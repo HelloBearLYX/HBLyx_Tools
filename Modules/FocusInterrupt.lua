@@ -7,7 +7,7 @@
 FocusInterrupt = {
     frame = nil,
     active = false,
-    interruptID = 119914,
+    interruptID = nil,
     subInterrupt = nil,
     timer = nil
 }
@@ -313,8 +313,6 @@ function FocusInterrupt:Initialize()
     self.subInterrupt = nil
     self:UpdateStyle()
 
-    UpdateInterruptId(self)
-
     return self
 end
 
@@ -437,6 +435,7 @@ function FocusInterrupt:RegisterEvents()
     addon.eventsHandler:Register(StartCastHandle, "PLAYER_FOCUS_CHANGED")
     -- switch spec
     addon.eventsHandler:Register(UpdateID, "PLAYER_SPECIALIZATION_CHANGED")
+    addon.eventsHandler:Register(UpdateID, "PLAYER_ENTERING_WORLD")
     -- stop cast
     addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_STOP", "focus")
     addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_FAILED", "focus")

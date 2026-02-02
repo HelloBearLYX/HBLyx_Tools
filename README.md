@@ -25,4 +25,4 @@
 ### To customize the addon, please use: ESC->Options->Addons->HBLyx\_Tools
 ### 若需要自定义,请使用: ESC->选项->插件->HBLyx\_Tools
 *   Under the Test mode, you can drag to adjust position of all elements shown (recommendation: after adjustment, please turn off the test mode and reload)
-*   在测试模式下，您可以拖动调整所有显示元素的位位置(建议：调整完成后，请关闭测试模式并重新加载)
+*   在测试模式下，您可以拖动调整所有显示元素的位位置(建议：调整完成后，请关闭测试模式并重新加载) 

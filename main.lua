@@ -108,11 +108,6 @@ function addon:Initialize()
 		addon.challengeEnhance:RegisterEvents()
 	end
 
-	addon.bloodlustTracker = BloodLustTracker:Initialize()
-	if addon.bloodlustTracker then
-		addon.bloodlustTracker:RegisterEvents()
-	end
-
     addon.warlockReminder = WarlockReminder:Initialize()
 	if addon.warlockReminder then
 		addon.warlockReminder:RegisterEvents()

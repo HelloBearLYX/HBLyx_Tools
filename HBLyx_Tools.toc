@@ -1,0 +1,39 @@
+## Interface: 120000,120001
+## Title: HBLyx_Tools
+## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
+## Author: HBLyx
+## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
+## Version: 3.1.5
+## SavedVariables: HBLyx_Tools_DB
+## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.tga
+## Category: Collections
+## Category-zhCN: 整合工具
+
+embeds.xml
+
+## Locales
+Locales\enUS.lua
+Locales\zhCN.lua
+
+utilities.lua
+eventHandler.lua
+
+# handle configuration and options
+configure.lua
+Configs\CombatIndicator.lua
+Configs\CombatTimer.lua
+Configs\FocusInterrupt.lua
+Configs\BattleRes.lua
+Configs\ChallengeEnhance.lua
+Configs\WarlockReminder.lua
+
+# Modules
+Modules\CombatIndicator.lua
+Modules\CombatTimer.lua
+Modules\FocusInterrupt.lua
+Modules\BattleRes.lua
+Modules\ChallengeEnhance.lua
+Modules\WarlockReminder.lua
+
+# main
+main.lua

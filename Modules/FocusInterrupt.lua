@@ -97,8 +97,6 @@ end
 ---@param interrupted boolean if the bar should be in interrupted state, false to reset color to normal mode
 local function SetBarInterruptedColor(self, interrupted)
     if interrupted then
-        self.frame.notInterruptibleBar:SetAlpha(0)
-        self.frame.interruptReadyBar:SetAlpha(0)
         self.frame.statusBar:SetAlpha(1)
         self.frame.statusBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["InterruptedColor"]))
     else
@@ -137,10 +135,12 @@ end
 ---@param duration LuaDurationObject Blizzard's LuaDurationObject
 ---@param isChannel boolean if the cast is a channel cast
 local function CastsHandler(self, duration, isChannel, notInterruptible)
-    self.frame.notInterruptibleBar:SetMinMaxValues(0, duration:GetTotalDuration())
-    self.frame.interruptReadyBar:SetMinMaxValues(0, duration:GetTotalDuration())
     self.frame.statusBar:SetMinMaxValues(0, duration:GetTotalDuration())
     
+    local cooldownColor = CreateColorFromHexString(addon.db[MOD_KEY]["CooldownColor"])
+    local interruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptibleColor"])
+    local notInterruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["NotInterruptibleColor"])
+
     self.frame:SetScript("OnUpdate", function ()
         if not self.active then
             return
@@ -153,13 +153,13 @@ local function CastsHandler(self, duration, isChannel, notInterruptible)
             remaining = duration:GetElapsedDuration()
         end
 
-        self.frame.notInterruptibleBar:SetValue(remaining)
-        self.frame.interruptReadyBar:SetValue(remaining)
         self.frame.statusBar:SetValue(remaining)
         
         self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
 
         local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
+
+        local color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, interruptibleColor, cooldownColor)
         
         -- for Demonology Warlocks/Two interrupts specs
         local subInterruptReady
@@ -169,14 +169,12 @@ local function CastsHandler(self, duration, isChannel, notInterruptible)
             else
                 subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
             end
+
+            color = C_CurveUtil.EvaluateColorFromBoolean(subInterruptReady, interruptibleColor, color)
         end
 
-        self.frame.notInterruptibleBar:SetAlphaFromBoolean(notInterruptible)
-        self.frame.interruptReadyBar:SetAlphaFromBoolean(isInterruptReady)
-
-        if self.subInterrupt then
-            self.frame.interruptReadyBar:SetAlphaFromBoolean(subInterruptReady, 255, self.frame.interruptReadyBar:GetAlpha())
-        end
+        color = C_CurveUtil.EvaluateColorFromBoolean(notInterruptible, notInterruptibleColor, color)
+        self.frame.statusBar:GetStatusBarTexture():SetVertexColor(color:GetRGBA())
 
         if addon.db[MOD_KEY]["CooldownHide"] then
             self.frame:SetAlphaFromBoolean(isInterruptReady)
@@ -244,7 +242,7 @@ local function Handler(self)
     local target = UnitSpellTargetName("focus")
     if target then
         local color = C_ClassColor.GetClassColor(UnitSpellTargetClass("focus")):GenerateHexColor() or "FFFFFF" -- 8 digits Hex
-        self.frame.spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. string.format("%.16s", target) .. "|r")
+        self.frame.spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. target .. "|r")
     else
         self.frame.spellText:SetText(name)
     end
@@ -279,16 +277,6 @@ function FocusInterrupt:Initialize()
 
     self.frame.icon = self.frame:CreateTexture(nil, "ARTWORK")
     self.frame.icon:SetPoint("LEFT", self.frame, "LEFT", 0, 0)
-    
-    self.frame.notInterruptibleBar = CreateFrame("StatusBar", nil, self.frame)
-    self.frame.notInterruptibleBar:SetMinMaxValues(0, 1)
-    self.frame.notInterruptibleBar:SetValue(0)
-    self.frame.notInterruptibleBar:SetPoint("RIGHT", self.frame, "RIGHT")
-
-    self.frame.interruptReadyBar = CreateFrame("StatusBar", nil, self.frame)
-    self.frame.interruptReadyBar:SetMinMaxValues(0, 1)
-    self.frame.interruptReadyBar:SetValue(0)
-    self.frame.interruptReadyBar:SetPoint("RIGHT", self.frame, "RIGHT")
 
     self.frame.statusBar = CreateFrame("StatusBar", nil, self.frame)
     self.frame.statusBar:SetMinMaxValues(0, 1)
@@ -332,14 +320,6 @@ function FocusInterrupt:UpdateStyle()
     self.frame.statusBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["CooldownColor"]))
     self.frame.statusBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
 
-    self.frame.interruptReadyBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[MOD_KEY]["Texture"]))
-    self.frame.interruptReadyBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["InterruptibleColor"]))
-    self.frame.interruptReadyBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
-
-    self.frame.notInterruptibleBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[MOD_KEY]["Texture"]))
-    self.frame.notInterruptibleBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["NotInterruptibleColor"]))
-    self.frame.notInterruptibleBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
-
     self.frame.spellText:SetFont(
         addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
         addon.db[MOD_KEY]["FontSize"],
@@ -372,15 +352,9 @@ function FocusInterrupt:Test(on)
 		self.active = true
         self.frame:Show()
         local name, target = "MaximumTestSpell", "Target"
-        self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. string.format("%.16s", target) .. "|r")
+        self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
         self.frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
-
-        self.frame.notInterruptibleBar:SetMinMaxValues(0, 10)
-        self.frame.interruptReadyBar:SetMinMaxValues(0, 10)
         self.frame.statusBar:SetMinMaxValues(0, 10)
-
-        self.frame.notInterruptibleBar:SetValue(2.5)
-        self.frame.interruptReadyBar:SetValue(5)
         self.frame.statusBar:SetValue(7.5)
 
         self.frame.timeText:SetText(string.format("%.1f/%.1f", 7.5, 10))

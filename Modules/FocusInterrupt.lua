@@ -205,65 +205,53 @@ local function InterruptHandler(self, guid)
     end)
 end
 
--- MARK: CastsHandler
+-- MARK: Update
 
 ---Handle Casts by passed information
 ---@param self FocusInterrupt self
 ---@param duration LuaDurationObject Blizzard's LuaDurationObject
 ---@param isChannel boolean if the cast is a channel cast
-local function CastsHandler(self, duration, isChannel, notInterruptible)
-    self.frame.statusBar:SetMinMaxValues(0, duration:GetTotalDuration())
-
-    self.frame:SetScript("OnUpdate", function ()
-        if not self.active then
-            return
-        end
-
-        local remaining
-        if isChannel then
-            remaining = duration:GetRemainingDuration()
-        else
-            remaining = duration:GetElapsedDuration()
-        end
-
-        self.frame.statusBar:SetValue(remaining)
-        
-        self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
-
-        local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
-        
-        -- for Demonology Warlocks/Two interrupts specs
-        local subInterruptReady
-        if self.subInterrupt then
-            if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then -- check if interrupt has been loaded
-                subInterruptReady = C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"]) -- if the grimoire is in the spell book -> grimoire can be seen as an interrupt
-            else
-                subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
-            end
-        end
-
-        -- handle colors for the statusBar
-        colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
-
-        if addon.db[MOD_KEY]["CooldownHide"] then
-            self.frame:SetAlphaFromBoolean(isInterruptReady)
-            if self.subInterrupt then
-                self.frame:SetAlphaFromBoolean(subInterruptReady, 255, self.frame:GetAlpha())
-            end
-        end
-
-        if addon.db[MOD_KEY]["NotInterruptibleHide"] then
-            self.frame:SetAlphaFromBoolean(notInterruptible, 0, self.frame:GetAlpha()) -- if not interruptible alpha = 0
-        end
-    end)
-
-    self.frame:SetAlphaFromBoolean(addon.db[MOD_KEY]["Hidden"], 0, 255)
-
-    if not addon.db[MOD_KEY]["Mute"] and IsInteruptible() then
-        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), "Master")
+local function Update(self, duration, isChannel, notInterruptible)
+    if not self.active then
+        return
     end
 
-    self.frame:Show()
+    local remaining
+    if isChannel then
+        remaining = duration:GetRemainingDuration()
+    else
+        remaining = duration:GetElapsedDuration()
+    end
+
+    self.frame.statusBar:SetValue(remaining)
+    
+    self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
+
+    local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
+    
+    -- for Demonology Warlocks/Two interrupts specs
+    local subInterruptReady
+    if self.subInterrupt then
+        if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then -- check if interrupt has been loaded
+            subInterruptReady = C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"]) -- if the grimoire is in the spell book -> grimoire can be seen as an interrupt
+        else
+            subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
+        end
+    end
+
+    -- handle colors for the statusBar
+    colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
+
+    if addon.db[MOD_KEY]["CooldownHide"] then
+        self.frame:SetAlphaFromBoolean(isInterruptReady)
+        if self.subInterrupt then
+            self.frame:SetAlphaFromBoolean(subInterruptReady, 255, self.frame:GetAlpha())
+        end
+    end
+
+    if addon.db[MOD_KEY]["NotInterruptibleHide"] then
+        self.frame:SetAlphaFromBoolean(notInterruptible, 0, self.frame:GetAlpha()) -- if not interruptible alpha = 0
+    end
 end
 
 ---Update FocusInterrupt's interruptID
@@ -318,7 +306,19 @@ local function Handler(self)
 
     self.frame.icon:SetTexture(texture or UNKNOWN_SPELL_TEXTURE)
 
-    CastsHandler(self, duration, isChannel, notInterruptible)
+    self.frame.statusBar:SetMinMaxValues(0, duration:GetTotalDuration())
+
+    self.frame:SetScript("OnUpdate", function (_, _)
+        Update(self, duration, isChannel, notInterruptible)
+    end)
+
+    self.frame:SetAlphaFromBoolean(addon.db[MOD_KEY]["Hidden"], 0, 255)
+
+    if not addon.db[MOD_KEY]["Mute"] and IsInteruptible() then
+        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), "Master")
+    end
+
+    self.frame:Show()
 end
 
 -- public methods
@@ -373,16 +373,18 @@ function FocusInterrupt:Test(on)
     if on then
         -- generate a demo cast bar
 		self.active = true
-        self.frame:Show()
         local name, target = "MaximumTestSpell", "Target"
         self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
         self.frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
-        self.frame.statusBar:SetMinMaxValues(0, 10)
-        self.frame.statusBar:SetValue(7.5)
+        self.frame.statusBar:SetMinMaxValues(0, 30)
+        local testDuration = C_DurationUtil.CreateDuration()
+        testDuration:SetTimeFromStart(GetTime(), 30)
 
-        self.frame.timeText:SetText(string.format("%.1f/%.1f", 7.5, 10))
+        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y", function()
+            Update(self, testDuration, false, false)
+        end)
 
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
+        self.frame:Show()
     else
         self.active = false
         self.frame:Hide()

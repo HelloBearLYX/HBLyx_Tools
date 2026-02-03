@@ -357,7 +357,8 @@ end
 ---@param mod string the mod to access addon profile(the mod key for the addon.db[mod])
 ---@param xKey string the option to access addon profile(the option key for the addon.db[mod][xKey])
 ---@param yKey string the option to access addon profile(the option key for the addon.db[mod][xKey])
-function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey)
+---@param updateFunc function? additional function to call in update
+function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFunc)
 	local function updatePosition(frame)
 		local x, y = GetCursorPosition()
 		x, y = addon.Utilities:ScreenPositionToUIPosition(x, y)
@@ -387,7 +388,10 @@ function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey)
 	frame:SetScript("OnUpdate", function (self)
 		if self.isDragging then
 			updatePosition(self)
-			return
+		end
+
+		if updateFunc then
+			updateFunc()
 		end
 	end)
 end

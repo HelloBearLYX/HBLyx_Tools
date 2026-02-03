@@ -7,6 +7,7 @@
 ---@field cooldownColer ColorMixin? color for interrupt on cooldown cast
 ---@field interruptibleColor ColorMixin? color for interruptible cast
 ---@field notInterruptibleColor ColorMixin? color for NOT interruptible cast
+---@field interruptedColor ColorMixin? color for interrupted fade time
 FocusInterrupt = {
     frame = nil,
     active = false,
@@ -16,6 +17,7 @@ FocusInterrupt = {
     cooldownColor = nil,
     interruptibleColor = nil,
     notInterruptibleColor = nil,
+    interruptedColor = nil,
 }
 
 local ADDON_NAME, addon = ...
@@ -138,15 +140,19 @@ local function GetInterruptSpellID(self, class)
     return output
 end
 
--- MARK: Color Handler
+-- MARK: SetBarColor
 
 ---Set statusBar color for the cast
 ---@param self FocusInterrupt self
+---@param interrupted boolean is cast interrupted already(never use secret-value)
 ---@param notInterruptible boolean is Not-interruptible cast
 ---@param isInterruptReady boolean is Interrupt ready
 ---@param subInterruptReady boolean? is subInterrupt ready(optional)
-local function colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
-    local color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, self.interruptibleColor, self.cooldownColor)
+local function SetBarColor(self, interrupted, notInterruptible, isInterruptReady, subInterruptReady)
+    local color = C_CurveUtil.EvaluateColorFromBoolean(interrupted, self.interruptedColor, self.interruptibleColor)
+
+    -- also secret-value comparation operations: See details in Update() -> Hidden-Control
+    color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, color, self.cooldownColor)
 
     if self.subInterrupt then
         color = C_CurveUtil.EvaluateColorFromBoolean(subInterruptReady, self.interruptibleColor, color)
@@ -169,18 +175,6 @@ local function GetInterrupter(guid)
     return name, class
 end
 
----Set the bar to "interrupted" state
----@param self FocusInterrupt self
----@param interrupted boolean if the bar should be in interrupted state, false to reset color to normal mode
-local function SetBarInterruptedColor(self, interrupted)
-    if interrupted then
-        self.frame.statusBar:SetAlpha(1)
-        self.frame.statusBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["InterruptedColor"]))
-    else
-        self.frame.statusBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["CooldownColor"]))
-    end
-end
-
 -- MARK: Interrupt Handle
 
 ---Interrupt Hanlder
@@ -188,14 +182,14 @@ end
 ---@param guid integer the GUID of the interrupter
 local function InterruptHandler(self, guid)
     local interrupter, class = GetInterrupter(guid)
-    local color = C_ClassColor.GetClassColor(class):GenerateHexColor() or "FFFFFF"
+    local color = C_ClassColor.GetClassColor(class):GenerateHexColor() or "FFFFFF" -- also secret-value
 
     if addon.db[MOD_KEY]["ShowInterrupter"] then
         self.frame.spellText:SetText(L["Interrupted"] .. ": |c".. color .. interrupter .. "|r")
     else
         self.frame.spellText:SetText(L["Interrupted"])
     end
-    SetBarInterruptedColor(self, true)
+    SetBarColor(self, true, false, true) -- change color to interrupted color
     self.active = false
 
     if self.timer then
@@ -205,7 +199,7 @@ local function InterruptHandler(self, guid)
     self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["InterruptedFadeTime"], function ()
         self.timer = nil
         self.frame:Hide()
-        SetBarInterruptedColor(self, false) -- reset color
+        SetBarColor(self, false, false, true) -- reset color
     end)
 end
 
@@ -216,10 +210,12 @@ end
 ---@param duration LuaDurationObject Blizzard's LuaDurationObject
 ---@param isChannel boolean if the cast is a channel cast
 local function Update(self, duration, isChannel, notInterruptible)
+    -- after 3.2, self.active is still significant to halt update, but control it in RegisterEvent instead of handler
     if not self.active then
         return
     end
 
+    -- get remaining time by cast types
     local remaining
     if isChannel then
         remaining = duration:GetRemainingDuration()
@@ -227,34 +223,60 @@ local function Update(self, duration, isChannel, notInterruptible)
         remaining = duration:GetElapsedDuration()
     end
 
+    -- update statusBar
     self.frame.statusBar:SetValue(remaining)
     
+    -- update time text
+    -- considering remove total duration text
     self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
 
+    -- general interrupt cooldown check
     local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
     
     -- for Demonology Warlocks/Two interrupts specs
+    -- since the GRIMOIRE is also a kick, this part can only used for Demo Warlock so far. Prot Paladin cannot use this as GCD issue(IsZero includes GCD)
     local subInterruptReady
     if self.subInterrupt then
-        if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then -- check if interrupt has been loaded
-            subInterruptReady = C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"]) -- if the grimoire is in the spell book -> grimoire can be seen as an interrupt
-        else
+        -- the SpellLock(player version) is obtained to the SpellBook after used GRIMOIRE
+        if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then -- if SpellLock not in SpellBook-> GRIMOIRE not used yet/GRIMOIRE not learned(ignore it)
+            -- if GRIMOIRE in SpellBook -> GRIMOIRE not on cooldown yet -> also a sub-interrupt ready
+            subInterruptReady = C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"])
+        else -- SpellLock(player version) is in SpellBook -> GRIMOIRE used
+            -- check SpellLock(player version)
             subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
         end
     end
 
     -- handle colors for the statusBar
-    colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
+    -- after 3.2 use color constrol instead of overlays
+    SetBarColor(self, false, notInterruptible, isInterruptReady, subInterruptReady)
 
+    -- Hidden-Control
+        -- As secret-value cannot compute, even compare between secret-values are not allowed
+        -- use func(bool, trueVal, falseVal) to replace not/and/or
+        -- NOT: reverse the values, then
+            -- func(bool, trueVal = falseVal, falseVal = trueVal)
+        -- AND: any false is false -> need currentVal = value after first bool execution, then
+            -- func(bool, trueVal = trueVal, falseVal = falseVal) + func(bool, trueVal = currentVal, falseVal = falseVal)
+        -- OR: any true is true -> need currentVal = value after first bool execution, then
+            -- func(bool, trueVal = trueVal, falseVal = falseVal) + func(bool, trueVal = trueVal, falseVal = currentVal)
     if addon.db[MOD_KEY]["CooldownHide"] then
-        self.frame:SetAlphaFromBoolean(isInterruptReady)
+        -- func(isInterruptReady or subInterruptReady, show, hide)
+            -- func = Region:SetAlphaFromBoolean(bool, trueVal, falseVal)
+            -- show = 255
+            -- hide = 0
+            -- currentVal = self.frame:GetAlpha()
+        self.frame:SetAlphaFromBoolean(isInterruptReady) -- func(isInterruptReady, show, hide)
         if self.subInterrupt then
-            self.frame:SetAlphaFromBoolean(subInterruptReady, 255, self.frame:GetAlpha())
+            self.frame:SetAlphaFromBoolean(subInterruptReady, 255, self.frame:GetAlpha()) -- func(subInterruptReady, show, currentVal)
         end
     end
 
     if addon.db[MOD_KEY]["NotInterruptibleHide"] then
-        self.frame:SetAlphaFromBoolean(notInterruptible, 0, self.frame:GetAlpha()) -- if not interruptible alpha = 0
+        -- func(any(InterruptReady) and not notInterruptible, show hide)
+            -- any(InterruptReady) is above, then func(not notInterruptible, currentVal, hide)
+            -- then, func(notInterruptible, hide, currentVal)
+        self.frame:SetAlphaFromBoolean(notInterruptible, 0, self.frame:GetAlpha())
     end
 end
 
@@ -269,6 +291,7 @@ end
 ---Handler for FocusInterrupt
 ---@param self FocusInterrupt self
 local function Handler(self)
+    -- after 3.2 self.active is handled in RegisterEvent part, although self.active is still a key variable for Update(CastHandler)
     if not addon.db[MOD_KEY]["Enabled"] then
         self.frame:Hide()
         return
@@ -285,13 +308,13 @@ local function Handler(self)
     end
     
     if not name then -- not a cast (for switching focus to a new unit)
-        -- halt it 
+        -- if the new focus is not casting, halt it 
         self.active = false
         self.frame:Hide()
         return
     end
 
-    -- get duration after we believe it is a cast and use correct cast type
+    -- get duration according to cast types
     local duration
     if isChannel then
         duration = UnitChannelDuration("focus")
@@ -300,24 +323,31 @@ local function Handler(self)
     end
 
     -- handle target
-    local target = UnitSpellTargetName("focus")
+    -- channel target is not naturally provided through API, a complicated way is to use focus's target but involves more events and too much excessive information
+    local target = UnitSpellTargetName("focus") -- only attempt to get non-channel cast target
     if addon.db[MOD_KEY]["ShowTarget"] and target then
-        local color = C_ClassColor.GetClassColor(UnitSpellTargetClass("focus")):GenerateHexColor() or "FFFFFF" -- 8 digits Hex
+        local color = C_ClassColor.GetClassColor(UnitSpellTargetClass("focus")):GenerateHexColor() or "FFFFFF" -- 8 digits Hex(also secret-value, do not directly compute it)
         self.frame.spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. target .. "|r")
     else
         self.frame.spellText:SetText(name)
     end
 
+    -- handle icon
     self.frame.icon:SetTexture(texture or UNKNOWN_SPELL_TEXTURE)
 
+    -- set the max time earlier for performance
     self.frame.statusBar:SetMinMaxValues(0, duration:GetTotalDuration())
 
+    -- still use "OnUpdate", as there are many things we need to keep real-time update
+    -- attempted to restrict the refresh rate(update interval), but a smooth function is highly demanded for it -> temperarily gave it up
     self.frame:SetScript("OnUpdate", function (_, _)
         Update(self, duration, isChannel, notInterruptible)
     end)
 
+    -- use alpha hiden instead of Hide() to prevent bugs on any hooked script or potential future hooked script
     self.frame:SetAlphaFromBoolean(addon.db[MOD_KEY]["Hidden"], 0, 255)
 
+    -- attempted to use "HookScript("OnShow", func)" for sound alert, nontheless frames are seen as shown while zero alpha and SetShown() cannot take secret-values
     if not addon.db[MOD_KEY]["Mute"] and IsInteruptible() then
         PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), "Master")
     end
@@ -330,37 +360,52 @@ end
 
 ---Update style settings and render them in-game for FocusInterrupt
 function FocusInterrupt:UpdateStyle()
+    -- basic size and position of bar
     self.frame:SetSize(addon.db[MOD_KEY]["Width"], addon.db[MOD_KEY]["Height"])
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
-
+    
+    -- background is kind of Blizzard's texture, only color and alpha are customizable
     self.frame.background:SetColorTexture(0, 0, 0, addon.db[MOD_KEY]["BackgroundAlpha"])
 
-    self.frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
-    self.frame.icon:SetSize(addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
+    -- icon zoom and size
+    self.frame.icon:SetTexCoord( -- prevent Blizzard's raw icons' border and fill all space with texture
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"],
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"]
+    )
+    self.frame.icon:SetSize(addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"]) -- keep icon has the same height as bar and keep it a cube
 
+    -- bar texture and size
+    -- after 3.2, only keep one status bar instead of 3(1 bar + 2 overlays)
     self.frame.statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[MOD_KEY]["Texture"]))
     self.frame.statusBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
 
     -- color settings
+    -- after 3.2, by accessing texture's color instead of SetStatusBarColor() to use secret-value to decide color instead of overlays manipulations
     self.cooldownColor = CreateColorFromHexString(addon.db[MOD_KEY]["CooldownColor"])
     self.interruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptibleColor"])
     self.notInterruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["NotInterruptibleColor"])
+    self.interruptedColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptedColor"])
     self.frame.statusBar:GetStatusBarTexture():SetVertexColor(self.interruptibleColor:GetRGBA())
 
+    -- font/text positions/
+    -- left texts(spell + target)
+    -- after 3.2, allow change the font size but change the margin to 0 for formatting more information
     self.frame.spellText:SetFont(
         addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
         addon.db[MOD_KEY]["FontSize"],
         "OUTLINE"
     )
     self.frame.spellText:SetPoint("LEFT", self.frame, "LEFT", addon.db[MOD_KEY]["Height"], 0)
-    self.frame.spellText:SetSize(0.7 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"])
-
+    self.frame.spellText:SetSize(0.7 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"]) -- how much propotion of space is allowd
+    -- right texts(time)
     self.frame.timeText:SetFont(
         addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
         addon.db[MOD_KEY]["FontSize"],
         "OUTLINE"
     )
-    self.frame.timeText:SetSize(0.3 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"])
+    self.frame.timeText:SetSize(0.3 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"]) -- how much propotion of space is allowd
 end
 
 -- MARK: Test
@@ -381,10 +426,10 @@ function FocusInterrupt:Test(on)
         self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
         self.frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
         self.frame.statusBar:SetMinMaxValues(0, 30)
-        local testDuration = C_DurationUtil.CreateDuration()
+        local testDuration = C_DurationUtil.CreateDuration() -- use a Blizzard LuaDurationObject to test
         testDuration:SetTimeFromStart(GetTime(), 30)
 
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y", function()
+        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
             Update(self, testDuration, false, false)
         end)
 
@@ -398,12 +443,12 @@ end
 --MARK: Register Event
 
 ---Register events for FocusInterrupt on EventsHandler
-function FocusInterrupt:RegisterEvents()
+function FocusInterrupt:RegisterEvents() -- for cast-start events
     local StartCastHandle = function()
-        if self.timer then
+        if self.timer then -- if the interrupted fade Timer is still there, we should immediately halt it and handle new cast
             self.timer:Cancel()
             self.timer = nil
-            SetBarInterruptedColor(self, false)
+            SetBarColor(self, false, false, true)
         end
         
         self.active = true
@@ -411,16 +456,16 @@ function FocusInterrupt:RegisterEvents()
     end
     
     local StopCastHandle = function (event, ...)
-        if event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_FAILED" then
-            if not self.timer then
+        if event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_FAILED" then -- for stop-cast events
+            if not self.timer then -- since the stop-cast events also triggered after the interrupted-events, must avoid stop-cast events override the interrupted-events
                 self.active = false
                 self.frame:Hide()
             end
-        elseif event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-            local _, _, _, guid = ...
-            if guid then
+        elseif event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then -- handle potential interrupted-cast events 
+            local _, _, _, guid = ... -- if guid != null -> some one interrupted it
+            if guid then -- handle interrupted
                 InterruptHandler(self, guid)
-            else
+            else -- potential a normal stop cast
                 if not self.timer then
                     self.active = false
                     self.frame:Hide()

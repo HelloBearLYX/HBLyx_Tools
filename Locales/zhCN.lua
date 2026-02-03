@@ -114,6 +114,8 @@ L["FocusInterruptibleFilter"] = "不可打断时隐藏"
 L["FocusInterruptibleFilterDesc"] = "不可打断时隐藏整个施法条"
 L["FocusMuteDesc"] = "基于暴雪的限制, 打断音效任然会在打断技能CD时播放\n\n建议不使用音效(本模块包含多种视觉上的焦点施法过滤)\n\n注意: 如果其他插件(包括ElvUI和oUF)禁用了暴雪的 焦点框体/焦点施法条, 打断音效也会在不可打断读条时播放(不会影响施法条的视觉效果)。暴雪原生焦点施法条是取得非secret-value的能否打断信息的途径"
 L["FocusInterruptSoundDesc"] = "需要打断时播放的音效"
+L["InterruptedFadeTime"] = "被打断淡出时间"
+L["InterruptedFadeTimeDesc"] = "被打断后施法条多久会隐藏(秒)"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "战复计时器"

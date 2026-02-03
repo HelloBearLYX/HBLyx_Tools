@@ -111,6 +111,8 @@ L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
 L["FocusInterruptibleFilterDesc"] = "Disable sound and invisible cast bar while a non-interruptible spell is being casting"
 L["FocusMuteDesc"] = "Due to Blizzard's restrictions, the sound alert will still play when the interrupt is on cooldown.\n\nRecommend keep sound alert off(this module contains multiple version of visual display to identify focus casting and interrupt information)\n\nNOTE: If other unit frame or cast bar addon (include ElvUI and oUF) disabled Blizzard's Focus Unit Frame/Focus Cast Bar, the sound alert will also play during NOT-interruptible casting(NOT affect visual cast bar). Blizzard's Focus Cast bar is the way to get a non-secret-value information of whether interruptible."
 L["FocusInterruptSoundDesc"] = "Sound play when interrupt needed"
+L["InterruptedFadeTime"] = "Interrpted Fade Time"
+L["InterruptedFadeTimeDesc"] = "How long the cast bar hide after the cast is interrupted(seconds)"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"

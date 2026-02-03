@@ -198,7 +198,7 @@ local function InterruptHandler(self, guid)
         self.timer:Cancel()
     end
 
-    self.timer = C_Timer.NewTimer(0.75, function ()
+    self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["InterruptedFadeTime"], function ()
         self.timer = nil
         self.frame:Hide()
         SetBarInterruptedColor(self, false) -- reset color

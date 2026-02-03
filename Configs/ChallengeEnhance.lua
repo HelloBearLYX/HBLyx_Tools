@@ -35,6 +35,8 @@ addon.configurationList[MOD_KEY] = {
 -- options
 local optionMap = addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceSettings"], {
     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadDesc"]}),
+    addon.Utilities:MakeResetOption(MOD_KEY, L["ChallengeEnhanceSettings"]),
+    addon.Utilities:MakeOptionLineBreak(),
     addon.Utilities:MakeLSMFontOption(L["Font"], MOD_KEY, "Font", update, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
     addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceLevelSettings"], {
         addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "LevelEnabled", update),

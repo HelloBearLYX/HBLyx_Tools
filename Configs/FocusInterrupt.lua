@@ -38,6 +38,7 @@ addon.configurationList[MOD_KEY] = {
 
 local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded),
+    addon.Utilities:MakeResetOption(MOD_KEY, L["FocusInterruptSettings"]),
     -- focus cast bar settings
     addon.Utilities:MakeOptionGroup(L["FocusCastBarSettings"], {
         addon.Utilities:MakeToggleOption(L["FocusCastBarHidden"], MOD_KEY, "Hidden", nil, {desc = L["FocusCastBarHiddenDesc"]}),

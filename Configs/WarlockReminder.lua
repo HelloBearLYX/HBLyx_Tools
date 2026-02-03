@@ -35,6 +35,7 @@ addon.configurationList[MOD_KEY] = {
 
 local optionMap = addon.Utilities:MakeOptionGroup(L["WarlockReminders"], {
 	addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadDesc"]}),
+	addon.Utilities:MakeResetOption(MOD_KEY, L["WarlockReminders"]),
 	-- warlock style settings
 	addon.Utilities:MakeOptionGroup(L["StyleSettings"],{
 		addon.Utilities:MakeRangeOption(L["IconSize"], MOD_KEY, "IconSize", 10, 200, 1, update),

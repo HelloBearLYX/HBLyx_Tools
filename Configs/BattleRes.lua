@@ -26,6 +26,8 @@ addon.configurationList[MOD_KEY] = {
 -- options
 local optionMap = addon.Utilities:MakeOptionGroup(L["BattleResSettings"], {
     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadNeeded"]}),
+	addon.Utilities:MakeResetOption(MOD_KEY, L["BattleResSettings"]),
+	addon.Utilities:MakeOptionLineBreak(),
 	addon.Utilities:MakeToggleOption(L["HidenInactive"], MOD_KEY, "HideInactive", nil, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
 	addon.Utilities:MakeOptionGroup(L["StyleSettings"], {
 		addon.Utilities:MakeRangeOption(L["IconSize"], MOD_KEY, "IconSize", 10, 200, 1, update),

@@ -1,4 +1,6 @@
 local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class Utilities
 addon.Utilities = {}
 
@@ -223,6 +225,27 @@ function addon.Utilities:MakeInputOption(name, mod, key, update, extraFields)
 	return output
 end
 
+---Make a button option in the option List
+---@param name string the button name
+---@param func function function run after click the button
+---@param extraFields? table extra fields to set up this option
+---@return table output a created option tabble for AceConfig to register
+function addon.Utilities:MakeButtonOption(name, func, extraFields)
+	local output = {
+		type = "execute",
+		name = name,
+		func = func
+	}
+
+	if extraFields then
+		for k, v in pairs(extraFields) do
+			output[k] = v
+		end
+	end
+
+	return output
+end
+
 ---Make a color pick option in the optionList
 ---@param name string the option name
 ---@param mod string the mod to access addon profile(the mod key for the addon.db[mod])
@@ -431,6 +454,31 @@ end
 
 -- MARK: Reset Config
 
+---Reset a module's settings into default
+---@param mod string mod key
 function addon.Utilities:ResetModule(mod)
-	
+	if addon.configurationList[mod] then
+		for key, value in pairs(addon.configurationList[mod]) do
+			addon.db[mod][key] = value
+		end
+	end
+end
+
+---Make a reset mod option in the optionList 
+---@param mod string mod key
+---@param modName string modName
+---@return table a created option table for AceConfig to register
+function addon.Utilities:MakeResetOption(mod, modName)
+	local output = addon.Utilities:MakeButtonOption(L["ResetMod"], function ()
+		addon.Utilities:SetPopupDialog(
+			ADDON_NAME .. "ResetMod",
+			"|cffC41E3A" .. modName .. "|r: " .. L["ComfirmResetMod"],
+			true,
+			{button1 = YES, button2 = NO, OnButton1 = function ()
+		    	addon.Utilities:ResetModule(mod)
+				ReloadUI()
+			end})
+	end)
+
+	return output
 end

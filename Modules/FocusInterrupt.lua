@@ -440,5 +440,4 @@ function FocusInterrupt:RegisterEvents()
     addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_FAILED", "focus")
     addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", "focus")
     addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", "focus")
-
 end

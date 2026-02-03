@@ -34,6 +34,8 @@ L["ReloadDesc"] = "重载(Reload)若改变"
 L["ReloadNeeded"] = "需要重载(Reload)才能使更改生效"
 L["ResetModule"] = "你确认你要|cffC41E3A重置此模块|r吗?"
 L["IconZoom"] = "图标缩放"
+L["ResetMod"] = "重置本模块"
+L["ComfirmResetMod"] = "您确定要重置此模块的所有设置吗?(同时重载)"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

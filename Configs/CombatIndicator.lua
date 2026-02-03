@@ -33,6 +33,7 @@ addon.configurationList[MOD_KEY] = {
 -- options
 local optionMap = addon.Utilities:MakeOptionGroup(L["CombatSettings"], {
 	addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded),
+	addon.Utilities:MakeResetOption(MOD_KEY, L["CombatSettings"]),
 	-- combat indicator style settings
 	addon.Utilities:MakeOptionGroup(L["StyleSettings"],{
 		addon.Utilities:MakeRangeOption(L["FadeTime"], MOD_KEY, "FadeTime", 0.5, 10, 0.5, nil, {desc = L["CombatFadeTimeDesc"]}),

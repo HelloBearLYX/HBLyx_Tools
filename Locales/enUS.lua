@@ -31,6 +31,8 @@ L["ReloadDesc"] = "Reload if changed"
 L["ReloadNeeded"] = "Need to reload to take effect of changes"
 L["ResetModule"] = "Are you sure you want to |cffC41E3Areset settings for this module|r?"
 L["IconZoom"] = "Icon Zoom"
+L["ResetMod"] = "Reset Module"
+L["ComfirmResetMod"] = "Are you sure you want to reset all settings for this module?(also reload UI)"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

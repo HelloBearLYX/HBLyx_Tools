@@ -4,12 +4,18 @@
 ---@field interruptID integer interrupt id
 ---@field subInterrupt integer? if there is a second interrupt
 ---@field timer C_Timer? timer to handle interrupt fade out
+---@field cooldownColer ColorMixin? color for interrupt on cooldown cast
+---@field interruptibleColor ColorMixin? color for interruptible cast
+---@field notInterruptibleColor ColorMixin? color for NOT interruptible cast
 FocusInterrupt = {
     frame = nil,
     active = false,
     interruptID = nil,
     subInterrupt = nil,
-    timer = nil
+    timer = nil,
+    cooldownColor = nil,
+    interruptibleColor = nil,
+    notInterruptibleColor = nil,
 }
 
 local ADDON_NAME, addon = ...
@@ -80,6 +86,25 @@ local function GetInterruptSpellID(self, class)
     return output
 end
 
+-- MARK: Color Handler
+
+---Set statusBar color for the cast
+---@param self FocusInterrupt self
+---@param notInterruptible boolean is Not-interruptible cast
+---@param isInterruptReady boolean is Interrupt ready
+---@param subInterruptReady boolean? is subInterrupt ready(optional)
+local function colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
+    local color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, self.interruptibleColor, self.cooldownColor)
+
+    if self.subInterrupt then
+        color = C_CurveUtil.EvaluateColorFromBoolean(subInterruptReady, self.interruptibleColor, color)
+    end
+
+    color = C_CurveUtil.EvaluateColorFromBoolean(notInterruptible, self.notInterruptibleColor, color)
+
+    self.frame.statusBar:GetStatusBarTexture():SetVertexColor(color:GetRGBA())
+end
+
 ---Get Interrupter from GUID
 ---@param guid integer GUID for the interrupter
 ---@return string name name of the interrupter
@@ -136,10 +161,6 @@ end
 ---@param isChannel boolean if the cast is a channel cast
 local function CastsHandler(self, duration, isChannel, notInterruptible)
     self.frame.statusBar:SetMinMaxValues(0, duration:GetTotalDuration())
-    
-    local cooldownColor = CreateColorFromHexString(addon.db[MOD_KEY]["CooldownColor"])
-    local interruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptibleColor"])
-    local notInterruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["NotInterruptibleColor"])
 
     self.frame:SetScript("OnUpdate", function ()
         if not self.active then
@@ -158,8 +179,6 @@ local function CastsHandler(self, duration, isChannel, notInterruptible)
         self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
 
         local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
-
-        local color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, interruptibleColor, cooldownColor)
         
         -- for Demonology Warlocks/Two interrupts specs
         local subInterruptReady
@@ -170,11 +189,10 @@ local function CastsHandler(self, duration, isChannel, notInterruptible)
                 subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
             end
 
-            color = C_CurveUtil.EvaluateColorFromBoolean(subInterruptReady, interruptibleColor, color)
+            colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
+        else
+            colorHandler(self, notInterruptible, isInterruptReady, nil)
         end
-
-        color = C_CurveUtil.EvaluateColorFromBoolean(notInterruptible, notInterruptibleColor, color)
-        self.frame.statusBar:GetStatusBarTexture():SetVertexColor(color:GetRGBA())
 
         if addon.db[MOD_KEY]["CooldownHide"] then
             self.frame:SetAlphaFromBoolean(isInterruptReady)
@@ -317,8 +335,13 @@ function FocusInterrupt:UpdateStyle()
     self.frame.icon:SetSize(addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
 
     self.frame.statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[MOD_KEY]["Texture"]))
-    self.frame.statusBar:SetStatusBarColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["CooldownColor"]))
     self.frame.statusBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
+
+    -- color settings
+    self.cooldownColor = CreateColorFromHexString(addon.db[MOD_KEY]["CooldownColor"])
+    self.interruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptibleColor"])
+    self.notInterruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["NotInterruptibleColor"])
+    self.frame.statusBar:GetStatusBarTexture():SetVertexColor(self.interruptibleColor:GetRGBA())
 
     self.frame.spellText:SetFont(
         addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",

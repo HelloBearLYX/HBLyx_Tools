@@ -188,11 +188,10 @@ local function CastsHandler(self, duration, isChannel, notInterruptible)
             else
                 subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
             end
-
-            colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
-        else
-            colorHandler(self, notInterruptible, isInterruptReady, nil)
         end
+
+        -- handle colors for the statusBar
+        colorHandler(self, notInterruptible, isInterruptReady, subInterruptReady)
 
         if addon.db[MOD_KEY]["CooldownHide"] then
             self.frame:SetAlphaFromBoolean(isInterruptReady)

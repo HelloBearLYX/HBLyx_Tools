@@ -103,7 +103,7 @@ L["InterruptedColor"] = "被打断颜色"
 -- Focus Cast Bar Settings
 L["FocusCastBarSettings"] = "焦点施法条设置"
 L["FocusCastBarHidden"] = "隐藏焦点施法条"
-L["FocusCastBarHiddenDesc"] = "隐藏本插件提供的焦点施法条"
+L["FocusCastBarHiddenDesc"] = "隐藏本插件提供的焦点施法条,但依然在后台运行"
 L["FocusColorPriorityDesc"] = "不可打断颜色 > 打断未就绪颜色 > 可打断颜色"
 -- Focus Interrupt Settings
 L["FocusInteruptSettings"] = "焦点打断设置"
@@ -116,6 +116,8 @@ L["FocusMuteDesc"] = "基于暴雪的限制, 打断音效任然会在打断技�
 L["FocusInterruptSoundDesc"] = "需要打断时播放的音效"
 L["InterruptedFadeTime"] = "被打断淡出时间"
 L["InterruptedFadeTimeDesc"] = "被打断后施法条多久会隐藏(秒)"
+L["ShowInterrupter"] = "显示打断者"
+L["ShowTarget"] = "显示目标"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "战复计时器"

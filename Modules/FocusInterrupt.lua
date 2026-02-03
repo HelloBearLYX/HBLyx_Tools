@@ -190,7 +190,11 @@ local function InterruptHandler(self, guid)
     local interrupter, class = GetInterrupter(guid)
     local color = C_ClassColor.GetClassColor(class):GenerateHexColor() or "FFFFFF"
 
-    self.frame.spellText:SetText(L["Interrupted"] .. ": |c".. color .. interrupter .. "|r")
+    if addon.db[MOD_KEY]["ShowInterrupter"] then
+        self.frame.spellText:SetText(L["Interrupted"] .. ": |c".. color .. interrupter .. "|r")
+    else
+        self.frame.spellText:SetText(L["Interrupted"])
+    end
     SetBarInterruptedColor(self, true)
     self.active = false
 
@@ -297,7 +301,7 @@ local function Handler(self)
 
     -- handle target
     local target = UnitSpellTargetName("focus")
-    if target then
+    if addon.db[MOD_KEY]["ShowTarget"] and target then
         local color = C_ClassColor.GetClassColor(UnitSpellTargetClass("focus")):GenerateHexColor() or "FFFFFF" -- 8 digits Hex
         self.frame.spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. target .. "|r")
     else

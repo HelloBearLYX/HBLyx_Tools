@@ -35,6 +35,8 @@ addon.configurationList[MOD_KEY] = {
     X = 0,
     Y = 170,
     IconZoom = 0.07,
+    ShowTarget = true,
+    ShowInterrupter = true,
 }
 
 local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
@@ -58,7 +60,6 @@ local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
             addon.Utilities:MakeColorOption(L["InterruptibleColor"], MOD_KEY, "InterruptibleColor", update, {desc = L["FocusColorPriorityDesc"]}),
             addon.Utilities:MakeColorOption(L["InterruptedColor"], MOD_KEY, "InterruptedColor", update),
             addon.Utilities:MakeRangeOption(L["IconZoom"], MOD_KEY, "IconZoom", 0.01, 0.5, 0.01, update),
-            addon.Utilities:MakeRangeOption(L["InterruptedFadeTime"], MOD_KEY, "InterruptedFadeTime", 0.0, 2, 0.25, nil, {desc = L["InterruptedFadeTimeDesc"]})
         }, true, {hidden = function () return addon.db[MOD_KEY]["Hidden"] end}),
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
     addon.Utilities:MakeOptionGroup(L["FocusInteruptSettings"], {
@@ -67,6 +68,11 @@ local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
         addon.Utilities:MakeOptionLineBreak(),
         addon.Utilities:MakeToggleOption(L["FocusInterruptibleFilter"], MOD_KEY, "NotInterruptibleHide", nil, {desc = L["FocusInterruptibleFilterDesc"]}),
         addon.Utilities:MakeColorOption(L["NotInterruptibleColor"], MOD_KEY, "NotInterruptibleColor", update, {hidden = function () return addon.db[MOD_KEY]["NotInterruptibleHide"] end}),
+        addon.Utilities:MakeOptionLineBreak(),
+        addon.Utilities:MakeToggleOption(L["ShowInterrupter"], MOD_KEY, "ShowInterrupter"),
+        addon.Utilities:MakeRangeOption(L["InterruptedFadeTime"], MOD_KEY, "InterruptedFadeTime", 0.0, 2, 0.25, nil, {desc = L["InterruptedFadeTimeDesc"]}),
+        addon.Utilities:MakeOptionLineBreak(),
+        addon.Utilities:MakeToggleOption(L["ShowTarget"], MOD_KEY, "ShowTarget")
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
     addon.Utilities:MakeOptionGroup(L["SoundSettings"], {
         {type = "description", name = L["FocusMuteDesc"]},

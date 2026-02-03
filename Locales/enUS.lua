@@ -100,7 +100,7 @@ L["InterruptedColor"] = "Interrupted Color"
 -- Focus Cast Bar Settings
 L["FocusCastBarSettings"] = "Focus Cast Bar Settings"
 L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
-L["FocusCastBarHiddenDesc"] = "Hide focus cast bar of this addon"
+L["FocusCastBarHiddenDesc"] = "Hide focus cast bar of this addon, but it still run on the back-end"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptNotReadyColor > InterruptibleColor"
 -- Focus Interrupt Settings
 L["FocusInteruptSettings"] = "Focus Interupt Settings"
@@ -113,6 +113,8 @@ L["FocusMuteDesc"] = "Due to Blizzard's restrictions, the sound alert will still
 L["FocusInterruptSoundDesc"] = "Sound play when interrupt needed"
 L["InterruptedFadeTime"] = "Interrpted Fade Time"
 L["InterruptedFadeTimeDesc"] = "How long the cast bar hide after the cast is interrupted(seconds)"
+L["ShowInterrupter"] = "Show Interrupter"
+L["ShowTarget"] = "Show Target"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"

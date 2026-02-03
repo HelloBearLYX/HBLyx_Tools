@@ -3,7 +3,7 @@
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
-## Version: 3.2.0
+## Version: 3.2.1
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.tga
 ## Category: Collections

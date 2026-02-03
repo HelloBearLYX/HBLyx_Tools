@@ -39,6 +39,58 @@ local INTERRUPT_BY_CLASS = {
   WARLOCK = {DEFAULT = 19647, DEMONOLOGY = 119914, DEMONOLOGY_SUB = 132409, GRIMOIRE = 1276467},
   WARRIOR = {DEFAULT = 6552}, -- Pummel
 }
+
+-- MARK: Initialize
+
+---Initialize(Constructor)
+---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
+function FocusInterrupt:Initialize()
+    if not addon.db[MOD_KEY]["Enabled"] then
+        return nil
+    end
+
+    self.frame = CreateFrame("Frame", ADDON_NAME .. "_FocusCastBar", UIParent)
+    self.frame:SetFrameStrata("HIGH")
+    self.frame:Hide()
+
+    self.frame.background = self.frame:CreateTexture(nil, "background")
+    self.frame.background:SetAllPoints(true)
+
+    self.frame.border = CreateFrame("Frame", nil, self.frame, "BackdropTemplate")
+    self.frame.border:SetAllPoints(true)
+    self.frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+    self.frame.border:SetFrameLevel(self.frame:GetFrameLevel() + 10)
+    self.frame.border:SetBackdropBorderColor(0, 0, 0, 1)
+
+    self.frame.icon = self.frame:CreateTexture(nil, "ARTWORK")
+    self.frame.icon:SetPoint("LEFT", self.frame, "LEFT", 0, 0)
+
+    self.frame.statusBar = CreateFrame("StatusBar", nil, self.frame)
+    self.frame.statusBar:SetMinMaxValues(0, 1)
+    self.frame.statusBar:SetValue(0)
+    self.frame.statusBar:SetPoint("RIGHT", self.frame, "RIGHT")
+
+    -- frame which takes texts
+    self.frame.textFrame = CreateFrame("Frame", nil, self.frame)
+    self.frame.textFrame:SetAllPoints(true)
+    self.frame.textFrame:SetFrameLevel(self.frame:GetFrameLevel() + 10)
+    -- set spell text
+    self.frame.spellText = self.frame.textFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    self.frame.spellText:SetJustifyH("LEFT")
+    self.frame.spellText:SetTextColor(1, 1, 1, 1)
+    -- set time text
+    self.frame.timeText = self.frame.textFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    self.frame.timeText:SetPoint("RIGHT", self.frame, "RIGHT", 0, 0)
+    self.frame.timeText:SetJustifyH("RIGHT")
+    self.frame.timeText:SetTextColor(1, 1, 1, 1)
+
+    self.active = false
+    self.subInterrupt = nil
+    self:UpdateStyle()
+
+    return self
+end
+
 -- private methods
 
 ---Check if the cast is interruptible through Blizzard's UI
@@ -270,57 +322,6 @@ local function Handler(self)
 end
 
 -- public methods
--- MARK: Initialize
-
----Initialize(Constructor)
----@return FocusInterrupt FocusInterrupt a FocusInterrupt object
-function FocusInterrupt:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-
-    self.frame = CreateFrame("Frame", ADDON_NAME .. "_FocusCastBar", UIParent)
-    self.frame:SetFrameStrata("HIGH")
-    self.frame:Hide()
-
-    self.frame.background = self.frame:CreateTexture(nil, "background")
-    self.frame.background:SetAllPoints(true)
-
-    self.frame.border = CreateFrame("Frame", nil, self.frame, "BackdropTemplate")
-    self.frame.border:SetAllPoints(true)
-    self.frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
-    self.frame.border:SetFrameLevel(self.frame:GetFrameLevel() + 10)
-    self.frame.border:SetBackdropBorderColor(0, 0, 0, 1)
-
-    self.frame.icon = self.frame:CreateTexture(nil, "ARTWORK")
-    self.frame.icon:SetPoint("LEFT", self.frame, "LEFT", 0, 0)
-
-    self.frame.statusBar = CreateFrame("StatusBar", nil, self.frame)
-    self.frame.statusBar:SetMinMaxValues(0, 1)
-    self.frame.statusBar:SetValue(0)
-    self.frame.statusBar:SetPoint("RIGHT", self.frame, "RIGHT")
-
-    -- frame which takes texts
-    self.frame.textFrame = CreateFrame("Frame", nil, self.frame)
-    self.frame.textFrame:SetAllPoints(true)
-    self.frame.textFrame:SetFrameLevel(self.frame:GetFrameLevel() + 10)
-    -- set spell text
-    self.frame.spellText = self.frame.textFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    self.frame.spellText:SetJustifyH("LEFT")
-    self.frame.spellText:SetTextColor(1, 1, 1, 1)
-    -- set time text
-    self.frame.timeText = self.frame.textFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    self.frame.timeText:SetPoint("RIGHT", self.frame, "RIGHT", 0, 0)
-    self.frame.timeText:SetJustifyH("RIGHT")
-    self.frame.timeText:SetTextColor(1, 1, 1, 1)
-
-    self.active = false
-    self.subInterrupt = nil
-    self:UpdateStyle()
-
-    return self
-end
-
 -- MARK: UpdateStyle
 
 ---Update style settings and render them in-game for FocusInterrupt

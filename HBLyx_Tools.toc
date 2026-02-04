@@ -39,5 +39,5 @@ Modules\WarlockReminder.lua
 main.lua
 
 # developer only, comment out following when release
-Configs\DeveloperTools.lua
-Modules\DeveloperTools.lua
+#Configs\DeveloperTools.lua
+#Modules\DeveloperTools.lua

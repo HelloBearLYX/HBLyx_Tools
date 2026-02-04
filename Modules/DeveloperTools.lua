@@ -7,6 +7,7 @@ addon.DeveloperTools = {
 }
 
 -- private methods
+
 local function CreateDisplayFrame(self, info)
     if self.displayFrame then
         self.displayFrame:Hide()
@@ -62,12 +63,6 @@ local function CreateDisplayFrame(self, info)
     StaticPopup_Show(ADDON_NAME .. "_Info")
 end
 
--- public methods
-
-function addon.DeveloperTools:IsShown()
-    return self.displayFrame ~= nil
-end
-
 local function GetEventsInfo()
     local events = {}
     for event, _ in pairs(addon.eventsHandler.eventNameMap) do
@@ -100,6 +95,8 @@ local function GetEventsInfo()
 
     return output
 end
+
+-- public methods
 
 local function GetGlobalVarInfo()
     local vars = {}

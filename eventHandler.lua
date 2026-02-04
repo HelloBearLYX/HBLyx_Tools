@@ -1,9 +1,11 @@
 ---@class EventsHandler
 ---@field eventFrame frame Blizzard frame which is a pseudo-frame to keep track of events
 ---@field eventMap table a table contains events and functions to excute when event triggered such as {event1 = {func1, func2, ...}, ...}
+---@field eventNameMap table a table contains events and the modules which regiestered to it such as {event1 = {mod1, mod2, ...}, ...}
 EventsHandler = {
     eventFrame = nil,
     eventMap = {},
+    eventNameMap = {},
 }
 
 local ADDON_NAME, addon = ...
@@ -15,6 +17,8 @@ local ADDON_NAME, addon = ...
 function EventsHandler:Initialize()
     self.eventFrame = CreateFrame("Frame")
     self.eventMap = {}
+    self.eventNameMap = {}
+    self.displayFrame = nil
     self.eventFrame:RegisterEvent("ADDON_LOADED") -- "ADDON_LOADED" is automatically registered
 
     return self
@@ -53,13 +57,16 @@ end
 ---Call to let EventsHandler register this event with the function
 ---@param func function function register to the event
 ---@param event string event name
----@param unit? string if this is a unit event, the unit name to register
-function EventsHandler:Register(func, event, unit)
+---@param mod string module name/key
+---@param unit string? if this is a unit event, the unit name to register
+function EventsHandler:Register(func, event, mod, unit)
     if not self.eventMap[event] then
         self.eventMap[event] = {}
+        self.eventNameMap[event] = {}
     end
 
     table.insert(self.eventMap[event], func)
+    table.insert(self.eventNameMap[event], mod)
 
     RegisterE(self, event, unit)
 end

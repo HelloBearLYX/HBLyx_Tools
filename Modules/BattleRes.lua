@@ -139,10 +139,10 @@ end
 function BattleRes:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.eventsHandler:Register(Handle, "PLAYER_ENTERING_WORLD")
-    addon.eventsHandler:Register(Handle, "ENCOUNTER_START")
-    addon.eventsHandler:Register(Handle, "ENCOUNTER_END")
-    addon.eventsHandler:Register(Handle, "SPELL_UPDATE_CHARGES")
-    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_START")
-    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_COMPLETED")
+    addon.eventsHandler:Register(Handle, "PLAYER_ENTERING_WORLD", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "ENCOUNTER_START", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "ENCOUNTER_END", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "SPELL_UPDATE_CHARGES", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_START", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_COMPLETED", MOD_KEY)
 end

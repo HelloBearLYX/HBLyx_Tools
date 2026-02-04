@@ -43,7 +43,7 @@ local PET_STANCE = { -- map pet stance names onto numbers
 ---Intialize(Constructor)
 ---@return WarlockReminder WarlockReminder a WarlockReminder object(nil for non-warlock player -> not initialized)
 function WarlockReminder:Initialize()
-    if addon.characterClass ~= "WARLOCK" or not addon.db[MOD_KEY]["Enabled"] then
+    if addon.Global["characterClass"] ~= "WARLOCK" or not addon.db[MOD_KEY]["Enabled"] then
         return nil
     end
 
@@ -144,7 +144,7 @@ end
 ---Handler for pet frame
 ---@param self WarlockReminder self
 local function PetHandler(self)
-    if not addon.db[MOD_KEY]["PetEnabled"] or addon.inCombat or IsMounted() then
+    if not addon.db[MOD_KEY]["PetEnabled"] or addon.Global["inCombat"] or IsMounted() then
         self.pet:Hide()
         return
     end
@@ -212,7 +212,7 @@ end
 ---Handler for candy frame
 ---@param self WarlockReminder self
 local function CandyHandler(self)
-    if not addon.db[MOD_KEY]["CandyEnabled"] or addon.inCombat then
+    if not addon.db[MOD_KEY]["CandyEnabled"] or addon.Global["inCombat"] then
         self.candy:Hide()
         return
     end
@@ -277,7 +277,7 @@ end
 ---Test mode for WarlockReminder
 ---@param on boolean turn the Test mode on or off
 function WarlockReminder:Test(on)
-    if on and not addon.inCombat then
+    if on and not addon.Global["inCombat"] then
 		self.pet:Show()
         addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetX")
 
@@ -300,14 +300,14 @@ function WarlockReminder:RegisterEvents()
     local petEvents = {"UNIT_PET", "PET_BAR_UPDATE", "PET_DISMISS_START", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_ALIVE"}
 
     for _, event in ipairs(bothEvents) do
-        addon.eventsHandler:Register(HandleBoth, event)
+        addon.eventsHandler:Register(HandleBoth, event, MOD_KEY)
     end
 
     for _, event in ipairs(petEvents) do
-        addon.eventsHandler:Register(HandlePet, event)
+        addon.eventsHandler:Register(HandlePet, event, MOD_KEY)
     end
 
-    addon.eventsHandler:Register(HandleCandy, "BAG_UPDATE")
+    addon.eventsHandler:Register(HandleCandy, "BAG_UPDATE", MOD_KEY)
     addon.eventsHandler:Register(function ()
         if IsMounted() then
             HandlePet()
@@ -319,5 +319,5 @@ function WarlockReminder:RegisterEvents()
 
             self.timer = C_Timer.NewTimer(3, function () HandlePet() end)
         end
-    end, "PLAYER_MOUNT_DISPLAY_CHANGED")
+    end, "PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY)
 end

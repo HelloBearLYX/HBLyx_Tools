@@ -63,7 +63,7 @@ end
 ---Handler for CombatTimer
 ---@param self CombatTimer self
 local function Handler(self)
-    if addon.inCombat then
+    if addon.Global["inCombat"] then
         self.startTime = GetTime()
         self.frame:Show()
         -- update every 1 sec instead of 1 frame to improve the performance
@@ -121,6 +121,6 @@ end
 function CombatTimer:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_DISABLED")
-    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_ENABLED")
+    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_DISABLED", MOD_KEY)
+    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_ENABLED", MOD_KEY)
 end

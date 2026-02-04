@@ -76,11 +76,12 @@ function addon:Initialize()
     InitializeConfig()
 
     -- global variables
-    _, addon.characterClass = UnitClass("player")
+	addon.Global = {}
+	_, addon.Global["characterClass"] = UnitClass("player")
 
-    addon.inCombat = false -- keep this for the situation the CombatLockDown not locked but combat begings
-    addon.eventsHandler:Register(function () addon.inCombat = true end, "PLAYER_REGEN_DISABLED")
-    addon.eventsHandler:Register(function () addon.inCombat = false end, "PLAYER_REGEN_ENABLED")
+    addon.Global["inCombat"] = false -- keep this for the situation the CombatLockDown not locked but combat begings
+    addon.eventsHandler:Register(function () addon.Global["inCombat"] = true end, "PLAYER_REGEN_DISABLED", "Global[\"inCombat\"]")
+    addon.eventsHandler:Register(function () addon.Global["inCombat"] = false end, "PLAYER_REGEN_ENABLED", "Global[\"inCombat\"]")
 
     -- features
     addon.combatIndicator = CombatIndicator:Initialize()

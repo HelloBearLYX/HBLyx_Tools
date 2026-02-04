@@ -56,10 +56,10 @@ function FocusInterrupt:Initialize()
     self.frame:Hide()
 
     self.frame.background = self.frame:CreateTexture(nil, "background")
-    self.frame.background:SetAllPoints(true)
+    self.frame.background:SetAllPoints()
 
     self.frame.border = CreateFrame("Frame", nil, self.frame, "BackdropTemplate")
-    self.frame.border:SetAllPoints(true)
+    self.frame.border:SetAllPoints()
     self.frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.frame.border:SetFrameLevel(self.frame:GetFrameLevel() + 10)
     self.frame.border:SetBackdropBorderColor(0, 0, 0, 1)
@@ -74,7 +74,7 @@ function FocusInterrupt:Initialize()
 
     -- frame which takes texts
     self.frame.textFrame = CreateFrame("Frame", nil, self.frame)
-    self.frame.textFrame:SetAllPoints(true)
+    self.frame.textFrame:SetAllPoints()
     self.frame.textFrame:SetFrameLevel(self.frame:GetFrameLevel() + 10)
     -- set spell text
     self.frame.spellText = self.frame.textFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -283,7 +283,7 @@ end
 ---Update FocusInterrupt's interruptID
 ---@param self FocusInterrupt self
 local function UpdateInterruptId(self)
-    self.interruptID = GetInterruptSpellID(self, addon.characterClass)
+    self.interruptID = GetInterruptSpellID(self, addon.Global["characterClass"])
 end
 
 -- MARK: Handler
@@ -477,16 +477,16 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
     local UpdateID = function () UpdateInterruptId(self) end
 
     -- active cast
-    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_START", "focus")
-    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_CHANNEL_START", "focus")
+    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_START", MOD_KEY, "focus")
+    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_CHANNEL_START", MOD_KEY, "focus")
     -- switch focus
-    addon.eventsHandler:Register(StartCastHandle, "PLAYER_FOCUS_CHANGED")
+    addon.eventsHandler:Register(StartCastHandle, "PLAYER_FOCUS_CHANGED", MOD_KEY)
     -- switch spec
-    addon.eventsHandler:Register(UpdateID, "PLAYER_SPECIALIZATION_CHANGED")
-    addon.eventsHandler:Register(UpdateID, "PLAYER_ENTERING_WORLD")
+    addon.eventsHandler:Register(UpdateID, "PLAYER_SPECIALIZATION_CHANGED", MOD_KEY)
+    addon.eventsHandler:Register(UpdateID, "PLAYER_ENTERING_WORLD", MOD_KEY)
     -- stop cast
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_STOP", "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_FAILED", "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", "focus")
+    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_STOP", MOD_KEY, "focus")
+    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_FAILED", MOD_KEY, "focus")
+    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus")
+    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus")
 end

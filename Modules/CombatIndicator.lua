@@ -48,7 +48,7 @@ end
 local function Handler(self)
     -- local startTime = GetTime()
     local text, color
-    if addon.inCombat then
+    if addon.Global["inCombat"] then
         text = addon.db[MOD_KEY]["InCombatText"]
         color = addon.db[MOD_KEY]["InCombatColor"]
     else
@@ -60,7 +60,7 @@ local function Handler(self)
     self.frame:Show()
 
     if not addon.db[MOD_KEY]["Mute"] then
-        if addon.inCombat then
+        if addon.Global["inCombat"] then
             PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMeida"]), "Master")
         else
             PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), "Master")
@@ -110,6 +110,6 @@ end
 function CombatIndicator:RegisterEvents()
     local HandleActive = function () Handler(self) end
 
-    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_DISABLED")
-    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_ENABLED")
+    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_DISABLED", MOD_KEY)
+    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_ENABLED", MOD_KEY)
 end

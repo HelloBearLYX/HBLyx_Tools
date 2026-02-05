@@ -17,8 +17,8 @@ addon.configurationList[MOD_KEY] = {
 	PrintEnabled = false,
 	Font = "",
 	FontSize = 20,
-	X = -390,
-	Y = - 180,
+	X = -180,
+	Y = -260,
 }
 
 -- options

@@ -26,6 +26,7 @@ Configs\CombatTimer.lua
 Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
 Configs\WarlockReminder.lua
+# Configs\CustomSpellAlert.lua
 
 # Modules
 Modules\FocusInterrupt.lua
@@ -34,10 +35,11 @@ Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
 Modules\WarlockReminder.lua
+# Modules\CustomSpellAlert.lua
 
 # main
 main.lua
 
 # developer only, comment out following when release
-#Configs\DeveloperTools.lua
-#Modules\DeveloperTools.lua
+# Configs\DeveloperTools.lua
+# Modules\DeveloperTools.lua

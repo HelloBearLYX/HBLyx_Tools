@@ -15,10 +15,10 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = true,
 	Font = "",
 	HideInactive = true,
-	TimeFontScale = 0.5,
+	TimeFontScale = 1,
 	ChargeFontSize = 14,
-	X = -390,
-	Y = -220,
+	X = -230,
+	Y = -260,
 	IconSize = 35,
 	IconZoom = 0.07,
 }

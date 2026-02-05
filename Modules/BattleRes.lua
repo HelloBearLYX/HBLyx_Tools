@@ -26,18 +26,18 @@ function BattleRes:Initialize()
     self.frame:SetFrameStrata("BACKGROUND")
     
     self.frame.cooldown = CreateFrame("Cooldown", nil, self.frame, "CooldownFrameTemplate")
-    self.frame.cooldown:SetAllPoints(true)
+    self.frame.cooldown:SetAllPoints()
     self.frame.cooldown:SetDrawEdge(false)
     self.frame.cooldown:SetCountdownAbbrevThreshold(600)
 
     -- icon
     self.frame.icon = self.frame:CreateTexture(nil, "ARTWORK")
-    self.frame.icon:SetAllPoints(true)
+    self.frame.icon:SetAllPoints()
     self.frame.icon:SetTexture(BATTLE_RES_TEXTURE)
 
     -- text
     self.frame.textFrame = CreateFrame("Frame", nil, self.frame)
-    self.frame.textFrame:SetAllPoints(true)
+    self.frame.textFrame:SetAllPoints()
 
     self.frame.charge = self.frame.textFrame:CreateFontString(nil, "OVERLAY")
     self.frame.charge:SetPoint("CENTER", self.frame, "BOTTOM", 0, 0)
@@ -45,7 +45,7 @@ function BattleRes:Initialize()
 
     -- borders
     self.frame.border = CreateFrame("Frame", nil, self.frame, "BackdropTemplate")
-    self.frame.border:SetAllPoints(true)
+    self.frame.border:SetAllPoints()
     self.frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.frame.border:SetBackdropBorderColor(0, 0, 0, 1)
 
@@ -116,7 +116,7 @@ function BattleRes:Test(Test)
     if Test then
         -- make a demo
         self.frame.charge:SetText("5")
-        self.frame.cooldown:SetCooldown(GetTime(), 30)
+        self.frame.cooldown:SetCooldown(GetTime(), 90)
         self.frame.icon:SetDesaturated(false)
         self.frame:Show()
 

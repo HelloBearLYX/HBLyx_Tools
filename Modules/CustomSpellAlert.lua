@@ -187,7 +187,7 @@ end
 -- MARK: DeleteSpell
 
 function CustomSpellAlert:DeleteSpell(id)
-    if not self.spells[id] then
+    if type(id) ~= "number" or not self.spells[id] then
         return false
     end
 

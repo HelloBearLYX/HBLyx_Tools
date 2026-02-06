@@ -61,11 +61,19 @@ local optionMap = addon.Utilities:MakeOptionGroup("CustomSpellAlertSettings", {
             addon.Utilities:MakeLSMSoundOption("ActiveSound", MOD_KEY, "_", {get=function(_)return activeSound end, set=function(_,val) activeSound=val end, width=0.75}),
             addon.Utilities:MakeLSMSoundOption("AfterCDSound", MOD_KEY, "_", {get=function(_)return afterCDSound end, set=function(_,val) afterCDSound=val end, width=0.75}),
             addon.Utilities:MakeButtonOption("Add", function ()
-                if type(spellID) ~= "number" or type(duration) ~= "number" or type(cooldown) ~="number" then
+                if addon.customSpellAlert:CreateIcon(spellID, duration, cooldown, activeSound, afterCDSound) then
+                    -- update db
+                    if addon.db[MOD_KEY]["Spells"] then
+                        addon.db[MOD_KEY]["Spells"] = {}
+                    end
+
+                    addon.db[MOD_KEY]["Spells"]["duration"] = duration
+                    addon.db[MOD_KEY]["Spells"]["cooldown"] = duration
+                    addon.db[MOD_KEY]["Spells"]["activeSound"] = activeSound
+                    addon.db[MOD_KEY]["Spells"]["afterCDSound"] = afterCDSound
+                else
                     addon.Utilities:SetPopupDialog(ADDON_NAME .. "_InvalidInput", "Invalid Input", true)
                 end
-
-                addon.customSpellAlert:CreateIcon(spellID, duration, cooldown)
             end, {width=0.75}),
         }, true)
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),

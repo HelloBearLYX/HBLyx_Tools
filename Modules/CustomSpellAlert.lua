@@ -43,7 +43,7 @@ function CustomSpellAlert:Initialize()
     self.head:SetFrameStrata("LOW")
 
     for id, info in pairs(addon.db[MOD_KEY]["Spells"]) do
-        self:CreateIcon(id, info["duration"], info["cooldown"])
+        self:AddSpell(id, info["duration"], info["cooldown"])
     end
 
     self:UpdateStyle()
@@ -60,12 +60,20 @@ local function StartDuration(frame)
     frame.cooldown:SetCooldown(GetTime(), frame.duration)
     frame.icon:SetDesaturated(false)
     frame.cooldown:SetReverse(true)
+
+    if frame.activeSound and frame.activeSound ~= "" then
+        PlaySoundFile(addon.LSM:Fetch("sound", frame.activeSound), "Master")
+    end
 end
 
 local function EndCooldown(frame)
     frame.cooldown:SetCooldown(0, 0)
     frame.cooldown:SetHideCountdownNumbers(true)
     frame.icon:SetDesaturated(false)
+
+    if frame.afterCDSound and frame.afterCDSound ~= "" then
+        PlaySoundFile(addon.LSM:Fetch("sound", frame.afterCDSound), "Master")
+    end
 end
 
 local function StartCooldown(frame)
@@ -106,32 +114,48 @@ function CustomSpellAlert:UpdateStyle()
     end
 end
 
--- MARK: CreateIcon
+-- MARK: UpdateSpellInfo
 
-function CustomSpellAlert:CreateIcon(id, duration, cd)
-    if type(id) ~= "number" or type(id) ~= "number" or type(cd) ~="number" then
-        addon.Utilities:print("Invalid Input")
+function CustomSpellAlert:UpdateSpellInfo(id, duration, cd, activeSound, afterCDSound)
+    if type(id) ~= "number" or type(duration) ~= "number" or type(cd) ~="number" or type(activeSound) ~= "string" or type(afterCDSound) ~= "string" 
+    or not self.spells[id] then -- or do not contains it
         return false
     end
 
-    if self.spells[id] then
-        addon.Utilities:print("The spell ID is already added, then update the spell information")
+    self.spells[id].duration = duration
+    self.spells[id].cd = cd
+    self.spells[id].timer = nil
+
+    if activeSound ~= "" then
+        self.spells[id].activeSound = activeSound
+    end
+    if afterCDSound ~= "" then
+        self.spells[id].afterCDSound = afterCDSound
+    end
+end
+
+-- MARK: AddSpell
+
+function CustomSpellAlert:AddSpell(id, duration, cd, activeSound, afterCDSound)
+    if type(id) ~= "number" or type(duration) ~= "number" or type(cd) ~="number" or type(activeSound) ~= "string" or type(afterCDSound) ~= "string"
+    or self.spells[id] then -- or already constains it
+        return false
     end
 
     local frame
-    if not self.tail then
+    if not self.tail then -- first element
         frame = CreateFrame("Frame", nil, self.head)
         frame:SetPoint(self.anchor, self.head, self.anchor, 0, 0)
+        frame.prev = self.head
+        frame.next = nil
         self.tail = frame
     else
         frame = CreateFrame("Frame", nil, self.tail)
         frame:SetPoint(self.anchor, self.tail, self.anchorParent, 0, 0)
+        frame.prev = self.tail
+        frame.next = nil
         self.tail = frame
     end
-
-    frame.duration = duration
-    frame.cd = cd
-    frame.timer = nil
 
     -- cooldown
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
@@ -153,13 +177,25 @@ function CustomSpellAlert:CreateIcon(id, duration, cd)
     frame:Show()
     self.spells[id] = frame
 
+    self:UpdateSpellInfo(id, duration, cd, activeSound, afterCDSound)
+
     return true
 end
 
--- MARK: DeleteIcon
+-- MARK: DeleteSpell
 
-function CustomSpellAlert:DeleteIcon(id)
-    
+function CustomSpellAlert:DeleteSpell(id)
+    if not self.spells[id] then
+        return false
+    end
+
+    self.spells[id].next:SetPoint(self.anchor, self.spells[id].prev, self.anchorParent, 0, 0)
+
+    self.spells[id].prev.next = self.spells[id].next
+    self.spells[id].next.prev = self.spells[id].prev
+    self.spells[id] = nil
+
+    return true
 end
 
 -- MARK: Test

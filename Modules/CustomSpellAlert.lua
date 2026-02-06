@@ -147,12 +147,14 @@ function CustomSpellAlert:AddSpell(id, duration, cd, activeSound, afterCDSound)
         frame = CreateFrame("Frame", nil, self.head)
         frame:SetPoint(self.anchor, self.head, self.anchor, 0, 0)
         frame.prev = self.head
+        self.head.next = frame
         frame.next = nil
         self.tail = frame
     else
         frame = CreateFrame("Frame", nil, self.tail)
         frame:SetPoint(self.anchor, self.tail, self.anchorParent, 0, 0)
         frame.prev = self.tail
+        self.tail.next = frame
         frame.next = nil
         self.tail = frame
     end

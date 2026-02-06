@@ -102,6 +102,7 @@ L["FocusCastBarSettings"] = "Focus Cast Bar Settings"
 L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
 L["FocusCastBarHiddenDesc"] = "Hide focus cast bar of this addon, but it still run on the back-end"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptNotReadyColor > InterruptibleColor"
+L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
 L["FocusInteruptSettings"] = "Focus Interupt Settings"
 L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"

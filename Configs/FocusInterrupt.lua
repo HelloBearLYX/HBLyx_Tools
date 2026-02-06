@@ -37,6 +37,7 @@ addon.configurationList[MOD_KEY] = {
     IconZoom = 0.07,
     ShowTarget = true,
     ShowInterrupter = true,
+    ShowTotalTime = true,
 }
 
 local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
@@ -59,6 +60,8 @@ local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
             addon.Utilities:MakeRangeOption(L["FontSize"], MOD_KEY, "FontSize", 4, 40, 1, update),
             addon.Utilities:MakeColorOption(L["InterruptibleColor"], MOD_KEY, "InterruptibleColor", update, {desc = L["FocusColorPriorityDesc"]}),
             addon.Utilities:MakeColorOption(L["InterruptedColor"], MOD_KEY, "InterruptedColor", update),
+            addon.Utilities:MakeOptionLineBreak(),
+            addon.Utilities:MakeToggleOption(L["ShowTotalTime"], MOD_KEY, "ShowTotalTime"),
             addon.Utilities:MakeRangeOption(L["IconZoom"], MOD_KEY, "IconZoom", 0.01, 0.5, 0.01, update),
         }, true, {hidden = function () return addon.db[MOD_KEY]["Hidden"] end}),
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),

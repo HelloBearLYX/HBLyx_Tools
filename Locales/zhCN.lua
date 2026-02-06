@@ -105,6 +105,7 @@ L["FocusCastBarSettings"] = "焦点施法条设置"
 L["FocusCastBarHidden"] = "隐藏焦点施法条"
 L["FocusCastBarHiddenDesc"] = "隐藏本插件提供的焦点施法条,但依然在后台运行"
 L["FocusColorPriorityDesc"] = "不可打断颜色 > 打断未就绪颜色 > 可打断颜色"
+L["ShowTotalTime"] = "显示总时间"
 -- Focus Interrupt Settings
 L["FocusInteruptSettings"] = "焦点打断设置"
 L["FocusInterruptCooldownFilter"] = "打断技能未就绪时隐藏"

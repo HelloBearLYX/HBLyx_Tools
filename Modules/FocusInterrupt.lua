@@ -228,7 +228,11 @@ local function Update(self, duration, isChannel, notInterruptible)
     
     -- update time text
     -- considering remove total duration text
-    self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
+    if addon.db[MOD_KEY]["ShowTotalTime"] then
+        self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
+    else
+        self.frame.timeText:SetText(string.format("%.1f", duration:GetRemainingDuration()))
+    end
 
     -- general interrupt cooldown check
     local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()

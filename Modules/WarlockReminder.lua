@@ -57,21 +57,21 @@ function WarlockReminder:Initialize()
 
     -- icons
     self.pet.icon = self.pet:CreateTexture(nil, "ARTWORK")
-    self.pet.icon:SetAllPoints(true)
+    self.pet.icon:SetAllPoints()
     self.pet.icon:SetTexture(TEXTURE_ID.GENERIC_SUMMON_DEMON)
 
     self.candy.icon = self.candy:CreateTexture(nil, "ARTWORK")
-    self.candy.icon:SetAllPoints(true)
+    self.candy.icon:SetAllPoints()
     self.candy.icon:SetTexture(TEXTURE_ID.HEALTHSTONE)
     self.candy.icon:SetDesaturated(true)
 
     -- texts
     -- frame which takes texts
     self.pet.textFrame = CreateFrame("Frame", nil, self.pet)
-    self.pet.textFrame:SetAllPoints(true)
+    self.pet.textFrame:SetAllPoints()
     
     self.candy.textFrame = CreateFrame("Frame", nil, self.candy)
-    self.candy.textFrame:SetAllPoints(true)
+    self.candy.textFrame:SetAllPoints()
 
     self.pet.text = self.pet.textFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     self.pet.text:SetText("")
@@ -81,12 +81,12 @@ function WarlockReminder:Initialize()
 
     -- borders
     self.pet.border = CreateFrame("Frame", nil, self.pet, "BackdropTemplate")
-    self.pet.border:SetAllPoints(true)
+    self.pet.border:SetAllPoints()
     self.pet.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.pet.border:SetBackdropBorderColor(0, 0, 0, 1)
 
     self.candy.border = CreateFrame("Frame", nil, self.candy, "BackdropTemplate")
-    self.candy.border:SetAllPoints(true)
+    self.candy.border:SetAllPoints()
     self.candy.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.candy.border:SetBackdropBorderColor(0, 0, 0, 1)
     

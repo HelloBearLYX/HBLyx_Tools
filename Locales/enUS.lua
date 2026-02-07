@@ -33,6 +33,8 @@ L["ResetModule"] = "Are you sure you want to |cffC41E3Areset settings for this m
 L["IconZoom"] = "Icon Zoom"
 L["ResetMod"] = "Reset Module"
 L["ComfirmResetMod"] = "Are you sure you want to reset all settings for this module?(also reload UI)"
+L["Anchor"] = "Anchor"
+L["Grow"] = "Grow Direction"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -116,7 +118,10 @@ L["InterruptedFadeTime"] = "Interrpted Fade Time"
 L["InterruptedFadeTimeDesc"] = "How long the cast bar hide after the cast is interrupted(seconds)"
 L["ShowInterrupter"] = "Show Interrupter"
 L["ShowTarget"] = "Show Target"
-
+L["InterruptIconsSettings"] = "Interrupt Icon Settings"
+L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
+L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
+ 
 -- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"

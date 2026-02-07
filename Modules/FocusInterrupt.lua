@@ -18,6 +18,8 @@ FocusInterrupt = {
     interruptibleColor = nil,
     notInterruptibleColor = nil,
     interruptedColor = nil,
+    kickIcon = nil,
+    subKickIcon = nil,
 }
 
 local ADDON_NAME, addon = ...
@@ -175,6 +177,50 @@ local function GetInterrupter(guid)
     return name, class
 end
 
+---Update interrupt icons, make sure icons are instantialized before use this
+---@param self FocusInterrupt self
+local function UpdateIcons(self)
+    local anchorFrom, anchorTo = addon.Utilities:GetAnchorFrom(addon.db[MOD_KEY]["KickIconAnchor"]), addon.db[MOD_KEY]["KickIconAnchor"]
+    local anchorChild, anchorParent = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["KickIconGrow"])
+
+    self.kickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+    self.kickIcon:SetPoint(anchorFrom, self.frame, anchorTo, 0, 0)
+    self.kickIcon.icon:SetTexCoord(
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"],
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"]
+    )
+    
+    self.subKickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+    self.subKickIcon:SetPoint(anchorChild, self.kickIcon, anchorParent, 0, 0)
+    self.subKickIcon.icon:SetTexCoord(
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"],
+        addon.db[MOD_KEY]["IconZoom"],
+        1 - addon.db[MOD_KEY]["IconZoom"]
+    )
+end
+
+--MARK: SetInterruptIcons
+
+---Set Interrupt Icons if needed
+---@param self FocusInterrupt self
+---@param notInterruptible boolean if the cast is not-interruptible
+---@param isInterruptReady boolean if the interrupt ready
+---@param subInterruptReady boolean? if the sub-interrupt ready
+local function SetInterruptIcons(self, notInterruptible, isInterruptReady, subInterruptReady)
+    if self.kickIcon then
+        self.kickIcon:SetAlphaFromBoolean(isInterruptReady)
+        self.kickIcon:SetAlphaFromBoolean(notInterruptible, 0, self.kickIcon:GetAlpha())
+
+        if self.subInterrupt then
+            self.subKickIcon:SetAlphaFromBoolean(subInterruptReady)
+            self.subKickIcon:SetAlphaFromBoolean(notInterruptible, 0, self.subKickIcon:GetAlpha())
+        end
+    end
+end
+
 -- MARK: Interrupt Handle
 
 ---Interrupt Hanlder
@@ -255,6 +301,9 @@ local function Update(self, duration, isChannel, notInterruptible)
     -- after 3.2 use color constrol instead of overlays
     SetBarColor(self, false, notInterruptible, isInterruptReady, subInterruptReady)
 
+    -- handle interrupt icons
+    SetInterruptIcons(self, notInterruptible, isInterruptReady, subInterruptReady)
+
     -- Hidden-Control
         -- As secret-value cannot compute, even compare between secret-values are not allowed
         -- use func(bool, trueVal, falseVal) to replace not/and/or
@@ -284,10 +333,49 @@ local function Update(self, duration, isChannel, notInterruptible)
     end
 end
 
+-- MARK: Update InterruptID
+
 ---Update FocusInterrupt's interruptID
 ---@param self FocusInterrupt self
 local function UpdateInterruptId(self)
     self.interruptID = GetInterruptSpellID(self, addon.Global["characterClass"])
+    
+    if addon.db[MOD_KEY]["ShowKickIcons"] and (not addon.db[MOD_KEY]["ShowDemoWarlockOnly"] or (addon.db[MOD_KEY]["ShowDemoWarlockOnly"] and self.subInterrupt ~= nil)) then
+        self.kickIcon = CreateFrame("Frame", nil, self.frame)
+        self.kickIcon.border = CreateFrame("Frame", nil, self.kickIcon, "BackdropTemplate")
+        self.kickIcon.border:SetAllPoints()
+        self.kickIcon.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+        self.kickIcon.border:SetBackdropBorderColor(0, 0, 0, 1)
+        self.kickIcon.icon = self.kickIcon:CreateTexture(nil, "ARTWORK")
+        self.kickIcon.icon:SetAllPoints()
+
+        self.subKickIcon = CreateFrame("Frame", nil, self.frame)
+        self.subKickIcon.border = CreateFrame("Frame", nil, self.subKickIcon, "BackdropTemplate")
+        self.subKickIcon.border:SetAllPoints()
+        self.subKickIcon.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+        self.subKickIcon.border:SetBackdropBorderColor(0, 0, 0, 1)
+        self.subKickIcon.icon = self.subKickIcon:CreateTexture(nil, "ARTWORK")
+        self.subKickIcon.icon:SetAllPoints()
+        self.subKickIcon:Hide()
+
+        self.kickIcon.icon:SetTexture(addon.Utilities:SpellToIcon(self.interruptID) or UNKNOWN_SPELL_TEXTURE)
+        
+        if self.subInterrupt then
+            self.subKickIcon.icon:SetTexture(addon.Utilities:SpellToIcon(self.subInterrupt) or UNKNOWN_SPELL_TEXTURE)
+            self.subKickIcon:Show()
+        else
+            self.subKickIcon:Hide()
+        end
+
+        UpdateIcons(self)
+    else
+        if self.kickIcon then
+            self.kickIcon:Hide()
+            self.subKickIcon:Hide()
+            self.kickIcon = nil
+            self.subKickIcon = nil
+        end
+    end
 end
 
 -- MARK: Handler
@@ -410,6 +498,10 @@ function FocusInterrupt:UpdateStyle()
         "OUTLINE"
     )
     self.frame.timeText:SetSize(0.3 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"]) -- how much propotion of space is allowd
+
+    if self.kickIcon then
+        UpdateIcons(self)
+    end
 end
 
 -- MARK: Test
@@ -427,7 +519,12 @@ function FocusInterrupt:Test(on)
         -- generate a demo cast bar
 		self.active = true
         local name, target = "MaximumTestSpell", "Target"
-        self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
+        if addon.db[MOD_KEY]["ShowTarget"] then
+            self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
+        else
+            self.frame.spellText:SetText(string.sub(name, 1, 16))
+        end
+        
         self.frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
         self.frame.statusBar:SetMinMaxValues(0, 30)
         local testDuration = C_DurationUtil.CreateDuration() -- use a Blizzard LuaDurationObject to test

@@ -38,6 +38,11 @@ addon.configurationList[MOD_KEY] = {
     ShowTarget = true,
     ShowInterrupter = true,
     ShowTotalTime = true,
+    ShowKickIcons = true,
+    ShowDemoWarlockOnly = true,
+    KickIconSize = 30,
+    KickIconAnchor = "BOTTOMLEFT",
+    KickIconGrow = "RIGHT",
 }
 
 local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
@@ -75,12 +80,32 @@ local optionMap = addon.Utilities:MakeOptionGroup(L["FocusInterruptSettings"], {
         addon.Utilities:MakeToggleOption(L["ShowInterrupter"], MOD_KEY, "ShowInterrupter"),
         addon.Utilities:MakeRangeOption(L["InterruptedFadeTime"], MOD_KEY, "InterruptedFadeTime", 0.0, 2, 0.25, nil, {desc = L["InterruptedFadeTimeDesc"]}),
         addon.Utilities:MakeOptionLineBreak(),
-        addon.Utilities:MakeToggleOption(L["ShowTarget"], MOD_KEY, "ShowTarget")
+        addon.Utilities:MakeToggleOption(L["ShowTarget"], MOD_KEY, "ShowTarget"),
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
     addon.Utilities:MakeOptionGroup(L["SoundSettings"], {
         {type = "description", name = L["FocusMuteDesc"]},
         addon.Utilities:MakeToggleOption("|cffC41E3A" .. L["Mute"] .. "|r", MOD_KEY, "Mute", nil, {desc = L["FocusMuteDesc"]}),
         addon.Utilities:MakeLSMSoundOption(L["Sound"], MOD_KEY, "SoundMedia", {desc = L["FocusInterruptSoundDesc"], hidden = function () return addon.db[MOD_KEY]["Mute"] end}),
+    }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
+    addon.Utilities:MakeOptionGroup(L["InterruptIconsSettings"], {
+        {type = "description", name = L["InterruptIconDesc"]},
+        addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "ShowKickIcons", RLNeeded),
+        addon.Utilities:MakeOptionGroup("", {
+            addon.Utilities:MakeToggleOption(L["ShowDemoWarlockOnly"], MOD_KEY, "ShowDemoWarlockOnly"),
+            addon.Utilities:MakeRangeOption(L["IconSize"], MOD_KEY, "KickIconSize", 10, 200, 1, update),
+            {type="select", name=L["Anchor"], values=addon.Utilities.Anchors, get=function(_)
+                return addon.db[MOD_KEY]["KickIconAnchor"]
+            end, set=function(_, val)
+                addon.db[MOD_KEY]["KickIconAnchor"] = val
+                RLNeeded()
+            end},
+            {type="select", name=L["Grow"], values=addon.Utilities.Grows, desc="Only work for multi-interrupts specs(demo warlock)\n只对多打断专精(恶魔术)生效", get=function(_)
+                return addon.db[MOD_KEY]["KickIconGrow"]
+            end, set=function(_, val)
+                addon.db[MOD_KEY]["KickIconGrow"] = val
+                RLNeeded()
+            end},
+        }, true, {hidden = function() return not addon.db[MOD_KEY]["ShowKickIcons"] end})
     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
 }, false, {order = addon:OptionOrderHandler(), desc = L["FocusInterruptSettingsDesc"]})
 addon:AppendOptionsList("FocusInterruptCastBar", optionMap)

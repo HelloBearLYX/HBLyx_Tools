@@ -4,6 +4,28 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@class Utilities
 addon.Utilities = {}
 
+-- MARK: Enums
+
+---@enum anchor anchor_To = anchor_From
+addon.Utilities.Anchors = {
+	LEFT = "LEFT",
+	RIGHT = "RIGHT",
+	TOP = "TOP",
+	BOTTOM = "BOTTOM",
+	TOPLEFT = "TOPLEFT",
+	BOTTOMLEFT = "BOTTOMLEFT",
+	TOPRIGHT = "TOPRIGHT",
+	BOTTOMRIGHT = "BOTTOMRIGHT",
+}
+
+---@enum
+addon.Utilities.Grows = {
+	LEFT = "LEFT",
+	RIGHT = "RIGHT",
+	UP = "UP",
+	DOWN = "DOWN",
+}
+
 -- MARK: print
 
 ---Use addon's identifier to print
@@ -64,6 +86,7 @@ function addon.Utilities:ScreenPositionToUIPosition(x, y)
 end
 
 -- MARK: Spell2Icon
+
 ---Get Icon ID Through Spell ID
 ---@param spellID integer spellID
 ---@return integer? iconID return iconID or nil for error
@@ -76,6 +99,49 @@ function addon.Utilities:SpellToIcon(spellID)
 	end
 
 	return nil
+end
+
+-- MARK: Get AnchorTo
+
+---Get anchor_from by anchor_to
+---@param anchorTo string anchor_to
+---@return string anchor_from anchor_from
+function addon.Utilities:GetAnchorFrom(anchorTo)
+	if anchorTo == "LEFT" then
+		return "RIGHT"
+	elseif anchorTo == "RIGHT" then
+		return "LEFT"
+	elseif anchorTo == "TOP" then
+		return "BOTTOM"
+	elseif anchorTo == "BOTTOM" then
+		return "TOP"
+	elseif anchorTo == "TOPLEFT" then
+		return "BOTTOMLEFT"
+	elseif anchorTo == "BOTTOMLEFT" then
+		return "TOPLEFT"
+	elseif anchorTo == "TOPRIGHT" then
+		return "BOTTOMRIGHT"
+	elseif anchorTo == "BOTTOMRIGHT" then
+		return "TOPRIGHT"
+	else
+		error("Invalid Input")
+	end
+end
+
+-- MARK: Get anchors by grow direction
+
+function addon.Utilities:GetGrowAnchors(direction)
+	if direction == "LEFT" then
+		return "RIGHT", "LEFT"
+	elseif direction == "RIGHT" then
+		return "LEFT", "RIGHT"
+	elseif direction == "UP" then
+		return "BOTTOM", "TOP"
+	elseif direction == "DOWN" then
+		return "TOP", "BOTTOM"
+	else
+		error("Invalid Input")
+	end
 end
 
 -- MARK: Create Options

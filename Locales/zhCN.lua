@@ -36,6 +36,8 @@ L["ResetModule"] = "你确认你要|cffC41E3A重置此模块|r吗?"
 L["IconZoom"] = "图标缩放"
 L["ResetMod"] = "重置本模块"
 L["ComfirmResetMod"] = "您确定要重置此模块的所有设置吗?(同时重载)"
+L["Anchor"] = "锚点"
+L["Grow"] = "成长方向"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"
@@ -119,6 +121,9 @@ L["InterruptedFadeTime"] = "被打断淡出时间"
 L["InterruptedFadeTimeDesc"] = "被打断后施法条多久会隐藏(秒)"
 L["ShowInterrupter"] = "显示打断者"
 L["ShowTarget"] = "显示目标"
+L["InterruptIconsSettings"] = "打断图标设置"
+L["InterruptIconDesc"] = "在可以打断的时候(可打断+打断就绪)的情况下,显示打断图标\n\n主要为恶魔术提供,在可打断时显示哪个打断可用"
+L["ShowDemoWarlockOnly"] = "只为恶魔术显示"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "战复计时器"

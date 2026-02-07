@@ -97,17 +97,6 @@ end
 
 -- private methods
 
----Check if the cast is interruptible through Blizzard's UI
----@return boolean interruptible if the current cast is interruptible
-local function IsInteruptible()
-    local focusBar = _G.FocusFrameSpellBar
-    if focusBar then
-        return focusBar:IsInterruptable()
-    end
-
-    return false
-end
-
 -- MARK: Get Interrupt ID
 
 ---Get interruptID depending on class and spec of the player
@@ -440,7 +429,7 @@ local function Handler(self)
     self.frame:SetAlphaFromBoolean(addon.db[MOD_KEY]["Hidden"], 0, 255)
 
     -- attempted to use "HookScript("OnShow", func)" for sound alert, nontheless frames are seen as shown while zero alpha and SetShown() cannot take secret-values
-    if not addon.db[MOD_KEY]["Mute"] and IsInteruptible() then
+    if not addon.db[MOD_KEY]["Mute"] then
         PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), "Master")
     end
 

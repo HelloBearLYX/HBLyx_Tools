@@ -41,9 +41,14 @@ function CustomSpellAlert:Initialize()
     self.spells = {}
     self.head = CreateFrame("Frame", ADDON_NAME .. "_" .. MOD_KEY, UIParent)
     self.head:SetFrameStrata("LOW")
+    self.head:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+
+    self.tail = {}
 
     for id, info in pairs(addon.db[MOD_KEY]["Spells"]) do
-        self:AddSpell(id, info["duration"], info["cooldown"])
+        local activeS, afterCDS = info["activeSound"], info["afterCDSound"]
+
+        self:AddSpell(id, info["duration"], info["cooldown"], activeS, afterCDS)
     end
 
     self:UpdateStyle()
@@ -52,6 +57,67 @@ function CustomSpellAlert:Initialize()
 end
 
 -- private methods
+
+-- MARK: Create Spell
+
+local function CreateSpell(self, id)
+    local frame
+    if not self.tail.prev then -- first element(tail is created tail.prev = nil)
+        frame = CreateFrame("Frame", nil, self.head)
+        frame:SetPoint(self.anchor, self.head, self.anchor, 0, 0)
+        frame.prev = self.head
+        self.head.next = frame
+        frame.next = self.tail
+        self.tail.prev = frame
+    else
+        frame = CreateFrame("Frame", nil, self.head)
+        local prev = self.tail.prev -- tail is a dummy node, the real previous element is the one before
+        frame:SetPoint(self.anchor, prev, self.anchorParent, 0, 0)
+        frame.prev = prev
+        prev.next = frame
+        frame.next = self.tail
+        self.tail.prev = frame
+    end
+
+    -- cooldown
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
+    frame.cooldown:SetAllPoints()
+    frame.cooldown:SetDrawEdge(false)
+    frame.cooldown:SetCountdownAbbrevThreshold(300)
+
+    --icon
+    frame.icon = frame:CreateTexture(nil, "ARTWORK")
+    frame.icon:SetAllPoints()
+    frame.icon:SetTexture(C_Spell.GetSpellInfo(id).iconID or UNKNOWN_SPELL_TEXTURE)
+
+    -- borders
+    frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    frame.border:SetAllPoints()
+    frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+    frame.border:SetBackdropBorderColor(0, 0, 0, 1)
+
+    frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+    frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
+    frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
+
+    frame:Show()
+    self.spells[id] = frame
+end
+
+-- MARK: UpdateSpellInfo
+
+local function UpdateSpellInfo(self, id, duration, cd, activeSound, afterCDSound)
+    self.spells[id].duration = duration
+    self.spells[id].cd = cd
+    self.spells[id].timer = nil
+
+    if activeSound ~= "" then
+        self.spells[id].activeSound = activeSound
+    end
+    if afterCDSound ~= "" then
+        self.spells[id].afterCDSound = afterCDSound
+    end
+end
 
 -- MARK: Handler
 
@@ -104,7 +170,6 @@ end
 -- MARK: UpdateStyle
 
 function CustomSpellAlert:UpdateStyle()
-    self.head:SetSize(addon.db[MOD_KEY]["IconSize"] * addon.db[MOD_KEY]["DisplayNum"], addon.db[MOD_KEY]["IconSize"])
     self.head:SetPoint(self.anchor, UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
 
     for _, frame in pairs(self.spells) do
@@ -114,72 +179,18 @@ function CustomSpellAlert:UpdateStyle()
     end
 end
 
--- MARK: UpdateSpellInfo
-
-function CustomSpellAlert:UpdateSpellInfo(id, duration, cd, activeSound, afterCDSound)
-    if type(id) ~= "number" or type(duration) ~= "number" or type(cd) ~="number" or type(activeSound) ~= "string" or type(afterCDSound) ~= "string" 
-    or not self.spells[id] then -- or do not contains it
-        return false
-    end
-
-    self.spells[id].duration = duration
-    self.spells[id].cd = cd
-    self.spells[id].timer = nil
-
-    if activeSound ~= "" then
-        self.spells[id].activeSound = activeSound
-    end
-    if afterCDSound ~= "" then
-        self.spells[id].afterCDSound = afterCDSound
-    end
-end
-
 -- MARK: AddSpell
 
 function CustomSpellAlert:AddSpell(id, duration, cd, activeSound, afterCDSound)
-    if type(id) ~= "number" or type(duration) ~= "number" or type(cd) ~="number" or type(activeSound) ~= "string" or type(afterCDSound) ~= "string"
-    or self.spells[id] then -- or already constains it
+    if type(id) ~= "number" or type(duration) ~= "number" or type(cd) ~="number" or type(activeSound) ~= "string" or type(afterCDSound) ~= "string" then
         return false
     end
 
-    local frame
-    if not self.tail then -- first element
-        frame = CreateFrame("Frame", nil, self.head)
-        frame:SetPoint(self.anchor, self.head, self.anchor, 0, 0)
-        frame.prev = self.head
-        self.head.next = frame
-        frame.next = nil
-        self.tail = frame
-    else
-        frame = CreateFrame("Frame", nil, self.tail)
-        frame:SetPoint(self.anchor, self.tail, self.anchorParent, 0, 0)
-        frame.prev = self.tail
-        self.tail.next = frame
-        frame.next = nil
-        self.tail = frame
+    if not self.spells[id] then
+        CreateSpell(self, id)
     end
 
-    -- cooldown
-    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
-    frame.cooldown:SetAllPoints()
-    frame.cooldown:SetDrawEdge(false)
-    frame.cooldown:SetCountdownAbbrevThreshold(300)
-
-    --icon
-    frame.icon = frame:CreateTexture(nil, "ARTWORK")
-    frame.icon:SetAllPoints()
-    frame.icon:SetTexture(C_Spell.GetSpellInfo(id).iconID or UNKNOWN_SPELL_TEXTURE)
-
-    -- borders
-    frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    frame.border:SetAllPoints()
-    frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
-    frame.border:SetBackdropBorderColor(0, 0, 0, 1)
-
-    frame:Show()
-    self.spells[id] = frame
-
-    self:UpdateSpellInfo(id, duration, cd, activeSound, afterCDSound)
+    UpdateSpellInfo(self, id, duration, cd, activeSound, afterCDSound)
 
     return true
 end
@@ -191,13 +202,40 @@ function CustomSpellAlert:DeleteSpell(id)
         return false
     end
 
-    self.spells[id].next:SetPoint(self.anchor, self.spells[id].prev, self.anchorParent, 0, 0)
+    if self.spells[id].next.next then -- if not the last spell(last's next is the tail dummy which has no next)
+        self.spells[id].next:SetPoint(self.anchor, self.spells[id].prev, self.anchorParent, 0, 0)
+    end
 
     self.spells[id].prev.next = self.spells[id].next
     self.spells[id].next.prev = self.spells[id].prev
     self.spells[id] = nil
 
     return true
+end
+
+-- MARK: GetSpellsList
+
+function CustomSpellAlert:GetSpellsList()
+    local output = {}
+    for id, _ in pairs(self.spells) do
+        output[id] = C_Spell.GetSpellInfo(id).name .. "(" .. tostring(id) .. ")"
+    end
+
+    return output
+end
+
+-- MARK: GetSpellInfo
+
+function CustomSpellAlert:GetSpellInfo(id)
+    local activeSound, afterCDSound = "", ""
+    if self.spells[id].activeSound then
+        activeSound = self.spells[id].activeSound
+    end
+    if self.spells[id].afterCDSound then
+        afterCDSound = self.spells[id].afterCDSound
+    end
+
+    return self.spells[id].duration, self.spells[id].cd, activeSound, afterCDSound
 end
 
 -- MARK: Test

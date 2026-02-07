@@ -114,10 +114,10 @@ function addon:Initialize()
 		addon.warlockReminder:RegisterEvents()
 	end
 
-	-- addon.customSpellAlert = CustomSpellAlert:Initialize()
-	-- if addon.customSpellAlert then
-	-- 	CustomSpellAlert:RegisterEvents()
-	-- end
+	addon.customSpellAlert = CustomSpellAlert:Initialize()
+	if addon.customSpellAlert then
+		CustomSpellAlert:RegisterEvents()
+	end
 end
 
 -- MARK: TestMode

@@ -17,16 +17,7 @@ Locales\zhCN.lua
 
 utilities.lua
 eventHandler.lua
-
-# handle configuration and options
 configure.lua
-Configs\FocusInterrupt.lua
-Configs\CombatIndicator.lua
-Configs\CombatTimer.lua
-Configs\BattleRes.lua
-Configs\ChallengeEnhance.lua
-Configs\WarlockReminder.lua
-# Configs\CustomSpellAlert.lua
 
 # Modules
 Modules\FocusInterrupt.lua
@@ -35,7 +26,16 @@ Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
 Modules\WarlockReminder.lua
-# Modules\CustomSpellAlert.lua
+Modules\CustomSpellAlert.lua
+
+# handle configuration and options
+Configs\FocusInterrupt.lua
+Configs\CombatIndicator.lua
+Configs\CombatTimer.lua
+Configs\BattleRes.lua
+Configs\ChallengeEnhance.lua
+Configs\WarlockReminder.lua
+Configs\CustomSpellAlert.lua
 
 # main
 main.lua

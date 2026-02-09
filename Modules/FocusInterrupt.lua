@@ -8,6 +8,8 @@
 ---@field interruptibleColor ColorMixin? color for interruptible cast
 ---@field notInterruptibleColor ColorMixin? color for NOT interruptible cast
 ---@field interruptedColor ColorMixin? color for interrupted fade time
+---@field kick Frame? Interrupt icon
+---@field subKickIcon Frame? sub-interrupt icon
 FocusInterrupt = {
     frame = nil,
     active = false,

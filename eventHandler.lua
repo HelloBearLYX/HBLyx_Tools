@@ -31,7 +31,11 @@ end
 ---@param unit? string if this is a unit event, the unit name to register 
 local function RegisterE(self, event, unit)
     if unit then
-        self.eventFrame:RegisterUnitEvent(event, unit)
+        if type(unit) == "table" then
+            self.eventFrame:RegisterUnitEvent(event, unpack(unit))
+        else
+            self.eventFrame:RegisterUnitEvent(event, unit)
+        end
     else
         self.eventFrame:RegisterEvent(event)
     end

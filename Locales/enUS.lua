@@ -2,7 +2,7 @@ local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
 L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: Welcome! Your profile has been reset, and you can set up in: ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
-L["WelecomeSetting"] = "you can change settings in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
+L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or open configuration panel in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
 
 -- MARK: Config

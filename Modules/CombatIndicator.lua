@@ -61,7 +61,7 @@ local function Handler(self)
 
     if not addon.db[MOD_KEY]["Mute"] then
         if addon.Global["inCombat"] then
-            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMeida"]), "Master")
+            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMedia"]), "Master")
         else
             PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), "Master")
         end

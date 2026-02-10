@@ -17,6 +17,10 @@ Locales\zhCN.lua
 
 utilities.lua
 eventHandler.lua
+
+# developer use only
+Modules\DeveloperTools.lua
+
 configure.lua
 
 # Modules
@@ -28,6 +32,7 @@ Modules\ChallengeEnhance.lua
 Modules\WarlockReminder.lua
 
 # handle configuration and options
+GUI.lua
 Configs\FocusInterrupt.lua
 Configs\CombatIndicator.lua
 Configs\CombatTimer.lua
@@ -37,7 +42,3 @@ Configs\WarlockReminder.lua
 
 # main
 main.lua
-
-# developer only, comment out following when release
-Configs\DeveloperTools.lua
-Modules\DeveloperTools.lua

@@ -28,7 +28,7 @@ end
 ---@param configurationList table a list contains options and configuration default values such as: {mod1 = {option1 = defaultVal, option2 = defaultVal, ...}, mod2 = ...}
 local function ProfileHandler(configurationList)
 	-- also reset configs before v3.0 version(no DB.Version before v3.0)
-	if type(HBLyx_Tools_DB) ~= "table" or not HBLyx_Tools_DB.Version then
+	if type(HBLyx_Tools_DB) ~= "table" or not HBLyx_Tools_DB.Version then -- 
 		HBLyx_Tools_DB = {}
 		addon.Utilities:print("Profile database initialized.")
 
@@ -36,7 +36,7 @@ local function ProfileHandler(configurationList)
   	end
 
 	addon.db = HBLyx_Tools_DB
-	addon.db.Version = addon.version -- update version number
+	-- addon.db.Version = addon.version -- update version number
 
 	-- after 3.0 configurationList: {mod1 = {option1 = defaultVal, option2 = defaultVal, ...}, mod2 = ...}
 	for mod, option in pairs(configurationList or {}) do
@@ -69,11 +69,20 @@ local function InitializeConfig()
 	addon.Utilities:print(L["WelecomeSetting"])
 end
 
+---Register in-game Slash Command
+local function SetUpSlashCommand()
+	SLASH_HBLYX1 = "/hblyx"
+	SlashCmdList["HBLYX"] = function()
+		addon.GUI:OpenGUI()
+	end
+end
+
 -- MARK: Initialize
 
 ---Initialization before main
 function addon:Initialize()
     InitializeConfig()
+	SetUpSlashCommand()
 
     -- global variables
 	addon.Global = {}

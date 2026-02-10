@@ -3,8 +3,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN")
 if not L then return end
 
 L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被重置, 你可以在: ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r里更改设置"
-L["WelecomeSetting"] = "you can change settings in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
-L["WelecomeSetting"] = "你可以在:ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r里更改设置"
+L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r 中打开配置面板来更改设置"
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
 
 -- MARK: Config

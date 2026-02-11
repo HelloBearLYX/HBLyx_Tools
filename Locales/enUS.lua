@@ -12,9 +12,12 @@ L["NotificationContent"] = "The tabs shows modules contained in this addon, you 
 L["Issues"] = "Issues"
 L["AnyIssues"] = "If you encounter any issues, please report them to the addon author through the contact information"
 L["IssuesContent"] = "The profile sharing feature is in development\n" ..
-"Q: Will there be a target version for the Focus Interrupt module?\nA: No plan for it, the target cast bar is too redundant with other addons"
+"\nQ: Will there be a target version for the Focus Interrupt module?\nA: No plan for it, the target cast bar is too redundant with other addons"
 -- MARK: Contact
 L["Contact"] = "Contact"
+L["GitHub"] = "Submit issue on GitHub"
+L["CurseForge"] = "Comments on CurseForge"
+
 -- MARK: Config
 L["Test"] = "Test/Unlock(Drag to Move)"
 L["Mute"] = "Mute"

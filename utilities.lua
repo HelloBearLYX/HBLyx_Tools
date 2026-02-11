@@ -507,15 +507,17 @@ function addon.Utilities:SetPopupDialog(dialogName, text, show, extraFields)
 		popupDialogs = {}
 	end
 
-	if type(popupDialogs[dialogName] ~= "table") then
-		popupDialogs[dialogName] = {
-			text = text,
-			button1 = CLOSE,
-			timeout = 0,
-			whileDead = true,
-			hideOnEscape = true,
-		}
+	if type(popupDialogs[dialogName]) ~= "table" then
+		popupDialogs[dialogName] = {}
 	end
+
+	popupDialogs[dialogName] = {
+		text = text,
+		button1 = CLOSE,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+	}
 
 	if extraFields then
 		for k, v in pairs(extraFields) do
@@ -538,6 +540,40 @@ function addon.Utilities:ResetModule(mod)
 			addon.db[mod][key] = value
 		end
 	end
+end
+
+-- MARK: OpenURL
+
+---Create pop a dialog with url which can be copied
+---@param title string title
+---@param url string url to show in the dialog
+function addon.Utilities:OpenURL(title, url)
+    local popupDialogs = _G.StaticPopupDialogs
+
+    if type(popupDialogs) ~= "table" then
+		popupDialogs = {}
+	end
+
+    if type(popupDialogs[ADDON_NAME .. "_OpenURL"]) ~= "table" then
+        popupDialogs[ADDON_NAME .. "_OpenURL"] = {}
+    end
+
+    popupDialogs[ADDON_NAME .. "_OpenURL"] = {
+        text = title or "",
+        button1 = CLOSE,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        hasEditBox = true,
+        OnShow = function(self)
+            self.EditBox:SetText(url)
+            self.EditBox:SetFocus()
+            self.EditBox:HighlightText()
+        end,
+        editBoxWidth = 300,
+    }
+
+    StaticPopup_Show(ADDON_NAME .. "_OpenURL")
 end
 
 -- ---Make a reset mod option in the optionList 

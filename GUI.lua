@@ -12,7 +12,7 @@ addon.GUI = {
 
 -- MARK: TABS
 local TABS = {
-    {text = "General", value = "General"},
+    {text = L["General"], value = "General"},
     {text = L["FocusInterruptSettings"], value = "FocusInterrupt"},
     {text = L["CombatSettings"], value = "CombatIndicator"},
     {text = L["TimerSettings"], value = "CombatTimer"},
@@ -35,7 +35,7 @@ function addon.GUI:Initialize()
     self.frame:SetWidth(900)
     self.frame:SetHeight(600)
     self.frame:EnableResize(false)
-    self.frame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion())
+    self.frame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion() .. " " .. L["AnyIssues"])
     self.frame:SetCallback("OnClose", function(widgets)
         if widgets then
             AceGUI:Release(widgets)
@@ -73,7 +73,30 @@ function addon.GUI:Initialize()
             local panel = addon.GUI:CreateScrollFrame(container)
             panel:SetLayout("Flow")
             panel:SetFullWidth(true)
-            addon.GUI:CreateInformationTag(panel, "Welecome", "LEFT")
+            addon.GUI:CreateInformationTag(panel, L["WelecomeInfo"], "CENTER")
+            local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])
+            addon.GUI:CreateInformationTag(notificationsGroup, L["NotificationContent"], "LEFT")
+            local issueGroup = addon.GUI:CreateInlineGroup(panel, L["Issues"])
+            addon.GUI:CreateInformationTag(issueGroup, L["IssuesContent"], "LEFT")
+            local contactGroup = addon.GUI:CreateInlineGroup(panel, L["Contact"])
+            local gitHubInteractive = AceGUI:Create("InteractiveLabel")
+            gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGithub|r")
+            gitHubInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+            gitHubInteractive:SetJustifyV("MIDDLE")
+            gitHubInteractive:SetRelativeWidth(0.33)
+            gitHubInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL("Submit issue on GitHub", "https://github.com/HelloBearLYX/HBLyx_Tools/issues") end)
+            gitHubInteractive:SetCallback("OnEnter", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFFFFFFFFGithub|r") end)
+            gitHubInteractive:SetCallback("OnLeave", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGithub|r") end)
+            contactGroup:AddChild(gitHubInteractive)
+            local curseForgeInteractive = AceGUI:Create("InteractiveLabel")
+            curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r")
+            curseForgeInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+            curseForgeInteractive:SetJustifyV("MIDDLE")
+            curseForgeInteractive:SetRelativeWidth(0.33)
+            curseForgeInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL("Comments on CurseForge", "https://www.curseforge.com/wow/addons/hblyx-tools") end)
+            curseForgeInteractive:SetCallback("OnEnter", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFFFFFFFFCurseForge|r") end)
+            curseForgeInteractive:SetCallback("OnLeave", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r") end)
+            contactGroup:AddChild(curseForgeInteractive)
 
             panel:DoLayout()
         elseif tab == "FocusInterrupt" then
@@ -96,6 +119,8 @@ function addon.GUI:Initialize()
             panel:DoLayout()
         end
     end)
+
+    tabs:SelectTab("General")
 end
 
 -- MARK: Inline Group

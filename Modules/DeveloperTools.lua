@@ -43,22 +43,24 @@ local function CreateDisplayFrame(self, info)
 		popupDialogs = {}
 	end
 
-    if type(popupDialogs[ADDON_NAME .. "_Info"] ~= "table") then
-		popupDialogs[ADDON_NAME .. "_Info"] = {
-			text = "Copy the addon info below if needed",
-			button1 = OKAY,
-			timeout = 0,
-			whileDead = true,
-			hideOnEscape = true,
-            hasEditBox = true,
-            OnShow = function(self)
-                self.EditBox:SetText(info)
-                self.EditBox:SetFocus()
-                self.EditBox:HighlightText()
-            end,
-            editBoxWidth = 300,
-		}
-	end
+    if type(popupDialogs[ADDON_NAME .. "_Info"]) ~= "table" then
+        popupDialogs[ADDON_NAME .. "_Info"] = {}
+    end
+    
+    popupDialogs[ADDON_NAME .. "_Info"] = {
+        text = "Copy the addon info below if needed",
+        button1 = OKAY,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        hasEditBox = true,
+        OnShow = function(self)
+            self.EditBox:SetText(info)
+            self.EditBox:SetFocus()
+            self.EditBox:HighlightText()
+        end,
+        editBoxWidth = 300,
+    }
 
     StaticPopup_Show(ADDON_NAME .. "_Info")
 end

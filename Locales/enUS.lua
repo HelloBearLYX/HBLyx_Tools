@@ -2,10 +2,19 @@ local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
 L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: Welcome! Your profile has been reset, and you can set up in: ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
+L["WelecomeInfo"] = "Welecome! Thank you for using |cff8788ee" .. ADDON_NAME .. "|r!"
 L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or open configuration panel in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r Configurations Panel"
-
+L["Notifications"] = "Notifications"
+L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately. The profile sharing feature is in development, but you can use screenshot to share your settings for now."
+--MARK: Issues
+L["Issues"] = "Issues"
+L["AnyIssues"] = "If you encounter any issues, please report them to the addon author through the contact information"
+L["IssuesContent"] = "The profile sharing feature is in development\n" ..
+"Q: Will there be a target version for the Focus Interrupt module?\nA: No plan for it, the target cast bar is too redundant with other addons"
+-- MARK: Contact
+L["Contact"] = "Contact"
 -- MARK: Config
 L["Test"] = "Test/Unlock(Drag to Move)"
 L["Mute"] = "Mute"
@@ -33,6 +42,7 @@ L["ResetMod"] = "Reset Module"
 L["ComfirmResetMod"] = "Are you sure you want to reset all settings for this module?(also reload UI)"
 L["Anchor"] = "Anchor"
 L["Grow"] = "Grow Direction"
+L["General"] = "General"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -110,7 +120,7 @@ L["FocusInteruptSettings"] = "Focus Interupt Settings"
 L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"
 L["FocusInterruptNotReadyColor"] = "Interrupt Not Ready Color"
 L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
-L["FocusMuteDesc"] = "Due to Blizzard's restrictions, the sound alert will still play no matter how cast is\n\nRecommend keep sound alert off(this module contains multiple version of visual display to identify focus casting and interrupt information)"
+L["FocusMuteDesc"] = "Due to Blizzard's restrictions(02/06/2026), the sound alert will still play no matter how cast is\n\nRecommend keep sound alert off(this module contains multiple version of visual display to identify focus casting and interrupt information)"
 L["InterruptedFadeTime"] = "Interrpted Fade Time"
 L["ShowInterrupter"] = "Show Interrupter"
 L["ShowTarget"] = "Show Target"

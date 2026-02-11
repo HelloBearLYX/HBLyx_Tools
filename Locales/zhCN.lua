@@ -3,9 +3,19 @@ local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN")
 if not L then return end
 
 L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被重置, 你可以在: ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r里更改设置"
+L["WelecomeInfo"] = "欢迎! 感谢你使用|cff8788ee" .. ADDON_NAME .. "|r!"
 L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r 中打开配置面板来更改设置"
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r配置面板"
+L["Notifications"] = "通知"
+L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块. 配置文件分享功能正在开发中, 但你可以暂时使用截图来分享你的设置"
+--MARK: Issues
+L["Issues"] = "问题"
+L["AnyIssues"] = "如果你遇到任何问题, 请通过联系方式向插件作者报告"
+L["IssuesContent"] = "配置文件分享功能正在开发中\n" .. 
+"Q:焦点打断模块是否会有目标版本?\nA:暂时不考虑,目标施法条因为和其他插件提供的功能过于重复"
+-- MARK: Contact
+L["Contact"] = "联系方式"
 
 -- MARK: Config
 L["Test"] = "测试/解锁(拖动移动)"
@@ -34,6 +44,7 @@ L["ResetMod"] = "重置本模块"
 L["ComfirmResetMod"] = "您确定要重置此模块的所有设置吗?(同时重载)"
 L["Anchor"] = "锚点"
 L["Grow"] = "成长方向"
+L["General"] = "综合"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"
@@ -111,7 +122,7 @@ L["FocusInteruptSettings"] = "焦点打断设置"
 L["FocusInterruptCooldownFilter"] = "打断技能未就绪时隐藏"
 L["FocusInterruptNotReadyColor"] = "打断未就绪颜色"
 L["FocusInterruptibleFilter"] = "不可打断时隐藏"
-L["FocusMuteDesc"] = "基于暴雪的限制, 打断音效任然会任意施法时播放\n\n建议不使用音效(本模块包含多种视觉上的焦点施法过滤)"
+L["FocusMuteDesc"] = "基于暴雪的限制(02/06/2026), 打断音效任然会任意施法时播放\n\n建议不使用音效(本模块包含多种视觉上的焦点施法过滤)"
 L["InterruptedFadeTime"] = "被打断淡出时间"
 L["ShowInterrupter"] = "显示打断者"
 L["ShowTarget"] = "显示目标"

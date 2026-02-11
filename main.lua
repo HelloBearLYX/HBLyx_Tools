@@ -53,7 +53,7 @@ end
 local function InitializeConfig()
 	-- initialize the test mode
 	addon.isTestMode = false
-	addon.version = 3.3
+	addon.version = 3.4
 	-- initialize configurations
 	ProfileHandler(addon.configurationList)
 

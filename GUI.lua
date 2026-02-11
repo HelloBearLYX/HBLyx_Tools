@@ -24,13 +24,15 @@ local TABS = {
 function addon.GUI:Initialize()
     if self.isOpened or InCombatLockdown() then return end
 
+    -- create main frame
     self.isOpened = true
     self.frame = AceGUI:Create("Frame")
-    self.frame:SetTitle("|cff8788ee"..  ADDON_NAME .. "|r Configurations Panel")
+    self.frame:SetTitle(L["GUITitle"])
     self.frame:SetLayout("Flow")
     self.frame:SetWidth(900)
     self.frame:SetHeight(600)
     self.frame:EnableResize(false)
+    self.frame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion())
     self.frame:SetCallback("OnClose", function(widgets)
         if widgets then
             AceGUI:Release(widgets)
@@ -41,21 +43,22 @@ function addon.GUI:Initialize()
         addon:TestMode(addon.isTestMode)
     end)
 
-    self.TestToggle = AceGUI:Create("CheckBox")
-    self.TestToggle:SetLabel(L["Test"])
-    self.TestToggle:SetValue(addon.isTestMode)
-    self.TestToggle:SetCallback("OnValueChanged", function(_, _, newValue)
-        addon.isTestMode = newValue
+    -- test button
+    self.TestButton = AceGUI:Create("Button")
+    self.TestButton:SetText(L["Test"])
+    self.TestButton:SetWidth(200)
+    self.TestButton:SetCallback("OnClick", function()
+        addon.isTestMode = not addon.isTestMode
         addon:TestMode(addon.isTestMode)
     end)
-    self.frame:AddChild(self.TestToggle)
+    self.frame:AddChild(self.TestButton)
 
+    -- create tabs
     local tabs = AceGUI:Create("TabGroup")
     tabs:SetLayout("Fill")
     tabs:SetFullWidth(true)
     tabs:SetFullHeight(true)
-    tabs:SetTabs(TABS) 
-    tabs:SelectTab("General")
+    tabs:SetTabs(TABS)
     self.frame:AddChild(tabs)
     
     tabs:SetCallback("OnGroupSelected", function(container, _, tab)
@@ -88,8 +91,6 @@ function addon.GUI:Initialize()
             panel:DoLayout()
         end
     end)
-
-    tabs:SelectTab("General")
 end
 
 -- MARK: Inline Group
@@ -258,6 +259,27 @@ function addon.GUI:CreateEditBox(parent, label, get, callback)
     end)
     parent:AddChild(editBox)
     return editBox
+end
+
+-- MARK: Create Dropdown
+
+function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callback)
+    local dropdown = AceGUI:Create("Dropdown")
+    dropdown:SetLabel(label)
+    dropdown:SetMultiselect(multiSelect)
+    for key, value in pairs(list) do
+        dropdown:AddItem(key, value)
+    end
+    dropdown:SetText(get)
+    dropdown:SetCallback("OnValueChanged", function(self, _, key)
+        self:SetText(key)
+        if callback then
+            callback(key)
+        end
+    end)
+    parent:AddChild(dropdown)
+    return dropdown
+    
 end
 
 -- MARK: Open/Close GUI

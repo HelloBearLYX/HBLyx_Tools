@@ -77,6 +77,12 @@ local function SetUpSlashCommand()
 	end
 end
 
+---Get Addon's Version number
+---@return number version number
+function addon:GetVersion()
+	return addon.version
+end
+
 -- MARK: Initialize
 
 ---Initialization before main

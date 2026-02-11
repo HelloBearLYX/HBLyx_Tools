@@ -3,6 +3,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "ChallengeEnhance"
 
+-- MARK: Safe update
 local function update()
     if addon.challengeEnhance then
         addon.challengeEnhance:UpdateStyle()
@@ -12,7 +13,7 @@ local function RLNeeded()
 	addon:ShowDialog(ADDON_NAME.."RLNeeded")
 end
 
--- configs
+-- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Font = "",
@@ -33,7 +34,7 @@ addon.configurationList[MOD_KEY] = {
     NameY = 2,
 }
 
--- -- options
+-- MARK: Options (deprecated)
 -- local optionMap = addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceSettings"], {
 --     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadDesc"]}),
 --     addon.Utilities:MakeResetOption(MOD_KEY, L["ChallengeEnhanceSettings"]),
@@ -63,10 +64,11 @@ addon.configurationList[MOD_KEY] = {
 -- GUI
 GUI.TagPanels.ChallengeEnhance = {}
 function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
+    -- MARK: General
     local frame = GUI:CreateScrollFrame(parent)
     frame:SetLayout("Flow")
 	frame:SetFullWidth(true)
-    
+
     GUI:CreateInformationTag(frame, L["ChallengeEnhanceSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChallengeEnhanceSettings"] .. "|r", addon.db.ChallengeEnhance.Enabled, function(value)
         addon.db.ChallengeEnhance.Enabled = value
@@ -88,60 +90,62 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         )
     end)
 
-    GUI:CreateHeader(frame, L["ChallengeEnhanceLevelSettings"])
-    GUI:CreateToggleCheckBox(frame, L["Enable"], addon.db.ChallengeEnhance.LevelEnabled, function(value)
+    -- MARK: Level Settings
+    local levelGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceLevelSettings"])
+    GUI:CreateToggleCheckBox(levelGroup, L["Enable"], addon.db.ChallengeEnhance.LevelEnabled, function(value)
         addon.db.ChallengeEnhance.LevelEnabled = value
         update()
     end)
-    GUI:CreateSlider(frame, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.LevelFontSize, function(value)
+    GUI:CreateSlider(levelGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.LevelFontSize, function(value)
         addon.db.ChallengeEnhance.LevelFontSize = value
         update()
     end)
-    GUI:CreateSlider(frame, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.LevelX, function(value)
+    GUI:CreateSlider(levelGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.LevelX, function(value)
         addon.db.ChallengeEnhance.LevelX = value
         update()
     end)
-    GUI:CreateSlider(frame, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.LevelY, function(value)
+    GUI:CreateSlider(levelGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.LevelY, function(value)
         addon.db.ChallengeEnhance.LevelY = value
         update()
     end)
 
-    GUI:CreateHeader(frame, L["ChallengeEnhanceScoreSettings"])
-    GUI:CreateToggleCheckBox(frame, L["Enable"], addon.db.ChallengeEnhance.ScoreEnabled, function(value)
+    -- MARK: Score Settings
+    local scoreGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceScoreSettings"])
+    GUI:CreateToggleCheckBox(scoreGroup, L["Enable"], addon.db.ChallengeEnhance.ScoreEnabled, function(value)
         addon.db.ChallengeEnhance.ScoreEnabled = value
         update()
     end)
-    GUI:CreateSlider(frame, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.ScoreFontSize, function(value)
+    GUI:CreateSlider(scoreGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.ScoreFontSize, function(value)
         addon.db.ChallengeEnhance.ScoreFontSize = value
         update()
     end)
-    GUI:CreateSlider(frame, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
+    GUI:CreateSlider(scoreGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
         addon.db.ChallengeEnhance.ScoreX = value
         update()
     end)
-    GUI:CreateSlider(frame, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
+    GUI:CreateSlider(scoreGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
         addon.db.ChallengeEnhance.ScoreY = value
         update()
     end)
 
-    GUI:CreateHeader(frame, L["ChallengeEnhanceNameSettings"])
-    GUI:CreateToggleCheckBox(frame, L["Enable"], addon.db.ChallengeEnhance.NameEnabled, function(value)
+    -- MARK: Name Settings
+    local nameGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceNameSettings"])
+    GUI:CreateToggleCheckBox(nameGroup, L["Enable"], addon.db.ChallengeEnhance.NameEnabled, function(value)
         addon.db.ChallengeEnhance.NameEnabled = value
         update()
     end)
-    GUI:CreateSlider(frame, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.NameFontSize, function(value)
+    GUI:CreateSlider(nameGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.NameFontSize, function(value)
         addon.db.ChallengeEnhance.NameFontSize = value
         update()
     end)
-    GUI:CreateSlider(frame, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.NameX, function(value)
+    GUI:CreateSlider(nameGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.NameX, function(value)
         addon.db.ChallengeEnhance.NameX = value
         update()
     end)
-    GUI:CreateSlider(frame, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.NameY, function(value)
+    GUI:CreateSlider(nameGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.NameY, function(value)
         addon.db.ChallengeEnhance.NameY = value
         update()
     end)
 
-    parent:AddChild(frame)
     return frame
 end

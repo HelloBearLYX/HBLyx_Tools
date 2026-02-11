@@ -1,13 +1,16 @@
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+local GUI = addon.GUI
 local MOD_KEY = "CombatTimer"
 
+-- MARK: Safe update
 local function update()
 	if addon.combatTimer then
 		addon.combatTimer:UpdateStyle()
 	end
 end
 
+-- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
 	CombatShow = false,
@@ -18,7 +21,7 @@ addon.configurationList[MOD_KEY] = {
 	Y = -260,
 }
 
--- options
+-- MARK: Options (deprecated)
 -- local optionMap = addon.Utilities:MakeOptionGroup(L["TimerSettings"], {
 -- 	addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadDesc"]}),
 -- 	addon.Utilities:MakeResetOption(MOD_KEY, L["TimerSettings"]),
@@ -36,13 +39,13 @@ addon.configurationList[MOD_KEY] = {
 -- }, false, {order = addon:OptionOrderHandler(), desc = L["TimerSettingsDesc"]})
 -- addon:AppendOptionsList("CombatTimer", optionMap)
 
---GUI
-local GUI = addon.GUI
-
+-- GUI
 GUI.TagPanels.CombatTimer = {}
 function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
+	-- MARK: General
 	local frame = GUI:CreateScrollFrame(parent)
 	frame:SetLayout("Flow")
+
 	GUI:CreateInformationTag(frame, L["TimerSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["TimerSettings"] .. "|r", addon.db.CombatTimer.Enabled, function(value)
 		addon.db.CombatTimer.Enabled = value
@@ -67,24 +70,29 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 		)
 	end)
 
-	GUI:CreateHeader(frame, L["StyleSettings"])
-	GUI:CreateFontSelect(frame, L["Font"], addon.db.CombatTimer.Font, function(value)
+	-- Style Settings
+	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	-- MARK: Font
+	local fontGroup = GUI:CreateInlineGroup(styleGroup, L["FontSettings"])
+	GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.CombatTimer.Font, function(value)
 		addon.db.CombatTimer.Font = value
 		update()
 	end)
-	GUI:CreateSlider(frame, L["FontSize"], 6, 40, 1, addon.db.CombatTimer.FontSize, function(value)
+	GUI:CreateSlider(fontGroup, L["FontSize"], 6, 40, 1, addon.db.CombatTimer.FontSize, function(value)
 		addon.db.CombatTimer.FontSize = value
 		update()
 	end)
-	GUI:CreateSlider(frame, L["X"], -2000, 2000, 1, addon.db.CombatTimer.X, function(value)
+
+	-- MARK: Position
+	local positionGroup = GUI:CreateInlineGroup(styleGroup, L["PositionSettings"])
+	GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, addon.db.CombatTimer.X, function(value)
 		addon.db.CombatTimer.X = value
 		update()
 	end)
-	GUI:CreateSlider(frame, L["Y"], -1000, 1000, 1, addon.db.CombatTimer.Y, function(value)
+	GUI:CreateSlider(positionGroup, L["Y"], -1000, 1000, 1, addon.db.CombatTimer.Y, function(value)
 		addon.db.CombatTimer.Y = value
 		update()
 	end)
 
-	parent:AddChild(frame)
 	return frame
 end

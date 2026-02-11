@@ -34,6 +34,16 @@ function addon.Utilities:print(message)
 	print("|cff8788ee" .. ADDON_NAME .. "|r: " .. message)
 end
 
+---Debug print
+---@param message string debug message
+---@param callback function? additional function to call after print
+function addon:debug(message, callback)
+	addon.Utilities:print("|cffff0000[Debug]|r " .. message)
+	if callback then
+		callback()
+	end
+end
+
 -- MARK: RGB Handle
 
 ---Convert a Hex string into a RGBa

@@ -3,12 +3,14 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local AceGUI = LibStub("AceGUI-3.0")
 
 ---@class HB_GUI
+---@field frame GUI? GUI to dispaly
+---@field isOpened boolean is GUI opened, release the GUI if not opened to save memory
 addon.GUI = {
     frame = nil,
     isOpened = false,
 }
 
--- MARK: Constants
+-- MARK: TABS
 local TABS = {
     {text = "General", value = "General"},
     {text = L["FocusInterruptSettings"], value = "FocusInterrupt"},
@@ -21,6 +23,7 @@ local TABS = {
 
 -- MARK: Initialize GUI
 
+---Initialize/Constructor for GUI
 function addon.GUI:Initialize()
     if self.isOpened or InCombatLockdown() then return end
 
@@ -43,7 +46,7 @@ function addon.GUI:Initialize()
         addon:TestMode(addon.isTestMode)
     end)
 
-    -- test button
+    -- MARK: Test button
     self.TestButton = AceGUI:Create("Button")
     self.TestButton:SetText(L["Test"])
     self.TestButton:SetWidth(200)
@@ -61,9 +64,11 @@ function addon.GUI:Initialize()
     tabs:SetTabs(TABS)
     self.frame:AddChild(tabs)
     
+    -- MARK: Tab Callback
     tabs:SetCallback("OnGroupSelected", function(container, _, tab)
         container:ReleaseChildren()
 
+        -- General Panel
         if tab == "General" then
             local panel = addon.GUI:CreateScrollFrame(container)
             panel:SetLayout("Flow")
@@ -95,6 +100,10 @@ end
 
 -- MARK: Inline Group
 
+---Create an inline group to its parent
+---@param parent AceGUIWidget the parent container
+---@param title string title
+---@return AceGUIWidget
 function addon.GUI:CreateInlineGroup(parent, title)
     local inlineGroup = AceGUI:Create("InlineGroup")
     inlineGroup:SetTitle("|cFFFFFFFF" .. title .. "|r")
@@ -106,6 +115,9 @@ end
 
 -- MARK: Scroll Frame
 
+---Create a scroll frame to its parent
+---@param parent AceGUIWidget the parent container
+---@return AceGUIWidget
 function addon.GUI:CreateScrollFrame(parent)
     local scrollFrame = AceGUI:Create("ScrollFrame")
     scrollFrame:SetLayout("Flow")
@@ -116,6 +128,13 @@ function addon.GUI:CreateScrollFrame(parent)
 end
 
 -- MARK: Toggle CheckBox
+
+---Create a Toggle Check Box
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get boolean the value to set
+---@param callback fun(newValue: boolean) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateToggleCheckBox(parent, label, get, callback)
     local toggle = AceGUI:Create("CheckBox")
     toggle:SetLabel(label)
@@ -130,6 +149,12 @@ function addon.GUI:CreateToggleCheckBox(parent, label, get, callback)
 end
 
 -- MARK: Button
+
+---Create a button
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param callback fun() callback function when button clicked
+---@return AceGUIWidget
 function addon.GUI:CreateButton(parent, label, callback)
     local button = AceGUI:Create("Button")
     button:SetText(label)
@@ -144,6 +169,16 @@ function addon.GUI:CreateButton(parent, label, callback)
 end
 
 -- MARK: Slider
+
+---Create a slider
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param min number minimum of the slider
+---@param max number maximum of the slider
+---@param step number step size of the slider
+---@param get number the value to set
+---@param callback fun(newValue) callback function when value change
+---@return AceGUIWidget
 function addon.GUI:CreateSlider(parent, label, min, max, step, get, callback)
     local slider = AceGUI:Create("Slider")
     slider:SetLabel(label)
@@ -159,6 +194,11 @@ function addon.GUI:CreateSlider(parent, label, min, max, step, get, callback)
 end
 
 -- MARK: CreateHeader(parent, title)
+
+---Create a header
+---@param parent AceGUIWidget the parent container
+---@param title string title
+---@return AceGUIWidget
 function addon.GUI:CreateHeader(parent, title)
     local headingText = AceGUI:Create("Heading")
     headingText:SetText("|cFFFFCC00" .. title .. "|r")
@@ -168,6 +208,12 @@ function addon.GUI:CreateHeader(parent, title)
 end
 
 -- MARK: Information Tag
+
+---Create an information tag/lines
+---@param parent AceGUIWidget the parent container
+---@param description string the description to display
+---@param textJustification string the text justification ("LEFT", "CENTER", "RIGHT")
+---@return AceGUIWidget
 function addon.GUI:CreateInformationTag(parent, description, textJustification)
     local informationLabel = AceGUI:Create("Label")
     informationLabel:SetText(description)
@@ -181,6 +227,13 @@ function addon.GUI:CreateInformationTag(parent, description, textJustification)
 end
 
 -- MARK: Create Font
+
+---Create a font select dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get string the value to set
+---@param callback fun(key: string) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateFontSelect(parent, label, get, callback)
     local fontSelect = AceGUI:Create("LSM30_Font")
     fontSelect:SetLabel(label)
@@ -197,6 +250,13 @@ function addon.GUI:CreateFontSelect(parent, label, get, callback)
 end
 
 -- MARK: Create Sound
+
+---Create a sound select dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get string the value to set
+---@param callback fun(key: string) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateSoundSelect(parent, label, get, callback)
     local soundSelect = AceGUI:Create("LSM30_Sound")
     soundSelect:SetLabel(label)
@@ -214,6 +274,12 @@ end
 
 -- MARK: Create Texture
 
+---Create a texture select dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get string the value to set
+---@param callback fun(key: string) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateTextureSelect(parent, label, get, callback)
     local textureSelect = AceGUI:Create("LSM30_Statusbar")
     textureSelect:SetLabel(label)
@@ -231,6 +297,13 @@ end
 
 -- MARK: Create Color Picker
 
+---Create a color picker
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param hasAlpha boolean whether the color picker has alpha channel
+---@param get string the value to set (hex color)
+---@param callback fun(hexColor: string) callback function when value changed, the color will be converted to hex format before passing to the callback
+---@return AceGUIWidget
 function addon.GUI:CreateColorPicker(parent, label, hasAlpha, get, callback)
     local colorPicker = AceGUI:Create("ColorPicker")
     colorPicker:SetLabel(label)
@@ -248,6 +321,12 @@ end
 
 -- MARK: Create EditBox
 
+---Create an edit box
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get string the value to set
+---@param callback fun(newValue: string) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateEditBox(parent, label, get, callback)
     local editBox = AceGUI:Create("EditBox")
     editBox:SetLabel(label)
@@ -263,6 +342,14 @@ end
 
 -- MARK: Create Dropdown
 
+---Create a generic dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param list table the list of items to display in the dropdown
+---@param get string the value to set
+---@param multiSelect boolean whether the dropdown allows multiple selections
+---@param callback fun(key: string) callback function when value changed
+---@return AceGUIWidget
 function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callback)
     local dropdown = AceGUI:Create("Dropdown")
     dropdown:SetLabel(label)
@@ -284,10 +371,12 @@ end
 
 -- MARK: Open/Close GUI
 
+---Open GUI
 function addon.GUI:OpenGUI()
     addon.GUI:Initialize()
 end
 
+---Close GUI
 function addon.GUI:CloseGUI()
     if self.isOpened and self.frame then
         self.frame:Hide()
@@ -295,4 +384,5 @@ function addon.GUI:CloseGUI()
     end
 end
 
+-- Initialize Tag Panels
 addon.GUI.TagPanels = {}

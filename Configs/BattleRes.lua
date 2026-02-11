@@ -57,6 +57,9 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 		addon.db.BattleRes.Enabled = value
 		addon:ShowDialog(ADDON_NAME.."RLNeeded")
 	end)
+	GUI:CreateToggleCheckBox(frame, L["HideInactive"], addon.db.BattleRes.HideInactive, function(value)
+		addon.db.BattleRes.HideInactive = value
+	end)
 	GUI:CreateButton(frame, L["ResetMod"], function ()
 		addon.Utilities:SetPopupDialog(
 			ADDON_NAME .. "ResetMod",

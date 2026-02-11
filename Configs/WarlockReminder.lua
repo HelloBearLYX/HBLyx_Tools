@@ -82,6 +82,7 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 	local frame = GUI:CreateScrollFrame(parent)
 	frame:SetLayout("Flow")
 
+	GUI:CreateInformationTag(frame, L["WarlockWelecome"] .. "\n\n" .. L["WarlockRemindersIntro"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["WarlockReminders"] .. "|r", addon.db.WarlockReminders.Enabled, function(value)
 		addon.db.WarlockReminders.Enabled = value
 		addon:ShowDialog(ADDON_NAME.."RLNeeded")
@@ -144,6 +145,7 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 
 	-- MARK: Pet Type
 	local petTypeGroup = GUI:CreateInlineGroup(petGroup, L["PetTypeSettings"])
+	GUI:CreateInformationTag(petTypeGroup, L["PetTypeSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(petTypeGroup, L["FelguardEnable"], addon.db.WarlockReminders.FelguardEnabled, function(value)
 		addon.db.WarlockReminders.FelguardEnabled = value
 	end)

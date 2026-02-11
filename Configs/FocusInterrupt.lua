@@ -149,11 +149,12 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
         addon.db.FocusInterrupt.NotInterruptibleHide = value
     end)
     local interruptedGroup = GUI:CreateInlineGroup(focusInterruptGroup, L["InterruptedSettings"])
-    GUI:CreateToggleCheckBox(interruptedGroup, L["ShowInterrupter"], addon.db.FocusInterrupt.ShowInterrupter, function(value)
-        addon.db.FocusInterrupt.ShowInterrupter = value
-    end)
+    GUI:CreateInformationTag(interruptedGroup, L["InterruptedSettingsDesc"], "LEFT")
     GUI:CreateSlider(interruptedGroup, L["InterruptedFadeTime"], 0, 2, 0.25, addon.db.FocusInterrupt.InterruptedFadeTime, function(value)
         addon.db.FocusInterrupt.InterruptedFadeTime = value
+    end)
+    GUI:CreateToggleCheckBox(interruptedGroup, L["ShowInterrupter"], addon.db.FocusInterrupt.ShowInterrupter, function(value)
+        addon.db.FocusInterrupt.ShowInterrupter = value
     end)
 
     -- MARK: Interrupted
@@ -225,6 +226,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
         addon.db.FocusInterrupt.FontSize = value
         update()
     end)
+    GUI:CreateInformationTag(fontGroup, "\n")
     GUI:CreateToggleCheckBox(fontGroup, L["ShowTotalTime"], addon.db.FocusInterrupt.ShowTotalTime, function(value)
         addon.db.FocusInterrupt.ShowTotalTime = value
     end)

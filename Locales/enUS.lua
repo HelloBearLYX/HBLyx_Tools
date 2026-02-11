@@ -58,7 +58,7 @@ L["PetFamily"] = {
 	WRONG = "Wrong Pet!",
 }
 L["PetStance"] = {
-	ASSIST = "",
+	ASSIST = "ASSIST",
 	DEFENSIVE = "DEFENSIVE",
 	PASSIVE = "PASSIVE",
 }
@@ -115,6 +115,7 @@ L["InterruptedFadeTime"] = "Interrpted Fade Time"
 L["ShowInterrupter"] = "Show Interrupter"
 L["ShowTarget"] = "Show Target"
 L["InterruptedSettings"] = "Interrupted Settings"
+L["InterruptedSettingsDesc"] = "When the focus is interrupted, there is a short fade time for the cast bar, you can make the fade time zero to make it disappear immediately.\n\nAlso, there is information showing during the fade time"
 L["InterruptIconsSettings"] = "Interrupt Icon Settings"
 L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
 L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
@@ -125,7 +126,9 @@ L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"
+L["WarlockRemindersIntro"] = "This module provides pet and healthstone reminders\n\nThe reminder will show up when you are missing your pet/healthstone(or incorrect pet stance/type)"
 -- Warlock Pet settings
+L["PetTypeSettingsDesc"] = "Felguard check for Demonology, and Felhunter/Imp check for other specs"
 L["FelguardEnable"] = "Enable Felguard Check"
 L["FelhunterEnable"] = "Enable Felhunter/Imp Check"
 -- Warlock Candy settings

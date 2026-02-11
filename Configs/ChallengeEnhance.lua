@@ -34,33 +34,6 @@ addon.configurationList[MOD_KEY] = {
     NameY = 2,
 }
 
--- MARK: Options (deprecated)
--- local optionMap = addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceSettings"], {
---     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadDesc"]}),
---     addon.Utilities:MakeResetOption(MOD_KEY, L["ChallengeEnhanceSettings"]),
---     addon.Utilities:MakeOptionLineBreak(),
---     addon.Utilities:MakeLSMFontOption(L["Font"], MOD_KEY, "Font", update, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
---     addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceLevelSettings"], {
---         addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "LevelEnabled", update),
---         addon.Utilities:MakeRangeOption(L["FontSize"], MOD_KEY, "LevelFontSize", 6, 40, 1, update, {hidden = function() return not addon.db[MOD_KEY]["LevelEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["X"], MOD_KEY, "LevelX", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["LevelEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["Y"], MOD_KEY, "LevelY", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["LevelEnabled"] end}),
---     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
---     addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceScoreSettings"], {
---         addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "ScoreEnabled", update),
---         addon.Utilities:MakeRangeOption(L["FontSize"], MOD_KEY, "ScoreFontSize", 6, 40, 1, update, {hidden = function() return not addon.db[MOD_KEY]["ScoreEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["X"], MOD_KEY, "ScoreX", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["ScoreEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["Y"], MOD_KEY, "ScoreY", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["ScoreEnabled"] end}),
---     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
---     addon.Utilities:MakeOptionGroup(L["ChallengeEnhanceNameSettings"], {        
---         addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "NameEnabled", update),
---         addon.Utilities:MakeRangeOption(L["FontSize"], MOD_KEY, "NameFontSize", 6, 40, 1, update, {hidden = function() return not addon.db[MOD_KEY]["NameEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["X"], MOD_KEY, "NameX", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["NameEnabled"] end}),
---         addon.Utilities:MakeRangeOption(L["Y"], MOD_KEY, "NameY", -50, 50, 1, update, {hidden = function() return not addon.db[MOD_KEY]["NameEnabled"] end}),
---     }, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
--- }, false, {order = addon:OptionOrderHandler(), desc = L["ChallengeEnhanceSettingsDesc"]})
--- addon:AppendOptionsList("ChallengeEnhance", optionMap)
-
 -- GUI
 GUI.TagPanels.ChallengeEnhance = {}
 function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)

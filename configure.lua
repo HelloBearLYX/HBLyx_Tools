@@ -11,18 +11,6 @@ function addon:ShowDialog(dialogName)
 	StaticPopup_Show(dialogName)
 end
 
----Handle option group order for options creations
--- ---@return integer order the order of this option group
--- function addon:OptionOrderHandler()
--- 	local output = optionOrder
--- 	optionOrder = optionOrder + 1
--- 	return output
--- end
-
--- function addon:AppendOptionsList(optionName, optionMap)
--- 	addon.optionsList[optionName] = optionMap
--- end
-
 -- MARK: Config set ups
 -- set up  configurationList
 addon.configurationList = {}

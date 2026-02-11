@@ -23,27 +23,6 @@ addon.configurationList[MOD_KEY] = {
 	IconZoom = 0.07,
 }
 
--- MARK: Options (deprecated)
--- local optionMap = addon.Utilities:MakeOptionGroup(L["BattleResSettings"], {
---     addon.Utilities:MakeToggleOption(L["Enable"], MOD_KEY, "Enabled", RLNeeded, {desc = L["ReloadNeeded"]}),
--- 	addon.Utilities:MakeResetOption(MOD_KEY, L["BattleResSettings"]),
--- 	addon.Utilities:MakeOptionLineBreak(),
--- 	addon.Utilities:MakeToggleOption(L["HidenInactive"], MOD_KEY, "HideInactive", nil, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
--- 	addon.Utilities:MakeOptionGroup(L["StyleSettings"], {
--- 		addon.Utilities:MakeRangeOption(L["IconSize"], MOD_KEY, "IconSize", 10, 200, 1, update),
--- 		addon.Utilities:MakeRangeOption(L["IconZoom"], MOD_KEY, "IconZoom",0.01, 0.5, 0.01, update),
--- 		addon.Utilities:MakeOptionLineBreak(),
--- 		addon.Utilities:MakeRangeOption(L["X"], MOD_KEY, "X", -2000, 2000, 1, update),
--- 		addon.Utilities:MakeRangeOption(L["Y"], MOD_KEY, "Y", -1000, 1000, 1, update),
--- 		addon.Utilities:MakeOptionLineBreak(),
--- 		addon.Utilities:MakeRangeOption(L["TimeFontScale"], MOD_KEY, "TimeFontScale", 0.1, 5, 0.01, update),
--- 		addon.Utilities:MakeOptionLineBreak(),
--- 		addon.Utilities:MakeLSMFontOption(L["Font"], MOD_KEY, "Font", update),
--- 		addon.Utilities:MakeRangeOption(L["StackFontSize"], MOD_KEY, "ChargeFontSize", 6, 40, 1, update),
--- 	}, true, {hidden = function() return not addon.db[MOD_KEY]["Enabled"] end}),
--- }, false, {order = addon:OptionOrderHandler(), desc = L["BattleResSettingsDesc"]})
--- addon:AppendOptionsList("BattleRes", optionMap)
-
 -- GUI
 GUI.TagPanels.BattleRes = {}
 function GUI.TagPanels.BattleRes:CreateTabPanel(parent)

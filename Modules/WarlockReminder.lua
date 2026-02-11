@@ -41,9 +41,9 @@ local PET_STANCE = { -- map pet stance names onto numbers
 -- MARK: Initialize
 
 ---Intialize(Constructor)
----@return WarlockReminder WarlockReminder a WarlockReminder object(nil for non-warlock player -> not initialized)
+---@return WarlockReminder|nil WarlockReminder a WarlockReminder object(nil for non-warlock player -> not initialized)
 function WarlockReminder:Initialize()
-    if addon.Global["characterClass"] ~= "WARLOCK" or not addon.db[MOD_KEY]["Enabled"] then
+    if addon.Global["characterClass"] ~= "WARLOCK" then
         return nil
     end
 
@@ -96,7 +96,7 @@ function WarlockReminder:Initialize()
     return self
 end
 
--- private methods
+-- MARK: private methods
 
 ---Get current specialization of the player
 ---@return integer spec an integer which indicates the current spec of warlock
@@ -300,15 +300,15 @@ function WarlockReminder:RegisterEvents()
     local petEvents = {"UNIT_PET", "PET_BAR_UPDATE", "PET_DISMISS_START", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_ALIVE"}
 
     for _, event in ipairs(bothEvents) do
-        addon.eventsHandler:Register(HandleBoth, event, MOD_KEY)
+        addon.core:RegisterEvent(HandleBoth, event, MOD_KEY)
     end
 
     for _, event in ipairs(petEvents) do
-        addon.eventsHandler:Register(HandlePet, event, MOD_KEY)
+        addon.core:RegisterEvent(HandlePet, event, MOD_KEY)
     end
 
-    addon.eventsHandler:Register(HandleCandy, "BAG_UPDATE", MOD_KEY)
-    addon.eventsHandler:Register(function ()
+    addon.core:RegisterEvent(HandleCandy, "BAG_UPDATE", MOD_KEY)
+    addon.core:RegisterEvent(function ()
         if IsMounted() then
             HandlePet()
         else
@@ -321,3 +321,6 @@ function WarlockReminder:RegisterEvents()
         end
     end, "PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY)
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return WarlockReminder:Initialize() end, function() WarlockReminder:RegisterEvents() end)

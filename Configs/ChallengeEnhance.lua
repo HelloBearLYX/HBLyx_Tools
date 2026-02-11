@@ -5,12 +5,7 @@ local MOD_KEY = "ChallengeEnhance"
 
 -- MARK: Safe update
 local function update()
-    if addon.challengeEnhance then
-        addon.challengeEnhance:UpdateStyle()
-    end
-end
-local function RLNeeded()
-	addon:ShowDialog(ADDON_NAME.."RLNeeded")
+    return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
 -- MARK: Defaults

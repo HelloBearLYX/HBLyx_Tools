@@ -13,10 +13,6 @@ local MOD_KEY = "CombatIndicator"
 ---Initialzie(Constructor)
 ---@return CombatIndicator CombatIndicator a CombatIndicator object
 function CombatIndicator:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_CommbatIndicator", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
     self.frame:SetSize(300, 40)
@@ -110,6 +106,9 @@ end
 function CombatIndicator:RegisterEvents()
     local HandleActive = function () Handler(self) end
 
-    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_DISABLED", MOD_KEY)
-    addon.eventsHandler:Register(HandleActive, "PLAYER_REGEN_ENABLED", MOD_KEY)
+    addon.core:RegisterEvent(HandleActive, "PLAYER_REGEN_DISABLED", MOD_KEY)
+    addon.core:RegisterEvent(HandleActive, "PLAYER_REGEN_ENABLED", MOD_KEY)
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return CombatIndicator:Initialize() end, function() CombatIndicator:RegisterEvents() end)

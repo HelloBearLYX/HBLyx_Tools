@@ -37,10 +37,6 @@ local MAP_PORTAL = {
 ---Intialize(Constructor)
 ---@return ChallengeEnhance ChallengeEnhance a ChallengeEnhance object
 function ChallengeEnhance:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-    
     self.buttons = {}
     self.eventFrame = CreateFrame("Frame")
 
@@ -210,9 +206,12 @@ function ChallengeEnhance:RegisterEvents()
 
     self.eventFrame:SetScript("OnEvent", function(self, event, name)
         if event == "ADDON_LOADED" and name == "Blizzard_ChallengesUI" then
-            if addon.challengeEnhance:Create() then
+            if addon.core:GetModule(MOD_KEY):Create() then
                 self:UnregisterEvent("ADDON_LOADED")
             end
         end
     end)
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return ChallengeEnhance:Initialize() end, function() ChallengeEnhance:RegisterEvents() end)

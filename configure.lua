@@ -3,8 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 addon.LSM = LibStub("LibSharedMedia-3.0")
 
-local optionOrder = 1
-
 ---Show the RLNeeded popup dialog
 ---@param dialogName string dialog name
 function addon:ShowDialog(dialogName)
@@ -55,6 +53,7 @@ local optionsList = {
 		inline = true,
 	},
 }
+
 addon.optionsList = optionsList
 --set up RLNeeded popup dialog
 addon.Utilities:SetPopupDialog(ADDON_NAME .. "RLNeeded", L["ReloadNeeded"], false, {button1 = L["Reload"], button2 = CLOSE, OnButton1 = ReloadUI})

@@ -5,13 +5,8 @@ local MOD_KEY = "WarlockReminders"
 
 -- MARK: Safe update
 local function update()
-	if addon.warlockReminder then
-		addon.warlockReminder:UpdateStyle()
-	end
+	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
--- local function RLNeeded()
--- 	addon:ShowDialog(ADDON_NAME.."RLNeeded")
--- end
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {

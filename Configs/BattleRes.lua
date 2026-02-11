@@ -5,9 +5,7 @@ local MOD_KEY = "BattleRes"
 
 -- MARK: Safe update
 local function update()
-	if addon.battleRes then
-		addon.battleRes:UpdateStyle()
-	end
+	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
 -- MARK: Defaults

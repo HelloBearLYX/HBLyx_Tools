@@ -2,7 +2,6 @@
 HBLyx_Tools = LibStub("AceAddon-3.0"):NewAddon("HBLyx_Tools")
 
 local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Config Handle
 
@@ -28,7 +27,7 @@ end
 ---@param configurationList table a list contains options and configuration default values such as: {mod1 = {option1 = defaultVal, option2 = defaultVal, ...}, mod2 = ...}
 local function ProfileHandler(configurationList)
 	-- also reset configs before v3.0 version(no DB.Version before v3.0)
-	if type(HBLyx_Tools_DB) ~= "table" or not HBLyx_Tools_DB.Version then -- 
+	if type(HBLyx_Tools_DB) ~= "table" or not HBLyx_Tools_DB["Version"] then
 		HBLyx_Tools_DB = {}
 		addon.Utilities:print("Profile database initialized.")
 
@@ -36,7 +35,7 @@ local function ProfileHandler(configurationList)
   	end
 
 	addon.db = HBLyx_Tools_DB
-	-- addon.db.Version = addon.version -- update version number
+	addon.db["Version"] = addon.version
 
 	-- after 3.0 configurationList: {mod1 = {option1 = defaultVal, option2 = defaultVal, ...}, mod2 = ...}
 	for mod, option in pairs(configurationList or {}) do
@@ -44,8 +43,6 @@ local function ProfileHandler(configurationList)
 			ResetConfiguration(mod, name, defaultVal)
 		end
 	end
-
-	addon.Utilities:print("Profile loaded")
 end
 
 ---Initialize the configrations: make sure addon.optionsList and addon.configurationList are both created before run this
@@ -53,7 +50,6 @@ end
 local function InitializeConfig()
 	-- initialize the test mode
 	addon.isTestMode = false
-	addon.version = 3.4
 	-- initialize configurations
 	ProfileHandler(addon.configurationList)
 
@@ -69,6 +65,8 @@ local function InitializeConfig()
 	addon.Utilities:print(L["WelecomeSetting"])
 end
 
+-- MARK: SlashCMD
+
 ---Register in-game Slash Command
 local function SetUpSlashCommand()
 	SLASH_HBLYX1 = "/hblyx"
@@ -83,11 +81,24 @@ function addon:GetVersion()
 	return addon.version
 end
 
+-- MARK: TestMode
+
+---Addon's Test(Unlock) mod
+---@param on boolean If test mod on
+function addon:TestMode(on)
+	addon.core:TestMode(on)
+end
+
 -- MARK: Initialize
 
 ---Initialization before main
 function addon:Initialize()
-    InitializeConfig()
+	addon.version = 3.4
+
+	-- set up profile and configures
+	InitializeConfig()
+
+	-- set up slash command
 	SetUpSlashCommand()
 
     -- global variables
@@ -95,71 +106,14 @@ function addon:Initialize()
 	_, addon.Global["characterClass"] = UnitClass("player")
 
     addon.Global["inCombat"] = false -- keep this for the situation the CombatLockDown not locked but combat begings
-    addon.eventsHandler:Register(function () addon.Global["inCombat"] = true end, "PLAYER_REGEN_DISABLED", "Global[\"inCombat\"]")
-    addon.eventsHandler:Register(function () addon.Global["inCombat"] = false end, "PLAYER_REGEN_ENABLED", "Global[\"inCombat\"]")
+    addon.core:RegisterEvent(function () addon.Global["inCombat"] = true end, "PLAYER_REGEN_DISABLED", "Global[\"inCombat\"]")
+    addon.core:RegisterEvent(function () addon.Global["inCombat"] = false end, "PLAYER_REGEN_ENABLED", "Global[\"inCombat\"]")
 
-    -- features
-    addon.combatIndicator = CombatIndicator:Initialize()
-	if addon.combatIndicator then
-		addon.combatIndicator:RegisterEvents()
-	end
-
-    addon.combatTimer = CombatTimer:Initialize()
-    if addon.combatTimer then
-		addon.combatTimer:RegisterEvents()
-	end
-
-    addon.focusCastBar = FocusInterrupt:Initialize()
-    if addon.focusCastBar then
-		addon.focusCastBar:RegisterEvents()
-	end
-
-    addon.battleRes = BattleRes:Initialize()
-    if addon.battleRes then
-		addon.battleRes:RegisterEvents()
-	end
-
-	addon.challengeEnhance = ChallengeEnhance:Initialize()
-	if addon.challengeEnhance then
-		addon.challengeEnhance:RegisterEvents()
-	end
-
-    addon.warlockReminder = WarlockReminder:Initialize()
-	if addon.warlockReminder then
-		addon.warlockReminder:RegisterEvents()
-	end
-end
-
--- MARK: TestMode
-
----Addon's Test(Unlock) mod
----@param on boolean If test mod on
-function addon:TestMode(on)
-	
-	if addon.combatIndicator then
-		addon.combatIndicator:Test(on)
-	end
-	
-	if addon.combatTimer then
-		addon.combatTimer:Test(on)
-	end
-	
-	if addon.focusCastBar then
-		addon.focusCastBar:Test(on)
-	end
-	
-	if addon.battleRes then
-		addon.battleRes:Test(on)
-	end
-	
-	if addon.warlockReminder then
-		addon.warlockReminder:Test(on)
-	end
+    -- modules
+	addon.core:LoadAllModules()
 end
 
 -- main
--- addon.eventHandler = EventsHandler:Initialize() -- in excuted eventHandler.lua
+-- addon.core = addon.Core:Initialize() -- has been called in Core.lua, no need to call again here
 -- "ADDON_LOADED" has been automatically registered into eventHandler
-addon.eventsHandler.eventFrame:SetScript("OnEvent", function (self, event, ...)
-    addon.eventsHandler:Handle(event, ...)
-end)
+addon.core:Start() -- start

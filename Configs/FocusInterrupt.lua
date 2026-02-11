@@ -7,13 +7,8 @@ addon.LSM:Register("sound", ADDON_NAME.. "_FocusDefault", L["FocusDefaultSound"]
 
 -- MARK: Safe update
 local function update()
-    if addon.focusCastBar then
-        addon.focusCastBar:UpdateStyle()
-    end
+    return addon.core:GetSafeUpdate(MOD_KEY)()
 end
--- local function RLNeeded()
--- 	addon:ShowDialog(ADDON_NAME.."RLNeeded")
--- end
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {

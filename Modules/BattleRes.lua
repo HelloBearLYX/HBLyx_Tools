@@ -16,10 +16,6 @@ local BATTLE_RES_TEXTURE = 136080
 ---Initialize(Constructor)
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-
     self.modName = "BattleRes"
 
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent)
@@ -135,14 +131,17 @@ end
 
 --MARK: Register Event
 
----Register events needed by CombatTimer on addon.EventsHandler
+---Register events needed by CombatTimer
 function BattleRes:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.eventsHandler:Register(Handle, "PLAYER_ENTERING_WORLD", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "ENCOUNTER_START", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "ENCOUNTER_END", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "SPELL_UPDATE_CHARGES", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_START", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "CHALLENGE_MODE_COMPLETED", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "PLAYER_ENTERING_WORLD", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "ENCOUNTER_START", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "ENCOUNTER_END", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "SPELL_UPDATE_CHARGES", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "CHALLENGE_MODE_START", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "CHALLENGE_MODE_COMPLETED", MOD_KEY)
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return BattleRes:Initialize() end, function() BattleRes:RegisterEvents() end)

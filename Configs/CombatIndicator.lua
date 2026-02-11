@@ -9,9 +9,7 @@ addon.LSM:Register("sound", ADDON_NAME.. "_LeaveCombat", L["CombatOutSoundDefaul
 
 -- MARK: Safe update
 local function update()
-	if addon.combatIndicator then
-		addon.combatIndicator:UpdateStyle()
-	end
+	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
 -- MARK: Defaults

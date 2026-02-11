@@ -14,10 +14,6 @@ local MOD_KEY = "CombatTimer"
 ---Intialize(Constructor)
 ---@return CombatTimer CombatTimer a CombatTimer object
 function CombatTimer:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-
     self.frame = CreateFrame("Frame", ADDON_NAME .. "TimerFrame", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
     self.frame:SetSize(100, 40)
@@ -121,6 +117,9 @@ end
 function CombatTimer:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_DISABLED", MOD_KEY)
-    addon.eventsHandler:Register(Handle, "PLAYER_REGEN_ENABLED", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "PLAYER_REGEN_DISABLED", MOD_KEY)
+    addon.core:RegisterEvent(Handle, "PLAYER_REGEN_ENABLED", MOD_KEY)
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return CombatTimer:Initialize() end, function() CombatTimer:RegisterEvents() end)

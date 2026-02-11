@@ -51,10 +51,6 @@ local INTERRUPT_BY_CLASS = {
 ---Initialize(Constructor)
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
-    if not addon.db[MOD_KEY]["Enabled"] then
-        return nil
-    end
-
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_FocusCastBar", UIParent)
     self.frame:SetFrameStrata("HIGH")
     self.frame:Hide()
@@ -569,16 +565,19 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
     local UpdateID = function () UpdateInterruptId(self) end
 
     -- active cast
-    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_START", MOD_KEY, "focus")
-    addon.eventsHandler:Register(StartCastHandle, "UNIT_SPELLCAST_CHANNEL_START", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StartCastHandle, "UNIT_SPELLCAST_START", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StartCastHandle, "UNIT_SPELLCAST_CHANNEL_START", MOD_KEY, "focus")
     -- switch focus
-    addon.eventsHandler:Register(StartCastHandle, "PLAYER_FOCUS_CHANGED", MOD_KEY)
+    addon.core:RegisterEvent(StartCastHandle, "PLAYER_FOCUS_CHANGED", MOD_KEY)
     -- switch spec
-    addon.eventsHandler:Register(UpdateID, "PLAYER_SPECIALIZATION_CHANGED", MOD_KEY)
-    addon.eventsHandler:Register(UpdateID, "PLAYER_ENTERING_WORLD", MOD_KEY)
+    addon.core:RegisterEvent(UpdateID, "PLAYER_SPECIALIZATION_CHANGED", MOD_KEY)
+    addon.core:RegisterEvent(UpdateID, "PLAYER_ENTERING_WORLD", MOD_KEY)
     -- stop cast
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_STOP", MOD_KEY, "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_FAILED", MOD_KEY, "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus")
-    addon.eventsHandler:Register(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_STOP", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_FAILED", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus")
+    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus")
 end
+
+-- MARK: Register Module
+addon.core:RegisterModule(MOD_KEY, function() return FocusInterrupt:Initialize() end, function() FocusInterrupt:RegisterEvents() end)

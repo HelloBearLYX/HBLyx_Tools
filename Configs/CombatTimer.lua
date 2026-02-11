@@ -5,9 +5,7 @@ local MOD_KEY = "CombatTimer"
 
 -- MARK: Safe update
 local function update()
-	if addon.combatTimer then
-		addon.combatTimer:UpdateStyle()
-	end
+	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
 -- MARK: Defaults

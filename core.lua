@@ -134,9 +134,8 @@ function addon.Core:LoadModule(mod)
         self.modules[mod] = self.registeredMods[mod].initialize()
         if self.modules[mod] and self.registeredMods[mod].eventRegister then
             self.registeredMods[mod].eventRegister()
+            self.loadedMods = self.loadedMods + 1
         end
-
-        self.loadedMods = self.loadedMods + 1
         return true
     elseif loadedAlready then -- if the module is already loaded, it has been loaded
         return true

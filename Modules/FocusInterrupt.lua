@@ -31,19 +31,19 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local MOD_KEY = "FocusInterrupt"
 local UNKNOWN_SPELL_TEXTURE = 134400
 local INTERRUPT_BY_CLASS = {
-  DEATHKNIGHT = {DEFAULT = 47528}, -- Mind Freeze
-  DEMONHUNTER = {DEFAULT = 183752}, -- Disrupt
-  DRUID = {BALANCE = 78675, DEFAULT = 106839},
-  EVOKER = {DEFAULT = 351338}, -- Quell
-  HUNTER = {DEFAULT = 147362, SURVIVAL = 187707},
-  MAGE = {DEFAULT = 2139}, -- Counterspell
-  MONK = {DEFAULT = 116705}, -- Spear Hand Strike
-  PALADIN = {DEFAULT = 96231}, -- Rebuke
-  PRIEST = {DEFAULT = 15487}, -- Silence
-  ROGUE = {DEFAULT = 1766}, -- Kick
-  SHAMAN = {DEFAULT = 57994}, -- Wind Shear
-  WARLOCK = {DEFAULT = 19647, DEMONOLOGY = 119914, DEMONOLOGY_SUB = 132409, GRIMOIRE = 1276467},
-  WARRIOR = {DEFAULT = 6552}, -- Pummel
+    DEATHKNIGHT = {DEFAULT = 47528}, -- Mind Freeze
+    DEMONHUNTER = {DEFAULT = 183752}, -- Disrupt
+    DRUID = {BALANCE = 78675, DEFAULT = 106839},
+    EVOKER = {DEFAULT = 351338}, -- Quell
+    HUNTER = {DEFAULT = 147362, SURVIVAL = 187707},
+    MAGE = {DEFAULT = 2139}, -- Counterspell
+    MONK = {DEFAULT = 116705}, -- Spear Hand Strike
+    PALADIN = {DEFAULT = 96231}, -- Rebuke
+    PRIEST = {DEFAULT = 15487}, -- Silence
+    ROGUE = {DEFAULT = 1766}, -- Kick
+    SHAMAN = {DEFAULT = 57994}, -- Wind Shear
+    WARLOCK = {DEFAULT = 19647, DEMONOLOGY = 119914, DEMONOLOGY_SUB = 132409, GRIMOIRE = 1276467},
+    WARRIOR = {DEFAULT = 6552}, -- Pummel
 }
 
 -- MARK: Initialize
@@ -543,22 +543,19 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         Handler(self)
     end
     
-    local StopCastHandle = function (event, ...)
-        if event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_FAILED" then -- for stop-cast events
-            if not self.timer then -- since the stop-cast events also triggered after the interrupted-events, must avoid stop-cast events override the interrupted-events
-                self.active = false
-                self.frame:Hide()
-            end
-        elseif event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then -- handle potential interrupted-cast events 
-            local _, _, _, guid = ... -- if guid != null -> some one interrupted it
-            if guid then -- handle interrupted
-                InterruptHandler(self, guid)
-            else -- potential a normal stop cast
-                if not self.timer then
-                    self.active = false
-                    self.frame:Hide()
-                end
-            end
+    local StopCastHandle = function(_, ...)
+        if not self.timer then -- since the stop-cast events also triggered after the interrupted-events, must avoid stop-cast events override the interrupted-events
+            self.active = false
+            self.frame:Hide()
+        end
+    end
+
+    local InterruptedHandle = function (_, ...)
+        local _, _, _, guid = ... -- if guid != null -> some one interrupted it
+        if guid then -- handle interrupted
+            InterruptHandler(self, guid)
+        else -- potential a normal stop cast
+            StopCastHandle(_, ...)
         end
     end
 
@@ -575,8 +572,9 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
     -- stop cast
     addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_STOP", MOD_KEY, "focus")
     addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_FAILED", MOD_KEY, "focus")
-    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus")
-    addon.core:RegisterEvent(StopCastHandle, "UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus")
+    -- interrupted/stop cast
+    addon.core:RegisterEvent(InterruptedHandle, "UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus")
+    addon.core:RegisterEvent(InterruptedHandle, "UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus")
 end
 
 -- MARK: Register Module

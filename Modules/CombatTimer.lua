@@ -59,7 +59,7 @@ end
 ---Handler for CombatTimer
 ---@param self CombatTimer self
 local function Handler(self)
-    if addon.Global["inCombat"] then
+    if UnitAffectingCombat("player") then
         self.startTime = GetTime()
         self.frame:Show()
         -- update every 1 sec instead of 1 frame to improve the performance
@@ -70,6 +70,7 @@ local function Handler(self)
     else
         if self.updateTimer then
             self.updateTimer:Cancel()
+            self.updateTimer = nil
         end
 
         if addon.db[MOD_KEY]["PrintEnabled"] then

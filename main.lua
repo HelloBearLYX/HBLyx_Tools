@@ -106,10 +106,6 @@ function addon:Initialize()
 	addon.Global = {}
 	_, addon.Global["characterClass"] = UnitClass("player")
 
-    addon.Global["inCombat"] = false -- keep this for the situation the CombatLockDown not locked but combat begings
-    addon.core:RegisterEvent(function () addon.Global["inCombat"] = true end, "PLAYER_REGEN_DISABLED", "Global[\"inCombat\"]")
-    addon.core:RegisterEvent(function () addon.Global["inCombat"] = false end, "PLAYER_REGEN_ENABLED", "Global[\"inCombat\"]")
-
     -- modules
 	addon.core:LoadAllModules()
 end

@@ -144,7 +144,7 @@ end
 ---Handler for pet frame
 ---@param self WarlockReminder self
 local function PetHandler(self)
-    if not addon.db[MOD_KEY]["PetEnabled"] or addon.Global["inCombat"] or IsMounted() then
+    if not addon.db[MOD_KEY]["PetEnabled"] or UnitAffectingCombat("player") or IsMounted() then
         self.pet:Hide()
         return
     end
@@ -212,7 +212,7 @@ end
 ---Handler for candy frame
 ---@param self WarlockReminder self
 local function CandyHandler(self)
-    if not addon.db[MOD_KEY]["CandyEnabled"] or addon.Global["inCombat"] then
+    if not addon.db[MOD_KEY]["CandyEnabled"] or UnitAffectingCombat("player") then
         self.candy:Hide()
         return
     end
@@ -277,7 +277,7 @@ end
 ---Test mode for WarlockReminder
 ---@param on boolean turn the Test mode on or off
 function WarlockReminder:Test(on)
-    if on and not addon.Global["inCombat"] then
+    if on and not UnitAffectingCombat("player") then
 		self.pet:Show()
         addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetX")
 

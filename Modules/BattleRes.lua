@@ -16,8 +16,6 @@ local BATTLE_RES_TEXTURE = 136080
 ---Initialize(Constructor)
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
-    self.modName = "BattleRes"
-
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
     

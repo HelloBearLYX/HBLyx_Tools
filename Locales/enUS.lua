@@ -7,12 +7,19 @@ L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or o
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r Configurations Panel"
 L["Notifications"] = "Notifications"
-L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately. The profile sharing feature is in development, but you can use screenshot to share your settings for now."
+L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" .. 
+"You can find on |cff8788eeHBLyx|r's CurseForge page:" .. "\n" ..
+"|cff8788eeHBLyx_Tools|r: a collection of modules including Combat Indicator, Combat Timer, Focus Interrupt and more modules" .. "\n" ..
+"|cff8788eeMidnightFocusInterrupt|r: Focus Interrupt module standalone version" .. "\n" ..
+"|cff8788eeSharedMedia_HBLyx|r: an AI-generated Chinese sound pack(LibSharedMedia)"
+
 --MARK: Issues
 L["Issues"] = "Issues"
-L["AnyIssues"] = "If you encounter any issues, please report them to the addon author through the contact information"
-L["IssuesContent"] = "The profile sharing feature is in development\n" ..
-"\nQ: Will there be a target version for the Focus Interrupt module?\nA: No plan for it, the target cast bar is too redundant with other addons"
+L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"
+L["IssuesContent"] = "Q: Will there be a target version for the Focus Interrupt module?\nA: No plan for it, the target cast bar is too redundant with other addons" .. "\n\n" ..
+"Q: Can you add XXX spell as an interrupt spell in Focus Interrupt module?\nA: No, spells with GCD cannot be added due to Blizzard's API restrictions. If you want to add a spell without GCD, please inform me with the spell details" .. "\n\n" ..
+"Q: The BattleRes cannot display at the start of some Beta M+ dungeons and \"reload\" can fix it, why?\nA: It is caused by Blizzard's failure to trigger the CHALLENGE_MODE_START event in some dungeons with M+ mode, there is currently no good solution, wait for Blizzard to fix it"
+
 -- MARK: Contact
 L["Contact"] = "Contact"
 L["GitHub"] = "Submit issue on GitHub"
@@ -46,6 +53,14 @@ L["ComfirmResetMod"] = "Are you sure you want to reset all settings for this mod
 L["Anchor"] = "Anchor"
 L["Grow"] = "Grow Direction"
 L["General"] = "General"
+L["Profile"] = "Profile"
+L["Export"] = "Export"
+L["Import"] = "Import"
+L["ProfileSettingsDesc"] = "Export and Import your profile with the string below.\n\nExported string contains all modules"
+L["ImportSuccess"] = "Profile imported successfully. Please reload your UI to apply the changes."
+L["ModuleProfile"] = "Module Profile"
+L["ModuleProfileDesc"] = "You can select a module to export/import profile separately.\n\nTo export, select the module below first. To import, the module will be automatically recognized from the string"
+L["SelectModule"] = "Select Module"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

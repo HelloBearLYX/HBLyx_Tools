@@ -19,6 +19,7 @@ local TABS = {
     {text = L["BattleResSettings"], value = "BattleRes"},
     {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
     {text = L["WarlockReminders"], value = "WarlockReminder"},
+    {text = L["Profile"], value = "Profile"},
 }
 
 -- MARK: Initialize GUI
@@ -80,13 +81,13 @@ function addon.GUI:Initialize()
             addon.GUI:CreateInformationTag(issueGroup, L["IssuesContent"], "LEFT")
             local contactGroup = addon.GUI:CreateInlineGroup(panel, L["Contact"])
             local gitHubInteractive = AceGUI:Create("InteractiveLabel")
-            gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGithub|r")
+            gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r")
             gitHubInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
             gitHubInteractive:SetJustifyV("MIDDLE")
             gitHubInteractive:SetRelativeWidth(0.33)
             gitHubInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL(L["GitHub"], "https://github.com/HelloBearLYX/HBLyx_Tools/issues") end)
-            gitHubInteractive:SetCallback("OnEnter", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFFFFFFFFGithub|r") end)
-            gitHubInteractive:SetCallback("OnLeave", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGithub|r") end)
+            gitHubInteractive:SetCallback("OnEnter", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFFFFFFFFGitHub|r") end)
+            gitHubInteractive:SetCallback("OnLeave", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r") end)
             contactGroup:AddChild(gitHubInteractive)
             local curseForgeInteractive = AceGUI:Create("InteractiveLabel")
             curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r")
@@ -116,6 +117,9 @@ function addon.GUI:Initialize()
             panel:DoLayout()
         elseif tab == "WarlockReminder" then
             local panel = addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container)
+            panel:DoLayout()
+        elseif tab == "Profile" then
+            local panel = addon.GUI.TagPanels.Profile:CreateTabPanel(container)
             panel:DoLayout()
         end
     end)
@@ -389,9 +393,33 @@ function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callbac
             callback(key)
         end
     end)
+
     parent:AddChild(dropdown)
     return dropdown
-    
+end
+
+-- MARK: MultiLine EditBox
+
+---Create a multi-line edit box
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param get string the value to set
+---@param callback fun(newValue: string) callback function when value changed
+---@return AceGUIWidget
+function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
+    local editBox = AceGUI:Create("MultiLineEditBox")
+    editBox:SetLabel(label)
+    editBox:SetText(get)
+    editBox:SetRelativeWidth(0.5)
+    editBox:SetHeight(200)
+    editBox:SetCallback("OnEnterPressed", function(self)
+        if callback then
+            callback(self:GetText())
+        end
+    end)
+
+    parent:AddChild(editBox)
+    return editBox
 end
 
 -- MARK: Open/Close GUI

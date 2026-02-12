@@ -187,4 +187,17 @@ function addon.Core:TestMode(on)
     end
 end
 
+-- MARK: Get Module List
+
+---Get All Modules List(include not-loaded)
+---@return table<String> list of all registered module keys
+function addon.Core:GetModuleList()
+    local output = {}
+    for mod, _ in pairs(self.registeredMods) do
+        table.insert(output, mod)
+    end
+
+    return output
+end
+
 addon.core = addon.Core:Initialize()

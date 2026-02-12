@@ -8,12 +8,19 @@ L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r配置面板"
 L["Notifications"] = "通知"
-L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块. 配置文件分享功能正在开发中, 但你可以暂时使用截图来分享你的设置"
+L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
+"你可以在|cff8788eeHBLyx|r的CurseForge页面里找到:" .. "\n" ..
+"|cff8788eeHBLyx_Tools|r: 一个包含战斗指示器, 战斗计时器, 焦点打断以及更多模块的集合" .. "\n" ..
+"|cff8788eeMidnightFocusInterrupt|r: 焦点打断模块的独立版本" .. "\n" ..
+"|cff8788eeSharedMedia_HBLyx|r: 一个AI生成的中文语音素材包(LibSharedMedia)"
+
 --MARK: Issues
 L["Issues"] = "问题"
-L["AnyIssues"] = "如果你遇到任何问题, 请通过联系方式向插件作者报告"
-L["IssuesContent"] = "配置文件分享功能正在开发中\n" .. 
-"\nQ:焦点打断模块是否会有目标版本?\nA:暂时不考虑,目标施法条因为和其他插件提供的功能过于重复"
+L["AnyIssues"] = "如果你遇到任何问题, 请通过联系方式向插件作者反馈"
+L["IssuesContent"] = "Q:焦点打断模块是否会有目标版本?\nA:暂时不考虑,目标施法条因为和其他插件提供的功能过于重复" .. "\n\n" ..
+"Q:能否在焦点打断模块中添加XXX技能作为打断技能?\nA: 不能,由于暴雪的API限制,带有GCD的技能无法添加。若你想添加一个无GCD的技能,请告知我(提供技能详情)" .. "\n\n" ..
+"Q:战复计时器在部分Beta大秘境开始时无法正确显示,必须重载,这是为什么?\nA: 这是暴雪部分副本的大秘境开始事件(CHALLENGE_MODE_START)没有正确触发导致的,目前没有好的解决方法,只能等暴雪修复了"
+
 -- MARK: Contact
 L["Contact"] = "联系方式"
 L["GitHub"] = "在GitHub提交问题"
@@ -47,6 +54,14 @@ L["ComfirmResetMod"] = "您确定要重置此模块的所有设置吗?(同时重
 L["Anchor"] = "锚点"
 L["Grow"] = "成长方向"
 L["General"] = "综合"
+L["Profile"] = "配置文件"
+L["Export"] = "导出"
+L["Import"] = "导入"
+L["ProfileSettingsDesc"] = "使用下面的字符串导出和导入你的配置文件\n\n导出的字符串包含了所有模块的设置"
+L["ImportSuccess"] = "配置文件导入成功,请重载界面以应用更改"
+L["ModuleProfile"] = "模块配置文件"
+L["ModuleProfileDesc"] = "你可以选择一个模块来单独导出/导入配置文件\n\n导出时先在下面选择模块,导入时字符串会自动识别模块"
+L["SelectModule"] = "选择模块"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

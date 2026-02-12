@@ -67,7 +67,7 @@ local function Handle(self, event, ...)
     else
         for _, funcs in pairs(self.eventMap[event]) do
             for _, func in pairs(funcs) do
-                func(...)
+                func(event, ...)
             end
         end
     end

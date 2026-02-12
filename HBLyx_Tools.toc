@@ -20,7 +20,7 @@ configure.lua
 core.lua
 
 # developer use only
-# Modules\DeveloperTools.lua
+Modules\DeveloperTools.lua
 
 # modules
 Modules\FocusInterrupt.lua

@@ -1,6 +1,12 @@
 local ADDON_NAME, addon = ...
 
----@class Manager
+---@class addon.Core
+---@field eventFrame Frame the frame used to register events
+---@field eventMap table<string, table<string, table<function>>> map of event to module to functions, used to handle events
+---@field modules table<string, table> map of module key to module instance, used to store
+---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
+---@field totalMods number total number of registered modules, used to check if all modules are loaded
+---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
 addon.Core = {
     eventFrame = nil,
     eventMap = {},
@@ -13,7 +19,7 @@ addon.Core = {
 -- MARK: Initialize
 
 ---Initialize/Constructor
----@return Manager
+---@return addon.Core
 function addon.Core:Initialize()
     self.eventFrame = CreateFrame("Frame")
     self.eventMap = {}
@@ -32,7 +38,7 @@ end
 -- MARK: private event register
 
 ---Register event for the EventHandler on the EventHandler.eventFrame
----@param self Manager self
+---@param self addon.Core self
 ---@param event string event to register
 ---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
 local function RegisterE(self, event, unit)

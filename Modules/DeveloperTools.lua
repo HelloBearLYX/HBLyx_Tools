@@ -1,7 +1,7 @@
 local ADDON_NAME, addon = ...
 
 ---@class DeveloperTools
----@field displayFrame frame? a frame to display developer tool's outputs
+---@field displayFrame frame|nil a frame to display developer tool's outputs
 addon.DeveloperTools = {
     displayFrame = nil,
 }
@@ -67,38 +67,38 @@ end
 
 local function GetEventsInfo()
     local events = {}
-    for event, _ in pairs(addon.eventsHandler.eventNameMap) do
+    local eventsCount = {}
+    for event, modules in pairs(addon.core.eventMap) do
         table.insert(events, event)
+        eventsCount[event] = 0
+        for _, funcs in pairs(modules) do
+            eventsCount[event] = eventsCount[event] + #funcs
+        end
     end
     table.sort(events, function (a, b)
-        if #addon.eventsHandler.eventNameMap[a] == #addon.eventsHandler.eventNameMap[b] then
+        if eventsCount[a] == eventsCount[b] then
             return a < b
         end
 
-        return #addon.eventsHandler.eventNameMap[a] > # addon.eventsHandler.eventNameMap[b]
+        return eventsCount[a] > eventsCount[b]
     end)
 
-    local output = ""
-    local count = 0
+    local output = "|cff8788EEEvents Info|r:\n"
+    local total = 0
     
     for _, event in ipairs(events) do
-        output = output .. "|cff00ff00" .. event .. "|r|cffC41E3A(" .. tostring(#addon.eventsHandler.eventNameMap[event]) .. ")|r: "
-        count = count + #addon.eventsHandler.eventNameMap[event]
-        for i, mod in ipairs(addon.eventsHandler.eventNameMap[event]) do
-            if i < #addon.eventsHandler.eventNameMap[event] then -- NOTE: Lua start index with 1 end with n instead of 0 to n-1
-                output = output .. tostring(mod .. ", ")
-            else
-                output = output .. tostring(mod .. "\n")
-            end
+        output = output .. "|cff00ff00" .. event .. "|r|cffC41E3A(" .. tostring(eventsCount[event]) .. ")|r: "
+        total = total + eventsCount[event]
+        for mod, _ in pairs(addon.core.eventMap[event]) do
+            output = output .. mod .. ", "
         end
+        output = output .. "\n"
     end
 
-    output = output .. string.format("*|cff00ff00Total Events: %d|r *|cffC41E3ATotal Registers: %d|r\n", #events, count)
+    output = output .. string.format("*|cff00ff00Total Events: %d|r *|cffC41E3ATotal Registers: %d|r\n", #events, total)
 
     return output
 end
-
--- public methods
 
 local function GetGlobalVarInfo()
     local vars = {}
@@ -107,7 +107,7 @@ local function GetGlobalVarInfo()
     end
     table.sort(vars)
 
-    local output = ""
+    local output = "|cff8788EEGlobal Variables Info|r:\n"
     
     for i, var in ipairs(vars) do
         if i < #vars then
@@ -120,6 +120,24 @@ local function GetGlobalVarInfo()
     return output
 end
 
+local function GetModulesInfo()
+    local output = "|cff8788EEModules Info|r:\n"
+
+    output = output .. string.format("|cffFF7C0ARegistered Modules|r|cffC41E3A(%d)|r: ", addon.core.totalMods)
+    for mod, _ in pairs(addon.core.registeredMods) do
+        output = output .. mod .. ", "
+    end
+    output = output .. "\n"
+
+    output = output .. string.format("|cff00ff00Loaded Modules|r|cffC41E3A(%d)|r: ", addon.core.loadedMods)
+    for mod, _ in pairs(addon.core.modules) do
+        output = output .. mod .. ", "
+    end
+    output = output .. "\n"
+
+    return output
+end
+
 function addon.DeveloperTools:DisplayAddonInfo()
     if self.displayFrame then -- if there is an existing display frame
         CreateDisplayFrame(self, "") -- erase and reset it
@@ -128,7 +146,7 @@ function addon.DeveloperTools:DisplayAddonInfo()
 
     local output = ""
 
-    output = output .. GetEventsInfo() .. "\n" .. GetGlobalVarInfo()
+    output = output .. GetModulesInfo() .. "\n" .. GetEventsInfo() .. "\n" .. GetGlobalVarInfo()
 
     CreateDisplayFrame(self, output)
 end

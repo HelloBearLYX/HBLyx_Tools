@@ -4,6 +4,8 @@ local GUI = addon.GUI
 local Serialize = LibStub:GetLibrary("AceSerializer-3.0")
 local Compress = LibStub:GetLibrary("LibDeflate")
 
+---Get modules list with locales(some old locales are not in formats)
+---@return table<string, string> list key is module key, value is localized name
 local function GetModuleNameList()
     local list = addon.core:GetModuleList()
     local output = {}
@@ -29,6 +31,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     local frame = GUI:CreateScrollFrame(parent)
     frame:SetLayout("Flow")
 
+    -- MARK: General Profile
     local generalProfileGroup = GUI:CreateInlineGroup(frame, L["Profile"])
     GUI:CreateInformationTag(generalProfileGroup, L["ProfileSettingsDesc"], "LEFT")
     GUI:CreateMultiLineEditBox(generalProfileGroup, L["Export"], addon:ExportProfile(), nil)
@@ -36,6 +39,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
         addon:ImportProfile(value)
     end)
 
+    -- MARK: Module Profile
     local modProfileGroup = GUI:CreateInlineGroup(frame, L["ModuleProfile"])
     GUI:CreateInformationTag(modProfileGroup, L["ModuleProfileDesc"], "LEFT")
     GUI:CreateInformationTag(modProfileGroup, "\n")
@@ -57,6 +61,10 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     return frame
 end
 
+-- MARK: Profile Export
+
+---Export all profiles
+---@return string|nil export profile string or nil if no profile data
 function addon:ExportProfile()
     local profile = addon.db
     if not profile then
@@ -72,6 +80,9 @@ function addon:ExportProfile()
     return "!HBLyx_Tools_Profile_" .. encodedData
 end
 
+---Export profile for the module
+---@param mod string key for the module
+---@return string|nil export profile string or nil if no profile data for the module
 function addon:ExportModuleProfile(mod)
     local moduleProfile = addon.db[mod]
     if not moduleProfile then
@@ -88,6 +99,11 @@ function addon:ExportModuleProfile(mod)
     return prefix .. encodedData
 end
 
+-- MARK: Profile Import
+
+---Import all profiles
+---@param data string profile string to import
+---@return boolean success if the import was successful
 function addon:ImportProfile(data)
     local decodedData = Compress:DecodeForPrint(data:sub(22))
     local decompressedData = Compress:DecompressDeflate(decodedData)
@@ -102,6 +118,10 @@ function addon:ImportProfile(data)
     addon.Utilities:print(L["ImportSuccess"])
 end
 
+---Import module profile
+---@param data string module profile string to import
+---@param mod string key for the module
+---@return boolean success if the import was successful
 function addon:ImportModuleProfile(data, mod)
     local prefix = "!HBLyx_Tools_" .. mod .. "_"
     local prefixLength = string.len(prefix)

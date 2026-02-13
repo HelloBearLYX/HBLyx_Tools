@@ -190,7 +190,7 @@ end
 -- MARK: Get Module List
 
 ---Get All Modules List(include not-loaded)
----@return table<String> list of all registered module keys
+---@return table<string> list of all registered module keys
 function addon.Core:GetModuleList()
     local output = {}
     for mod, _ in pairs(self.registeredMods) do

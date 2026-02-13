@@ -57,9 +57,9 @@ local function Handler(self)
 
     if not addon.db[MOD_KEY]["Mute"] then
         if UnitAffectingCombat("player") then
-            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMedia"]), "Master")
+            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
         else
-            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), "Master")
+            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
         end
     end
 

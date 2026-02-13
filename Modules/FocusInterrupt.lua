@@ -428,7 +428,7 @@ local function Handler(self)
 
     -- attempted to use "HookScript("OnShow", func)" for sound alert, nontheless frames are seen as shown while zero alpha and SetShown() cannot take secret-values
     if not addon.db[MOD_KEY]["Mute"] then
-        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), "Master")
+        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
     end
 
     self.frame:Show()

@@ -15,6 +15,7 @@ addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Mute = true,
     SoundMedia = ADDON_NAME .. "_FocusDefault",
+    SoundChannel = "Master",
     CooldownHide = false,
     CooldownColor = "ffC41E3A",
     NotInterruptibleHide = true,
@@ -190,6 +191,9 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     end)
     GUI:CreateSoundSelect(soundGroup, L["Sound"], addon.db.FocusInterrupt.SoundMedia, function(value)
         addon.db.FocusInterrupt.SoundMedia = value
+    end)
+    GUI:CreateDropDown(soundGroup, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.FocusInterrupt.SoundChannel, false, function(value)
+        addon.db.FocusInterrupt.SoundChannel = value
     end)
 
     return frame

@@ -18,12 +18,21 @@ addon.Utilities.Anchors = {
 	BOTTOMRIGHT = "BOTTOMRIGHT",
 }
 
----@enum
+---@enum growDirection the direction to grow from anchor point
 addon.Utilities.Grows = {
 	LEFT = "LEFT",
 	RIGHT = "RIGHT",
 	UP = "UP",
 	DOWN = "DOWN",
+}
+
+---@enum soundChannel sound channel
+addon.Utilities.SoundChannels = {
+	Master = L["SoundChannel"]["Master"],
+	SFX = L["SoundChannel"]["SFX"],
+	Music = L["SoundChannel"]["Music"],
+	Ambience = L["SoundChannel"]["Ambience"],
+	Dialog = L["SoundChannel"]["Dialog"],
 }
 
 -- MARK: print

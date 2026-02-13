@@ -27,6 +27,7 @@ addon.configurationList[MOD_KEY] = {
 	Mute = true,
 	InCombatSoundMedia = ADDON_NAME.. "_EnterCombat",
 	OutCombatSoundMedia = ADDON_NAME.. "_LeaveCombat",
+	SoundChannel = "Master",
 }
 
 -- GUI
@@ -107,6 +108,9 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	GUI:CreateSoundSelect(soundGroup, L["CombatOutSoundMedia"], addon.db.CombatIndicator.OutCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.OutCombatSoundMedia = value
 	end)
+	GUI:CreateDropDown(soundGroup, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CombatIndicator.SoundChannel, false, function(value)
+        addon.db.CombatIndicator.SoundChannel = value
+    end)
 
 	return frame
 end

@@ -26,6 +26,16 @@ L["Contact"] = "联系方式"
 L["GitHub"] = "在GitHub提交问题"
 L["CurseForge"] = "在CurseForge发表评论"
 
+-- MARK: Sound Channel
+L["SoundChannelSettings"] = "声音通道"
+L["SoundChannel"] = {
+	Master = "主音量",
+	SFX = "效果",
+	Music = "音乐",
+	Ambience = "环境音",
+	Dialog = "对话",
+}
+
 -- MARK: Config
 L["Test"] = "测试/解锁(拖动移动)"
 L["Mute"] = "静音"

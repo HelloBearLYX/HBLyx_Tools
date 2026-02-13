@@ -25,6 +25,16 @@ L["Contact"] = "Contact"
 L["GitHub"] = "Submit issue on GitHub"
 L["CurseForge"] = "Comments on CurseForge"
 
+-- MARK: Sound Channel
+L["SoundChannelSettings"] = "Sound Channel"
+L["SoundChannel"] = {
+	Master = "Master",
+	SFX = "Effects",
+	Music = "Music",
+	Ambience = "Ambience",
+	Dialog = "Dialog",
+}
+
 -- MARK: Config
 L["Test"] = "Test/Unlock(Drag to Move)"
 L["Mute"] = "Mute"

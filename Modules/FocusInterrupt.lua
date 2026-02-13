@@ -138,9 +138,13 @@ end
 ---@param isInterruptReady boolean is Interrupt ready
 ---@param subInterruptReady boolean? is subInterrupt ready(optional)
 local function SetBarColor(self, interrupted, notInterruptible, isInterruptReady, subInterruptReady)
-    local color = C_CurveUtil.EvaluateColorFromBoolean(interrupted, self.interruptedColor, self.interruptibleColor)
+    local color = self.interruptibleColor
+    if interrupted then
+        color = C_CurveUtil.EvaluateColorFromBoolean(interrupted, self.interruptedColor, self.interruptibleColor)
+        self.frame.statusBar:GetStatusBarTexture():SetVertexColor(color:GetRGBA())
+        return
+    end
 
-    -- also secret-value comparation operations: See details in Update() -> Hidden-Control
     color = C_CurveUtil.EvaluateColorFromBoolean(isInterruptReady, color, self.cooldownColor)
 
     if self.subInterrupt then
@@ -215,14 +219,14 @@ end
 ---@param guid integer the GUID of the interrupter
 local function InterruptHandler(self, guid)
     local interrupter, class = GetInterrupter(guid)
-    local color = C_ClassColor.GetClassColor(class):GenerateHexColor() or "FFFFFF" -- also secret-value
+    local color = C_ClassColor.GetClassColor(class or "PRIEST"):GenerateHexColor() -- also secret-value
 
     if addon.db[MOD_KEY]["ShowInterrupter"] then
         self.frame.spellText:SetText(L["Interrupted"] .. ": |c".. color .. interrupter .. "|r")
     else
         self.frame.spellText:SetText(L["Interrupted"])
     end
-    SetBarColor(self, true, false, true) -- change color to interrupted color
+    SetBarColor(self, true, false, false, false) -- change color to interrupted color
     self.active = false
 
     if self.timer then
@@ -232,7 +236,7 @@ local function InterruptHandler(self, guid)
     self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["InterruptedFadeTime"], function ()
         self.timer = nil
         self.frame:Hide()
-        SetBarColor(self, false, false, true) -- reset color
+        SetBarColor(self, false, false, false, false) -- reset color
     end)
 end
 
@@ -536,7 +540,7 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         if self.timer then -- if the interrupted fade Timer is still there, we should immediately halt it and handle new cast
             self.timer:Cancel()
             self.timer = nil
-            SetBarColor(self, false, false, true)
+            SetBarColor(self, false, false, false, false) -- reset color
         end
         
         self.active = true

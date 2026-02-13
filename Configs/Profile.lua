@@ -46,7 +46,6 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     local modExportBox = GUI:CreateMultiLineEditBox(modProfileGroup, L["Export"], "", nil)
     GUI:CreateMultiLineEditBox(modProfileGroup, L["Import"], "", function(value)
         local mod = value:match("!HBLyx_Tools_(%w+)_")
-        addon:debug("mod: " .. mod)
         if not mod or mod == "" then
             addon.Utilities:print("Invalid module profile string.")
             return
@@ -116,6 +115,8 @@ function addon:ImportProfile(data)
 
     addon.db = profileData.profile
     addon.Utilities:print(L["ImportSuccess"])
+
+    return true
 end
 
 ---Import module profile
@@ -136,4 +137,6 @@ function addon:ImportModuleProfile(data, mod)
 
     addon.db[mod] = profileData[mod]
     addon.Utilities:print(string.format("Module %s profile imported successfully.", mod))
+
+    return true
 end

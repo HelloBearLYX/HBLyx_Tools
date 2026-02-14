@@ -29,6 +29,7 @@ Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
 Modules\WarlockReminder.lua
+Modules\InterruptTracker.lua
 
 # handle configuration and options
 GUI.lua

@@ -197,11 +197,18 @@ end
 
 ---Set Interrupt Icons if needed
 ---@param self FocusInterrupt self
+---@param interrupted boolean if the cast is already interrupted
 ---@param notInterruptible boolean if the cast is not-interruptible
 ---@param isInterruptReady boolean if the interrupt ready
 ---@param subInterruptReady boolean? if the sub-interrupt ready
-local function SetInterruptIcons(self, notInterruptible, isInterruptReady, subInterruptReady)
+local function SetInterruptIcons(self, interrupted, notInterruptible, isInterruptReady, subInterruptReady)
     if self.kickIcon then
+        if interrupted then -- if interrupted already, just hide both icons
+            self.kickIcon:SetAlphaFromBoolean(interrupted, 0, 255)
+            self.subKickIcon:SetAlphaFromBoolean(interrupted, 0, 255)
+            return
+        end
+
         self.kickIcon:SetAlphaFromBoolean(isInterruptReady)
         self.kickIcon:SetAlphaFromBoolean(notInterruptible, 0, self.kickIcon:GetAlpha())
 
@@ -227,6 +234,7 @@ local function InterruptHandler(self, guid)
         self.frame.spellText:SetText(L["Interrupted"])
     end
     SetBarColor(self, true, false, false, false) -- change color to interrupted color
+    SetInterruptIcons(self, true, false, false, false) -- hide interrupt icons
     self.active = false
 
     if self.timer then
@@ -236,7 +244,6 @@ local function InterruptHandler(self, guid)
     self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["InterruptedFadeTime"], function ()
         self.timer = nil
         self.frame:Hide()
-        SetBarColor(self, false, false, false, false) -- reset color
     end)
 end
 
@@ -293,7 +300,7 @@ local function Update(self, duration, isChannel, notInterruptible)
     SetBarColor(self, false, notInterruptible, isInterruptReady, subInterruptReady)
 
     -- handle interrupt icons
-    SetInterruptIcons(self, notInterruptible, isInterruptReady, subInterruptReady)
+    SetInterruptIcons(self, false, notInterruptible, isInterruptReady, subInterruptReady)
 
     -- Hidden-Control
         -- As secret-value cannot compute, even compare between secret-values are not allowed
@@ -540,7 +547,6 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         if self.timer then -- if the interrupted fade Timer is still there, we should immediately halt it and handle new cast
             self.timer:Cancel()
             self.timer = nil
-            SetBarColor(self, false, false, false, false) -- reset color
         end
         
         self.active = true

@@ -92,6 +92,7 @@ end
 
 -- MARK: States
 
+---Initialize addon states
 local function InitializeStates()
 	addon.states = {}
 

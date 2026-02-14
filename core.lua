@@ -201,12 +201,17 @@ end
 -- MARK: TestMode
 
 ---Turn on/off TestMode for all loaded modules
----@param on boolean on(true)/off(false)
+---@param on boolean|nil turn on or off the test mode, nil to toggle the test mode
 function addon.Core:TestMode(on)
-    self.testMode = on
+    if on == nil then
+        self.testMode = not self.testMode -- toggle test mode if on is nil
+    else
+        self.testMode = on -- set test mode to on if on is not nil
+    end
+
     for _, module in pairs(self.modules) do -- for all loaded modules, call the Test function if it exists
         if module.Test then
-            module:Test(on)
+            module:Test(self.testMode)
         end
     end
 end

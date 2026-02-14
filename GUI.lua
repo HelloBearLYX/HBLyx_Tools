@@ -43,8 +43,7 @@ function addon.GUI:Initialize()
         end
 
         self.isOpened = false
-        addon.isTestMode = false
-        addon:TestMode(addon.isTestMode)
+        addon.core:TestMode(false) -- turn off test mode when closing GUI
     end)
 
     -- MARK: Test button
@@ -52,8 +51,7 @@ function addon.GUI:Initialize()
     self.TestButton:SetText(L["Test"])
     self.TestButton:SetWidth(200)
     self.TestButton:SetCallback("OnClick", function()
-        addon.isTestMode = not addon.isTestMode
-        addon:TestMode(addon.isTestMode)
+        addon.core:TestMode() -- toggle test mode on/off when click the button
     end)
     self.frame:AddChild(self.TestButton)
 

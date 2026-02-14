@@ -82,14 +82,6 @@ function addon:GetVersion()
 	return addon.version
 end
 
--- MARK: TestMode
-
----Addon's Test(Unlock) mod
----@param on boolean If test mod on
-function addon:TestMode(on)
-	addon.core:TestMode(on)
-end
-
 -- MARK: States
 
 ---Initialize addon states

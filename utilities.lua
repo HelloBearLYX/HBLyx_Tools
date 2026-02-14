@@ -104,22 +104,6 @@ function addon.Utilities:ScreenPositionToUIPosition(x, y)
 	return x - centerX, y - centerY
 end
 
--- MARK: Spell2Icon
-
----Get Icon ID Through Spell ID
----@param spellID integer spellID
----@return integer? iconID return iconID or nil for error
-function addon.Utilities:SpellToIcon(spellID)
-	if spellID then
-		local spellInfo = C_Spell.GetSpellInfo(spellID)
-		if  spellID then
-			return spellInfo.iconID
-		end
-	end
-
-	return nil
-end
-
 -- MARK: Get AnchorTo
 
 ---Get anchor_from by anchor_to

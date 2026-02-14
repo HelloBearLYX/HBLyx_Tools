@@ -7,6 +7,7 @@ local ADDON_NAME, addon = ...
 ---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
 ---@field totalMods number total number of registered modules, used to check if all modules are loaded
 ---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
+---@field testMode boolean if the addon is in test mode
 addon.Core = {
     eventFrame = nil,
     eventMap = {},
@@ -14,6 +15,7 @@ addon.Core = {
     registeredMods = {},
     totalMods = 0,
     loadedMods = 0,
+    testMode = false,
 }
 
 -- MARK: Initialize
@@ -180,11 +182,26 @@ end
 ---Turn on/off TestMode for all loaded modules
 ---@param on boolean on(true)/off(false)
 function addon.Core:TestMode(on)
+    self.testMode = on
     for _, module in pairs(self.modules) do -- for all loaded modules, call the Test function if it exists
         if module.Test then
             module:Test(on)
         end
     end
+end
+
+-- MARK: Module Test Mode
+
+---Attempt to turn the test mod for the module
+---@param module string module key
+---@return boolean success if the test mode is turned on after this call
+function addon.Core:TestModule(module)
+    if self.modules[module] and self.modules[module].Test then
+        self.modules[module]:Test(self.testMode)
+        return self.testMode
+    end
+
+    return false
 end
 
 -- MARK: Get Module List

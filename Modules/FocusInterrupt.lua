@@ -175,6 +175,7 @@ local function UpdateIcons(self)
     local anchorChild, anchorParent = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["KickIconGrow"])
 
     self.kickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+    self.kickIcon:ClearAllPoints()
     self.kickIcon:SetPoint(anchorFrom, self.frame, anchorTo, 0, 0)
     self.kickIcon.icon:SetTexCoord(
         addon.db[MOD_KEY]["IconZoom"],
@@ -182,15 +183,18 @@ local function UpdateIcons(self)
         addon.db[MOD_KEY]["IconZoom"],
         1 - addon.db[MOD_KEY]["IconZoom"]
     )
-    
-    self.subKickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
-    self.subKickIcon:SetPoint(anchorChild, self.kickIcon, anchorParent, 0, 0)
-    self.subKickIcon.icon:SetTexCoord(
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"],
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"]
-    )
+
+    if self.subKickIcon then
+        self.subKickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+        self.subKickIcon:ClearAllPoints()
+        self.subKickIcon:SetPoint(anchorChild, self.kickIcon, anchorParent, 0, 0)
+        self.subKickIcon.icon:SetTexCoord(
+            addon.db[MOD_KEY]["IconZoom"],
+            1 - addon.db[MOD_KEY]["IconZoom"],
+            addon.db[MOD_KEY]["IconZoom"],
+            1 - addon.db[MOD_KEY]["IconZoom"]
+        )
+    end
 end
 
 --MARK: SetInterruptIcons
@@ -205,14 +209,16 @@ local function SetInterruptIcons(self, interrupted, notInterruptible, isInterrup
     if self.kickIcon then
         if interrupted then -- if interrupted already, just hide both icons
             self.kickIcon:SetAlphaFromBoolean(interrupted, 0, 255)
-            self.subKickIcon:SetAlphaFromBoolean(interrupted, 0, 255)
+            if self.subKickIcon then
+                self.subKickIcon:SetAlphaFromBoolean(interrupted, 0, 255)
+            end
             return
         end
 
         self.kickIcon:SetAlphaFromBoolean(isInterruptReady)
         self.kickIcon:SetAlphaFromBoolean(notInterruptible, 0, self.kickIcon:GetAlpha())
 
-        if self.subInterrupt then
+        if self.subKickIcon then
             self.subKickIcon:SetAlphaFromBoolean(subInterruptReady)
             self.subKickIcon:SetAlphaFromBoolean(notInterruptible, 0, self.subKickIcon:GetAlpha())
         end
@@ -346,30 +352,26 @@ local function UpdateInterruptId(self)
         self.kickIcon.border:SetBackdropBorderColor(0, 0, 0, 1)
         self.kickIcon.icon = self.kickIcon:CreateTexture(nil, "ARTWORK")
         self.kickIcon.icon:SetAllPoints()
+        self.kickIcon.icon:SetTexture(C_Spell.GetSpellInfo(self.interruptID).iconID or UNKNOWN_SPELL_TEXTURE)
 
-        self.subKickIcon = CreateFrame("Frame", nil, self.frame)
-        self.subKickIcon.border = CreateFrame("Frame", nil, self.subKickIcon, "BackdropTemplate")
-        self.subKickIcon.border:SetAllPoints()
-        self.subKickIcon.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
-        self.subKickIcon.border:SetBackdropBorderColor(0, 0, 0, 1)
-        self.subKickIcon.icon = self.subKickIcon:CreateTexture(nil, "ARTWORK")
-        self.subKickIcon.icon:SetAllPoints()
-        self.subKickIcon:Hide()
-
-        self.kickIcon.icon:SetTexture(addon.Utilities:SpellToIcon(self.interruptID) or UNKNOWN_SPELL_TEXTURE)
-        
         if self.subInterrupt then
-            self.subKickIcon.icon:SetTexture(addon.Utilities:SpellToIcon(self.subInterrupt) or UNKNOWN_SPELL_TEXTURE)
-            self.subKickIcon:Show()
-        else
-            self.subKickIcon:Hide()
+            self.subKickIcon = CreateFrame("Frame", nil, self.frame)
+            self.subKickIcon.border = CreateFrame("Frame", nil, self.subKickIcon, "BackdropTemplate")
+            self.subKickIcon.border:SetAllPoints()
+            self.subKickIcon.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+            self.subKickIcon.border:SetBackdropBorderColor(0, 0, 0, 1)
+            self.subKickIcon.icon = self.subKickIcon:CreateTexture(nil, "ARTWORK")
+            self.subKickIcon.icon:SetAllPoints()
+            self.subKickIcon.icon:SetTexture(C_Spell.GetSpellInfo(self.subInterrupt).iconID or UNKNOWN_SPELL_TEXTURE)
         end
 
         UpdateIcons(self)
     else
         if self.kickIcon then
             self.kickIcon:Hide()
-            self.subKickIcon:Hide()
+            if self.subKickIcon then
+                self.subKickIcon:Hide()
+            end
             self.kickIcon = nil
             self.subKickIcon = nil
         end
@@ -527,6 +529,7 @@ function FocusInterrupt:Test(on)
         self.frame.statusBar:SetMinMaxValues(0, 30)
         local testDuration = C_DurationUtil.CreateDuration() -- use a Blizzard LuaDurationObject to test
         testDuration:SetTimeFromStart(GetTime(), 30)
+        UpdateInterruptId(self)
 
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
             Update(self, testDuration, false, false)

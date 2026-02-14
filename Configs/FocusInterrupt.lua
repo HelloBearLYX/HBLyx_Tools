@@ -53,7 +53,16 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     GUI:CreateInformationTag(frame, L["FocusInterruptSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["FocusInterruptSettings"] .. "|r", addon.db.FocusInterrupt.Enabled, function(value)
         addon.db.FocusInterrupt.Enabled = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
+            if not value then -- user try to disable the module
+                addon:ShowDialog(ADDON_NAME.."RLNeeded")
+            end
+        else -- if the module is not loaded yet
+            if value then -- user try to enable the module, just load it without asking for reload, since it will be loaded immediately
+                addon.core:LoadModule(MOD_KEY)
+                addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
+            end
+        end
     end)
     GUI:CreateToggleCheckBox(frame, L["FocusCastBarHidden"], addon.db.FocusInterrupt.Hidden, function(value)
         addon.db.FocusInterrupt.Hidden = value
@@ -96,6 +105,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     end)
     GUI:CreateToggleCheckBox(interruptIconsGroup, L["ShowDemoWarlockOnly"], addon.db.FocusInterrupt.ShowDemoWarlockOnly, function(value)
         addon.db.FocusInterrupt.ShowDemoWarlockOnly = value
+        addon:ShowDialog(ADDON_NAME.."RLNeeded")
     end)
     GUI:CreateInformationTag(interruptIconsGroup, "\n")
     GUI:CreateSlider(interruptIconsGroup, L["IconSize"], 10, 200, 1, addon.db.FocusInterrupt.KickIconSize, function(value)
@@ -104,11 +114,11 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     end)
     GUI:CreateDropDown(interruptIconsGroup, L["Anchor"], addon.Utilities.Anchors, addon.db.FocusInterrupt.KickIconAnchor, false, function(value)
         addon.db.FocusInterrupt.KickIconAnchor = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        update()
     end)
     GUI:CreateDropDown(interruptIconsGroup, L["Grow"], addon.Utilities.Grows, addon.db.FocusInterrupt.KickIconGrow, false, function(value)
         addon.db.FocusInterrupt.KickIconGrow = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        update()
     end)
 
     -- style

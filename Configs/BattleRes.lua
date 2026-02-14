@@ -32,7 +32,16 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 	GUI:CreateInformationTag(frame, L["BattleResSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BattleResSettings"] .. "|r", addon.db.BattleRes.Enabled, function(value)
 		addon.db.BattleRes.Enabled = value
-		addon:ShowDialog(ADDON_NAME.."RLNeeded")
+		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
+            if not value then -- user try to disable the module
+                addon:ShowDialog(ADDON_NAME.."RLNeeded")
+            end
+        else -- if the module is not loaded yet
+            if value then -- user try to enable the module, just load it without asking for reload, since it will be loaded immediately
+                addon.core:LoadModule(MOD_KEY)
+                addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
+            end
+        end
 	end)
 	GUI:CreateToggleCheckBox(frame, L["HideInactive"], addon.db.BattleRes.HideInactive, function(value)
 		addon.db.BattleRes.HideInactive = value

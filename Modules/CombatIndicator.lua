@@ -44,7 +44,7 @@ end
 local function Handler(self)
     -- local startTime = GetTime()
     local text, color
-    if UnitAffectingCombat("player") then
+    if addon.states["inCombat"] then
         text = addon.db[MOD_KEY]["InCombatText"]
         color = addon.db[MOD_KEY]["InCombatColor"]
     else
@@ -56,7 +56,7 @@ local function Handler(self)
     self.frame:Show()
 
     if not addon.db[MOD_KEY]["Mute"] then
-        if UnitAffectingCombat("player") then
+        if addon.states["inCombat"] then
             PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
         else
             PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])

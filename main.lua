@@ -90,6 +90,27 @@ function addon:TestMode(on)
 	addon.core:TestMode(on)
 end
 
+-- MARK: States
+
+local function InitializeStates()
+	addon.states = {}
+
+	-- player class
+	_, addon.states["playerClass"] = UnitClass("player")
+
+	-- if the player is in combat
+	addon.states["inCombat"] = UnitAffectingCombat("player")
+	addon.core:RegisterState("PLAYER_REGEN_DISABLED", "inCombat", function() addon.states["inCombat"] = true end)
+	addon.core:RegisterState("PLAYER_REGEN_ENABLED", "inCombat", function() addon.states["inCombat"] = false end)
+
+	-- player spec
+	local GetSpec = function ()
+		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
+	end
+	addon.core:RegisterState("PLAYER_ENTERING_WORLD", "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
+	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", "playerSpec", GetSpec)
+end
+
 -- MARK: Initialize
 
 ---Initialization before main
@@ -102,9 +123,8 @@ function addon:Initialize()
 	-- set up slash command
 	SetUpSlashCommand()
 
-    -- global variables
-	addon.Global = {}
-	_, addon.Global["characterClass"] = UnitClass("player")
+    -- global states such as player class, spec, in-combat status, etc.
+	InitializeStates()
 
     -- modules
 	addon.core:LoadAllModules()

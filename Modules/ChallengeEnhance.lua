@@ -54,7 +54,7 @@ local function UpdateTooltip(parent, mapID)
         onEnterParent(parent)
     end
 
-    if UnitAffectingCombat("player") then
+    if addon.states["inCombat"] then
         GameTooltip:Show()
         return
     end
@@ -129,7 +129,7 @@ end
 ---This must be executed after Blizzard_ChallengesUI loaded the PVEFrame and its icons
 ---@return boolean success if the buttons are created
 function ChallengeEnhance:Create()
-    if UnitAffectingCombat("player") or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
+    if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
 
     if ChallengesFrame.Update then
         local firstExecute = true

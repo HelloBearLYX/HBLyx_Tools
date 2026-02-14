@@ -59,7 +59,7 @@ end
 ---Handler for CombatTimer
 ---@param self CombatTimer self
 local function Handler(self)
-    if UnitAffectingCombat("player") then
+    if addon.states["inCombat"] then
         self.startTime = GetTime()
         self.frame:Show()
         -- update every 1 sec instead of 1 frame to improve the performance

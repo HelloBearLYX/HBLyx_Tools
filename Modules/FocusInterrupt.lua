@@ -101,29 +101,17 @@ end
 ---@param self FocusInterrupt self
 ---@param class string Upper-case class string
 ---@return integer interruptID the interrupt spell ID
-local function GetInterruptSpellID(self, class)
-    local output = INTERRUPT_BY_CLASS[class].DEFAULT
+local function GetInterruptSpellID(self)
+    local output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEFAULT
     self.subInterrupt = nil
 
-    if class == "WARLOCK" then -- warlock has the complex cases handle it
-        -- specID: AFFLICTION = 1, DEMONOLOGY = 2, DESTRUCTION = 3
-        local spec = GetSpecialization()
-        if spec == 2 then
-            self.subInterrupt = INTERRUPT_BY_CLASS[class].DEMONOLOGY_SUB
-            output = INTERRUPT_BY_CLASS[class].DEMONOLOGY
-        end
-    elseif class == "HUNTER" then -- hunter has the complex cases handle it
-        -- specID: BEASTMASTERY = 1, MARKSMANSHIP = 2, SURVIVAL = 3
-        local spec = GetSpecialization()
-        if spec == 3 then
-            output = INTERRUPT_BY_CLASS[class].SURVIVAL
-        end
-    elseif class == "DRUID" then -- druid has the complex cases handle it
-        -- specID: BALANCE = 1, FERAL = 2, GUARDIAN = 3, RESTORATION = 4
-        local spec = GetSpecialization()
-        if spec == 1 then
-            output = INTERRUPT_BY_CLASS[class].BALANCE
-        end
+    if addon.states["playerSpec"] == 266 then -- demonology warlock
+        self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY_SUB
+        output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY
+    elseif addon.states["playerSpec"] == 102 then -- balance druid
+        output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].BALANCE
+    elseif addon.states["playerSpec"] == 255 then -- survival hunter
+        output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].SURVIVAL
     end
 
     return output
@@ -342,9 +330,14 @@ end
 ---Update FocusInterrupt's interruptID
 ---@param self FocusInterrupt self
 local function UpdateInterruptId(self)
-    self.interruptID = GetInterruptSpellID(self, addon.Global["characterClass"])
+    self.interruptID = GetInterruptSpellID(self)
     
     if addon.db[MOD_KEY]["ShowKickIcons"] and (not addon.db[MOD_KEY]["ShowDemoWarlockOnly"] or (addon.db[MOD_KEY]["ShowDemoWarlockOnly"] and self.subInterrupt ~= nil)) then
+        if self.kickIcon then -- delete old icon if exist
+            self.kickIcon:Hide()
+            self.kickIcon = nil
+        end
+
         self.kickIcon = CreateFrame("Frame", nil, self.frame)
         self.kickIcon.border = CreateFrame("Frame", nil, self.kickIcon, "BackdropTemplate")
         self.kickIcon.border:SetAllPoints()
@@ -353,6 +346,11 @@ local function UpdateInterruptId(self)
         self.kickIcon.icon = self.kickIcon:CreateTexture(nil, "ARTWORK")
         self.kickIcon.icon:SetAllPoints()
         self.kickIcon.icon:SetTexture(C_Spell.GetSpellInfo(self.interruptID).iconID or UNKNOWN_SPELL_TEXTURE)
+
+        if self.subKickIcon then -- delete old sub icon if exist
+            self.subKickIcon:Hide()
+            self.subKickIcon = nil
+        end
 
         if self.subInterrupt then
             self.subKickIcon = CreateFrame("Frame", nil, self.frame)
@@ -556,19 +554,19 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         Handler(self)
     end
     
-    local StopCastHandle = function(_, ...)
+    local StopCastHandle = function(...)
         if not self.timer then -- since the stop-cast events also triggered after the interrupted-events, must avoid stop-cast events override the interrupted-events
             self.active = false
             self.frame:Hide()
         end
     end
 
-    local InterruptedHandle = function (_, ...)
+    local InterruptedHandle = function (...)
         local _, _, _, guid = ... -- if guid != null -> some one interrupted it
         if guid then -- handle interrupted
             InterruptHandler(self, guid)
         else -- potential a normal stop cast
-            StopCastHandle(_, ...)
+            StopCastHandle(...)
         end
     end
 

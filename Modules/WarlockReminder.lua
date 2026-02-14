@@ -43,7 +43,7 @@ local PET_STANCE = { -- map pet stance names onto numbers
 ---Intialize(Constructor)
 ---@return WarlockReminder|nil WarlockReminder a WarlockReminder object(nil for non-warlock player -> not initialized)
 function WarlockReminder:Initialize()
-    if addon.Global["characterClass"] ~= "WARLOCK" then
+    if addon.states["playerClass"] ~= "WARLOCK" then
         return nil
     end
 
@@ -98,12 +98,6 @@ end
 
 -- MARK: private methods
 
----Get current specialization of the player
----@return integer spec an integer which indicates the current spec of warlock
-local function GetCurSpec()
-    return GetSpecializationInfo(GetSpecialization() or 1)
-end
-
 ---Determine whether there is at least one valid candy in the bag
 ---@return boolean isCandyValid if there is at least one valid candy in the bag
 local function IsCandyValid()
@@ -144,21 +138,20 @@ end
 ---Handler for pet frame
 ---@param self WarlockReminder self
 local function PetHandler(self)
-    if not addon.db[MOD_KEY]["PetEnabled"] or UnitAffectingCombat("player") or IsMounted() then
+    if not addon.db[MOD_KEY]["PetEnabled"] or addon.states["inCombat"] or IsMounted() then
         self.pet:Hide()
         return
     end
 
     -- check existance of pet
     local petFamily = ""
-    local spec = GetCurSpec()
     if UnitExists("pet") then -- pet is missing: petFamily == ""
         petFamily = UnitCreatureFamily("pet")
     end
 
     if petFamily == "" then -- if pet is missing
         self.pet.icon:SetDesaturated(true)
-        if spec == SPEC_ID.DEMONOLOGY then -- assign correct pet icon depending on spec
+        if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY then -- assign correct pet icon depending on spec
             self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
         else
             self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
@@ -166,7 +159,7 @@ local function PetHandler(self)
         self.pet.text:SetText(addon.db[MOD_KEY]["PetMissingText"])
         self.pet:Show()
     else -- check pet type
-        if spec == SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelguardEnabled"] then
+        if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelguardEnabled"] then
             if petFamily ~= L["PetFamily"]["Felguard"] then -- wrong type for demonology
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
@@ -174,7 +167,7 @@ local function PetHandler(self)
                 self.pet:Show()
                 return
             end
-        elseif spec ~= SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelhunterEnabled"] then 
+        elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelhunterEnabled"] then 
             if petFamily ~= L["PetFamily"]["Felhunter"] and petFamily ~= L["PetFamily"]["Imp"] then -- wrong type for afflication/destruction
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
@@ -212,7 +205,7 @@ end
 ---Handler for candy frame
 ---@param self WarlockReminder self
 local function CandyHandler(self)
-    if not addon.db[MOD_KEY]["CandyEnabled"] or UnitAffectingCombat("player") then
+    if not addon.db[MOD_KEY]["CandyEnabled"] or addon.states["inCombat"] then
         self.candy:Hide()
         return
     end
@@ -277,7 +270,7 @@ end
 ---Test mode for WarlockReminder
 ---@param on boolean turn the Test mode on or off
 function WarlockReminder:Test(on)
-    if on and not UnitAffectingCombat("player") then
+    if on and not addon.states["inCombat"] then
 		self.pet:Show()
         addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetX")
 

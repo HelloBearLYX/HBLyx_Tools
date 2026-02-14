@@ -2,12 +2,13 @@ local ADDON_NAME, addon = ...
 
 ---@class addon.Core
 ---@field eventFrame Frame the frame used to register events
----@field eventMap table<string, table<string, table<function>>> map of event to module to functions, used to handle events
+---@field eventMap table<string, table<string, function>> map of event to map of module to handler function
 ---@field modules table<string, table> map of module key to module instance, used to store
 ---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
 ---@field totalMods number total number of registered modules, used to check if all modules are loaded
 ---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
 ---@field testMode boolean if the addon is in test mode
+---@field statesUpdate table<string, table<string, function>> map of event to map of addon state to update function
 addon.Core = {
     eventFrame = nil,
     eventMap = {},
@@ -16,6 +17,7 @@ addon.Core = {
     totalMods = 0,
     loadedMods = 0,
     testMode = false,
+    statesUpdate = {},
 }
 
 -- MARK: Initialize
@@ -30,6 +32,8 @@ function addon.Core:Initialize()
     self.registeredMods = {}
     self.totalMods = 0
     self.loadedMods = 0
+    self.testMode = false
+    self.statesUpdate = {}
 
     self.eventFrame:RegisterEvent("ADDON_LOADED") -- "ADDON_LOADED" is automatically registered
 
@@ -67,9 +71,15 @@ local function Handle(self, event, ...)
             addon:Initialize()
         end
     else
-        for _, funcs in pairs(self.eventMap[event]) do
-            for _, func in pairs(funcs) do
-                func(event, ...)
+        if self.statesUpdate[event] then
+            for _, func in pairs(self.statesUpdate[event]) do
+                func(...)
+            end
+        end
+
+        if self.eventMap[event] then
+            for _, func in pairs(self.eventMap[event]) do
+                func(...)
             end
         end
     end
@@ -86,14 +96,25 @@ end
 function addon.Core:RegisterEvent(func, event, mod, unit)
     if not self.eventMap[event] then
         self.eventMap[event] = {}
-        -- self.eventNameMap[event] = {}
     end
 
-    if not self.eventMap[event][mod] then
-        self.eventMap[event][mod] = {}
+    self.eventMap[event][mod] = func
+
+    RegisterE(self, event, unit)
+end
+
+-- MARK: Register Global Var
+
+---Register addon state to the core
+---@param event string event name
+---@param name string name of the addon state
+---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
+function addon.Core:RegisterState(event , name, updateFunc, unit)
+    if not self.statesUpdate[event] then
+        self.statesUpdate[event] = {}
     end
 
-    table.insert(self.eventMap[event][mod], func)
+    self.statesUpdate[event][name] = updateFunc
 
     RegisterE(self, event, unit)
 end

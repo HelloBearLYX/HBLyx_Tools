@@ -299,7 +299,6 @@ function CustomAuraTracker:Test(on)
     if on then
         self.auras.dragRegion = addon.Utilities:CreateDragBackground(self.auras.head, L["CustomAuraTrackerSettings"])
 
-        local anchorFrom, _ = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
         addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
     else
         if self.auras.dragRegion then

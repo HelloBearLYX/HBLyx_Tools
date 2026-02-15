@@ -205,7 +205,10 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     end)
     -- MARK: Remove Aura
     GUI:CreateButton(auraGroup, L["Remove"], function ()
-        local id = tonumber(inputSpellID:GetText())
+        local id = CheckSpellIDInput(inputSpellID:GetText())
+        if not id then
+            return
+        end
 
         local success = Remove(id)
         if success then

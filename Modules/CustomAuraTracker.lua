@@ -20,7 +20,8 @@ function CustomAuraTracker:Initialize()
     self.auras.spells = {}
     self.auras.size = 0
     self.auras.head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent)
-    self.auras.tail = self.auras.head
+    self.auras.tail = nil
+    self.auras.head:Show()
 
     self:UpdateStyle() -- Update style on initialization, so you do not have to duplicate code of rendering style in both Initialize and UpdateStyle functions
 
@@ -52,15 +53,19 @@ end
 local function ShowAura(self, frame)
     local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
 
-    if self.auras.tail == self.auras.head then -- if tail is head, return the first position
+    if not self.auras.tail then -- if tail is head, return the first position
+        frame:ClearAllPoints()
         frame:SetPoint(anchorFrom, self.auras.head, anchorFrom, 0, 0)
         frame.prev = self.auras.head
     else
+        frame:ClearAllPoints()
         frame:SetPoint(anchorFrom, self.auras.tail, anchorTo, 0, 0)
         frame.prev = self.auras.tail
+        frame.prev.next = frame
     end
 
     self.auras.tail = frame
+    frame:Show()
 end
 
 -- MARK: Hide Aura
@@ -73,16 +78,20 @@ local function HideAura(self, frame)
 
     if frame.prev == self.auras.head then -- if the first showing aura
         if frame.next then -- if there is another showing aura after this one, set it to first position
+            frame.next:ClearAllPoints()
             frame.next:SetPoint(anchorFrom, self.auras.head, anchorFrom, 0, 0)
             frame.next.prev = self.auras.head
         else -- if there is no other showing aura, set tail to head
-            self.auras.tail = self.auras.head
+            self.auras.tail = nil
         end
     else -- if this is not the first showing aura
         if frame.next then -- if there is another showing aura after this one, set it to the previous position
+            frame.next:ClearAllPoints()
             frame.next:SetPoint(anchorFrom, frame.prev, anchorTo, 0, 0)
             frame.next.prev = frame.prev
+            frame.prev.next = frame.next
         else -- if there is no other showing aura, set tail to the previous position
+            frame.prev.next = nil
             self.auras.tail = frame.prev
         end
     end
@@ -121,6 +130,7 @@ local function Handler(self, spellID)
                 if frame.expireSound then
                     PlaySoundFile(addon.LSM:Fetch("sound", frame.expireSound), "Master")
                 end
+                frame.timer = nil
             end)
         end)
     end
@@ -160,8 +170,9 @@ function CustomAuraTracker:UpdateStyle()
     local iconSize = addon.db[MOD_KEY]["IconSize"]
     local scale = addon.db[MOD_KEY]["TimeFontScale"]
 
+    local anchorFrom, _ = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
     self.auras.head:SetSize(math.max(self.auras.size, 1) * iconSize, iconSize)
-    self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.auras.head:SetPoint(anchorFrom, UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
 
     for _, frame in pairs(self.auras.spells) do
         frame:SetSize(iconSize, iconSize)
@@ -183,8 +194,9 @@ function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, exp
     local success = true
     local frame = self.auras.spells[spellID]
     if not frame then
-        frame = CreateFrame("Frame", nil, UIParent)
+        frame = CreateFrame("Frame", nil, self.auras.head)
         self.auras.spells[spellID] = frame
+        self.auras.size = self.auras.size + 1
 
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
         frame.cooldown:SetAllPoints()
@@ -201,8 +213,6 @@ function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, exp
 
         frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
         frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
-
-        frame:Hide()
 
         self.auras.head:SetSize(math.max(self.auras.size, 1) * addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
     end
@@ -226,7 +236,6 @@ end
 ---@return boolean success true if the aura was removed successfully, false if not found
 function CustomAuraTracker:RemoveAura(spellID)
     if self.auras.spells[spellID] then
-        self.auras.spells[spellID]:Hide()
         self.auras.spells[spellID]:ClearAllPoints()
         if self.auras.spells[spellID].timer then
             self.auras.spells[spellID].timer:Cancel()
@@ -291,7 +300,8 @@ function CustomAuraTracker:Test(on)
     if on then
         self.auras.dragRegion = addon.Utilities:CreateDragBackground(self.auras.head, L["CustomAuraTrackerSettings"])
 
-        addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
+        local anchorFrom, _ = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
+        addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y", nil, anchorFrom)
     else
         if self.auras.dragRegion then
             addon.Utilities:ReleaseDragBackground(self.auras.dragRegion)

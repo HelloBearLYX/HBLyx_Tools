@@ -44,6 +44,7 @@ addon.configurationList[MOD_KEY] = {
     X = 0,
     Y = 0,
     Grow = "LEFT",
+    SoundChannel = "Master",
 }
 
 -- GUI
@@ -68,6 +69,9 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             end
         end
 	end)
+    GUI:CreateDropDown(frame, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CustomAuraTracker.SoundChannel, false, function(key)
+        addon.db.CustomAuraTracker.SoundChannel = key
+    end)
 	GUI:CreateButton(frame, L["ResetMod"], function ()
 		addon.Utilities:SetPopupDialog(
 			ADDON_NAME .. "ResetMod",
@@ -192,7 +196,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
 
             -- update the dropdown list
             local name = C_Spell.GetSpellInfo(id).name or "UNKNOWN"
-            auraSelected:SetItemValue(id, nil)
+            auraSelected:SetItemDisabled(id, true)
             addon.Utilities:print(string.format("%s(%d) removed successfully.", name, id))
         else
             addon.Utilities:print(string.format("Failed to remove %d. Please check spellID.", id))

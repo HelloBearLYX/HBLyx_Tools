@@ -16,10 +16,9 @@ local MOD_KEY = "CombatTimer"
 function CombatTimer:Initialize()
     self.frame = CreateFrame("Frame", ADDON_NAME .. "TimerFrame", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
-    self.frame:SetSize(100, 40)
 
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
-    self.frame.text:SetAllPoints()
+    self.frame.text:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
 
     if addon.db[MOD_KEY]["CombatShow"] then
        self.frame:Hide()
@@ -89,6 +88,8 @@ end
 ---Update style settings and render it in-game for CombatTimer
 function CombatTimer:UpdateStyle()
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.frame:SetSize(3 * addon.db[MOD_KEY]["FontSize"], addon.db[MOD_KEY]["FontSize"])
+
     self.frame.text:SetFont(
         addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
         addon.db[MOD_KEY]["FontSize"],
@@ -103,9 +104,15 @@ end
 function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
+        self.frame.dragRegion = addon.Utilities:CreateDragBackground(self.frame)
 
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
     else
+        if self.frame.dragRegion then
+            self.frame.dragRegion:Hide()
+            self.frame.dragRegion = nil
+        end
+
         if addon.db[MOD_KEY]["CombatShow"] then
 			self.frame:Hide()
 		end

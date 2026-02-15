@@ -166,7 +166,7 @@ function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFun
 	end
 
 	frame:SetScript("OnMouseDown", function (self, button)
-		if button == "LeftButton" and addon.isTestMode and not InCombatLockdown() then
+		if button == "LeftButton" and addon.core:IsTestOn() and not InCombatLockdown() then
 			self.isDragging = true
 			updatePosition(self)
 		end
@@ -191,6 +191,17 @@ function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFun
 			updateFunc()
 		end
 	end)
+end
+
+---Create a drag region backgound for frame(especially non-texture like text frame)
+---@param frame frame frame to take the drag region
+---@return frame background drag region background
+function addon.Utilities:CreateDragBackground(frame)
+	local background = frame:CreateTexture(nil, "BACKGROUND")
+	background:SetAllPoints()
+	background:SetColorTexture(0, 0, 1, 0.5)
+
+	return background
 end
 
 -- MARK: Popup Dialog

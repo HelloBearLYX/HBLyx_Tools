@@ -28,8 +28,8 @@ Modules\CombatIndicator.lua
 Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
+# Modules\PotionRaceTracker.lua
 Modules\WarlockReminder.lua
-Modules\InterruptTracker.lua
 
 # handle configuration and options
 GUI.lua
@@ -38,6 +38,7 @@ Configs\CombatIndicator.lua
 Configs\CombatTimer.lua
 Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
+# Configs\PotionRaceTracker.lua
 Configs\WarlockReminder.lua
 Configs\Profile.lua
 

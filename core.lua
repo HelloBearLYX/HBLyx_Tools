@@ -230,6 +230,14 @@ function addon.Core:TestModule(module)
     return false
 end
 
+-- MARK: Is Test On
+
+---Check whether the test mode is on
+---@return boolean on if the test mode is on
+function addon.Core:IsTestOn()
+    return self.testMode
+end
+
 -- MARK: Get Module List
 
 ---Get All Modules List(include not-loaded)

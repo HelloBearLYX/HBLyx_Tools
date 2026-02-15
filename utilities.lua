@@ -133,6 +133,10 @@ end
 
 -- MARK: Get anchors by grow direction
 
+---GetGrowAnchor
+---@param direction string Grow direction
+---@return string
+---@return string
 function addon.Utilities:GetGrowAnchors(direction)
 	if direction == "LEFT" then
 		return "RIGHT", "LEFT"
@@ -196,12 +200,25 @@ end
 ---Create a drag region backgound for frame(especially non-texture like text frame)
 ---@param frame frame frame to take the drag region
 ---@return frame background drag region background
-function addon.Utilities:CreateDragBackground(frame)
+function addon.Utilities:CreateDragBackground(frame, name)
 	local background = frame:CreateTexture(nil, "BACKGROUND")
 	background:SetAllPoints()
 	background:SetColorTexture(0, 0, 1, 0.5)
+	background.text = frame:CreateFontString(nil, "OVERLAY")
+	background.text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	background.text:SetPoint("CENTER", background, "TOP", 0, 0)
+	background.text:SetText(name or "")
 
 	return background
+end
+
+function addon.Utilities:ReleaseDragBackground(background)
+	background:Hide()
+	if background.text then
+		background.text:Hide()
+		background.text = nil
+	end
+	background = nil
 end
 
 -- MARK: Popup Dialog

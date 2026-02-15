@@ -71,6 +71,13 @@ L["ImportSuccess"] = "Profile imported successfully. Please reload your UI to ap
 L["ModuleProfile"] = "Module Profile"
 L["ModuleProfileDesc"] = "You can select a module to export/import profile separately.\n\nTo export, select the module below first. To import, the module will be automatically recognized from the string"
 L["SelectModule"] = "Select Module"
+L["SpellID"] = "Spell ID"
+L["Duration"] = "Duration"
+L["Cooldown"] = "Cooldown"
+L["ActiveSound"] = "Active Sound"
+L["ExpireSound"] = "Expire Sound"
+L["Add"] = "Add"
+L["Remove"] = "Remove"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -196,3 +203,13 @@ L["OF"] = "Floodgate"
 L["PSF"] = "PotSF"
 L["GAMBIT"] = "Gambit"
 L["STREET"] = "Street"
+
+-- MARK: Custom Aura Tracker
+L["CustomAuraTrackerSettings"] = "Custom Aura Tracker"
+L["CustomAuraTrackerSettingsDesc"] = "Track aura that are triggered by \"player\" and display and play sound alert with customizable options \n\n|cffff0000NOTE|r: this is not a real aura tracker, it highly depends on \"UNIT_SPELLCAST_SUCCEEDED\" of \"player\". In other words, it can only track things from the cast success event, and it is highly hard-coded(no dynamic duration/cooldown)."
+L["AuraSettings"] = "Auras Settings"
+L["AuraSettingsDesc"] = "Although the function is limited, but it still can be supportive. For example, you can track your potion and active trinkets\n\n" ..
+"Taking 12.0 potion as an example, you can add \"Light's Potential\" with its spell ID(1236616) + duration(30s) + cooldown(300s) + expire sound(X sound effect), and then you will get a 30s icon to show aura when you use the potion and a sound alert played after the cooldown time(300s).\n\n" ..
+"You can also use it as a simple sound alert after a period of time after you cast a certain spell. For example, after 300s of using \"health potion\" play a sound effect, you can set spell ID=\"spell ID of health potion\" + duration=0 + cooldown=300 + expire sound\n\n" ..
+"|cffff0000NOTE|r: Spell IDs for items are \"spell ID\" instead of \"item ID\"(you can aquire them with other addon like \"idTip\"), and you can delete/update(delete/add button below) an aura by entering spell ID manually or selecting an existing aura by the dropdown menu below. Additionally, duration and cooldown are in seconds. Eventually, if you want to cancel a sound effect, you can select \"None\" for the sound effect to cancel it."
+L["SelectAura"] = "Select an existing aura"

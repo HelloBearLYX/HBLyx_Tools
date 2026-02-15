@@ -104,13 +104,12 @@ end
 function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
-        self.frame.dragRegion = addon.Utilities:CreateDragBackground(self.frame)
+        self.frame.dragRegion = addon.Utilities:CreateDragBackground(self.frame, L["TimerSettings"])
 
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
     else
         if self.frame.dragRegion then
-            self.frame.dragRegion:Hide()
-            self.frame.dragRegion = nil
+            addon.Utilities:ReleaseDragBackground(self.frame.dragRegion)
         end
 
         if addon.db[MOD_KEY]["CombatShow"] then

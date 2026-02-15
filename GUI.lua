@@ -189,7 +189,6 @@ end
 function addon.GUI:CreateButton(parent, label, callback)
     local button = AceGUI:Create("Button")
     button:SetText(label)
-    button:SetWidth(100)
     button:SetCallback("OnClick", function()
         if callback then
             callback()

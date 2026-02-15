@@ -159,16 +159,13 @@ end
 ---@param xKey string the option to access addon profile(the option key for the addon.db[mod][xKey])
 ---@param yKey string the option to access addon profile(the option key for the addon.db[mod][xKey])
 ---@param updateFunc function? additional function to call in update
----@param anchorFrom string? anchor point to grow from, default is "CENTER"
----@param anchorTo string? anchor point to grow to, default is "CENTER"
-function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFunc, anchorFrom, anchorTo)
-	local anchorFrom, anchorTo = anchorFrom or "CENTER", anchorTo or "CENTER"
+function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFunc)
 	local function updatePosition(frame)
 		local x, y = GetCursorPosition()
 		x, y = addon.Utilities:ScreenPositionToUIPosition(x, y)
 		x, y = math.floor(x + 0.5), math.floor(y + 0.5) -- round the position to integers
 
-		frame:SetPoint(anchorFrom, UIParent, anchorTo, x, y)
+		frame:SetPoint("CENTER", UIParent, "CENTER", x, y)
 		return x, y
 	end
 

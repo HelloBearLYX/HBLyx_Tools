@@ -30,6 +30,9 @@ end
 -- private methods
 
 -- MARK: Load Saved Auras
+
+---Load saved auras from database and initialize them
+---@param self CustomAuraTracker self
 local function LoadSavedAuras(self)
     local auraList = addon.db[MOD_KEY].spells
     if auraList then
@@ -62,6 +65,9 @@ end
 
 -- MARK: Hide Aura
 
+---Hide aura and relink the showing auras chain
+---@param self CustomAuraTracker self
+---@param frame frame the frame of the aura to hide
 local function HideAura(self, frame)
     local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
 
@@ -89,6 +95,9 @@ end
 
 -- MARK: Handler
 
+---Handler for CustomAuraTracker when a tracked spell is cast
+---@param self CustomAuraTracker self
+---@param spellID integer the spell ID that was cast
 local function Handler(self, spellID)
     local frame = self.auras.spells[spellID]
     if frame then
@@ -119,6 +128,13 @@ end
 
 -- MARK: Update Aura Info
 
+---Update aura information for a frame
+---@param frame frame the frame to update
+---@param spellID integer the spell ID
+---@param duration number the duration of the aura effect
+---@param cooldown number the cooldown of the spell
+---@param activeSound string? the sound to play when aura becomes active
+---@param expireSound string? the sound to play when cooldown expires
 local function UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, expireSound)
     frame.spellID = spellID
     frame.duration = duration
@@ -156,6 +172,13 @@ end
 
 -- MARK: Add Aura
 
+---Add or update a tracked aura
+---@param spellID integer the spell ID to track
+---@param duration number the duration of the aura effect
+---@param cooldown number the cooldown of the spell
+---@param activeSound string? the sound to play when aura becomes active
+---@param expireSound string? the sound to play when cooldown expires
+---@return boolean success true if the aura was added/updated successfully
 function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound)
     local success = true
     local frame = self.auras.spells[spellID]
@@ -198,6 +221,9 @@ end
 
 -- MARK: Remove Aura
 
+---Remove a tracked aura
+---@param spellID integer the spell ID to remove from tracking
+---@return boolean success true if the aura was removed successfully, false if not found
 function CustomAuraTracker:RemoveAura(spellID)
     if self.auras.spells[spellID] then
         self.auras.spells[spellID]:Hide()
@@ -216,6 +242,8 @@ end
 
 -- MARK: Get Auras List
 
+---Get a list of all tracked auras
+---@return table output a table mapping spell IDs to spell names
 function CustomAuraTracker:GetAurasList()
     if not self.auras.spells then
         return {}
@@ -232,6 +260,9 @@ end
 
 -- MARK: Get Aura Info
 
+---Get detailed information for a specific tracked aura
+---@param spellID integer the spell ID to get information for
+---@return table? info a table containing aura details, or nil if not found
 function CustomAuraTracker:GetAuraInfo(spellID)
     if not self.auras.spells[spellID] then
         return nil

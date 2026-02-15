@@ -19,6 +19,9 @@
 ### **M+ Panel Enhance**: Display score and dungeon name and clickable M+ dungeon portal on the M+ Panel
 ### **大秘境面板增强**: 在M+面板上显示分数、地下城名称以及可点击的M+地下城传送门
 
+### **Custom Aura Tracker**: Track aura that are triggered by "player" and display and play sound alert with customizable options
+### **自定义光环追踪**：追踪玩家触发的光环，并显示和播放声音警报，支持自定义选项
+
 ### **Warlock Reminders**: Icon+Text reminder for pet and healthstones for warlocks.
 ### **术士提醒**: 为术士提供宠物和治疗石提醒
 

@@ -143,10 +143,9 @@ end
 function CustomAuraTracker:UpdateStyle()
     local iconSize = addon.db[MOD_KEY]["IconSize"]
     local scale = addon.db[MOD_KEY]["TimeFontScale"]
-    local anchorFrom, _ = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
 
     self.auras.head:SetSize(math.max(self.auras.size, 1) * iconSize, iconSize)
-    self.auras.head:SetPoint(anchorFrom, UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
 
     for _, frame in pairs(self.auras.spells) do
         frame:SetSize(iconSize, iconSize)
@@ -260,6 +259,8 @@ function CustomAuraTracker:Test(on)
 
     if on then
         self.auras.dragRegion = addon.Utilities:CreateDragBackground(self.auras.head, L["CustomAuraTrackerSettings"])
+
+        addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
     else
         if self.auras.dragRegion then
             addon.Utilities:ReleaseDragBackground(self.auras.dragRegion)

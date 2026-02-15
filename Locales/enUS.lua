@@ -95,6 +95,12 @@ L["TextSettings"] = "Text Settings"
 L["InterruptibleColor"] = "Interruptible Color"
 L["NotInterruptibleColor"] = "NotInterruptible Color"
 
+-- MARK: Input
+L["InvalidInput"] = "Invalid Input, please check your input format and value type"
+L["InvalidSpellID"] = "Invalid Spell ID. The Spell ID must be a positive integer."
+L["SpellIDNotFound"] = "Spell ID not found in game. Please be cautious when you add it."
+L["InvalidTime"] = "Invalid Time, it must be a non-negative number in seconds."
+
 -- MARK: Constants
 L["PetFamily"] = {
 	Felguard = "Felguard",

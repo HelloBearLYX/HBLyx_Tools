@@ -96,6 +96,12 @@ L["TextSettings"] = "文字设置"
 L["InterruptibleColor"] = "可打断颜色"
 L["NotInterruptibleColor"] = "不可打断颜色"
 
+-- MARK: Input
+L["InvalidInput"] = "输入无效, 请输入正确的格式和类型"
+L["InvalidSpellID"] = "无效的法术ID. 法术ID必须是一个正整数."
+L["SpellIDNotFound"] = "游戏中未找到法术ID. 添加时请谨慎."
+L["InvalidTime"] = "无效的时间, 时间必须是一个非负的数字, 单位为秒."
+
 -- MARK: Constants
 L["PetFamily"] = {
 Felguard = "恶魔卫士",

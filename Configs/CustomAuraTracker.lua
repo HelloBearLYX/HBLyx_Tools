@@ -4,9 +4,11 @@ local GUI = addon.GUI
 local MOD_KEY = "CustomAuraTracker"
 
 -- MARK: Safe update
+
 local function update()
 	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
+
 local function FetchAurasList()
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:GetAurasList()
@@ -14,6 +16,7 @@ local function FetchAurasList()
         return {}
     end
 end
+
 local function GetAuraInfo(spellID)
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:GetAuraInfo(spellID)
@@ -21,6 +24,7 @@ local function GetAuraInfo(spellID)
         return nil
     end
 end
+
 local function Add(spellID, duration, cooldown, activeSound, expireSound)
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:AddAura(spellID, duration, cooldown, activeSound, expireSound)
@@ -28,12 +32,41 @@ local function Add(spellID, duration, cooldown, activeSound, expireSound)
         return false
     end
 end
+
 local function Remove(spellID)
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:RemoveAura(spellID)
     else
         return false
     end
+end
+
+-- MARK: Input Check
+
+local function CheckTimeInput(value)
+    local data = tonumber(value)
+    if not data then
+        addon.Utilities:SetPopupDialog(ADDON_NAME.."InvalidInput", L["InvalidInput"], true)
+        return nil
+    elseif data < 0 then
+        addon.Utilities:SetPopupDialog(ADDON_NAME.."InvalidInput", L["InvalidTime"], true)
+        return nil
+    end
+
+    return data
+end
+
+local function CheckSpellIDInput(value)
+    local data = tonumber(value)
+    if not data or data <= 0 or data % 1 ~= 0 then
+        addon.Utilities:SetPopupDialog(ADDON_NAME.."InvalidInput", L["InvalidSpellID"], true)
+        return nil
+    elseif not C_Spell.GetSpellInfo(data) then
+        addon.Utilities:SetPopupDialog(ADDON_NAME.."InvalidInput", L["SpellIDNotFound"], true)
+        return nil
+    end
+
+    return data
 end
 
 -- MARK: Defaults
@@ -110,24 +143,9 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     -- MARK: Input Options
     local auraGroup = GUI:CreateInlineGroup(frame, L["AuraSettings"])
     GUI:CreateInformationTag(auraGroup, L["AuraSettingsDesc"], "LEFT")
-    local inputSpellID = GUI:CreateEditBox(auraGroup, L["SpellID"], "", function(value)
-        if not tonumber(value) then
-            addon.Utilities:print("Invalid Spell ID.")
-            return
-        end
-    end)
-    local inputDuration = GUI:CreateEditBox(auraGroup, L["Duration"], "", function (value)
-        if not tonumber(value) then
-            addon.Utilities:print("Invalid Duration.")
-            return
-        end
-    end)
-    local inputCooldown = GUI:CreateEditBox(auraGroup, L["Cooldown"], "", function (value)
-        if not tonumber(value) then
-            addon.Utilities:print("Invalid Cooldown.")
-            return
-        end
-    end)
+    local inputSpellID = GUI:CreateEditBox(auraGroup, L["SpellID"], "", nil)
+    local inputDuration = GUI:CreateEditBox(auraGroup, L["Duration"], "", nil)
+    local inputCooldown = GUI:CreateEditBox(auraGroup, L["Cooldown"], "", nil)
     local inputActiveSound = GUI:CreateSoundSelect(auraGroup, L["ActiveSound"], nil, nil)
     local inputExpireSound = GUI:CreateSoundSelect(auraGroup, L["ExpireSound"], nil, nil)
     inputSpellID:SetRelativeWidth(0.2)
@@ -149,9 +167,13 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     end)
     -- MARK: Add Aura
     GUI:CreateButton(auraGroup, L["Add"], function ()
-        local id = tonumber(inputSpellID:GetText())
-        local duration = tonumber(inputDuration:GetText())
-        local cooldown = tonumber(inputCooldown:GetText())
+        local id = CheckSpellIDInput(inputSpellID:GetText())
+        local duration = CheckTimeInput(inputDuration:GetText())
+        local cooldown = CheckTimeInput(inputCooldown:GetText())
+
+        if not id or not duration or not cooldown then
+            return
+        end
         
         local activeSound = inputActiveSound:GetValue()
         if activeSound == "" or activeSound == "None" then activeSound = nil end

@@ -126,7 +126,7 @@ local function Handler(self, spellID)
         frame.timer = C_Timer.NewTimer(frame.duration, function()
             HideAura(self, frame)
             -- set cooldown timer, make a callback after cooldown to play ready sound if exist
-            frame.timer = C_Timer.NewTimer(frame.cd - frame.duration, function()
+            frame.timer = C_Timer.NewTimer(math.max(frame.cd - frame.duration, 0), function()
                 if frame.expireSound then
                     PlaySoundFile(addon.LSM:Fetch("sound", frame.expireSound), addon.db[MOD_KEY]["SoundChannel"] or "Master")
                 end

@@ -75,7 +75,6 @@ local function Handler(self)
     else
         self.frame.charge:SetText("")
         self.frame.cooldown:SetCooldown(0, 0)
-        -- self.frame.time:SetText("")
         if addon.db[MOD_KEY]["HideInactive"] then
             self.frame:Hide()
         end

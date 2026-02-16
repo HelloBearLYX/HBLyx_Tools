@@ -304,8 +304,11 @@ end
 
 -- MARK: Get Spell Icon String
 
+---Get a Icon_Name(id) string by spell id
+---@param spellID integer spell id
+---@return string output a Icon_Name(id) string
 function addon.Utilities:GetSpellIconString(spellID)
-	if not spellID then return spellID end
+	if not spellID then return tostring(spellID) end
 
 	local info = C_Spell.GetSpellInfo(spellID)
 	local name = info and info.name or "UNKNOWN"

@@ -384,9 +384,7 @@ function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callbac
     local dropdown = AceGUI:Create("Dropdown")
     dropdown:SetLabel(label)
     dropdown:SetMultiselect(multiSelect)
-    for key, value in pairs(list) do
-        dropdown:AddItem(key, value)
-    end
+    dropdown:SetList(list)
     dropdown:SetText(get)
     dropdown:SetCallback("OnValueChanged", function(self, _, key)
         self:SetText(key)

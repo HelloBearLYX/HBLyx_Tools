@@ -301,3 +301,15 @@ function addon.Utilities:OpenURL(title, url)
 
     StaticPopup_Show(ADDON_NAME .. "_OpenURL")
 end
+
+-- MARK: Get Spell Icon String
+
+function addon.Utilities:GetSpellIconString(spellID)
+	if not spellID then return spellID end
+
+	local info = C_Spell.GetSpellInfo(spellID)
+	local name = info and info.name or "UNKNOWN"
+	local icon = info and info.iconID and "|T" .. info.iconID .. ":0|t" or ""
+	
+	return string.format("%s%s(%d)", icon, name, spellID)
+end

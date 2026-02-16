@@ -36,9 +36,40 @@ end
 ---@param self CustomAuraTracker self
 local function LoadSavedAuras(self)
     local auraList = addon.db[MOD_KEY].spells
+
     if auraList then
-        for _, auraData in ipairs(auraList) do
-            self:AddAura(auraData.id, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
+        local oldAuras, oldIndex = {}, {} -- 3.6.2: for old data format, store the old auras and their index to remove them after loading
+
+        for id, auraData in pairs(auraList) do
+            local spellID = id
+            local duration, cd, activeSound, expireSound = auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound
+
+            -- 3.6.2: handle old data format, re-format it and save the new format data after loading
+            if auraData.id then
+                addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
+                spellID = auraData.id
+                oldAuras[spellID] = {
+                    duration = auraData.duration,
+                    cooldown = auraData.cooldown,
+                    activeSound = auraData.activeSound,
+                    expireSound = auraData.expireSound,
+                }
+
+                table.insert(oldIndex, id)
+            end
+
+            self:AddAura(spellID, duration, cd, activeSound, expireSound)
+        end
+
+        -- 3.6.2: remove old data
+        for _, index in ipairs(oldIndex) do
+            addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[index].id))
+            addon.db[MOD_KEY].spells[index] = nil
+        end
+
+        -- 3.6.2: save new data for old auras
+        for spellID, auraData in pairs(oldAuras) do
+            addon.db[MOD_KEY].spells[spellID] = auraData
         end
     end
 
@@ -188,14 +219,15 @@ end
 ---@param cooldown number the cooldown of the spell
 ---@param activeSound string? the sound to play when aura becomes active
 ---@param expireSound string? the sound to play when cooldown expires
----@return boolean success true if the aura was added/updated successfully
+---@return boolean isAdd true if add a new aura, false if update an existing aura
 function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound)
-    local success = true
+    local isAdd = false
     local frame = self.auras.spells[spellID]
     if not frame then
         frame = CreateFrame("Frame", nil, self.auras.head)
         self.auras.spells[spellID] = frame
         self.auras.size = self.auras.size + 1
+        isAdd = true
 
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
         frame.cooldown:SetAllPoints()
@@ -225,7 +257,7 @@ function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, exp
 
     UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, expireSound)
 
-    return success
+    return isAdd
 end
 
 -- MARK: Remove Aura
@@ -258,11 +290,10 @@ function CustomAuraTracker:GetAurasList()
     end
 
     local output = {}
-    for spellID, frame in pairs(self.auras.spells) do
-        if frame then
-            output[spellID] = frame.name
-        end
+    for spellID, _ in pairs(self.auras.spells) do
+        output[spellID] = addon.Utilities:GetSpellIconString(spellID)
     end
+    
     return output
 end
 

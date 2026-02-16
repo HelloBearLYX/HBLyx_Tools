@@ -181,26 +181,25 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         local expireSound = inputExpireSound:GetValue()
         if expireSound == "" or expireSound == "None" then expireSound = nil end
 
-        local success = Add(id, duration, cooldown, activeSound, expireSound)
-        if success then
-            if not addon.db.CustomAuraTracker.spells then
-                addon.db.CustomAuraTracker.spells = {}
-            end 
+        local isAdd = Add(id, duration, cooldown, activeSound, expireSound)
+        if not addon.db.CustomAuraTracker.spells then
+            addon.db.CustomAuraTracker.spells = {}
+        end
 
-            table.insert(addon.db.CustomAuraTracker.spells, {
-                id = id,
-                duration = duration,
-                cooldown = cooldown,
-                activeSound = activeSound,
-                expireSound = expireSound,
-            })
-            
-            -- update the dropdown list
-            local name = C_Spell.GetSpellInfo(id).name or "UNKNOWN"
-            auraSelected:AddItem(id, name)
-            addon.Utilities:print(string.format("%s(%d) added successfully.", name, id))
+        addon.db.CustomAuraTracker.spells[id] = {
+            duration = duration,
+            cooldown = cooldown,
+            activeSound = activeSound,
+            expireSound = expireSound,
+        }
+        
+        -- update the dropdown list
+        local val = addon.Utilities:GetSpellIconString(id)
+        if isAdd then
+            auraSelected:AddItem(id, val)
+            addon.Utilities:print(string.format("%s(%d) added successfully.", val, id))
         else
-            addon.Utilities:print(string.format("Failed to add %d. Please check input information.", id))
+            addon.Utilities:print(string.format("%s(%d) updated successfully.", val, id))
         end
     end)
     -- MARK: Remove Aura
@@ -212,19 +211,14 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
 
         local success = Remove(id)
         if success then
-            for index, aura in pairs(addon.db.CustomAuraTracker.spells) do
-                if aura.id == id then
-                    table.remove(addon.db.CustomAuraTracker.spells, index)
-                    break
-                end
-            end
+            addon.db.CustomAuraTracker.spells[id] = nil
 
             -- update the dropdown list
-            local name = C_Spell.GetSpellInfo(id).name or "UNKNOWN"
+            local val = addon.Utilities:GetSpellconString(id)
             auraSelected:SetItemDisabled(id, true)
-            addon.Utilities:print(string.format("%s(%d) removed successfully.", name, id))
+            addon.Utilities:print(string.format("%s(%d) removed successfully.", val, id))
         else
-            addon.Utilities:print(string.format("Failed to remove %d. Please check spellID.", id))
+            addon.Utilities:print("Failed to remove. Please check spellID.")
         end
     end)
 

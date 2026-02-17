@@ -121,8 +121,8 @@ end
 function CombatTimer:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.core:RegisterEvent(Handle, "PLAYER_REGEN_DISABLED", MOD_KEY)
-    addon.core:RegisterEvent(Handle, "PLAYER_REGEN_ENABLED", MOD_KEY)
+    addon.core:RegisterEvent("PLAYER_REGEN_DISABLED", MOD_KEY, nil, Handle)
+    addon.core:RegisterEvent("PLAYER_REGEN_ENABLED", MOD_KEY, nil, Handle)
 end
 
 -- MARK: Register Module

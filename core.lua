@@ -89,11 +89,11 @@ end
 -- MARK: Register Event
 
 ---Call to let Manager register this event with the function
----@param func function function register to the event
 ---@param event string event name
 ---@param mod string module name/key
 ---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
-function addon.Core:RegisterEvent(func, event, mod, unit)
+---@param func function function register to the event
+function addon.Core:RegisterEvent(event, mod, unit, func)
     if not self.eventMap[event] then
         self.eventMap[event] = {}
     end

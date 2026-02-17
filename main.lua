@@ -89,10 +89,10 @@ local function InitializeStates()
 	addon.states = {}
 
 	-- player class
-	_, addon.states["playerClass"] = UnitClass("player")
-
+	addon.states["playerClass"] = select(2, UnitClass("player")) -- "ADDON_LOADED"
+	
 	-- if the player is in combat
-	addon.states["inCombat"] = UnitAffectingCombat("player")
+	addon.states["inCombat"] = UnitAffectingCombat("player") -- "ADDON_LOADED"
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", "inCombat", function() addon.states["inCombat"] = true end)
 	addon.core:RegisterState("PLAYER_REGEN_ENABLED", "inCombat", function() addon.states["inCombat"] = false end)
 

@@ -293,15 +293,15 @@ function WarlockReminder:RegisterEvents()
     local petEvents = {"UNIT_PET", "PET_BAR_UPDATE", "PET_DISMISS_START", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_ALIVE"}
 
     for _, event in ipairs(bothEvents) do
-        addon.core:RegisterEvent(HandleBoth, event, MOD_KEY)
+        addon.core:RegisterEvent(event, MOD_KEY, nil, HandleBoth)
     end
 
     for _, event in ipairs(petEvents) do
-        addon.core:RegisterEvent(HandlePet, event, MOD_KEY)
+        addon.core:RegisterEvent(event, MOD_KEY, nil, HandlePet)
     end
 
-    addon.core:RegisterEvent(HandleCandy, "BAG_UPDATE", MOD_KEY)
-    addon.core:RegisterEvent(function ()
+    addon.core:RegisterEvent("BAG_UPDATE", MOD_KEY, nil, HandleCandy)
+    addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY, nil, function ()
         if IsMounted() then
             HandlePet()
         else
@@ -312,7 +312,7 @@ function WarlockReminder:RegisterEvents()
 
             self.timer = C_Timer.NewTimer(3, function () HandlePet() end)
         end
-    end, "PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY)
+    end)
 end
 
 -- MARK: Register Module

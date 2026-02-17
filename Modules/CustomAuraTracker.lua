@@ -1,6 +1,13 @@
 ---@class CustomAuraTracker
+---@field auras table a table contains loaded auras and informations
+---@field auras.loaded table a table mapping spell IDs to their corresponding aura frames
+---@field auras.size integer the number of loaded auras, used for calculating the size of
+---@field auras.head frame the head of the showing auras linked-list, a dummy frame used for anchoring the first showing aura
+---@field auras.tail frame the tail of the showing auras linked-list, nil if there is no showing aura
+---@field specAuras table a table store auras for each spec to load
 CustomAuraTracker = {
     auras = {},
+    specAuras = {},
 }
 
 local ADDON_NAME, addon = ...
@@ -17,10 +24,12 @@ local UNKNOWN_SPELL_TEXTURE = 134400
 ---@return CustomAuraTracker CustomAuraTracker a CustomAuraTracker object
 function CustomAuraTracker:Initialize()
     self.auras = {}
-    self.auras.spells = {}
+    self.specAuras = {}
+    self.auras.loaded = {} -- a loaded frame pool
     self.auras.size = 0
     self.auras.head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent)
     self.auras.tail = nil
+
     self.auras.head:Show()
 
     self:UpdateStyle() -- Update style on initialization, so you do not have to duplicate code of rendering style in both Initialize and UpdateStyle functions
@@ -142,7 +151,7 @@ end
 ---@param self CustomAuraTracker self
 ---@param spellID integer the spell ID that was cast
 local function Handler(self, spellID)
-    local frame = self.auras.spells[spellID]
+    local frame = self.auras.loaded[spellID]
     if frame then
         if frame.timer then
             frame.timer:Cancel()
@@ -207,7 +216,7 @@ function CustomAuraTracker:UpdateStyle()
     self.auras.head:SetSize(iconSize, iconSize)
     self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
 
-    for _, frame in pairs(self.auras.spells) do
+    for _, frame in pairs(self.auras.loaded) do
         frame:SetSize(iconSize, iconSize)
         frame.cooldown:SetScale(scale)
         frame:ClearAllPoints()
@@ -225,10 +234,10 @@ end
 ---@return boolean isAdd true if add a new aura, false if update an existing aura
 function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound)
     local isAdd = false
-    local frame = self.auras.spells[spellID]
+    local frame = self.auras.loaded[spellID]
     if not frame then
         frame = CreateFrame("Frame", nil, self.auras.head)
-        self.auras.spells[spellID] = frame
+        self.auras.loaded[spellID] = frame
         self.auras.size = self.auras.size + 1
         isAdd = true
 
@@ -269,14 +278,14 @@ end
 ---@param spellID integer the spell ID to remove from tracking
 ---@return boolean success true if the aura was removed successfully, false if not found
 function CustomAuraTracker:RemoveAura(spellID)
-    if self.auras.spells[spellID] then
-        self.auras.spells[spellID]:ClearAllPoints()
-        if self.auras.spells[spellID].timer then
-            self.auras.spells[spellID].timer:Cancel()
-            self.auras.spells[spellID].timer = nil
+    if self.auras.loaded[spellID] then
+        self.auras.loaded[spellID]:ClearAllPoints()
+        if self.auras.loaded[spellID].timer then
+            self.auras.loaded[spellID].timer:Cancel()
+            self.auras.loaded[spellID].timer = nil
         end
 
-        self.auras.spells[spellID] = addon.Utilities:DeleteFrame(self.auras.spells[spellID])
+        self.auras.loaded[spellID] = addon.Utilities:DeleteFrame(self.auras.loaded[spellID])
         self.auras.size = self.auras.size - 1
         return true
     end
@@ -289,12 +298,12 @@ end
 ---Get a list of all tracked auras
 ---@return table output a table mapping spell IDs to spell names
 function CustomAuraTracker:GetAurasList()
-    if not self.auras.spells then
+    if not self.auras.loaded then
         return {}
     end
 
     local output = {}
-    for spellID, _ in pairs(self.auras.spells) do
+    for spellID, _ in pairs(self.auras.loaded) do
         output[spellID] = addon.Utilities:GetSpellIconString(spellID)
     end
 
@@ -307,11 +316,11 @@ end
 ---@param spellID integer the spell ID to get information for
 ---@return table? info a table containing aura details, or nil if not found
 function CustomAuraTracker:GetAuraInfo(spellID)
-    if not self.auras.spells[spellID] then
+    if not self.auras.loaded[spellID] then
         return nil
     end
 
-    local frame = self.auras.spells[spellID]
+    local frame = self.auras.loaded[spellID]
     return {
         spellID = frame.spellID,
         name = frame.name,
@@ -345,7 +354,7 @@ end
 function CustomAuraTracker:RegisterEvents()
     local OnUpdate = function (...)
         local spellID  = select(3, ...)
-        if self.auras.spells[spellID] then
+        if self.auras.loaded[spellID] then
             Handler(self, spellID)
         end
     end
@@ -354,8 +363,8 @@ function CustomAuraTracker:RegisterEvents()
         LoadSavedAuras(self)
     end
 
-    addon.core:RegisterEvent(OnUpdate, "UNIT_SPELLCAST_SUCCEEDED", MOD_KEY, "player")
-    addon.core:RegisterEvent(Load, "PLAYER_LOGIN", MOD_KEY)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", MOD_KEY, "player", OnUpdate)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, Load)
 end
 
 -- MARK: Register Module

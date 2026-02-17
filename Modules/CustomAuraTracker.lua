@@ -32,44 +32,48 @@ end
 
 -- MARK: Load Saved Auras
 
+---Handle old data(3.6.0 - 3.6.1)
+---@param auraList any
+local function HanlerOldAuraData(auraList)
+    local oldAuras, oldIndex = {}, {} -- for old data format, store the old auras and their index to remove them after loading
+
+    for id, auraData in pairs(auraList) do
+        if auraData.id then
+            addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
+            local spellID = auraData.id
+            oldAuras[spellID] = {
+                duration = auraData.duration,
+                cooldown = auraData.cooldown,
+                activeSound = auraData.activeSound,
+                expireSound = auraData.expireSound,
+            }
+
+            table.insert(oldIndex, id)
+        end
+    end
+
+    for _, index in ipairs(oldIndex) do
+        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[index].id))
+        addon.db[MOD_KEY].spells[index] = nil
+    end
+
+    for spellID, auraData in pairs(oldAuras) do
+        addon.db[MOD_KEY].spells[spellID] = auraData
+    end
+end
+
 ---Load saved auras from database and initialize them
 ---@param self CustomAuraTracker self
 local function LoadSavedAuras(self)
     local auraList = addon.db[MOD_KEY].spells
 
     if auraList then
-        local oldAuras, oldIndex = {}, {} -- 3.6.2: for old data format, store the old auras and their index to remove them after loading
-
-        for id, auraData in pairs(auraList) do
-            local spellID = id
-            local duration, cd, activeSound, expireSound = auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound
-
-            -- 3.6.2: handle old data format, re-format it and save the new format data after loading
-            if auraData.id then
-                addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
-                spellID = auraData.id
-                oldAuras[spellID] = {
-                    duration = auraData.duration,
-                    cooldown = auraData.cooldown,
-                    activeSound = auraData.activeSound,
-                    expireSound = auraData.expireSound,
-                }
-
-                table.insert(oldIndex, id)
-            end
-
-            self:AddAura(spellID, duration, cd, activeSound, expireSound)
+        if addon.db.Version < 3.7 then
+            HanlerOldAuraData(auraList)
         end
 
-        -- 3.6.2: remove old data
-        for _, index in ipairs(oldIndex) do
-            addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[index].id))
-            addon.db[MOD_KEY].spells[index] = nil
-        end
-
-        -- 3.6.2: save new data for old auras
-        for spellID, auraData in pairs(oldAuras) do
-            addon.db[MOD_KEY].spells[spellID] = auraData
+        for spellID, auraData in pairs(auraList) do
+            self:AddAura(spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
         end
     end
 
@@ -293,7 +297,7 @@ function CustomAuraTracker:GetAurasList()
     for spellID, _ in pairs(self.auras.spells) do
         output[spellID] = addon.Utilities:GetSpellIconString(spellID)
     end
-    
+
     return output
 end
 

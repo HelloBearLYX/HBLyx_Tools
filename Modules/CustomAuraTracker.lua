@@ -204,6 +204,7 @@ local function CreateNewFrame(self)
 
     frame.icon = frame:CreateTexture(nil, "BACKGROUND")
     frame.icon:SetAllPoints()
+    frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
     
     frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.border:SetAllPoints()
@@ -382,7 +383,7 @@ function CustomAuraTracker:UpdateStyle()
     for _, frame in pairs(self.auras.loaded) do
         frame:SetSize(iconSize, iconSize)
         frame.cooldown:SetScale(scale)
-        frame:ClearAllPoints()
+        frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
     end
 end
 

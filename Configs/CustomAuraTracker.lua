@@ -96,6 +96,7 @@ addon.configurationList[MOD_KEY] = {
     Y = 0,
     Grow = "LEFT",
     SoundChannel = "Master",
+    IconZoom = 0.07,
 }
 
 -- GUI
@@ -151,6 +152,10 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     end)
     GUI:CreateSlider(iconStyleGroup, L["Y"], -2000, 2000, 1, addon.db.CustomAuraTracker.Y, function(value)
         addon.db.CustomAuraTracker.Y = value
+        update()
+    end)
+    GUI:CreateSlider(iconStyleGroup, L["IconZoom"], 0, 0.5, 0.01, addon.db.CustomAuraTracker.IconZoom, function(value)
+        addon.db.CustomAuraTracker.IconZoom = value
         update()
     end)
     GUI:CreateDropDown(iconStyleGroup, L["Grow"], addon.Utilities.Grows, addon.db.CustomAuraTracker.Grow, false, function(key)

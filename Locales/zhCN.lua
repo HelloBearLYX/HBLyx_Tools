@@ -79,6 +79,10 @@ L["ActiveSound"] = "激活音效"
 L["ExpireSound"] = "过期音效"
 L["Add"] = "添加"
 L["Remove"] = "删除"
+L["AddSuccess"] = "成功|cffffff00添加|r"
+L["UpdateSuccess"] = "成功|cffffff00更新|r"
+L["RemoveSuccess"] = "成功|cffffff00删除|r"
+L["RemoveFailed"] = "|cffffff00删除|r失败"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

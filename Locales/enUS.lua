@@ -78,6 +78,10 @@ L["ActiveSound"] = "Active Sound"
 L["ExpireSound"] = "Expire Sound"
 L["Add"] = "Add"
 L["Remove"] = "Remove"
+L["AddSuccess"] = "|cffffff00added|r successfully"
+L["UpdateSuccess"] = "|cffffff00updated|r successfully"
+L["RemoveSuccess"] = "|cffffff00removed|r successfully"
+L["RemoveFailed"] = "Failed to |cffffff00remove|r"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

@@ -25,9 +25,9 @@ local function GetAuraInfo(spellID)
     end
 end
 
-local function Add(spellID, duration, cooldown, activeSound, expireSound)
+local function Add(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     if addon.core.modules[MOD_KEY] then
-        return addon.core.modules[MOD_KEY]:AddAura(spellID, duration, cooldown, activeSound, expireSound)
+        return addon.core.modules[MOD_KEY]:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     else
         return false
     end
@@ -153,6 +153,14 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     inputCooldown:SetRelativeWidth(0.2)
     inputActiveSound:SetRelativeWidth(0.2)
     inputExpireSound:SetRelativeWidth(0.2)
+    local specsSelected = {}
+    GUI:CreateDropDown(auraGroup, "LoadingSpecs", addon.Utilities:GetAllSpecIconList(), nil, true, function(key, checked)
+        if checked then
+            specsSelected[key] = true
+        else
+            specsSelected[key] = nil
+        end
+    end, addon.Utilities.SpecIDs)
 
     GUI:CreateInformationTag(auraGroup, "\n")
     local auraSelected = GUI:CreateDropDown(auraGroup, L["SelectAura"], FetchAurasList(), "", false, function(key)
@@ -181,7 +189,11 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         local expireSound = inputExpireSound:GetValue()
         if expireSound == "" or expireSound == "None" then expireSound = nil end
 
-        local isAdd = Add(id, duration, cooldown, activeSound, expireSound)
+        local specsCount = 0
+        for _ in pairs(specsSelected) do specsCount = specsCount + 1 end
+        local loadingSpecs = specsCount > 0 and specsSelected or nil
+
+        local isAdd = Add(id, duration, cooldown, activeSound, expireSound, loadingSpecs)
         if not addon.db.CustomAuraTracker.spells then
             addon.db.CustomAuraTracker.spells = {}
         end
@@ -196,10 +208,11 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         -- update the dropdown list
         local val = addon.Utilities:GetSpellIconString(id)
         if isAdd then
-            auraSelected:AddItem(id, val)
-            addon.Utilities:print(string.format("%s(%d) added successfully.", val, id))
+            auraSelected:SetList(FetchAurasList())
+            auraSelected:SetValue(id)
+            addon.Utilities:print(string.format("%s-" .. L["AddSuccess"], val))
         else
-            addon.Utilities:print(string.format("%s(%d) updated successfully.", val, id))
+            addon.Utilities:print(string.format("%s-" .. L["UpdateSuccess"], val))
         end
     end)
     -- MARK: Remove Aura
@@ -210,15 +223,17 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         end
 
         local success = Remove(id)
+        local val = addon.Utilities:GetSpellIconString(id)
         if success then
             addon.db.CustomAuraTracker.spells[id] = nil
 
             -- update the dropdown list
-            local val = addon.Utilities:GetSpellconString(id)
-            auraSelected:SetItemDisabled(id, true)
-            addon.Utilities:print(string.format("%s(%d) removed successfully.", val, id))
+            auraSelected:SetList(FetchAurasList())
+            auraSelected:SetText("")
+            
+            addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], val))
         else
-            addon.Utilities:print("Failed to remove. Please check spellID.")
+            addon.Utilities:print(string.format("%s-" .. L["RemoveFailed"], val))
         end
     end)
 

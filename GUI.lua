@@ -378,18 +378,24 @@ end
 ---@param list table the list of items to display in the dropdown
 ---@param get string the value to set
 ---@param multiSelect boolean whether the dropdown allows multiple selections
----@param callback fun(key: string) callback function when value changed
+---@param callback fun(key: string, checked: boolean) callback function when value changed
 ---@return AceGUIWidget
-function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callback)
+function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callback, order)
     local dropdown = AceGUI:Create("Dropdown")
     dropdown:SetLabel(label)
     dropdown:SetMultiselect(multiSelect)
-    dropdown:SetList(list)
+    if list then
+        if order then
+            dropdown:SetList(list, order)
+        else
+            dropdown:SetList(list)
+        end
+    end
     dropdown:SetText(get)
-    dropdown:SetCallback("OnValueChanged", function(self, _, key)
-        self:SetText(key)
+    dropdown:SetValue(get)
+    dropdown:SetCallback("OnValueChanged", function(_, _, key, checked)
         if callback then
-            callback(key)
+            callback(key, checked)
         end
     end)
 

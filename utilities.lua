@@ -4,6 +4,36 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@class Utilities
 addon.Utilities = {}
 
+-- MARK: Constants
+addon.Utilities.SpecIDs = {
+	-- Death Knight
+	250, 251, 252,
+	-- Demon Hunter
+	577, 581, 1480,
+	-- Druid
+	102, 103, 104, 105,
+	-- Evoker
+	1467, 1468, 1473,
+	-- Hunter
+	253, 254, 255,
+	-- Mage
+	62, 63, 64,
+	-- Monk
+	268, 269, 270,
+	-- Paladin
+	65, 66, 70,
+	-- Priest
+	256, 257, 258,
+	-- Rogue
+	259, 260, 261,
+	-- Shaman
+	262, 263, 264,
+	-- Warlock
+	265, 266, 267,
+	-- Warrior
+	71, 72, 73,
+}
+
 -- MARK: Enums
 
 ---@enum anchor anchor_To = anchor_From
@@ -197,28 +227,31 @@ function addon.Utilities:MakeFrameDragPosition(frame, mod, xKey, yKey, updateFun
 	end)
 end
 
----Create a drag region backgound for frame(especially non-texture like text frame)
----@param frame frame frame to take the drag region
----@return frame background drag region background
-function addon.Utilities:CreateDragBackground(frame, name)
-	local background = frame:CreateTexture(nil, "BACKGROUND")
-	background:SetAllPoints()
-	background:SetColorTexture(0, 0, 1, 0.5)
-	background.text = frame:CreateFontString(nil, "OVERLAY")
-	background.text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	background.text:SetPoint("CENTER", background, "TOP", 0, 0)
-	background.text:SetText(name or "")
+-- MARK: Drag Region
 
-	return background
+---Create a drag region backgound for frame(especially non-texture like text frame)
+---@param frame frame (parent)frame to take the drag region
+function addon.Utilities:ShowDragRegion(frame, name)
+	if frame.dragRegion then
+		frame.dragRegion:Show()
+		frame.dragRegion.text:Show()
+		return
+	end
+
+	frame.dragRegion = frame:CreateTexture(nil, "BACKGROUND")
+	frame.dragRegion:SetAllPoints()
+	frame.dragRegion:SetColorTexture(0, 0, 1, 0.5)
+	frame.dragRegion.text = frame:CreateFontString(nil, "OVERLAY")
+	frame.dragRegion.text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	frame.dragRegion.text:SetPoint("CENTER", frame.dragRegion, "TOP", 0, 0)
+	frame.dragRegion.text:SetText(name or "")
 end
 
-function addon.Utilities:ReleaseDragBackground(background)
-	background:Hide()
-	if background.text then
-		background.text:Hide()
-		background.text = nil
+function addon.Utilities:HideDragRegion(frame)
+	if frame.dragRegion then
+		frame.dragRegion:Hide()
+		frame.dragRegion.text:Hide()
 	end
-	background = nil
 end
 
 -- MARK: Popup Dialog
@@ -319,13 +352,25 @@ end
 
 -- MARK: Get Spec Icon String
 
+---Get a Icon_Name(specID) string by spec ID
+---@param specID integer spec ID
+---@return string output a Icon_Name(specID) string
 function addon.Utilities:GetSpecIconString(specID)
 	if not specID then return tostring(specID) end
 
-	local _, name, _, icon = C_SpecializationInfo.GetSpecializationInfo(specID)
+	local _, name, _, icon = GetSpecializationInfoForSpecID(specID)
 	name = name or "UNKNOWN"
 	icon = icon and string.format("|T%d:0|t", icon) or ""
 
 	return string.format("%s%s(%d)", icon, name, specID)
-	
+end
+
+function addon.Utilities:GetAllSpecIconList()
+	local output = {}
+
+	for _, specID in ipairs(addon.Utilities.SpecIDs) do
+		output[specID] = addon.Utilities:GetSpecIconString(specID)
+	end
+
+	return output
 end

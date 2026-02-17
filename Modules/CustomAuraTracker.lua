@@ -276,7 +276,8 @@ function CustomAuraTracker:RemoveAura(spellID)
             self.auras.spells[spellID].timer = nil
         end
 
-        self.auras.spells[spellID] = nil
+        self.auras.spells[spellID] = addon.Utilities:DeleteFrame(self.auras.spells[spellID])
+        self.auras.size = self.auras.size - 1
         return true
     end
 
@@ -331,13 +332,11 @@ function CustomAuraTracker:Test(on)
     end
 
     if on then
-        self.auras.dragRegion = addon.Utilities:CreateDragBackground(self.auras.head, L["CustomAuraTrackerSettings"])
+        addon.Utilities:ShowDragRegion(self.auras.head, L["AuraSettings"])
 
         addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
     else
-        if self.auras.dragRegion then
-            addon.Utilities:ReleaseDragBackground(self.auras.dragRegion)
-        end
+        addon.Utilities:HideDragRegion(self.auras.head)
     end
 end
 

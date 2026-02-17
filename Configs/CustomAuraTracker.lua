@@ -9,17 +9,35 @@ local function update()
 	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
+-- MARK: Fetch Auras List
+
+---Fetch the auras saved in the database
+---@return table aurasList a table with spellID as key and spell icon string as value for all auras in the database
 local function FetchAurasList()
-    if addon.core.modules[MOD_KEY] then
-        return addon.core.modules[MOD_KEY]:GetAurasList()
-    else
-        return {}
+    local output = {}
+    for spellID, _ in pairs(addon.db[MOD_KEY].spells or {}) do
+        output[spellID] = addon.Utilities:GetSpellIconString(spellID)
     end
+
+    return output
 end
 
-local function GetAuraInfo(spellID)
-    if addon.core.modules[MOD_KEY] then
-        return addon.core.modules[MOD_KEY]:GetAuraInfo(spellID)
+-- MARK: Get Aura Info
+
+---Get detailed information for a specific tracked aura
+---@param spellID integer the spellID of the aura
+---@return table|nil info a table containing aura details, or nil if not found
+local function FetchAuraInfo(spellID)
+    local spellInfo = addon.db[MOD_KEY].spells and addon.db[MOD_KEY].spells[spellID]
+    if spellInfo then
+        return {
+            spellID = spellID,
+            duration = spellInfo.duration,
+            cooldown = spellInfo.cooldown,
+            activeSound = spellInfo.activeSound,
+            expireSound = spellInfo.expireSound,
+            loadingSpecs = spellInfo.loadingSpecs,
+        }
     else
         return nil
     end
@@ -29,7 +47,7 @@ local function Add(spellID, duration, cooldown, activeSound, expireSound, loadin
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     else
-        return false
+        return nil
     end
 end
 
@@ -143,34 +161,53 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     -- MARK: Input Options
     local auraGroup = GUI:CreateInlineGroup(frame, L["AuraSettings"])
     GUI:CreateInformationTag(auraGroup, L["AuraSettingsDesc"], "LEFT")
-    local inputSpellID = GUI:CreateEditBox(auraGroup, L["SpellID"], "", nil)
-    local inputDuration = GUI:CreateEditBox(auraGroup, L["Duration"], "", nil)
-    local inputCooldown = GUI:CreateEditBox(auraGroup, L["Cooldown"], "", nil)
-    local inputActiveSound = GUI:CreateSoundSelect(auraGroup, L["ActiveSound"], nil, nil)
-    local inputExpireSound = GUI:CreateSoundSelect(auraGroup, L["ExpireSound"], nil, nil)
+    GUI:CreateInformationTag(auraGroup, "\n")
+    local inputSpellID = GUI:CreateEditBox(nil, L["SpellID"], "", nil)
+    local inputDuration = GUI:CreateEditBox(nil, L["Duration"], "", nil)
+    local inputCooldown = GUI:CreateEditBox(nil, L["Cooldown"], "", nil)
+    local inputActiveSound = GUI:CreateSoundSelect(nil, L["ActiveSound"], nil, nil)
+    local inputExpireSound = GUI:CreateSoundSelect(nil, L["ExpireSound"], nil, nil)
     inputSpellID:SetRelativeWidth(0.2)
     inputDuration:SetRelativeWidth(0.2)
     inputCooldown:SetRelativeWidth(0.2)
     inputActiveSound:SetRelativeWidth(0.2)
     inputExpireSound:SetRelativeWidth(0.2)
-    local specsSelected = {}
-    GUI:CreateDropDown(auraGroup, "LoadingSpecs", addon.Utilities:GetAllSpecIconList(), nil, true, function(key, checked)
-        if checked then
-            specsSelected[key] = true
-        else
-            specsSelected[key] = nil
-        end
-    end, addon.Utilities.SpecIDs)
 
-    GUI:CreateInformationTag(auraGroup, "\n")
+    -- MARK: Specs Selection
+    local specsGroup = GUI:CreateInlineGroup(nil, L["LoadingSpecs"])
+    GUI:CreateInformationTag(specsGroup, L["LoadingSpecsDesc"], "LEFT")
+    local specsToggles = {}
+    local specsList, specsOrder = addon.Utilities:GetAllSpecIconList(true)
+
+    for _, class in ipairs(specsOrder) do
+        local classGroup = GUI:CreateInlineGroup(specsGroup, class)
+        classGroup:SetRelativeWidth(0.15)
+        for specID, specStr in pairs(specsList[class]) do
+            local toggle = GUI:CreateToggleCheckBox(classGroup, specStr, false, nil)
+            specsToggles[specID] = toggle
+        end
+    end
+
     local auraSelected = GUI:CreateDropDown(auraGroup, L["SelectAura"], FetchAurasList(), "", false, function(key)
-        local spellInfo = GetAuraInfo(key)
+        local spellInfo = FetchAuraInfo(key)
         if spellInfo then
             inputSpellID:SetText(spellInfo.spellID or "")
             inputDuration:SetText(spellInfo.duration or "")
             inputCooldown:SetText(spellInfo.cooldown or "")
             inputActiveSound:SetValue(spellInfo.activeSound or "")
             inputExpireSound:SetValue(spellInfo.expireSound or "")
+
+            for _, toggle in pairs(specsToggles) do
+                toggle:SetValue(false)
+            end
+
+            if spellInfo.loadingSpecs then
+                for specID, _ in pairs(spellInfo.loadingSpecs) do
+                    if specsToggles[specID] then
+                        specsToggles[specID]:SetValue(true)
+                    end
+                end
+            end
         end
     end)
     -- MARK: Add Aura
@@ -180,6 +217,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         local cooldown = CheckTimeInput(inputCooldown:GetText())
 
         if not id or not duration or not cooldown then
+            addon.Utilities:print(L["AddFailed"])
             return
         end
         
@@ -189,20 +227,33 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         local expireSound = inputExpireSound:GetValue()
         if expireSound == "" or expireSound == "None" then expireSound = nil end
 
-        local specsCount = 0
-        for _ in pairs(specsSelected) do specsCount = specsCount + 1 end
-        local loadingSpecs = specsCount > 0 and specsSelected or nil
+        -- get selected specs
+        local selectedSpecs = {}
+        local selectedSpecsCount = 0
+        for specID, toggle in pairs(specsToggles) do
+            if toggle:GetValue() then
+                selectedSpecs[specID] = true
+                selectedSpecsCount = selectedSpecsCount + 1
+            end
+        end
+        local loadingSpecs = nil
+        if selectedSpecsCount > 0 then
+            loadingSpecs = selectedSpecs
+        end
 
+        -- add the aura
         local isAdd = Add(id, duration, cooldown, activeSound, expireSound, loadingSpecs)
         if not addon.db.CustomAuraTracker.spells then
             addon.db.CustomAuraTracker.spells = {}
         end
 
+        -- save to the database
         addon.db.CustomAuraTracker.spells[id] = {
             duration = duration,
             cooldown = cooldown,
             activeSound = activeSound,
             expireSound = expireSound,
+            loadingSpecs = loadingSpecs,
         }
         
         -- update the dropdown list
@@ -211,6 +262,8 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             auraSelected:SetList(FetchAurasList())
             auraSelected:SetValue(id)
             addon.Utilities:print(string.format("%s-" .. L["AddSuccess"], val))
+        elseif isAdd == nil then
+            addon.Utilities:print(string.format("%s-" .. L["AddFailed"], val))
         else
             addon.Utilities:print(string.format("%s-" .. L["UpdateSuccess"], val))
         end
@@ -236,6 +289,16 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             addon.Utilities:print(string.format("%s-" .. L["RemoveFailed"], val))
         end
     end)
+
+    -- create these option after select/add/remove
+    -- but declare them before to avoid nil error
+    GUI:CreateInformationTag(auraGroup, "\n")
+    auraGroup:AddChild(inputSpellID)
+    auraGroup:AddChild(inputDuration)
+    auraGroup:AddChild(inputCooldown)
+    auraGroup:AddChild(inputActiveSound)
+    auraGroup:AddChild(inputExpireSound)
+    auraGroup:AddChild(specsGroup)
 
     return frame
 end

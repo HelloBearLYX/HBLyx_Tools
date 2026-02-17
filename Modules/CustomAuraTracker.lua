@@ -5,9 +5,12 @@
 ---@field auras.head frame the head of the showing auras linked-list, a dummy frame used for anchoring the first showing aura
 ---@field auras.tail frame the tail of the showing auras linked-list, nil if there is no showing aura
 ---@field specAuras table a table store auras for each spec to load
+---@field spareFrames table a table store the spare frames that can be reused when needed
 CustomAuraTracker = {
     auras = {},
     specAuras = {},
+    spareFrames = {},
+    lastSpec = -1,
 }
 
 local ADDON_NAME, addon = ...
@@ -24,11 +27,13 @@ local UNKNOWN_SPELL_TEXTURE = 134400
 ---@return CustomAuraTracker CustomAuraTracker a CustomAuraTracker object
 function CustomAuraTracker:Initialize()
     self.auras = {}
-    self.specAuras = {}
     self.auras.loaded = {} -- a loaded frame pool
     self.auras.size = 0
     self.auras.head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent)
     self.auras.tail = nil
+    self.specAuras = {}
+    self.spareFrames = {}
+    self.lastSpec = -1
 
     self.auras.head:Show()
 
@@ -38,55 +43,6 @@ function CustomAuraTracker:Initialize()
 end
 
 -- private methods
-
--- MARK: Load Saved Auras
-
----Handle old data(3.6.0 - 3.6.1)
----@param auraList any
-local function HanlerOldAuraData(auraList)
-    local oldAuras= {}
-
-    for id, auraData in pairs(auraList) do
-        if auraData.id then
-            addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
-            local spellID = auraData.id
-            oldAuras[spellID] = {
-                index = id,
-                duration = auraData.duration,
-                cooldown = auraData.cooldown,
-                activeSound = auraData.activeSound,
-                expireSound = auraData.expireSound,
-            }
-        end
-    end
-
-    for spellID, auraData in pairs(oldAuras) do
-        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[auraData.index].id))
-        addon.db[MOD_KEY].spells[auraData.index] = nil
-        addon.db[MOD_KEY].spells[spellID] = {
-            duration = auraData.duration,
-            cooldown = auraData.cooldown,
-            activeSound = auraData.activeSound,
-            expireSound = auraData.expireSound,
-        }
-    end
-end
-
----Load saved auras from database and initialize them
----@param self CustomAuraTracker self
-local function LoadSavedAuras(self)
-    local auraList = addon.db[MOD_KEY].spells
-
-    if auraList then
-        HanlerOldAuraData(auraList)
-
-        for spellID, auraData in pairs(auraList) do
-            self:AddAura(spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
-        end
-    end
-
-    self:UpdateStyle()
-end
 
 -- MARK: Show Aura
 
@@ -108,6 +64,7 @@ local function ShowAura(self, frame)
     end
 
     self.auras.tail = frame
+    frame.active = true
     frame:Show()
 end
 
@@ -142,6 +99,7 @@ local function HideAura(self, frame)
     frame.prev = nil
     frame.next = nil
     frame:ClearAllPoints()
+    frame.active = false
     frame:Hide()
 end
 
@@ -206,6 +164,211 @@ local function UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, e
     end
 end
 
+-- MARK: Update Spec Loading
+
+local function UpdateSpecLoading(self, newLoadingSpecs, spellID)
+    for spec, auras in pairs(self.specAuras) do
+        if auras[spellID] then -- if the aura is already associated
+            if not newLoadingSpecs or not newLoadingSpecs[spec] then -- if the association should be removed
+                self.specAuras[spec][spellID] = nil -- remove the spec association
+            end
+        else
+            if newLoadingSpecs and newLoadingSpecs[spec] then -- if the association should be added
+                self.specAuras[spec][spellID] = true -- add the spec association
+            end
+        end
+    end
+end
+
+-- MARK: Should Load
+
+local function ShouldLoad(self, loadingSpecs)
+    -- if loadingSpecs is nil, it means the aura is a general aura for all specs, return true directly
+    if not loadingSpecs then
+        return true
+    end
+
+    -- if loadingSpecs exist, return true only if current spec is in loadingSpecs
+    return loadingSpecs[addon.states["playerSpec"]] or false
+end
+
+-- MARK: Create New Frame
+
+local function CreateNewFrame(self)
+    local frame = CreateFrame("Frame", nil, self.auras.head)
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
+    frame.cooldown:SetAllPoints()
+    frame.cooldown:SetDrawEdge(false)
+    frame.cooldown:SetCountdownAbbrevThreshold(600)
+    frame.cooldown:SetReverse(true)
+
+    frame.icon = frame:CreateTexture(nil, "BACKGROUND")
+    frame.icon:SetAllPoints()
+    
+    frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    frame.border:SetAllPoints()
+    frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
+    frame.border:SetBackdropBorderColor(0, 0, 0, 1)
+
+    frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+    frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
+
+    frame.active = false
+
+    return frame
+end
+
+-- MARK: Load Aura
+
+---Load/update an aura. Update if already loaded, otherwise load it.
+---When try to load an aura, first use spared frame if exist, otherwise create a new one
+---@param self CustomAuraTracker self
+---@param spellID integer the spell ID of the aura
+---@param duration number the duration of the aura effect
+---@param cooldown number the cooldown of the spell
+---@param activeSound string|nil the sound to play when aura becomes active
+---@param expireSound string|nil the sound to play when aura expires
+---@return boolean
+local function LoadAura(self, spellID, duration, cooldown, activeSound, expireSound)
+    local isAdd = false
+    local frame = self.auras.loaded[spellID] -- try to find the frame in loaded pool
+
+    if not frame then -- if the frame is not loaded
+        if self.spareFrames[#self.spareFrames] then -- try to re-use spare frames
+            -- pop the last spare frame to reduce the table.remove() run-time
+            frame = table.remove(self.spareFrames, #self.spareFrames)
+        else -- if no spare frame, create new one
+            frame = CreateNewFrame(self)
+        end
+
+        -- set the frame to loaded pool and update the size
+        self.auras.loaded[spellID] = frame
+        self.auras.size = self.auras.size + 1
+        isAdd = true
+    end
+
+    -- update the frame information
+    UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, expireSound)
+
+    return isAdd
+end
+
+-- MARK: Unload Aura
+
+local function UnloadAura(self, frame)
+    if frame.active then
+        HideAura(self, frame)
+    end
+
+    if frame.timer then
+        frame.timer:Cancel()
+        frame.timer = nil
+    end
+
+    table.insert(self.spareFrames, frame) -- put the frame into spare pool for later re-use
+    self.auras.loaded[frame.spellID] = nil -- remove the frame from loaded pool
+    self.auras.size = self.auras.size - 1
+end
+
+-- MARK: Switch Spec
+
+local function SwitchSpec(self)
+    local currentSpec = addon.states["playerSpec"]
+    if currentSpec == self.lastSpec then return end
+
+    local alreadyLoaded = {}
+
+    -- delete all auras for last spec
+    for spellID, _ in pairs(self.specAuras[self.lastSpec] or {}) do
+        local frame = self.auras.loaded[spellID]
+        if frame and not self.specAuras[currentSpec][spellID] then -- if the aura is not for current spec, hide it and put the frame into spare pool
+            UnloadAura(self, frame)
+        elseif frame then -- if the aura is also for current spec, just put it into alreadyLoaded for later use, no need to hide or cancel timer
+            alreadyLoaded[spellID] = true
+        end
+    end
+
+    -- load auras for current spec
+    for spellID, _ in pairs(self.specAuras[currentSpec] or {}) do
+        if not alreadyLoaded[spellID] then -- if the aura is not already loaded, load it
+            local auraData = addon.db[MOD_KEY].spells[spellID] -- find aura data in the database
+            if auraData then
+                LoadAura(self, spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
+            end
+        end
+    end
+
+    -- update last spec
+    self.lastSpec = currentSpec
+end
+
+-- MARK: Load Saved Auras
+
+---Handle old data(3.6.0 - 3.6.1)
+---@param auraList any
+local function HanlerOldAuraData(auraList)
+    local oldAuras= {}
+
+    for id, auraData in pairs(auraList) do
+        if auraData.id then
+            addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
+            local spellID = auraData.id
+            oldAuras[spellID] = {
+                index = id,
+                duration = auraData.duration,
+                cooldown = auraData.cooldown,
+                activeSound = auraData.activeSound,
+                expireSound = auraData.expireSound,
+                loadingSpecs = auraData.loadingSpecs,
+            }
+        end
+    end
+
+    for spellID, auraData in pairs(oldAuras) do
+        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[auraData.index].id))
+        addon.db[MOD_KEY].spells[auraData.index] = nil
+        addon.db[MOD_KEY].spells[spellID] = {
+            duration = auraData.duration,
+            cooldown = auraData.cooldown,
+            activeSound = auraData.activeSound,
+            expireSound = auraData.expireSound,
+            loadingSpecs = auraData.loadingSpecs,
+        }
+    end
+end
+
+---Load saved auras from database and initialize them
+---@param self CustomAuraTracker self
+local function LoadSavedAuras(self)
+    local auraList = addon.db[MOD_KEY].spells
+    self.lastSpec = addon.states["playerSpec"] -- set last spec to current spec when loading
+
+    if auraList then
+        HanlerOldAuraData(auraList)
+
+        -- load auras(IDs only) for quick access when needed
+        for spellID, auraData in pairs(auraList) do
+            if auraData.loadingSpecs then
+                for spec, _ in pairs(auraData.loadingSpecs) do
+                    if not self.specAuras[spec] then
+                        self.specAuras[spec] = {}
+                    end
+
+                    self.specAuras[spec][spellID] = true
+
+                    if spec == addon.states["playerSpec"] then -- if the aura is for current spec, load it
+                        LoadAura(self, spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
+                    end
+                end
+            else -- if no spec is specified, it is a general aura for all specs, load it directly
+                LoadAura(self, spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
+            end
+        end
+
+        self:UpdateStyle()
+    end
+end
+
 -- MARK: UpdateStyle
 
 ---Update style settings and render them in-game
@@ -225,110 +388,29 @@ end
 
 -- MARK: Add Aura
 
----Add or update a tracked aura
----@param spellID integer the spell ID to track
----@param duration number the duration of the aura effect
----@param cooldown number the cooldown of the spell
----@param activeSound string? the sound to play when aura becomes active
----@param expireSound string? the sound to play when cooldown expires
----@return boolean isAdd true if add a new aura, false if update an existing aura
-function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound)
-    local isAdd = false
-    local frame = self.auras.loaded[spellID]
-    if not frame then
-        frame = CreateFrame("Frame", nil, self.auras.head)
-        self.auras.loaded[spellID] = frame
-        self.auras.size = self.auras.size + 1
-        isAdd = true
+function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
+    UpdateSpecLoading(self, loadingSpecs, spellID) -- update the spec loading
 
-        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
-        frame.cooldown:SetAllPoints()
-        frame.cooldown:SetDrawEdge(false)
-        frame.cooldown:SetCountdownAbbrevThreshold(600)
-
-        frame.icon = frame:CreateTexture(nil, "BACKGROUND")
-        frame.icon:SetAllPoints()
-        
-        frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-        frame.border:SetAllPoints()
-        frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
-        frame.border:SetBackdropBorderColor(0, 0, 0, 1)
-
-        frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
-        frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
-
-        self.auras.head:SetSize(math.max(self.auras.size, 1) * addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
-    end
-
-    if activeSound == "" then
-        activeSound = nil
-    end
-    if expireSound == "" then
-        expireSound = nil
-    end
-
-    UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, expireSound)
-
-    return isAdd
-end
-
--- MARK: Remove Aura
-
----Remove a tracked aura
----@param spellID integer the spell ID to remove from tracking
----@return boolean success true if the aura was removed successfully, false if not found
-function CustomAuraTracker:RemoveAura(spellID)
-    if self.auras.loaded[spellID] then
-        self.auras.loaded[spellID]:ClearAllPoints()
-        if self.auras.loaded[spellID].timer then
-            self.auras.loaded[spellID].timer:Cancel()
-            self.auras.loaded[spellID].timer = nil
-        end
-
-        self.auras.loaded[spellID] = addon.Utilities:DeleteFrame(self.auras.loaded[spellID])
-        self.auras.size = self.auras.size - 1
-        return true
+    if ShouldLoad(self, loadingSpecs) then -- if the aura should be loaded for current spec, load it    
+        return LoadAura(self, spellID, duration, cooldown, activeSound, expireSound)
     end
 
     return false
 end
 
--- MARK: Get Auras List
+-- MARK: Remove Aura
 
----Get a list of all tracked auras
----@return table output a table mapping spell IDs to spell names
-function CustomAuraTracker:GetAurasList()
-    if not self.auras.loaded then
-        return {}
+function CustomAuraTracker:RemoveAura(spellID)
+    if self.auras.loaded[spellID] then -- if the aura is currently loaded, unload it and remove from loaded pool
+        UnloadAura(self, self.auras.loaded[spellID])
+        return true
+    else
+        if not addon.db[MOD_KEY].spells[spellID] then
+            return false
+        end
+
+        return true -- if the aura is not loaded, return true let database operation runs
     end
-
-    local output = {}
-    for spellID, _ in pairs(self.auras.loaded) do
-        output[spellID] = addon.Utilities:GetSpellIconString(spellID)
-    end
-
-    return output
-end
-
--- MARK: Get Aura Info
-
----Get detailed information for a specific tracked aura
----@param spellID integer the spell ID to get information for
----@return table? info a table containing aura details, or nil if not found
-function CustomAuraTracker:GetAuraInfo(spellID)
-    if not self.auras.loaded[spellID] then
-        return nil
-    end
-
-    local frame = self.auras.loaded[spellID]
-    return {
-        spellID = frame.spellID,
-        name = frame.name,
-        duration = frame.duration,
-        cooldown = frame.cd,
-        activeSound = frame.activeSound,
-        expireSound = frame.expireSound,
-    }
 end
 
 -- MARK: Test
@@ -359,12 +441,13 @@ function CustomAuraTracker:RegisterEvents()
         end
     end
 
-    local Load = function (...)
-        LoadSavedAuras(self)
-    end
-
     addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", MOD_KEY, "player", OnUpdate)
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, Load)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, function ()
+        LoadSavedAuras(self)
+    end)
+    addon.core:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", MOD_KEY, nil, function()
+        SwitchSpec(self)
+    end)
 end
 
 -- MARK: Register Module

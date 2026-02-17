@@ -140,8 +140,42 @@ function addon.GUI:CreateInlineGroup(parent, title)
     inlineGroup:SetTitle("|cFFFFFFFF" .. title .. "|r")
     inlineGroup:SetFullWidth(true)
     inlineGroup:SetLayout("Flow")
-    parent:AddChild(inlineGroup)
+
+    if parent then
+        parent:AddChild(inlineGroup)
+    end
+
     return inlineGroup
+end
+
+-- MARK: Dropdown Group
+
+---Create a dropdown group to its parent
+---@param parent AceGUIWidget the parent container
+---@param title string title
+---@param list table the list of items for the dropdown
+---@param order table the order of items in the dropdown
+---@param get any initial value for the dropdown
+---@param callback fun(key) callback function when an item is selected
+---@return AceGUIWidget
+function addon.GUI:CreateDropdownGroup(parent, title, list, order, get, callback)
+    local dropdownGroup = AceGUI:Create("DropdownGroup")
+    dropdownGroup:SetTitle("|cFFFFFFFF" .. title .. "|r")
+    dropdownGroup:SetFullWidth(true)
+    dropdownGroup:SetLayout("Flow")
+    dropdownGroup:SetGroupList(list, order)
+    dropdownGroup:SetGroup(get)
+    dropdownGroup:SetCallback("OnGroupSelected", function(_, _, group)
+        if callback then
+            callback(group)
+        end
+    end)
+
+    if parent then
+        parent:AddChild(dropdownGroup)
+    end
+    
+    return dropdownGroup
 end
 
 -- MARK: Scroll Frame
@@ -154,7 +188,11 @@ function addon.GUI:CreateScrollFrame(parent)
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
     scrollFrame:SetFullHeight(true)
-    parent:AddChild(scrollFrame)
+    
+    if parent then
+        parent:AddChild(scrollFrame)
+    end
+
     return scrollFrame
 end
 
@@ -175,7 +213,9 @@ function addon.GUI:CreateToggleCheckBox(parent, label, get, callback)
             callback(newValue)
         end
     end)
-    parent:AddChild(toggle)
+    if parent then
+        parent:AddChild(toggle)
+    end
     return toggle
 end
 
@@ -194,7 +234,9 @@ function addon.GUI:CreateButton(parent, label, callback)
             callback()
         end
     end)
-    parent:AddChild(button)
+    if parent then
+        parent:AddChild(button)
+    end
     return button
 end
 
@@ -219,11 +261,13 @@ function addon.GUI:CreateSlider(parent, label, min, max, step, get, callback)
             callback(newValue)
         end
     end)
-    parent:AddChild(slider)
+    if parent then
+        parent:AddChild(slider)
+    end
     return slider
 end
 
--- MARK: CreateHeader(parent, title)
+-- MARK: Create Header
 
 ---Create a header
 ---@param parent AceGUIWidget the parent container
@@ -233,7 +277,9 @@ function addon.GUI:CreateHeader(parent, title)
     local headingText = AceGUI:Create("Heading")
     headingText:SetText("|cFFFFCC00" .. title .. "|r")
     headingText:SetFullWidth(true)
-    parent:AddChild(headingText)
+    if parent then
+        parent:AddChild(headingText)
+    end
     return headingText
 end
 
@@ -252,7 +298,9 @@ function addon.GUI:CreateInformationTag(parent, description, textJustification)
     informationLabel:SetJustifyH(textJustification or "CENTER")
     informationLabel:SetHeight(24)
     informationLabel:SetJustifyV("MIDDLE")
-    parent:AddChild(informationLabel)
+    if parent then
+        parent:AddChild(informationLabel)
+    end
     return informationLabel
 end
 
@@ -275,7 +323,9 @@ function addon.GUI:CreateFontSelect(parent, label, get, callback)
             callback(key)
         end
     end)
-    parent:AddChild(fontSelect)
+    if parent then
+        parent:AddChild(fontSelect)
+    end
     return fontSelect
 end
 
@@ -298,7 +348,9 @@ function addon.GUI:CreateSoundSelect(parent, label, get, callback)
             callback(key)
         end
     end)
-    parent:AddChild(soundSelect)
+    if parent then
+        parent:AddChild(soundSelect)
+    end
     return soundSelect
 end
 
@@ -321,7 +373,9 @@ function addon.GUI:CreateTextureSelect(parent, label, get, callback)
             callback(key)
         end
     end)
-    parent:AddChild(textureSelect)
+    if parent then
+        parent:AddChild(textureSelect)
+    end
     return textureSelect
 end
 
@@ -345,7 +399,9 @@ function addon.GUI:CreateColorPicker(parent, label, hasAlpha, get, callback)
             callback(addon.Utilities:RGBToHex(r, g, b, a))
         end
     end)
-    parent:AddChild(colorPicker)
+    if parent then
+        parent:AddChild(colorPicker)
+    end
     return colorPicker
 end
 
@@ -366,7 +422,9 @@ function addon.GUI:CreateEditBox(parent, label, get, callback)
             callback(self:GetText())
         end
     end)
-    parent:AddChild(editBox)
+    if parent then
+        parent:AddChild(editBox)
+    end
     return editBox
 end
 
@@ -399,7 +457,9 @@ function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callbac
         end
     end)
 
-    parent:AddChild(dropdown)
+    if parent then
+        parent:AddChild(dropdown)
+    end
     return dropdown
 end
 
@@ -423,7 +483,9 @@ function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
         end
     end)
 
-    parent:AddChild(editBox)
+    if parent then
+        parent:AddChild(editBox)
+    end
     return editBox
 end
 

@@ -79,9 +79,12 @@ L["ExpireSound"] = "Expire Sound"
 L["Add"] = "Add"
 L["Remove"] = "Remove"
 L["AddSuccess"] = "|cffffff00added|r successfully"
+L["AddFailed"] = "Failed to |cffffff00add|r"
 L["UpdateSuccess"] = "|cffffff00updated|r successfully"
 L["RemoveSuccess"] = "|cffffff00removed|r successfully"
 L["RemoveFailed"] = "Failed to |cffffff00remove|r"
+L["LoadingSpecs"] = "Loading Specializations"
+L["LoadingSpecsDesc"] = "Select the specializations(none or multiple) for which the aura will be active. If none of specializations is selected, the aura will be active for all specializations.\n\nWhen you select an existing aura, the specializations information will also be automatically filled."
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

@@ -4,36 +4,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@class Utilities
 addon.Utilities = {}
 
--- MARK: Constants
-addon.Utilities.SpecIDs = {
-	-- Death Knight
-	250, 251, 252,
-	-- Demon Hunter
-	577, 581, 1480,
-	-- Druid
-	102, 103, 104, 105,
-	-- Evoker
-	1467, 1468, 1473,
-	-- Hunter
-	253, 254, 255,
-	-- Mage
-	62, 63, 64,
-	-- Monk
-	268, 269, 270,
-	-- Paladin
-	65, 66, 70,
-	-- Priest
-	256, 257, 258,
-	-- Rogue
-	259, 260, 261,
-	-- Shaman
-	262, 263, 264,
-	-- Warlock
-	265, 266, 267,
-	-- Warrior
-	71, 72, 73,
-}
-
 -- MARK: Enums
 
 ---@enum anchor anchor_To = anchor_From
@@ -350,27 +320,33 @@ function addon.Utilities:GetSpellIconString(spellID)
 	return string.format("%s%s(%d)", icon, name, spellID)
 end
 
--- MARK: Get Spec Icon String
-
----Get a Icon_Name(specID) string by spec ID
----@param specID integer spec ID
----@return string output a Icon_Name(specID) string
-function addon.Utilities:GetSpecIconString(specID)
-	if not specID then return tostring(specID) end
-
-	local _, name, _, icon = GetSpecializationInfoForSpecID(specID)
-	name = name or "UNKNOWN"
-	icon = icon and string.format("|T%d:0|t", icon) or ""
-
-	return string.format("%s%s(%d)", icon, name, specID)
-end
-
-function addon.Utilities:GetAllSpecIconList()
+---Get all specializations' Icon List
+---@param withColor boolean whether to include class color in the output
+---@return table<string, table<string>> specsList a table of specID to Icon_Name(specID) string for all specs, indexed by class name
+---@return table<string> specsOrder a table of class names in the stable order(Druid last)
+function addon.Utilities:GetAllSpecIconList(withColor)
 	local output = {}
+	local order = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 11}
+	local outputOrder = {}
 
-	for _, specID in ipairs(addon.Utilities.SpecIDs) do
-		output[specID] = addon.Utilities:GetSpecIconString(specID)
+	for _, class in ipairs(order) do
+		local className, classFileName = GetClassInfo(class)
+		local classColor = C_ClassColor.GetClassColor(classFileName):GenerateHexColor()
+		if withColor then
+			className = string.format("|c%s%s|r", classColor, className)
+		end
+		output[className] = {}
+		table.insert(outputOrder, className)
+		local specsCount = C_SpecializationInfo.GetNumSpecializationsForClassID(class)
+		for specIndex = 1, specsCount do
+			local specID, name, _, icon = GetSpecializationInfoForClassID(class, specIndex)
+			if withColor then
+				output[className][specID] = string.format("|T%d:0|t|c%s%s|r", icon, classColor, name)
+			else
+				output[className][specID] = string.format("|T%d:0|t%s", icon, name)
+			end
+		end
 	end
 
-	return output
+	return output, outputOrder
 end

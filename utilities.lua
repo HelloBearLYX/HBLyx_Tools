@@ -373,3 +373,16 @@ function addon.Utilities:GetSpellIconString(spellID)
 	
 	return string.format("%s%s(%d)", icon, name, spellID)
 end
+
+-- MARK: Get Spec Icon String
+
+function addon.Utilities:GetSpecIconString(specID)
+	if not specID then return tostring(specID) end
+
+	local info = GetSpecializationInfoByID(specID)
+	local name = info and info.name or "UNKNOWN"
+	local icon = info and info.icon and "|T" .. info.icon .. ":0|t" or ""
+
+	return string.format("%s%s(%d)", icon, name, specID)
+	
+end

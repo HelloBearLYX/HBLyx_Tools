@@ -35,29 +35,25 @@ end
 ---Handle old data(3.6.0 - 3.6.1)
 ---@param auraList any
 local function HanlerOldAuraData(auraList)
-    local oldAuras, oldIndex = {}, {} -- for old data format, store the old auras and their index to remove them after loading
+    local oldAuras= {}
 
     for id, auraData in pairs(auraList) do
         if auraData.id then
             addon.Utilities:print(string.format("Found old aura data: %d", auraData.id))
             local spellID = auraData.id
             oldAuras[spellID] = {
+                index = id,
                 duration = auraData.duration,
                 cooldown = auraData.cooldown,
                 activeSound = auraData.activeSound,
                 expireSound = auraData.expireSound,
             }
-
-            table.insert(oldIndex, id)
         end
     end
 
-    for _, index in ipairs(oldIndex) do
-        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[index].id))
-        addon.db[MOD_KEY].spells[index] = nil
-    end
-
     for spellID, auraData in pairs(oldAuras) do
+        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[auraData.index].id))
+        addon.db[MOD_KEY].spells[auraData.index] = nil
         addon.db[MOD_KEY].spells[spellID] = auraData
     end
 end

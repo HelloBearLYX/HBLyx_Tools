@@ -107,9 +107,10 @@ end
 
 ---Register addon state to the core
 ---@param event string event name
----@param name string name of the addon state
 ---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
-function addon.Core:RegisterState(event , name, updateFunc, unit)
+---@param name string name of the addon state
+---@param updateFunc function function used to update the addon state when the event is triggered
+function addon.Core:RegisterState(event, unit, name, updateFunc)
     if not self.statesUpdate[event] then
         self.statesUpdate[event] = {}
     end

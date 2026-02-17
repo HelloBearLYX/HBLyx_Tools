@@ -93,15 +93,15 @@ local function InitializeStates()
 	
 	-- if the player is in combat
 	addon.states["inCombat"] = UnitAffectingCombat("player") -- "ADDON_LOADED"
-	addon.core:RegisterState("PLAYER_REGEN_DISABLED", "inCombat", function() addon.states["inCombat"] = true end)
-	addon.core:RegisterState("PLAYER_REGEN_ENABLED", "inCombat", function() addon.states["inCombat"] = false end)
+	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function() addon.states["inCombat"] = true end)
+	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function() addon.states["inCombat"] = false end)
 
 	-- player spec
 	local GetSpec = function ()
 		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
 	end
-	addon.core:RegisterState("PLAYER_ENTERING_WORLD", "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
-	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", "playerSpec", GetSpec)
+	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
+	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", nil, "playerSpec", GetSpec)
 end
 
 -- MARK: Initialize

@@ -68,9 +68,7 @@ local function LoadSavedAuras(self)
     local auraList = addon.db[MOD_KEY].spells
 
     if auraList then
-        if addon.db.Version < 3.7 then
-            HanlerOldAuraData(auraList)
-        end
+        HanlerOldAuraData(auraList)
 
         for spellID, auraData in pairs(auraList) do
             self:AddAura(spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)

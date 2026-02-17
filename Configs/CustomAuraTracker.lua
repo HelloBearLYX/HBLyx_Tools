@@ -181,7 +181,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
 
     for _, class in ipairs(specsOrder) do
         local classGroup = GUI:CreateInlineGroup(specsGroup, class)
-        classGroup:SetRelativeWidth(0.15)
+        classGroup:SetRelativeWidth(0.1666)
         for specID, specStr in pairs(specsList[class]) do
             local toggle = GUI:CreateToggleCheckBox(classGroup, specStr, false, nil)
             specsToggles[specID] = toggle

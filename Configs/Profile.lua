@@ -34,8 +34,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     -- MARK: General Profile
     local generalProfileGroup = GUI:CreateInlineGroup(frame, L["Profile"])
     GUI:CreateInformationTag(generalProfileGroup, L["ProfileSettingsDesc"], "LEFT")
-    GUI:CreateMultiLineEditBox(generalProfileGroup, L["Export"], addon:ExportProfile(), nil)
-    GUI:CreateMultiLineEditBox(generalProfileGroup, L["Import"], "", function(value)
+    GUI:CreateMultiLineEditBox(generalProfileGroup, L["Export/Import"], addon:ExportProfile(), function (value)
         addon:ImportProfile(value)
     end)
 
@@ -43,8 +42,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     local modProfileGroup = GUI:CreateInlineGroup(frame, L["ModuleProfile"])
     GUI:CreateInformationTag(modProfileGroup, L["ModuleProfileDesc"], "LEFT")
     GUI:CreateInformationTag(modProfileGroup, "\n")
-    local modExportBox = GUI:CreateMultiLineEditBox(modProfileGroup, L["Export"], "", nil)
-    GUI:CreateMultiLineEditBox(modProfileGroup, L["Import"], "", function(value)
+    local modBox = GUI:CreateMultiLineEditBox(nil, L["Export/Import"], "", function (value)
         local mod = value:match("!HBLyx_Tools_(%w+)_")
         if not mod or mod == "" then
             addon.Utilities:print("Invalid module profile string.")
@@ -53,9 +51,13 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
 
         addon:ImportModuleProfile(value, mod)
     end)
+
     GUI:CreateDropDown(modProfileGroup, L["SelectModule"], GetModuleNameList(), "", false, function(key)
-        modExportBox:SetText(addon:ExportModuleProfile(key))
+        modBox:SetText(addon:ExportModuleProfile(key))
     end)
+    GUI:CreateInformationTag(modProfileGroup, "\n", "LEFT")
+
+    modProfileGroup:AddChild(modBox)
 
     return frame
 end

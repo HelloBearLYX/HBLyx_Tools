@@ -333,7 +333,6 @@ function CustomAuraTracker:Test(on)
 
     if on then
         addon.Utilities:ShowDragRegion(self.auras.head, L["AuraSettings"])
-
         addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.auras.head)

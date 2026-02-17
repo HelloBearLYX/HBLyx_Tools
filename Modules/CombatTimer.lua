@@ -105,7 +105,6 @@ function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
         addon.Utilities:ShowDragRegion(self.frame, L["TimerSettings"])
-
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.frame)

@@ -166,6 +166,10 @@ end
 
 -- MARK: Update Spec Loading
 
+---Update spec loading map
+---@param self CustomAuraTracker self
+---@param newLoadingSpecs table<table<integer>> the new specialization table
+---@param spellID integer the spell ID of updating specialization map
 local function UpdateSpecLoading(self, newLoadingSpecs, spellID)
     for spec, auras in pairs(self.specAuras) do
         if auras[spellID] then -- if the aura is already associated
@@ -182,6 +186,10 @@ end
 
 -- MARK: Should Load
 
+---Check if the spell should be load by spell's loading spec map
+---@param self CustomAuraTracker self
+---@param loadingSpecs table<table<integer>> the loading spec map
+---@return boolean success if the spell should be loaded for current spec
 local function ShouldLoad(self, loadingSpecs)
     -- if loadingSpecs is nil, it means the aura is a general aura for all specs, return true directly
     if not loadingSpecs then
@@ -194,6 +202,9 @@ end
 
 -- MARK: Create New Frame
 
+---Create a new frame in this module when needed
+---@param self CustomAuraTracker self
+---@return frame frame a new frame created
 local function CreateNewFrame(self)
     local frame = CreateFrame("Frame", nil, self.auras.head)
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
@@ -256,6 +267,9 @@ end
 
 -- MARK: Unload Aura
 
+---Unload an aura
+---@param self CustomAuraTracker self
+---@param frame frame the aura to unload
 local function UnloadAura(self, frame)
     if frame.active then
         HideAura(self, frame)
@@ -273,6 +287,8 @@ end
 
 -- MARK: Switch Spec
 
+---Handle after switch specialization to unload unneccessary auras and load needed auras
+---@param self CustomAuraTracker self
 local function SwitchSpec(self)
     local currentSpec = addon.states["playerSpec"]
     if currentSpec == self.lastSpec then return end
@@ -389,6 +405,14 @@ end
 
 -- MARK: Add Aura
 
+---Add a new aura from option UI, all inputs are checked and pre-processed
+---@param spellID integer spellID to add(key)
+---@param duration number duration
+---@param cooldown number cooldown
+---@param activeSound string|nil LSM identifier for the active sound, nil for no sound effect
+---@param expireSound string|nil LSM identifier for the expire sound, nil for no sound effect
+---@param loadingSpecs table<table<integer>>|nil the spec loading map for the spell, nil for always load
+---@return boolean isAdd if the aura is added successfully, false if just update the aura without adding
 function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     UpdateSpecLoading(self, loadingSpecs, spellID) -- update the spec loading
 
@@ -401,6 +425,9 @@ end
 
 -- MARK: Remove Aura
 
+---Remove an existing aura by spellID, and unload it if it is currently loaded
+---@param spellID integer spellID to remove
+---@return boolean isRemoved if the aura is removed successfully, false otherwise
 function CustomAuraTracker:RemoveAura(spellID)
     if self.auras.loaded[spellID] then -- if the aura is currently loaded, unload it and remove from loaded pool
         UnloadAura(self, self.auras.loaded[spellID])

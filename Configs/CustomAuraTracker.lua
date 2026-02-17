@@ -43,6 +43,8 @@ local function FetchAuraInfo(spellID)
     end
 end
 
+-- MARK: I/O Functions
+
 local function Add(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     if addon.core.modules[MOD_KEY] then
         return addon.core.modules[MOD_KEY]:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
@@ -217,6 +219,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     end)
     -- MARK: Add Aura
     GUI:CreateButton(auraGroup, L["Add"], function ()
+        -- check inputs
         local id = CheckSpellIDInput(inputSpellID:GetText())
         local duration = CheckTimeInput(inputDuration:GetText())
         local cooldown = CheckTimeInput(inputCooldown:GetText())
@@ -261,7 +264,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             loadingSpecs = loadingSpecs,
         }
         
-        -- update the dropdown list
+        -- update the aura selected dropdown list
         local val = addon.Utilities:GetSpellIconString(id)
         if isAdd then
             auraSelected:SetList(FetchAurasList())
@@ -273,19 +276,22 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             addon.Utilities:print(string.format("%s-" .. L["UpdateSuccess"], val))
         end
     end)
+
     -- MARK: Remove Aura
     GUI:CreateButton(auraGroup, L["Remove"], function ()
+        -- check input
         local id = CheckSpellIDInput(inputSpellID:GetText())
         if not id then
             return
         end
 
-        local success = Remove(id)
+        -- remove the aura
+        local success = Remove(id) -- database check also performed in the Remove function, so false if the aura is not found in loaded auras and database
         local val = addon.Utilities:GetSpellIconString(id)
         if success then
             addon.db.CustomAuraTracker.spells[id] = nil
 
-            -- update the dropdown list
+            -- update the aura selected dropdown list
             auraSelected:SetList(FetchAurasList())
             auraSelected:SetText("")
             

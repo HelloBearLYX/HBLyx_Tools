@@ -54,7 +54,12 @@ local function HanlerOldAuraData(auraList)
     for spellID, auraData in pairs(oldAuras) do
         addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[auraData.index].id))
         addon.db[MOD_KEY].spells[auraData.index] = nil
-        addon.db[MOD_KEY].spells[spellID] = auraData
+        addon.db[MOD_KEY].spells[spellID] = {
+            duration = auraData.duration,
+            cooldown = auraData.cooldown,
+            activeSound = auraData.activeSound,
+            expireSound = auraData.expireSound,
+        }
     end
 end
 

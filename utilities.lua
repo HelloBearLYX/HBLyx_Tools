@@ -35,6 +35,63 @@ addon.Utilities.SoundChannels = {
 	Dialog = L["SoundChannel"]["Dialog"],
 }
 
+---@enum addon.Utilities.Specializations class specializations
+addon.Utilities.Specializations = {
+	-- Death Knight
+	[250] = L["Specializations"]["DeathKnight"]["Blood"], -- Blood
+	[251] = L["Specializations"]["DeathKnight"]["Frost"], -- Frost
+	[252] = L["Specializations"]["DeathKnight"]["Unholy"], -- Unholy
+	-- Demon Hunter
+	[577] = L["Specializations"]["DemonHunter"]["Havoc"], -- Havoc
+	[581] = L["Specializations"]["DemonHunter"]["Vengeance"], -- Vengeance
+	[1480] = L["Specializations"]["DemonHunter"]["Devourer"], -- Devourer
+	-- Druid
+	[102] = L["Specializations"]["Druid"]["Balance"], -- Balance
+	[103] = L["Specializations"]["Druid"]["Feral"], -- Feral
+	[104] = L["Specializations"]["Druid"]["Guardian"], -- Guardian
+	[105] = L["Specializations"]["Druid"]["Restoration"], -- Restoration
+	-- Evoker
+	[1467] = L["Specializations"]["Evoker"]["Devastation"], -- Devastation
+	[1468] = L["Specializations"]["Evoker"]["Preservation"], -- Preservation
+	[1473] = L["Specializations"]["Evoker"]["Augmentation"], -- Augmentation
+	-- Hunter
+	[253] = L["Specializations"]["Hunter"]["BeastMastery"], -- BeastMastery
+	[254] = L["Specializations"]["Hunter"]["Marksmanship"], -- Marksmanship
+	[255] = L["Specializations"]["Hunter"]["Survival"], -- Survival
+	-- Mage
+	[62] = L["Specializations"]["Mage"]["Arcane"], -- Arcane
+	[63] = L["Specializations"]["Mage"]["Fire"], -- Fire
+	[64] = L["Specializations"]["Mage"]["Frost"], -- Frost
+	-- Monk
+	[268] = L["Specializations"]["Monk"]["Brewmaster"], -- Brewmaster
+	[269] = L["Specializations"]["Monk"]["Windwalker"], -- Windwalker
+	[270] = L["Specializations"]["Monk"]["Mistweaver"], -- Mistweaver
+	-- Paladin
+	[65] = L["Specializations"]["Paladin"]["Holy"], -- Holy
+	[66] = L["Specializations"]["Paladin"]["Protection"], -- Protection
+	[70] = L["Specializations"]["Paladin"]["Retribution"], -- Retribution
+	-- Priest
+	[256] = L["Specializations"]["Priest"]["Discipline"], -- Discipline
+	[257] = L["Specializations"]["Priest"]["Holy"], -- Holy
+	[258] = L["Specializations"]["Priest"]["Shadow"], -- Shadow
+	-- Rogue
+	[259] = L["Specializations"]["Rogue"]["Assassination"], -- Assassination
+	[260] = L["Specializations"]["Rogue"]["Outlaw"], -- Outlaw
+	[261] = L["Specializations"]["Rogue"]["Subtlety"], -- Subtlety
+	-- Shaman
+	[262] = L["Specializations"]["Shaman"]["Elemental"], -- Elemental
+	[263] = L["Specializations"]["Shaman"]["Enhancement"], -- Enhancement
+	[264] = L["Specializations"]["Shaman"]["Restoration"], -- Restoration
+	-- Warlock
+	[265] = L["Specializations"]["Warlock"]["Affliction"], -- Affliction
+	[266] = L["Specializations"]["Warlock"]["Demonology"], -- Demonology
+	[267] = L["Specializations"]["Warlock"]["Destruction"], -- Destruction
+	-- Warrior
+	[71] = L["Specializations"]["Warrior"]["Arms"], -- Arms
+	[72] = L["Specializations"]["Warrior"]["Fury"], -- Fury
+	[73] = L["Specializations"]["Warrior"]["Protection"], -- Protection
+}
+
 -- MARK: print
 
 ---Use addon's identifier to print

@@ -36,6 +36,76 @@ L["SoundChannel"] = {
 	Dialog = "对话",
 }
 
+-- MARK: Specializations
+L["Specializations"] = {
+	DeathKnight = {
+		Blood = "鲜血",
+		Frost = "冰霜",
+		Unholy = "邪恶",
+	},
+	DemonHunter = {
+		Havoc = "浩劫",
+		Vengeance = "复仇",
+		Devourer = "噬灭",
+	},
+	Druid = {
+		Balance = "平衡",
+		Feral = "野性",
+		Guardian = "守护",
+		Restoration = "恢复",
+	},
+	Evoker = {
+		Devastation = "毁灭",
+		Preservation = "守护",
+		Augmentation = "增强",
+	},
+	Hunter = {
+		BeastMastery = "野兽控制",
+		Marksmanship = "射击",
+		Survival = "生存",
+	},
+	Mage = {
+		Arcane = "奥术",
+		Fire = "火焰",
+		Frost = "冰霜",
+	},
+	Monk = {
+		Brewmaster = "酒仙",
+		Windwalker = "踏风",
+		Mistweaver = "织雾",
+	},
+	Paladin = {
+		Holy = "神圣",
+		Protection = "防护",
+		Retribution = "惩戒",
+	},
+	Priest = {
+		Discipline = "戒律",
+		Holy = "神圣",
+		Shadow = "暗影",
+	},
+	Rogue = {
+		Assassination = "刺杀",
+		Outlaw = "狂徒",
+		Subtlety = "敏锐",
+	},
+	Shaman = {
+		Elemental = "元素",
+		Enhancement = "增强",
+		Restoration = "恢复",
+	},
+	Warlock = {
+		Affliction = "痛苦",
+		Demonology = "恶魔学识",
+		Destruction = "毁灭",
+	},
+	Warrior = {
+		Arms = "武器",
+		Fury = "狂怒",
+		Protection = "防护",
+	},
+}
+
 -- MARK: Config
 L["Test"] = "测试/解锁(拖动移动)"
 L["Mute"] = "静音"

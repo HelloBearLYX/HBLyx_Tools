@@ -33,27 +33,21 @@ end
 ---@param self CombatIndicator self
 ---@param text string text to show
 ---@param color string hex string of color(6 or 8)
-local function SetDisplay(self, text, color)
-    self.frame.text:SetText(text)
-    self.frame.text:SetTextColor(addon.Utilities:HexToRGB(color))
+local function SetIndicator(self, inCombat)
+    if inCombat then
+        self.frame.text:SetText(addon.db[MOD_KEY]["InCombatText"])
+        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["InCombatColor"]))
+    else
+        self.frame.text:SetText(addon.db[MOD_KEY]["OutCombatText"])
+        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["OutCombatColor"]))
+    end
 end
-
 
 --MARK: Handler
 
 ---Handler for CombatIndicator
 local function Handler(self)
-    -- local startTime = GetTime()
-    local text, color
-    if addon.states["inCombat"] then
-        text = addon.db[MOD_KEY]["InCombatText"]
-        color = addon.db[MOD_KEY]["InCombatColor"]
-    else
-        text = addon.db[MOD_KEY]["OutCombatText"]
-        color = addon.db[MOD_KEY]["OutCombatColor"]
-    end
-
-    SetDisplay(self, text, color)
+    SetIndicator(self, addon.states["inCombat"])
     self.frame:Show()
 
     if not addon.db[MOD_KEY]["Mute"] then
@@ -66,6 +60,7 @@ local function Handler(self)
 
     if self.timer then -- if we got overlapped timer, we cancel last one
         self.timer:Cancel()
+        self.timer = nil
     end
 
     self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["FadeTime"], function ()
@@ -92,13 +87,32 @@ end
 ---@param on boolean turn the Test mode on or off
 function CombatIndicator:Test(on)
     if on then
-        SetDisplay(self, addon.db[MOD_KEY]["InCombatText"], addon.db[MOD_KEY]["InCombatColor"])
+        if self.timer then -- if there is a active timer, we cancel it to prevent unexpected hiding
+            self.timer:Cancel()
+            self.timer = nil
+        end
+
+        SetIndicator(self, true)
+        self.timer = C_Timer.NewTicker(addon.db[MOD_KEY]["FadeTime"], function ()
+            if self.frame.text:GetText() == addon.db[MOD_KEY]["InCombatText"] then
+                SetIndicator(self, false)
+            else
+                SetIndicator(self, true)
+            end
+        end)
+
         self.frame:Show()
 
         addon.Utilities:ShowDragRegion(self.frame, L["CombatSettings"])
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.frame)
+
+        if self.timer then
+            self.timer:Cancel()
+            self.timer = nil
+        end
+
         self.frame:Hide()
     end
 end

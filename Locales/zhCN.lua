@@ -180,8 +180,8 @@ L["InterruptIconsSettings"] = "打断图标设置"
 L["InterruptIconDesc"] = "在可以打断的时候(可打断+打断就绪)的情况下,显示打断图标\n\n主要为恶魔术提供,在可打断时显示哪个打断可用"
 L["ShowDemoWarlockOnly"] = "只为恶魔术显示"
 -- Target Interrupt Settings
-L["TargetInterruptSettings"] = "目标打断"
-L["TargetInterruptSettingsDesc"] = "目标打断警报与目标施法条设置\n\n|cffff0000注意|r: 目标打断模块就是焦点打断模块的复制, 因为部分玩家反馈他们对目标打断有需求, 所以复制了此模块。但是|cffff0000如果之后焦点打断模块有更新, 目标打断模块可能不会同步更新|r, 因为Lua并不是真的OOP语言, 没有继承的概念, 类似的功能只能通过复制代码来实现, 所以维护成本较高, 这也是为什么我不想做目标打断模块的原因之一。"
+L["TargetBarSettings"] = "目标施法条设置"
+L["TargetBarSettingsDesc"] = "|cffffff00启用一个与焦点施法条相同的目标施法条|r。大部分设置是共享的，只有下面的样式设置是独立的。"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "战复计时器"

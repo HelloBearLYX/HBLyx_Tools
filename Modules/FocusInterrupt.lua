@@ -41,8 +41,24 @@ local INTERRUPT_BY_CLASS = {
 ---Initialize(Constructor)
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
+    -- after 3.8, as implemented target bar, we need to migrate part of the database to new format(for style settings)
+    local oldDBKeys = {"BackgroundAlpha", "Width", "Height", "X", "Y", "IconZoom", "Font", "FontSize"}
+    for _, key in pairs(oldDBKeys) do
+        if addon.db[self.modName][key] then
+            addon.Utilities:print("Migrating data: " .. key)
+            addon.db[self.modName]["focus" .. key] = addon.db[self.modName][key]
+        end
+
+        addon.db[self.modName][key] = nil -- remove old keys after migration
+    end
+
     self.bars.focus = self:CreateBar()
     self.bars.focus.active = false
+
+    if addon.db[self.modName]["EnabledTargetBar"] then
+        self.bars.target = self:CreateBar()
+        self.bars.target.active = false
+    end
 
     self:UpdateStyle()
 
@@ -100,7 +116,7 @@ local function GetBarColor(self, interrupted, notInterruptible, isInterruptReady
 end
 
 ---Get Interrupter from GUID
----@param guid integer GUID for the interrupter
+---@param guid string GUID for the interrupter
 ---@return string name name of the interrupter
 ---@return string class class of the interrupter
 local function GetInterrupter(guid)
@@ -124,10 +140,10 @@ local function UpdateKickIconsStyle(self, unit)
     self.bars[unit].kickIcon:ClearAllPoints()
     self.bars[unit].kickIcon:SetPoint(anchorFrom, self.bars[unit], anchorTo, 0, 0)
     self.bars[unit].kickIcon.icon:SetTexCoord(
-        addon.db[self.modName]["IconZoom"],
-        1 - addon.db[self.modName]["IconZoom"],
-        addon.db[self.modName]["IconZoom"],
-        1 - addon.db[self.modName]["IconZoom"]
+        addon.db[self.modName][unit .. "IconZoom"],
+        1 - addon.db[self.modName][unit .. "IconZoom"],
+        addon.db[self.modName][unit .. "IconZoom"],
+        1 - addon.db[self.modName][unit .. "IconZoom"]
     )
 
     if self.bars[unit].subKickIcon then
@@ -135,10 +151,10 @@ local function UpdateKickIconsStyle(self, unit)
         self.bars[unit].subKickIcon:ClearAllPoints()
         self.bars[unit].subKickIcon:SetPoint(anchorChild, self.bars[unit].kickIcon, anchorParent, 0, 0)
         self.bars[unit].subKickIcon.icon:SetTexCoord(
-            addon.db[self.modName]["IconZoom"],
-            1 - addon.db[self.modName]["IconZoom"],
-            addon.db[self.modName]["IconZoom"],
-            1 - addon.db[self.modName]["IconZoom"]
+            addon.db[self.modName][unit .. "IconZoom"],
+            1 - addon.db[self.modName][unit .. "IconZoom"],
+            addon.db[self.modName][unit .. "IconZoom"],
+            1 - addon.db[self.modName][unit .. "IconZoom"]
         )
     end
 end
@@ -427,44 +443,44 @@ end
 ---@param unit string unit key for the bar to be updated style
 local function UpdateBarStyle(self, unit)
     -- basic size and position of bar
-    self.bars[unit]:SetSize(addon.db[self.modName]["Width"], addon.db[self.modName]["Height"])
-    self.bars[unit]:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
+    self.bars[unit]:SetSize(addon.db[self.modName][unit .. "Width"], addon.db[self.modName][unit .. "Height"])
+    self.bars[unit]:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName][unit .. "X"], addon.db[self.modName][unit .. "Y"])
     
     -- background is kind of Blizzard's texture, only color and alpha are customizable
-    self.bars[unit].background:SetColorTexture(0, 0, 0, addon.db[self.modName]["BackgroundAlpha"])
+    self.bars[unit].background:SetColorTexture(0, 0, 0, addon.db[self.modName][unit .. "BackgroundAlpha"])
 
     -- icon zoom and size
     self.bars[unit].icon:SetTexCoord( -- prevent Blizzard's raw icons' border and fill all space with texture
-        addon.db[self.modName]["IconZoom"],
-        1 - addon.db[self.modName]["IconZoom"],
-        addon.db[self.modName]["IconZoom"],
-        1 - addon.db[self.modName]["IconZoom"]
+        addon.db[self.modName][unit .. "IconZoom"],
+        1 - addon.db[self.modName][unit .. "IconZoom"],
+        addon.db[self.modName][unit .. "IconZoom"],
+        1 - addon.db[self.modName][unit .. "IconZoom"]
     )
-    self.bars[unit].icon:SetSize(addon.db[self.modName]["Height"], addon.db[self.modName]["Height"]) -- keep icon has the same height as bar and keep it a cube
+    self.bars[unit].icon:SetSize(addon.db[self.modName][unit .. "Height"], addon.db[self.modName][unit .. "Height"]) -- keep icon has the same height as bar and keep it a cube
 
     -- bar texture and size
     -- after 3.2, only keep one status bar instead of 3(1 bar + 2 overlays)
-    self.bars[unit].statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[self.modName]["Texture"]))
-    self.bars[unit].statusBar:SetSize(addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"], addon.db[self.modName]["Height"])
+    self.bars[unit].statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[self.modName][unit .. "Texture"]))
+    self.bars[unit].statusBar:SetSize(addon.db[self.modName][unit .. "Width"] - addon.db[self.modName][unit .. "Height"], addon.db[self.modName][unit .. "Height"])
     self.bars[unit].statusBar:GetStatusBarTexture():SetVertexColor(self.interruptibleColor:GetRGBA())
 
     -- font/text positions/
     -- left texts(spell + target)
     -- after 3.2, allow change the font size but change the margin to 0 for formatting more information
     self.bars[unit].spellText:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[self.modName]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName][unit .. "Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName][unit .. "FontSize"],
         "OUTLINE"
     )
-    self.bars[unit].spellText:SetPoint("LEFT", self.bars[unit], "LEFT", addon.db[self.modName]["Height"], 0)
-    self.bars[unit].spellText:SetSize(0.7 * (addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"]), addon.db[self.modName]["FontSize"]) -- how much propotion of space is allowd
+    self.bars[unit].spellText:SetPoint("LEFT", self.bars[unit], "LEFT", addon.db[self.modName][unit .. "Height"], 0)
+    self.bars[unit].spellText:SetSize(0.7 * (addon.db[self.modName][unit .. "Width"] - addon.db[self.modName][unit .. "Height"]), addon.db[self.modName][unit .. "FontSize"]) -- how much propotion of space is allowd
     -- right texts(time)
     self.bars[unit].timeText:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[self.modName]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName][unit .. "Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName][unit .. "FontSize"],
         "OUTLINE"
     )
-    self.bars[unit].timeText:SetSize(0.3 * (addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"]), addon.db[self.modName]["FontSize"]) -- how much propotion of space is allowd
+    self.bars[unit].timeText:SetSize(0.3 * (addon.db[self.modName][unit .. "Width"] - addon.db[self.modName][unit .. "Height"]), addon.db[self.modName][unit .. "FontSize"]) -- how much propotion of space is allowd
 end
 
 -- public methods
@@ -559,7 +575,7 @@ function FocusInterrupt:Test(on)
         testDuration:SetTimeFromStart(GetTime(), 30)
         UpdateInterruptId(self)
 
-        addon.Utilities:MakeFrameDragPosition(self.bars[unit], self.modName, "X", "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
+        addon.Utilities:MakeFrameDragPosition(self.bars[unit], self.modName, unit .. "X", unit .. "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
             OnUpdate(self, unit, testDuration, false, false)
         end)
 

@@ -89,7 +89,7 @@ function addon.GUI:Render()
 
     -- create tabs
     local tabs = AceGUI:Create("TabGroup")
-    tabs:SetLayout("Fill")
+    tabs:SetLayout("Flow")
     tabs:SetFullWidth(true)
     tabs:SetFullHeight(true)
     tabs:SetTabs(TABS)

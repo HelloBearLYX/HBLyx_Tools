@@ -161,7 +161,7 @@ L["FocusInterruptSettingsDesc"] = "Focus Interrupt alert and Focus Cast Bar sett
 L["Interrupted"] = "Interrupted"
 L["InterruptedColor"] = "Interrupted Color"
 -- Focus Cast Bar Settings
-L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
+L["FocusCastBarHidden"] = "Hide Cast Bar"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > InterruptNotReadyColor"
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings

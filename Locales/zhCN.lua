@@ -162,7 +162,7 @@ L["FocusInterruptSettingsDesc"] = "焦点打断警报与焦点施法条设置"
 L["Interrupted"] = "被打断"
 L["InterruptedColor"] = "被打断颜色"
 -- Focus Cast Bar Settings
-L["FocusCastBarHidden"] = "隐藏焦点施法条"
+L["FocusCastBarHidden"] = "隐藏施法条"
 L["FocusColorPriorityDesc"] = "不可打断颜色 > 可打断颜色 > 打断未就绪颜色"
 L["ShowTotalTime"] = "显示总时间"
 -- Focus Interrupt Settings
@@ -181,7 +181,7 @@ L["InterruptIconDesc"] = "在可以打断的时候(可打断+打断就绪)的情
 L["ShowDemoWarlockOnly"] = "只为恶魔术显示"
 -- Target Interrupt Settings
 L["TargetBarSettings"] = "目标施法条设置"
-L["TargetBarSettingsDesc"] = "|cffffff00启用一个与焦点施法条相同的目标施法条|r。大部分设置是共享的，只有下面的样式设置是独立的。"
+L["TargetBarSettingsDesc"] = "|cffffff00启用一个与焦点施法条相同的目标施法条|r。大部分设置是共享的, 只有下面的样式设置是独立的。"
 
 -- MARK: BattleRes
 L["BattleResSettings"] = "战复计时器"

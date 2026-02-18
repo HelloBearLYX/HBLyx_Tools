@@ -534,7 +534,7 @@ end
 
 ---Register events for FocusInterrupt on EventsHandler
 function FocusInterrupt:RegisterEvents() -- for cast-start events
-    local StartCastHandle = function()
+    local function StartCastHandle()
         if self.timer then -- if the interrupted fade Timer is still there, we should immediately halt it and handle new cast
             self.timer:Cancel()
             self.timer = nil
@@ -544,14 +544,14 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         Handler(self)
     end
     
-    local StopCastHandle = function(...)
+    local function StopCastHandle(...)
         if not self.timer then -- since the stop-cast events also triggered after the interrupted-events, must avoid stop-cast events override the interrupted-events
             self.active = false
             self.frame:Hide()
         end
     end
 
-    local InterruptedHandle = function (...)
+    local function InterruptedHandle(...)
         local _, _, _, guid = ... -- if guid != null -> some one interrupted it
         if guid then -- handle interrupted
             InterruptHandler(self, guid)
@@ -560,22 +560,38 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         end
     end
 
-    local UpdateID = function () UpdateInterruptId(self) end
+    local function UpdateID()
+        UpdateInterruptId(self)
+    end
+
+    local function OnUpdate(_, event, ...)
+        if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" or event == "PLAYER_FOCUS_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+            StartCastHandle()
+        elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_FAILED" then
+            StopCastHandle(...)
+        elseif event == "UNIT_SPELLCAST_INTERRUPTED" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+            InterruptedHandle(...)
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            UpdateID()
+        end
+    end
 
     -- active cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_START", self.modName, "focus", StartCastHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", self.modName, "focus", StartCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_START", self.frame, self.modName, "focus")
+    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", self.frame, self.modName, "focus")
     -- switch focus
-    addon.core:RegisterEvent("PLAYER_FOCUS_CHANGED", self.modName, nil, StartCastHandle)
+    addon.core:RegisterEvent("PLAYER_FOCUS_CHANGED", self.frame, self.modName)
     -- switch spec
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, UpdateID)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
     addon.core:RegisterStateMonitor("playerSpec", self.modName, UpdateID)
     -- stop cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_STOP", self.modName, "focus", StopCastHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_FAILED", self.modName, "focus", StopCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_STOP", self.frame, self.modName, "focus")
+    addon.core:RegisterEvent("UNIT_SPELLCAST_FAILED", self.frame, self.modName, "focus")
     -- interrupted/stop cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", self.modName, "focus", InterruptedHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", self.modName, "focus", InterruptedHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", self.frame, self.modName, "focus")
+    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", self.frame, self.modName, "focus")
+
+    self.frame:SetScript("OnEvent", OnUpdate)
 end
 
 -- MARK: Register Module

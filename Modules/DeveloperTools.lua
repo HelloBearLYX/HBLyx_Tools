@@ -69,29 +69,24 @@ end
 
 local function GetEventsInfo()
     local events = {}
-    local eventsCount = {}
-    for event, modules in pairs(addon.core.eventMap) do
+    for event, _ in pairs(addon.core.eventMap) do
         table.insert(events, event)
-        eventsCount[event] = 0
-        for _, _ in pairs(modules) do
-            eventsCount[event] = eventsCount[event] + 1
-        end
     end
     table.sort(events, function (a, b)
-        if eventsCount[a] == eventsCount[b] then
+        if #addon.core.eventMap[a] == #addon.core.eventMap[b] then
             return a < b
         end
 
-        return eventsCount[a] > eventsCount[b]
+        return #addon.core.eventMap[a] > #addon.core.eventMap[b]
     end)
 
     local output = "|cff8788EEEvents Info|r:\n"
     local total = 0
     
     for _, event in ipairs(events) do
-        output = output .. "|cff00ff00" .. event .. "|r|cffC41E3A(" .. tostring(eventsCount[event]) .. ")|r: "
-        total = total + eventsCount[event]
-        for mod, _ in pairs(addon.core.eventMap[event]) do
+        output = output .. "|cff00ff00" .. event .. "|r|cffC41E3A(" .. tostring(#addon.core.eventMap[event]) .. ")|r: "
+        total = total + #addon.core.eventMap[event]
+        for _, mod in ipairs(addon.core.eventMap[event]) do
             output = output .. mod .. ", "
         end
         output = output .. "\n"

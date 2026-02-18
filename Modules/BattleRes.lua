@@ -130,14 +130,18 @@ end
 
 ---Register events needed by CombatTimer
 function BattleRes:RegisterEvents()
-    local Handle = function () Handler(self) end
+    local function OnUpdate()
+        Handler(self)
+    end
 
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, Handle)
-    addon.core:RegisterEvent("ENCOUNTER_START", self.modName, nil, Handle)
-    addon.core:RegisterEvent("ENCOUNTER_END", self.modName, nil, Handle)
-    addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.modName, nil, Handle)
-    addon.core:RegisterEvent("CHALLENGE_MODE_START", self.modName, nil, Handle)
-    addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.modName, nil, Handle)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
+    addon.core:RegisterEvent("ENCOUNTER_START", self.frame, self.modName)
+    addon.core:RegisterEvent("ENCOUNTER_END", self.frame, self.modName)
+    addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)
+    addon.core:RegisterEvent("CHALLENGE_MODE_START", self.frame, self.modName)
+    addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
+
+    self.frame:SetScript("OnEvent", OnUpdate)
 end
 
 -- MARK: Register Module

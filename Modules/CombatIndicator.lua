@@ -120,8 +120,8 @@ end
 
 ---Register events for CombatIndicator on EventsHandler
 function CombatIndicator:RegisterEvents()
-    local HandleActive = function () Handler(self) end
-    addon.core:RegisterStateMonitor("inCombat", self.modName, HandleActive)
+    local OnStateUpdate = function () Handler(self) end
+    addon.core:RegisterStateMonitor("inCombat", self.modName, OnStateUpdate)
 end
 
 -- MARK: Register Module

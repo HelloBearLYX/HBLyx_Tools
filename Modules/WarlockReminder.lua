@@ -8,6 +8,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field modName string module name for registering in core
 local WarlockReminder = {
     modName = "WarlockReminders",
+    frame = CreateFrame("Frame", ADDON_NAME .. "_WarlockReminder", UIParent),
 }
 
 -- MARK: Constants
@@ -45,11 +46,11 @@ function WarlockReminder:Initialize()
         return nil
     end
 
-    self.pet = CreateFrame("Frame", ADDON_NAME .. "_WarlockReminder" .. "_Pet", UIParent)
+    self.pet = CreateFrame("Frame", nil, UIParent)
     self.pet:SetFrameStrata("BACKGROUND")
     self.pet:Hide()
 
-    self.candy = CreateFrame("Frame", ADDON_NAME .. "_WarlockReminder" .. "_Candy", UIParent)
+    self.candy = CreateFrame("Frame", nil, UIParent)
     self.candy:SetFrameStrata("BACKGROUND")
     self.candy:Hide()
 
@@ -283,33 +284,39 @@ end
 
 ---Register events for WarlockReminder on EventsHandler
 function WarlockReminder:RegisterEvents()
-    local HandleBoth = function () Handler(self) end
-    local HandlePet = function() Handler(self, "pet") end
-    local HandleCandy = function() Handler(self, "candy") end
-
-    -- Both events
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, HandleBoth)
-    addon.core:RegisterStateMonitor("inCombat", self.modName, HandleBoth)
-    -- Pet events
-    addon.core:RegisterEvent("UNIT_PET", self.modName, "player", HandlePet)
-    addon.core:RegisterEvent("PET_BAR_UPDATE", self.modName, nil, HandlePet)
-    addon.core:RegisterEvent("PET_DISMISS_START", self.modName, nil, HandlePet)
-    addon.core:RegisterEvent("PLAYER_ALIVE", self.modName, nil, HandlePet)
-    addon.core:RegisterStateMonitor("playerSpec", self.modName, HandlePet)
-    addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.modName, nil, function ()
-        if IsMounted() then
-            HandlePet()
-        else
-            if self.timer then
+    local function OnUpdate(_, event, ...)
+        if event == "UNIT_PET" or event == "PET_BAR_UPDATE" or event == "PET_DISMISS_START" or event == "PLAYER_ALIVE" then
+            Handler(self, "pet")
+        elseif event == "BAG_UPDATE" then
+            Handler(self, "candy")
+         elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
+            if IsMounted() then
+                Handler(self)
+            else
+                if self.timer then
                     self.timer:Cancel()
                     self.timer = nil
-            end
+                end
 
-            self.timer = C_Timer.NewTimer(3, function () HandlePet() end)
+                self.timer = C_Timer.NewTimer(3, function () Handler(self) end)
+            end
         end
-    end)
+    end
+
+    -- Both events
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
+    addon.core:RegisterStateMonitor("inCombat", self.modName, function() Handler(self) end)
+    -- Pet events
+    addon.core:RegisterEvent("UNIT_PET", self.frame, self.modName, "player")
+    addon.core:RegisterEvent("PET_BAR_UPDATE", self.frame, self.modName)
+    addon.core:RegisterEvent("PET_DISMISS_START", self.frame, self.modName)
+    addon.core:RegisterEvent("PLAYER_ALIVE", self.frame, self.modName)
+    addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.frame, self.modName)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function() Handler(self, "pet") end)
     -- Candy events
-    addon.core:RegisterEvent("BAG_UPDATE", self.modName, nil, HandleCandy)
+    addon.core:RegisterEvent("BAG_UPDATE", self.frame, self.modName)
+
+    self.frame:SetScript("OnEvent", OnUpdate)
 end
 
 -- MARK: Register Module

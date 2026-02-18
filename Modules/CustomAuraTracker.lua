@@ -461,20 +461,22 @@ end
 
 ---Register events
 function CustomAuraTracker:RegisterEvents()
-    local OnUpdate = function (...)
-        local spellID  = select(3, ...)
-        if self.auras.loaded[spellID] then
-            Handler(self, spellID)
+    local function OnUpdate(_, event, ...)
+        if event == "UNIT_SPELLCAST_SUCCEEDED" then
+            local spellID  = select(3, ...)
+            if self.auras.loaded[spellID] then
+                Handler(self, spellID)
+            end
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            LoadSavedAuras(self)
         end
     end
 
-    addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.modName, "player", OnUpdate)
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, function ()
-        LoadSavedAuras(self)
-    end)
-    addon.core:RegisterStateMonitor("playerSpec", self.modName, function()
-        SwitchSpec(self)
-    end)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.auras.head, self.modName, "player")
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.auras.head, self.modName)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function() SwitchSpec(self) end)
+
+    self.auras.head:SetScript("OnEvent", OnUpdate)
 end
 
 -- MARK: Register Module

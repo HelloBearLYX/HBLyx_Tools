@@ -2,7 +2,7 @@ local ADDON_NAME, addon = ...
 
 ---@class Core
 ---@field eventFrame Frame the frame used to register events
----@field eventMap table<string, table<string, function>> map of event to map of module to handler function
+---@field eventMap table<string, table<string>> map of events for all modules, just record for developers
 ---@field modules table<string, table> map of module key to module instance, used to store
 ---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
 ---@field totalMods number total number of registered modules, used to check if all modules are loaded
@@ -39,15 +39,15 @@ end
 ---@param self Core self
 ---@param event string event to register
 ---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
-local function RegisterE(self, event, unit)
+local function RegisterE(frame, event, unit)
     if unit then
         if type(unit) == "table" then
-            self.eventFrame:RegisterUnitEvent(event, unpack(unit))
+            frame:RegisterUnitEvent(event, unpack(unit))
         else
-            self.eventFrame:RegisterUnitEvent(event, unit)
+            frame:RegisterUnitEvent(event, unit)
         end
     else
-        self.eventFrame:RegisterEvent(event)
+        frame:RegisterEvent(event)
     end
 end
 
@@ -70,11 +70,6 @@ local function Handle(self, event, ...)
                 monitorFunc(delta)
             end
         end
-
-        -- general events
-        for _, func in pairs(self.eventMap[event] or {}) do
-            func(...)
-        end
     end
 end
 
@@ -83,17 +78,17 @@ end
 
 ---Call to let Manager register this event with the function
 ---@param event string event name
+---@param frame frame the frame used to hook the event
 ---@param mod string module name/key
 ---@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
----@param func function function register to the event
-function Core:RegisterEvent(event, mod, unit, func)
+function Core:RegisterEvent(event, frame, mod, unit)
     if not self.eventMap[event] then
         self.eventMap[event] = {}
     end
 
-    self.eventMap[event][mod] = func
+    table.insert(self.eventMap[event], mod)
 
-    RegisterE(self, event, unit)
+    RegisterE(frame, event, unit)
 end
 
 -- MARK: Register State
@@ -110,7 +105,7 @@ function Core:RegisterState(event, unit, name, updateFunc)
 
     self.statesUpdate[event][name] = updateFunc
 
-    RegisterE(self, event, unit)
+    RegisterE(self.eventFrame, event, unit)
 end
 
 -- MARK: Register State Monitor

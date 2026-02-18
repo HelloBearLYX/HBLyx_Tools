@@ -119,8 +119,8 @@ end
 
 ---Register events needed by CombatTimer on addon.EventsHandler
 function CombatTimer:RegisterEvents()
-    local Handle = function () Handler(self) end
-    addon.core:RegisterStateMonitor("inCombat", self.modName, Handle)
+    local OnStateUpdate = function () Handler(self) end
+    addon.core:RegisterStateMonitor("inCombat", self.modName, OnStateUpdate)
 end
 
 -- MARK: Register Module

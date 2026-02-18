@@ -7,6 +7,7 @@ CombatIndicator = {
 }
 
 local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local MOD_KEY = "CombatIndicator"
 
 --MARK: Initialize
@@ -94,8 +95,10 @@ function CombatIndicator:Test(on)
         SetDisplay(self, addon.db[MOD_KEY]["InCombatText"], addon.db[MOD_KEY]["InCombatColor"])
         self.frame:Show()
 
+        addon.Utilities:ShowDragRegion(self.frame, L["CombatSettings"])
         addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
     else
+        addon.Utilities:HideDragRegion(self.frame)
         self.frame:Hide()
     end
 end

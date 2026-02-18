@@ -179,19 +179,19 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     GUI:CreateColorPicker(colorGroup, L["InterruptibleColor"], true, addon.db.FocusInterrupt.InterruptibleColor, function(value)
         addon.db.FocusInterrupt.InterruptibleColor = value
         update()
-    end)
+    end):SetRelativeWidth(0.25)
     GUI:CreateColorPicker(colorGroup, L["FocusInterruptNotReadyColor"], true, addon.db.FocusInterrupt.CooldownColor, function(value)
         addon.db.FocusInterrupt.CooldownColor = value
         update()
-    end)
+    end):SetRelativeWidth(0.25)
     GUI:CreateColorPicker(colorGroup, L["NotInterruptibleColor"], true, addon.db.FocusInterrupt.NotInterruptibleColor, function(value)
         addon.db.FocusInterrupt.NotInterruptibleColor = value
         update()
-    end)
+    end):SetRelativeWidth(0.25)
     GUI:CreateColorPicker(colorGroup, L["InterruptedColor"], true, addon.db.FocusInterrupt.InterruptedColor, function(value)
         addon.db.FocusInterrupt.InterruptedColor = value
         update()
-    end)
+    end):SetRelativeWidth(0.25)
 
     -- MARK: Sound
     local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])

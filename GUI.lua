@@ -23,10 +23,41 @@ local TABS = {
     {text = L["Profile"], value = "Profile"},
 }
 
+-- MARK: General Panel
+
+local function CreateGeneralPanel(container)
+    local panel = addon.GUI:CreateScrollFrame(container)
+    panel:SetFullWidth(true)
+    addon.GUI:CreateInformationTag(panel, L["WelecomeInfo"], "CENTER")
+    local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])
+    addon.GUI:CreateInformationTag(notificationsGroup, L["NotificationContent"], "LEFT")
+    local issueGroup = addon.GUI:CreateInlineGroup(panel, L["Issues"])
+    addon.GUI:CreateInformationTag(issueGroup, L["IssuesContent"], "LEFT")
+    local contactGroup = addon.GUI:CreateInlineGroup(panel, L["Contact"])
+    local gitHubInteractive = AceGUI:Create("InteractiveLabel")
+    gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r")
+    gitHubInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+    gitHubInteractive:SetJustifyV("MIDDLE")
+    gitHubInteractive:SetRelativeWidth(0.25)
+    gitHubInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL(L["GitHub"], "https://github.com/HelloBearLYX/HBLyx_Tools/issues") end)
+    gitHubInteractive:SetCallback("OnEnter", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFFFFFFFFGitHub|r") end)
+    gitHubInteractive:SetCallback("OnLeave", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r") end)
+    contactGroup:AddChild(gitHubInteractive)
+    local curseForgeInteractive = AceGUI:Create("InteractiveLabel")
+    curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r")
+    curseForgeInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+    curseForgeInteractive:SetJustifyV("MIDDLE")
+    curseForgeInteractive:SetRelativeWidth(0.25)
+    curseForgeInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL(L["CurseForge"], "https://www.curseforge.com/wow/addons/hblyx-tools") end)
+    curseForgeInteractive:SetCallback("OnEnter", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFFFFFFFFCurseForge|r") end)
+    curseForgeInteractive:SetCallback("OnLeave", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r") end)
+    contactGroup:AddChild(curseForgeInteractive)
+end
+
 -- MARK: Initialize GUI
 
 ---Initialize/Constructor for GUI
-function addon.GUI:Initialize()
+function addon.GUI:Render()
     if self.isOpened or InCombatLockdown() then return end
 
     -- create main frame
@@ -70,33 +101,7 @@ function addon.GUI:Initialize()
 
         -- General Panel
         if tab == "General" then
-            local panel = addon.GUI:CreateScrollFrame(container)
-            panel:SetFullWidth(true)
-            addon.GUI:CreateInformationTag(panel, L["WelecomeInfo"], "CENTER")
-            local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])
-            addon.GUI:CreateInformationTag(notificationsGroup, L["NotificationContent"], "LEFT")
-            local issueGroup = addon.GUI:CreateInlineGroup(panel, L["Issues"])
-            addon.GUI:CreateInformationTag(issueGroup, L["IssuesContent"], "LEFT")
-            local contactGroup = addon.GUI:CreateInlineGroup(panel, L["Contact"])
-            local gitHubInteractive = AceGUI:Create("InteractiveLabel")
-            gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r")
-            gitHubInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-            gitHubInteractive:SetJustifyV("MIDDLE")
-            gitHubInteractive:SetRelativeWidth(0.25)
-            gitHubInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL(L["GitHub"], "https://github.com/HelloBearLYX/HBLyx_Tools/issues") end)
-            gitHubInteractive:SetCallback("OnEnter", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFFFFFFFFGitHub|r") end)
-            gitHubInteractive:SetCallback("OnLeave", function() gitHubInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\Github.png:21:21|t |cFF8080FFGitHub|r") end)
-            contactGroup:AddChild(gitHubInteractive)
-            local curseForgeInteractive = AceGUI:Create("InteractiveLabel")
-            curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r")
-            curseForgeInteractive:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-            curseForgeInteractive:SetJustifyV("MIDDLE")
-            curseForgeInteractive:SetRelativeWidth(0.25)
-            curseForgeInteractive:SetCallback("OnClick", function() addon.Utilities:OpenURL(L["CurseForge"], "https://www.curseforge.com/wow/addons/hblyx-tools") end)
-            curseForgeInteractive:SetCallback("OnEnter", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFFFFFFFFCurseForge|r") end)
-            curseForgeInteractive:SetCallback("OnLeave", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r") end)
-            contactGroup:AddChild(curseForgeInteractive)
-
+            local panel = CreateGeneralPanel(container)
             panel:DoLayout()
         elseif tab == "FocusInterrupt" then
             local panel = addon.GUI.TagPanels.FocusInterrupt:CreateTabPanel(container)
@@ -491,7 +496,7 @@ end
 
 ---Open GUI
 function addon.GUI:OpenGUI()
-    addon.GUI:Initialize()
+    addon.GUI:Render()
 end
 
 ---Close GUI

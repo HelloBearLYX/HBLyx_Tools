@@ -121,15 +121,15 @@ L["InvalidTime"] = "无效的时间, 时间必须是一个非负的数字(允许
 
 -- MARK: Constants
 L["PetFamily"] = {
-Felguard = "恶魔卫士",
-Felhunter = "地狱猎犬",
-Imp = "小鬼",
-WRONG = "宝宝错误!",
+	Felguard = "恶魔卫士",
+	Felhunter = "地狱猎犬",
+	Imp = "小鬼",
+	WRONG = "宝宝错误!",
 }
 L["PetStance"] = {
-ASSIST = "",
-DEFENSIVE = "防御姿态",
-PASSIVE = "被动姿态",
+	ASSIST = "协助姿态",
+	DEFENSIVE = "防御姿态",
+	PASSIVE = "被动姿态",
 }
 
 -- MARK: Default values

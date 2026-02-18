@@ -174,7 +174,7 @@ L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > InterruptNotReadyColor"
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
-L["FocusInteruptSettings"] = "Focus Interupt Settings"
+L["InteruptSettings"] = "Focus Interupt Settings"
 L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"
 L["FocusInterruptNotReadyColor"] = "Interrupt Not Ready Color"
 L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
@@ -187,10 +187,14 @@ L["InterruptedSettingsDesc"] = "When the focus is interrupted, there is a short 
 L["InterruptIconsSettings"] = "Interrupt Icon Settings"
 L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
 L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
- 
+-- Target Interrupt Settings
+L["TargetBarSettings"] = "Target Cast Bar Settings"
+L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the focus cast bar|r. Most settings are shared, only the style settings below are independent."
+
 -- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"
+L["HideInactive"] = "Hide When Inactive"
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"

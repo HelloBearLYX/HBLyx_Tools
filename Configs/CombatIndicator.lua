@@ -108,18 +108,27 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 
 	-- MARK: Sound
 	local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])
-	GUI:CreateToggleCheckBox(soundGroup, L["Mute"], addon.db.CombatIndicator.Mute, function(value)
-		addon.db.CombatIndicator.Mute = value
-	end)
-	GUI:CreateSoundSelect(soundGroup, L["CombatInSoundMedia"], addon.db.CombatIndicator.InCombatSoundMedia, function(value)
+	local inSoundSelect = GUI:CreateSoundSelect(nil, L["CombatInSoundMedia"], addon.db.CombatIndicator.InCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.InCombatSoundMedia = value
 	end)
-	GUI:CreateSoundSelect(soundGroup, L["CombatOutSoundMedia"], addon.db.CombatIndicator.OutCombatSoundMedia, function(value)
+	local outSoundSelect = GUI:CreateSoundSelect(nil, L["CombatOutSoundMedia"], addon.db.CombatIndicator.OutCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.OutCombatSoundMedia = value
 	end)
-	GUI:CreateDropDown(soundGroup, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CombatIndicator.SoundChannel, false, function(value)
+	local soundChannelSelect = GUI:CreateDropDown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CombatIndicator.SoundChannel, false, function(value)
         addon.db.CombatIndicator.SoundChannel = value
     end)
+	GUI:CreateToggleCheckBox(soundGroup, L["Mute"], addon.db.CombatIndicator.Mute, function(value)
+		addon.db.CombatIndicator.Mute = value
+		inSoundSelect:SetDisabled(value)
+		outSoundSelect:SetDisabled(value)
+		soundChannelSelect:SetDisabled(value)
+	end)
+	inSoundSelect:SetDisabled(addon.db.CombatIndicator.Mute)
+	outSoundSelect:SetDisabled(addon.db.CombatIndicator.Mute)
+	soundChannelSelect:SetDisabled(addon.db.CombatIndicator.Mute)
+	soundGroup:AddChild(inSoundSelect)
+	soundGroup:AddChild(outSoundSelect)
+	soundGroup:AddChild(soundChannelSelect)
 
 	return frame
 end

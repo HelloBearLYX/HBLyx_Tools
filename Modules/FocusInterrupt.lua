@@ -199,7 +199,7 @@ local function InterruptHandler(self, unit, guid)
 
     self.bars[unit].timer = C_Timer.NewTimer(addon.db[self.modName]["InterruptedFadeTime"], function ()
         self.bars[unit].timer = nil
-        self.bars[unit].frame:Hide()
+        self.bars[unit]:Hide()
     end)
 end
 

@@ -473,7 +473,7 @@ function CustomAuraTracker:RegisterEvents()
     addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, function ()
         LoadSavedAuras(self)
     end)
-    addon.core:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", MOD_KEY, nil, function()
+    addon.core:RegisterStateMonitor("playerSpec", MOD_KEY, function()
         SwitchSpec(self)
     end)
 end

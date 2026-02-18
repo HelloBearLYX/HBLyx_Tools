@@ -9,6 +9,7 @@ local ADDON_NAME, addon = ...
 ---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
 ---@field testMode boolean if the addon is in test mode
 ---@field statesUpdate table<string, table<string, function>> map of event to map of addon state to update function
+---@field statesMonitor table<string, table<string, function>> map of addon state to map of module to monitor function
 addon.Core = {
     eventFrame = nil,
     eventMap = {},
@@ -18,6 +19,7 @@ addon.Core = {
     loadedMods = 0,
     testMode = false,
     statesUpdate = {},
+    statesMonitor = {},
 }
 
 -- MARK: Initialize
@@ -34,6 +36,7 @@ function addon.Core:Initialize()
     self.loadedMods = 0
     self.testMode = false
     self.statesUpdate = {}
+    self.statesMonitor = {}
 
     self.eventFrame:RegisterEvent("ADDON_LOADED") -- "ADDON_LOADED" is automatically registered
 
@@ -71,16 +74,16 @@ local function Handle(self, event, ...)
             addon:Initialize()
         end
     else
-        if self.statesUpdate[event] then
-            for _, func in pairs(self.statesUpdate[event]) do
-                func(...)
+        -- let state update first
+        for name, func in pairs(self.statesUpdate[event] or {}) do
+            local delta = func(...)
+            for _, monitorFunc in pairs(self.statesMonitor[name] or {}) do
+                monitorFunc(delta)
             end
         end
 
-        if self.eventMap[event] then
-            for _, func in pairs(self.eventMap[event]) do
-                func(...)
-            end
+        for _, func in pairs(self.eventMap[event] or {}) do
+            func(...)
         end
     end
 end
@@ -103,7 +106,7 @@ function addon.Core:RegisterEvent(event, mod, unit, func)
     RegisterE(self, event, unit)
 end
 
--- MARK: Register Global Var
+-- MARK: Register State
 
 ---Register addon state to the core
 ---@param event string event name
@@ -120,10 +123,18 @@ function addon.Core:RegisterState(event, unit, name, updateFunc)
     RegisterE(self, event, unit)
 end
 
-function addon.Core:Start()
-    self.eventFrame:SetScript("OnEvent", function (_, event, ...)
-        Handle(self, event, ...)
-    end)
+-- MARK: Register State Monitor
+
+---Register a module to an addon state, call the monitor function when the state is updated
+---@param stateName string name(key) of the addon state
+---@param moduleName string name(key) of the module
+---@param monitorFunc function function used to monitor the addon state, it will be called with the delta of the state value when the state is updated
+function addon.Core:RegisterStateMonitor(stateName, moduleName, monitorFunc)
+    if not self.statesMonitor[stateName] then
+        self.statesMonitor[stateName] = {}
+    end
+
+    self.statesMonitor[stateName][moduleName] = monitorFunc
 end
 
 -- MARK: Register Module
@@ -252,4 +263,13 @@ function addon.Core:GetModuleList()
     return output
 end
 
+-- MARK: Core Start
+---Start the core, let the eventFrame hook to events
+function addon.Core:Start()
+    self.eventFrame:SetScript("OnEvent", function (_, event, ...)
+        Handle(self, event, ...)
+    end)
+end
+
+-- MARK: Main-Initialize Core
 addon.core = addon.Core:Initialize()

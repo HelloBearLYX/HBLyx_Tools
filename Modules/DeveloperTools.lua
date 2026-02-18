@@ -1,76 +1,70 @@
 local ADDON_NAME, addon = ...
+local AceGUI = LibStub("AceGUI-3.0")
+local GUI = addon.GUI
 
 ---@class DeveloperTools
 ---@field displayFrame frame|nil a frame to display developer tool's outputs
 addon.DeveloperTools = {
     displayFrame = nil,
+    isOpened = false,
+}
+
+-- MARK: Constants
+local TABS = {
+    {text = "Copy Info", value = "CopyInfo"},
+    {text = "Modules Info", value = "ModulesInfo"},
+    {text = "States Info", value = "StatesInfo"},
 }
 
 -- private methods
 
-local function CreateDisplayFrame(self, info)
-    if self.displayFrame then
-        self.displayFrame:Hide()
-        self.displayFrame = nil
-        return
-    end
+local function RenderDisplayFrame(self, info)
+    self.isOpened = true
+    self.displayFrame = AceGUI:Create("Frame")
+    self.displayFrame:SetTitle("|cFF8788EEHBLyx Tools|r - Developer Tools")
+    self.displayFrame:SetLayout("Flow")
+    self.displayFrame:SetWidth(900)
+    self.displayFrame:SetHeight(600)
+    self.displayFrame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion() .. " " .. "Developer Tools")
+    self.displayFrame:SetCallback("OnClose", function(widget)
+        if widget then
+            widget:Release()
+        end
 
-    self.displayFrame = CreateFrame("Frame", ADDON_NAME .. "_EventsHandlerDisplay", UIParent)
-    self.displayFrame:SetFrameStrata("HIGH")
-    self.displayFrame:SetSize(0.75 * GetScreenWidth(), 0.75 * GetScreenHeight())
-    self.displayFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-
-    self.displayFrame.background = self.displayFrame:CreateTexture(nil, "background")
-    self.displayFrame.background:SetAllPoints()
-    self.displayFrame.background:SetColorTexture(0, 0, 0, 0.5)
-
-    self.displayFrame.text = self.displayFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    self.displayFrame.text:SetSize(0.75 * GetScreenWidth(), 0.75 * GetScreenHeight())
-    self.displayFrame.text:SetPoint("TOPLEFT", self.displayFrame, "TOPLEFT", 0, 0)
-    self.displayFrame.text:SetJustifyH("LEFT")
-    self.displayFrame.text:SetJustifyV("TOP")
-    self.displayFrame.text:SetTextColor(1, 1, 1, 1)
-    self.displayFrame.text:SetFont(
-        "Fonts\\FRIZQT__.TTF",
-        12,
-        "OUTLINE"
-    )
-
-    self.displayFrame.close = CreateFrame("Button", nil, self.displayFrame, "UIPanelCloseButton")
-    self.displayFrame.close:SetPoint("TOPRIGHT", self.displayFrame, "TOPRIGHT", 0, 0)
-    self.displayFrame.close:SetScript("OnClick", function()
-        self.displayFrame:Hide()
-        self.displayFrame = nil
+        self.isOpened = false
     end)
 
-    self.displayFrame.text:SetText(info)
-    self.displayFrame:Show()
+    local tabs = AceGUI:Create("TabGroup")
+    tabs:SetLayout("Flow")
+    tabs:SetFullWidth(true)
+    tabs:SetFullHeight(true)
+    tabs:SetTabs(TABS)
+    self.displayFrame:AddChild(tabs)
+    tabs:SetCallback("OnGroupSelected", function (container, _, tab)
+        container:ReleaseChildren()
 
-    local popupDialogs = _G.StaticPopupDialogs
-    if type(popupDialogs) ~= "table" then
-		popupDialogs = {}
-	end
+        if tab == "CopyInfo" then
+            local panel = GUI:CreateScrollFrame(container)
+            
+            local addonInfo = ""
+            for _, value in pairs(info) do
+                addonInfo = addonInfo .. value .. "\n------\n\n"
+            end
 
-    if type(popupDialogs[ADDON_NAME .. "_Info"]) ~= "table" then
-        popupDialogs[ADDON_NAME .. "_Info"] = {}
-    end
+            GUI:CreateMultiLineEditBox(panel, "Copy the addon info below:", addonInfo)
+            panel:DoLayout()
+        elseif tab == "ModulesInfo" then
+            local panel = GUI:CreateScrollFrame(container)
+            GUI:CreateInformationTag(panel, info["ModulesInfo"], "LEFT")
+            panel:DoLayout()
+        elseif tab == "StatesInfo" then
+            local panel = GUI:CreateScrollFrame(container)
+            GUI:CreateInformationTag(panel, info["StatesInfo"], "LEFT")
+            panel:DoLayout()
+        end
+    end)
     
-    popupDialogs[ADDON_NAME .. "_Info"] = {
-        text = "Copy the addon info below if needed",
-        button1 = OKAY,
-        timeout = 0,
-        whileDead = true,
-        hideOnEscape = true,
-        hasEditBox = true,
-        OnShow = function(self)
-            self.EditBox:SetText(info)
-            self.EditBox:SetFocus()
-            self.EditBox:HighlightText()
-        end,
-        editBoxWidth = 300,
-    }
-
-    StaticPopup_Show(ADDON_NAME .. "_Info")
+    tabs:SelectTab("CopyInfo")
 end
 
 local function GetEventsInfo()
@@ -115,7 +109,7 @@ local function GetStatesInfo()
     end
     table.sort(vars)
 
-    local output = "|cff8788EEAddon States Info|r:\n"
+    local output = "|cff8788EEStates Info|r:\n"
     
     for _, var in ipairs(vars) do
         output = output .. string.format("|cff0070DD%s|r|cffC41E3A(%s)|r: %s, ", var, type(addon.states[var]), tostring(addon.states[var]))
@@ -151,15 +145,48 @@ local function GetModulesInfo()
     return output
 end
 
-function addon.DeveloperTools:DisplayAddonInfo()
-    if self.displayFrame then -- if there is an existing display frame
-        CreateDisplayFrame(self, "") -- erase and reset it
-        return
+local function GetStateMonitorsInfo()
+    local output = "|cff8788EEState Monitors Info|r:\n"
+
+    local states = {}
+    local statesCount = {}
+    for state, monitors in pairs(addon.core.statesMonitor) do
+        table.insert(states, state)
+        statesCount[state] = 0
+        for _, _ in pairs(monitors) do
+            statesCount[state] = statesCount[state] + 1
+        end
     end
 
-    local output = ""
+    table.sort(states, function (a, b)
+        if statesCount[a] == statesCount[b] then
+            return a < b
+        end
 
-    output = output .. GetModulesInfo() .. "\n" .. GetEventsInfo() .. "\n" .. GetStatesInfo()
+        return statesCount[a] > statesCount[b]
+    end)
 
-    CreateDisplayFrame(self, output)
+    for _, state in ipairs(states) do
+        local str = ""
+        for monitor, _ in pairs(addon.core.statesMonitor[state]) do
+            str = str .. monitor .. ", "
+        end
+        output = output .. string.format("|cff00ff00%s|r|cffC41E3A(%d)|r: %s\n", state, statesCount[state], str)
+    end
+
+    return output
+end
+
+function addon.DeveloperTools:DisplayAddonInfo()
+    local output = {}
+    output["ModulesInfo"] = GetModulesInfo() .. "\n" .. GetEventsInfo()
+    output["StatesInfo"] = GetStatesInfo() .. "\n" .. GetStateMonitorsInfo()
+
+    if self.isOpened and self.displayFrame then
+        self.displayFrame:Hide()
+        self.displayFrame:Release()
+        self.isOpened = false
+    else
+        RenderDisplayFrame(self, output)
+    end
 end

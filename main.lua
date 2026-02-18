@@ -82,6 +82,17 @@ function addon:GetVersion()
 	return addon.version
 end
 
+-- MARK: State functions
+
+local function CreateState(name, initializeFunc)
+	if addon.states[name] then
+		addon:debug("State " .. name .. " already exists.")
+		return
+	end
+
+	addon.states[name] = initializeFunc and initializeFunc()
+end
+
 -- MARK: States
 
 ---Initialize addon states
@@ -89,14 +100,20 @@ local function InitializeStates()
 	addon.states = {}
 
 	-- player class
-	addon.states["playerClass"] = select(2, UnitClass("player")) -- "ADDON_LOADED"
+	CreateState("playerClass", function() return select(2, UnitClass("player")) end)
 	
 	-- if the player is in combat
-	addon.states["inCombat"] = UnitAffectingCombat("player") -- "ADDON_LOADED"
-	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function() addon.states["inCombat"] = true end)
-	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function() addon.states["inCombat"] = false end)
+	CreateState("inCombat", function() return InCombatLockdown() end)
+	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
+		addon.states["inCombat"] = true
+		return addon.states["inCombat"]
+	end)
+	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function()
+		addon.states["inCombat"] = false
+		return addon.states["inCombat"]
+	end)
 
-	-- player spec
+	-- player spec state
 	local GetSpec = function ()
 		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
 	end

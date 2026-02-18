@@ -105,9 +105,7 @@ end
 ---Register events for CombatIndicator on EventsHandler
 function CombatIndicator:RegisterEvents()
     local HandleActive = function () Handler(self) end
-
-    addon.core:RegisterEvent("PLAYER_REGEN_DISABLED", MOD_KEY, nil, HandleActive)
-    addon.core:RegisterEvent("PLAYER_REGEN_ENABLED", MOD_KEY, nil, HandleActive)
+    addon.core:RegisterStateMonitor("inCombat", MOD_KEY, HandleActive)
 end
 
 -- MARK: Register Module

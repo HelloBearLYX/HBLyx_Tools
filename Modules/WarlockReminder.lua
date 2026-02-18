@@ -272,7 +272,7 @@ end
 function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
 		self.pet:Show()
-        addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetX")
+        addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetY")
 
         self.candy:Show()
          addon.Utilities:MakeFrameDragPosition(self.candy, MOD_KEY, "CandyX", "CandyY")
@@ -289,18 +289,15 @@ function WarlockReminder:RegisterEvents()
     local HandlePet = function() Handler(self, "pet") end
     local HandleCandy = function() Handler(self, "candy") end
 
-    local bothEvents = {"PLAYER_ENTERING_WORLD", "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED"}
-    local petEvents = {"UNIT_PET", "PET_BAR_UPDATE", "PET_DISMISS_START", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_ALIVE"}
-
-    for _, event in ipairs(bothEvents) do
-        addon.core:RegisterEvent(event, MOD_KEY, nil, HandleBoth)
-    end
-
-    for _, event in ipairs(petEvents) do
-        addon.core:RegisterEvent(event, MOD_KEY, nil, HandlePet)
-    end
-
-    addon.core:RegisterEvent("BAG_UPDATE", MOD_KEY, nil, HandleCandy)
+    -- Both events
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, HandleBoth)
+    addon.core:RegisterStateMonitor("inCombat", MOD_KEY, HandleBoth)
+    -- Pet events
+    addon.core:RegisterEvent("UNIT_PET", MOD_KEY, "player", HandlePet)
+    addon.core:RegisterEvent("PET_BAR_UPDATE", MOD_KEY, nil, HandlePet)
+    addon.core:RegisterEvent("PET_DISMISS_START", MOD_KEY, nil, HandlePet)
+    addon.core:RegisterEvent("PLAYER_ALIVE", MOD_KEY, nil, HandlePet)
+    addon.core:RegisterStateMonitor("playerSpec", MOD_KEY, HandlePet)
     addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY, nil, function ()
         if IsMounted() then
             HandlePet()
@@ -313,6 +310,8 @@ function WarlockReminder:RegisterEvents()
             self.timer = C_Timer.NewTimer(3, function () HandlePet() end)
         end
     end)
+    -- Candy events
+    addon.core:RegisterEvent("BAG_UPDATE", MOD_KEY, nil, HandleCandy)
 end
 
 -- MARK: Register Module

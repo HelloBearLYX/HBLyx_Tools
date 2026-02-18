@@ -71,7 +71,6 @@ function addon.GUI:Initialize()
         -- General Panel
         if tab == "General" then
             local panel = addon.GUI:CreateScrollFrame(container)
-            panel:SetLayout("Flow")
             panel:SetFullWidth(true)
             addon.GUI:CreateInformationTag(panel, L["WelecomeInfo"], "CENTER")
             local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])

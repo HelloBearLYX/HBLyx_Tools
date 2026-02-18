@@ -93,7 +93,7 @@ function CombatIndicator:Test(on)
         end
 
         SetIndicator(self, true)
-        self.timer = C_Timer.NewTicker(addon.db[MOD_KEY]["FadeTime"], function ()
+        self.timer = C_Timer.NewTicker(5, function ()
             if self.frame.text:GetText() == addon.db[MOD_KEY]["InCombatText"] then
                 SetIndicator(self, false)
             else

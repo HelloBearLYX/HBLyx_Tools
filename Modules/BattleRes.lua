@@ -1,13 +1,13 @@
 ---@class BattleRes
 ---@field frame frame BattleRes frame
-BattleRes = {
+local BattleRes = {
     frame = nil,
+    modName = "BattleRes",
 }
 
 local ADDON_NAME, addon = ...
 
 --MARK: Constants
-local MOD_KEY = "BattleRes"
 local BATTLE_RES_ID = 20484
 local BATTLE_RES_TEXTURE = 136080
 
@@ -45,7 +45,7 @@ function BattleRes:Initialize()
 
     self:UpdateStyle()
 
-    if addon.db[MOD_KEY]["HideInactive"] then
+    if addon.db[self.modName]["HideInactive"] then
         self.frame:Hide()
     else
         self.frame:Show()
@@ -75,7 +75,7 @@ local function Handler(self)
     else
         self.frame.charge:SetText("")
         self.frame.cooldown:SetCooldown(0, 0)
-        if addon.db[MOD_KEY]["HideInactive"] then
+        if addon.db[self.modName]["HideInactive"] then
             self.frame:Hide()
         end
     end
@@ -86,17 +86,17 @@ end
 
 ---Update style settings and render it in-game for BattleRes
 function BattleRes:UpdateStyle()
-    self.frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+    self.frame:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 
-    self.frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
+    self.frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
 
-    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
 
-    self.frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
+    self.frame.cooldown:SetScale(addon.db[self.modName]["TimeFontScale"])
 
     self.frame.charge:SetFont(
-        addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["ChargeFontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["ChargeFontSize"],
         "OUTLINE"
     )
 end
@@ -113,14 +113,14 @@ function BattleRes:Test(Test)
         self.frame.icon:SetDesaturated(false)
         self.frame:Show()
 
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
+        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
     else
         -- reset all data
         self.frame.charge:SetText("")
         self.frame.cooldown:SetCooldown(0, 0)
         self.frame.icon:SetDesaturated(false)
         
-        if addon.db[MOD_KEY]["HideInactive"] then
+        if addon.db[self.modName]["HideInactive"] then
             self.frame:Hide()
         end
     end
@@ -132,13 +132,13 @@ end
 function BattleRes:RegisterEvents()
     local Handle = function () Handler(self) end
 
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, Handle)
-    addon.core:RegisterEvent("ENCOUNTER_START", MOD_KEY, nil, Handle)
-    addon.core:RegisterEvent("ENCOUNTER_END", MOD_KEY, nil, Handle)
-    addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", MOD_KEY, nil, Handle)
-    addon.core:RegisterEvent("CHALLENGE_MODE_START", MOD_KEY, nil, Handle)
-    addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", MOD_KEY, nil, Handle)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, Handle)
+    addon.core:RegisterEvent("ENCOUNTER_START", self.modName, nil, Handle)
+    addon.core:RegisterEvent("ENCOUNTER_END", self.modName, nil, Handle)
+    addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.modName, nil, Handle)
+    addon.core:RegisterEvent("CHALLENGE_MODE_START", self.modName, nil, Handle)
+    addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.modName, nil, Handle)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return BattleRes:Initialize() end, function() BattleRes:RegisterEvents() end)
+addon.core:RegisterModule(BattleRes.modName, function() return BattleRes:Initialize() end, function() BattleRes:RegisterEvents() end)

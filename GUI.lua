@@ -52,6 +52,8 @@ local function CreateGeneralPanel(container)
     curseForgeInteractive:SetCallback("OnEnter", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFFFFFFFFCurseForge|r") end)
     curseForgeInteractive:SetCallback("OnLeave", function() curseForgeInteractive:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:21:21|t |cFF8080FFCurseForge|r") end)
     contactGroup:AddChild(curseForgeInteractive)
+
+    return panel
 end
 
 -- MARK: Initialize GUI

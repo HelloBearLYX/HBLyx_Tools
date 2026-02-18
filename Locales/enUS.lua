@@ -165,7 +165,7 @@ L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > InterruptNotReadyColor"
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
-L["FocusInteruptSettings"] = "Focus Interupt Settings"
+L["InteruptSettings"] = "Interupt Settings"
 L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"
 L["FocusInterruptNotReadyColor"] = "Interrupt Not Ready Color"
 L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
@@ -178,7 +178,10 @@ L["InterruptedSettingsDesc"] = "When the focus is interrupted, there is a short 
 L["InterruptIconsSettings"] = "Interrupt Icon Settings"
 L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
 L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
- 
+-- Target Interrupt Settings
+L["TargetInterruptSettings"] = "Target Interrupt"
+L["TargetInterruptSettingsDesc"] = "Target Interrupt alert and Target Cast Bar settings.\n\n|cffff0000NOTE|r: The Target Interrupt module is merely a copy of the Focus Interrupt module, because some players feedback they demand for target interrupt, so I made this copy. Nevertheless, |cffff0000if the Focus Interrupt module has updates later, the Target Interrupt module may not be updated synchronously|r. Since Lua is not a real OOP language and does not support inheritance, override inherited method and re-use some methods, so the maintenance cost is high, which is also one of the reasons why I don't want to make a Target Interrupt module."
+
 -- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"

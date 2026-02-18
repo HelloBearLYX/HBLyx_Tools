@@ -80,7 +80,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     end)
 
     -- MARK: Core
-    local focusInterruptGroup = GUI:CreateInlineGroup(frame, L["FocusInteruptSettings"])
+    local focusInterruptGroup = GUI:CreateInlineGroup(frame, L["InteruptSettings"])
     GUI:CreateToggleCheckBox(focusInterruptGroup, L["FocusInterruptCooldownFilter"], addon.db.FocusInterrupt.CooldownHide, function(value)
         addon.db.FocusInterrupt.CooldownHide = value
     end)

@@ -1,14 +1,14 @@
 ---@class CombatIndicator
 ---@field frame frame CombatIndicator frame
 ---@field timer C_Timer timer to keep track of fade time
-CombatIndicator = {
+local CombatIndicator = {
     frame = nil,
     timer = nil,
+    modName = "CombatIndicator"
 }
 
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
-local MOD_KEY = "CombatIndicator"
 
 --MARK: Initialize
 ---Initialzie(Constructor)
@@ -35,11 +35,11 @@ end
 ---@param color string hex string of color(6 or 8)
 local function SetIndicator(self, inCombat)
     if inCombat then
-        self.frame.text:SetText(addon.db[MOD_KEY]["InCombatText"])
-        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["InCombatColor"]))
+        self.frame.text:SetText(addon.db[self.modName]["InCombatText"])
+        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["InCombatColor"]))
     else
-        self.frame.text:SetText(addon.db[MOD_KEY]["OutCombatText"])
-        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[MOD_KEY]["OutCombatColor"]))
+        self.frame.text:SetText(addon.db[self.modName]["OutCombatText"])
+        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["OutCombatColor"]))
     end
 end
 
@@ -50,11 +50,11 @@ local function Handler(self)
     SetIndicator(self, addon.states["inCombat"])
     self.frame:Show()
 
-    if not addon.db[MOD_KEY]["Mute"] then
+    if not addon.db[self.modName]["Mute"] then
         if addon.states["inCombat"] then
-            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["InCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
+            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[self.modName]["InCombatSoundMedia"]), addon.db[self.modName]["SoundChannel"])
         else
-            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["OutCombatSoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
+            PlaySoundFile(addon.LSM:Fetch("sound", addon.db[self.modName]["OutCombatSoundMedia"]), addon.db[self.modName]["SoundChannel"])
         end
     end
 
@@ -63,7 +63,7 @@ local function Handler(self)
         self.timer = nil
     end
 
-    self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["FadeTime"], function ()
+    self.timer = C_Timer.NewTimer(addon.db[self.modName]["FadeTime"], function ()
         self.frame:Hide()
     end)
 end
@@ -73,10 +73,10 @@ end
 
 ---Update style settings and render it in-game for CombatIndicator
 function CombatIndicator:UpdateStyle()
-    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
 end
@@ -94,7 +94,7 @@ function CombatIndicator:Test(on)
 
         SetIndicator(self, true)
         self.timer = C_Timer.NewTicker(5, function ()
-            if self.frame.text:GetText() == addon.db[MOD_KEY]["InCombatText"] then
+            if self.frame.text:GetText() == addon.db[self.modName]["InCombatText"] then
                 SetIndicator(self, false)
             else
                 SetIndicator(self, true)
@@ -104,7 +104,7 @@ function CombatIndicator:Test(on)
         self.frame:Show()
 
         addon.Utilities:ShowDragRegion(self.frame, L["CombatSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
+        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.frame)
 
@@ -122,8 +122,8 @@ end
 ---Register events for CombatIndicator on EventsHandler
 function CombatIndicator:RegisterEvents()
     local HandleActive = function () Handler(self) end
-    addon.core:RegisterStateMonitor("inCombat", MOD_KEY, HandleActive)
+    addon.core:RegisterStateMonitor("inCombat", self.modName, HandleActive)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return CombatIndicator:Initialize() end, function() CombatIndicator:RegisterEvents() end)
+addon.core:RegisterModule(CombatIndicator.modName, function() return CombatIndicator:Initialize() end, function() CombatIndicator:RegisterEvents() end)

@@ -1,16 +1,16 @@
 ---@class ChallengeEnhance
 ---@field buttons table ChallengeEnhance buttons
 ---@field eventFrame frame Handle Blizzard PVEFrame loaded
-ChallengeEnhance = {
+local ChallengeEnhance = {
     buttons = {},
-    eventFrame = nil
+    eventFrame = nil,
+    modName = "ChallengeEnhance"
 }
 
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
-local MOD_KEY = "ChallengeEnhance"
 local MAP_PORTAL = {
     -- current season
     [402] = {id = 393273, name = L["AA"]},    -- Algeth'ar Academy
@@ -156,39 +156,39 @@ function ChallengeEnhance:UpdateStyle()
         local name = MAP_PORTAL[mapID].name
 
         button.level:SetFont(
-            addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-            addon.db[MOD_KEY]["LevelFontSize"],
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.db[self.modName]["LevelFontSize"],
             "OUTLINE"
         )
-        button.level:SetPoint("TOP", button, "TOP", addon.db[MOD_KEY]["LevelX"], addon.db[MOD_KEY]["LevelY"])
+        button.level:SetPoint("TOP", button, "TOP", addon.db[self.modName]["LevelX"], addon.db[self.modName]["LevelY"])
 
         button.score:SetFont(
-            addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-            addon.db[MOD_KEY]["ScoreFontSize"],
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.db[self.modName]["ScoreFontSize"],
             "OUTLINE"
         )
-        button.score:SetPoint("CENTER", button, "CENTER", addon.db[MOD_KEY]["ScoreX"], addon.db[MOD_KEY]["ScoreY"])
+        button.score:SetPoint("CENTER", button, "CENTER", addon.db[self.modName]["ScoreX"], addon.db[self.modName]["ScoreY"])
 
         button.mapName:SetFont(
-            addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-            addon.db[MOD_KEY]["NameFontSize"],
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.db[self.modName]["NameFontSize"],
             "OUTLINE"
         )
-        button.mapName:SetPoint("BOTTOM", button, "BOTTOM", addon.db[MOD_KEY]["NameX"], addon.db[MOD_KEY]["NameY"])
+        button.mapName:SetPoint("BOTTOM", button, "BOTTOM", addon.db[self.modName]["NameX"], addon.db[self.modName]["NameY"])
         
         -- update text info and colors
-        if not addon.db[MOD_KEY]["LevelEnabled"] then -- blizzard assign it, we only disable it when needed
+        if not addon.db[self.modName]["LevelEnabled"] then -- blizzard assign it, we only disable it when needed
             button.mapName:SetText("")
         end
 
-        if addon.db[MOD_KEY]["ScoreEnabled"] then
+        if addon.db[self.modName]["ScoreEnabled"] then
             button.score:SetText(tostring(score or ""))
         else
             button.score:SetText("")
         end
         button.score:SetTextColor(button.level:GetTextColor())
         
-        if addon.db[MOD_KEY]["NameEnabled"] then
+        if addon.db[self.modName]["NameEnabled"] then
             button.mapName:SetText(name or "")
         else
             button.mapName:SetText("")
@@ -206,7 +206,7 @@ function ChallengeEnhance:RegisterEvents()
 
     self.eventFrame:SetScript("OnEvent", function(self, event, name)
         if event == "ADDON_LOADED" and name == "Blizzard_ChallengesUI" then
-            if addon.core:GetModule(MOD_KEY):Create() then
+            if addon.core:GetModule(ChallengeEnhance.modName):Create() then
                 self:UnregisterEvent("ADDON_LOADED")
             end
         end
@@ -214,4 +214,4 @@ function ChallengeEnhance:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return ChallengeEnhance:Initialize() end, function() ChallengeEnhance:RegisterEvents() end)
+addon.core:RegisterModule(ChallengeEnhance.modName, function() return ChallengeEnhance:Initialize() end, function() ChallengeEnhance:RegisterEvents() end)

@@ -13,6 +13,7 @@ local ADDON_NAME, addon = ...
 addon.Core = {
     eventFrame = nil,
     eventMap = {},
+    eventUnitMap = {},
     modules = {},
     registeredMods = {},
     totalMods = 0,
@@ -29,7 +30,7 @@ addon.Core = {
 function addon.Core:Initialize()
     self.eventFrame = CreateFrame("Frame")
     self.eventMap = {}
-    -- self.eventNameMap = {}
+    self.eventUnitMap = {}
     self.modules = {}
     self.registeredMods = {}
     self.totalMods = 0
@@ -82,6 +83,12 @@ local function Handle(self, event, ...)
             end
         end
 
+        -- unit events
+        for _, func in pairs(self.eventUnitMap[event] or {}) do
+            func(...)
+        end
+
+        -- general events
         for _, func in pairs(self.eventMap[event] or {}) do
             func(...)
         end

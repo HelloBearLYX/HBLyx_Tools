@@ -10,7 +10,7 @@
 ---@field interruptedColor ColorMixin? color for interrupted fade time
 ---@field kick Frame? Interrupt icon
 ---@field subKickIcon Frame? sub-interrupt icon
-FocusInterrupt = {
+local FocusInterrupt = {
     frame = nil,
     active = false,
     interruptID = nil,
@@ -22,13 +22,13 @@ FocusInterrupt = {
     interruptedColor = nil,
     kickIcon = nil,
     subKickIcon = nil,
+    modName = "FocusInterrupt"
 }
 
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
-local MOD_KEY = "FocusInterrupt"
 local UNKNOWN_SPELL_TEXTURE = 134400
 local INTERRUPT_BY_CLASS = {
     DEATHKNIGHT = {DEFAULT = 47528}, -- Mind Freeze
@@ -159,28 +159,28 @@ end
 ---Update interrupt icons, make sure icons are instantialized before use this
 ---@param self FocusInterrupt self
 local function UpdateIcons(self)
-    local anchorFrom, anchorTo = addon.Utilities:GetAnchorFrom(addon.db[MOD_KEY]["KickIconAnchor"]), addon.db[MOD_KEY]["KickIconAnchor"]
-    local anchorChild, anchorParent = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["KickIconGrow"])
+    local anchorFrom, anchorTo = addon.Utilities:GetAnchorFrom(addon.db[self.modName]["KickIconAnchor"]), addon.db[self.modName]["KickIconAnchor"]
+    local anchorChild, anchorParent = addon.Utilities:GetGrowAnchors(addon.db[self.modName]["KickIconGrow"])
 
-    self.kickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+    self.kickIcon:SetSize(addon.db[self.modName]["KickIconSize"], addon.db[self.modName]["KickIconSize"])
     self.kickIcon:ClearAllPoints()
     self.kickIcon:SetPoint(anchorFrom, self.frame, anchorTo, 0, 0)
     self.kickIcon.icon:SetTexCoord(
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"],
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"]
+        addon.db[self.modName]["IconZoom"],
+        1 - addon.db[self.modName]["IconZoom"],
+        addon.db[self.modName]["IconZoom"],
+        1 - addon.db[self.modName]["IconZoom"]
     )
 
     if self.subKickIcon then
-        self.subKickIcon:SetSize(addon.db[MOD_KEY]["KickIconSize"], addon.db[MOD_KEY]["KickIconSize"])
+        self.subKickIcon:SetSize(addon.db[self.modName]["KickIconSize"], addon.db[self.modName]["KickIconSize"])
         self.subKickIcon:ClearAllPoints()
         self.subKickIcon:SetPoint(anchorChild, self.kickIcon, anchorParent, 0, 0)
         self.subKickIcon.icon:SetTexCoord(
-            addon.db[MOD_KEY]["IconZoom"],
-            1 - addon.db[MOD_KEY]["IconZoom"],
-            addon.db[MOD_KEY]["IconZoom"],
-            1 - addon.db[MOD_KEY]["IconZoom"]
+            addon.db[self.modName]["IconZoom"],
+            1 - addon.db[self.modName]["IconZoom"],
+            addon.db[self.modName]["IconZoom"],
+            1 - addon.db[self.modName]["IconZoom"]
         )
     end
 end
@@ -222,7 +222,7 @@ local function InterruptHandler(self, guid)
     local interrupter, class = GetInterrupter(guid)
     local color = C_ClassColor.GetClassColor(class or "PRIEST"):GenerateHexColor() -- also secret-value
 
-    if addon.db[MOD_KEY]["ShowInterrupter"] then
+    if addon.db[self.modName]["ShowInterrupter"] then
         self.frame.spellText:SetText(L["Interrupted"] .. ": |c".. color .. interrupter .. "|r")
     else
         self.frame.spellText:SetText(L["Interrupted"])
@@ -235,7 +235,7 @@ local function InterruptHandler(self, guid)
         self.timer:Cancel()
     end
 
-    self.timer = C_Timer.NewTimer(addon.db[MOD_KEY]["InterruptedFadeTime"], function ()
+    self.timer = C_Timer.NewTimer(addon.db[self.modName]["InterruptedFadeTime"], function ()
         self.timer = nil
         self.frame:Hide()
     end)
@@ -266,7 +266,7 @@ local function Update(self, duration, isChannel, notInterruptible)
     
     -- update time text
     -- considering remove total duration text
-    if addon.db[MOD_KEY]["ShowTotalTime"] then
+    if addon.db[self.modName]["ShowTotalTime"] then
         self.frame.timeText:SetText(string.format("%.1f/%.1f", duration:GetRemainingDuration(), duration:GetTotalDuration()))
     else
         self.frame.timeText:SetText(string.format("%.1f", duration:GetRemainingDuration()))
@@ -305,7 +305,7 @@ local function Update(self, duration, isChannel, notInterruptible)
             -- func(bool, trueVal = trueVal, falseVal = falseVal) + func(bool, trueVal = currentVal, falseVal = falseVal)
         -- OR: any true is true -> need currentVal = value after first bool execution, then
             -- func(bool, trueVal = trueVal, falseVal = falseVal) + func(bool, trueVal = trueVal, falseVal = currentVal)
-    if addon.db[MOD_KEY]["CooldownHide"] then
+    if addon.db[self.modName]["CooldownHide"] then
         -- func(isInterruptReady or subInterruptReady, show, hide)
             -- func = Region:SetAlphaFromBoolean(bool, trueVal, falseVal)
             -- show = 255
@@ -317,7 +317,7 @@ local function Update(self, duration, isChannel, notInterruptible)
         end
     end
 
-    if addon.db[MOD_KEY]["NotInterruptibleHide"] then
+    if addon.db[self.modName]["NotInterruptibleHide"] then
         -- func(any(InterruptReady) and not notInterruptible, show hide)
             -- any(InterruptReady) is above, then func(not notInterruptible, currentVal, hide)
             -- then, func(notInterruptible, hide, currentVal)
@@ -332,7 +332,7 @@ end
 local function UpdateInterruptId(self)
     self.interruptID = GetInterruptSpellID(self)
     
-    if addon.db[MOD_KEY]["ShowKickIcons"] and (not addon.db[MOD_KEY]["ShowDemoWarlockOnly"] or (addon.db[MOD_KEY]["ShowDemoWarlockOnly"] and self.subInterrupt ~= nil)) then
+    if addon.db[self.modName]["ShowKickIcons"] and (not addon.db[self.modName]["ShowDemoWarlockOnly"] or (addon.db[self.modName]["ShowDemoWarlockOnly"] and self.subInterrupt ~= nil)) then
         if self.kickIcon then -- delete old icon if exist
             self.kickIcon:Hide()
             self.kickIcon = nil
@@ -382,7 +382,7 @@ end
 ---@param self FocusInterrupt self
 local function Handler(self)
     -- after 3.2 self.active is handled in RegisterEvent part, although self.active is still a key variable for Update(CastHandler)
-    if not addon.db[MOD_KEY]["Enabled"] then
+    if not addon.db[self.modName]["Enabled"] then
         self.frame:Hide()
         return
     end
@@ -415,7 +415,7 @@ local function Handler(self)
     -- handle target
     -- channel target is not naturally provided through API, a complicated way is to use focus's target but involves more events and too much excessive information
     local target = UnitSpellTargetName("focus") -- only attempt to get non-channel cast target
-    if addon.db[MOD_KEY]["ShowTarget"] and target then
+    if addon.db[self.modName]["ShowTarget"] and target then
         local color = C_ClassColor.GetClassColor(UnitSpellTargetClass("focus")):GenerateHexColor() or "FFFFFF" -- 8 digits Hex(also secret-value, do not directly compute it)
         self.frame.spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. target .. "|r")
     else
@@ -435,11 +435,11 @@ local function Handler(self)
     end)
 
     -- use alpha hiden instead of Hide() to prevent bugs on any hooked script or potential future hooked script
-    self.frame:SetAlphaFromBoolean(addon.db[MOD_KEY]["Hidden"], 0, 255)
+    self.frame:SetAlphaFromBoolean(addon.db[self.modName]["Hidden"], 0, 255)
 
     -- attempted to use "HookScript("OnShow", func)" for sound alert, nontheless frames are seen as shown while zero alpha and SetShown() cannot take secret-values
-    if not addon.db[MOD_KEY]["Mute"] then
-        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[MOD_KEY]["SoundMedia"]), addon.db[MOD_KEY]["SoundChannel"])
+    if not addon.db[self.modName]["Mute"] then
+        PlaySoundFile(addon.LSM:Fetch("sound", addon.db[self.modName]["SoundMedia"]), addon.db[self.modName]["SoundChannel"])
     end
 
     self.frame:Show()
@@ -451,51 +451,51 @@ end
 ---Update style settings and render them in-game for FocusInterrupt
 function FocusInterrupt:UpdateStyle()
     -- basic size and position of bar
-    self.frame:SetSize(addon.db[MOD_KEY]["Width"], addon.db[MOD_KEY]["Height"])
-    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.frame:SetSize(addon.db[self.modName]["Width"], addon.db[self.modName]["Height"])
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     
     -- background is kind of Blizzard's texture, only color and alpha are customizable
-    self.frame.background:SetColorTexture(0, 0, 0, addon.db[MOD_KEY]["BackgroundAlpha"])
+    self.frame.background:SetColorTexture(0, 0, 0, addon.db[self.modName]["BackgroundAlpha"])
 
     -- icon zoom and size
     self.frame.icon:SetTexCoord( -- prevent Blizzard's raw icons' border and fill all space with texture
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"],
-        addon.db[MOD_KEY]["IconZoom"],
-        1 - addon.db[MOD_KEY]["IconZoom"]
+        addon.db[self.modName]["IconZoom"],
+        1 - addon.db[self.modName]["IconZoom"],
+        addon.db[self.modName]["IconZoom"],
+        1 - addon.db[self.modName]["IconZoom"]
     )
-    self.frame.icon:SetSize(addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"]) -- keep icon has the same height as bar and keep it a cube
+    self.frame.icon:SetSize(addon.db[self.modName]["Height"], addon.db[self.modName]["Height"]) -- keep icon has the same height as bar and keep it a cube
 
     -- bar texture and size
     -- after 3.2, only keep one status bar instead of 3(1 bar + 2 overlays)
-    self.frame.statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[MOD_KEY]["Texture"]))
-    self.frame.statusBar:SetSize(addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"], addon.db[MOD_KEY]["Height"])
+    self.frame.statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[self.modName]["Texture"]))
+    self.frame.statusBar:SetSize(addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"], addon.db[self.modName]["Height"])
 
     -- color settings
     -- after 3.2, by accessing texture's color instead of SetStatusBarColor() to use secret-value to decide color instead of overlays manipulations
-    self.cooldownColor = CreateColorFromHexString(addon.db[MOD_KEY]["CooldownColor"])
-    self.interruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptibleColor"])
-    self.notInterruptibleColor = CreateColorFromHexString(addon.db[MOD_KEY]["NotInterruptibleColor"])
-    self.interruptedColor = CreateColorFromHexString(addon.db[MOD_KEY]["InterruptedColor"])
+    self.cooldownColor = CreateColorFromHexString(addon.db[self.modName]["CooldownColor"])
+    self.interruptibleColor = CreateColorFromHexString(addon.db[self.modName]["InterruptibleColor"])
+    self.notInterruptibleColor = CreateColorFromHexString(addon.db[self.modName]["NotInterruptibleColor"])
+    self.interruptedColor = CreateColorFromHexString(addon.db[self.modName]["InterruptedColor"])
     self.frame.statusBar:GetStatusBarTexture():SetVertexColor(self.interruptibleColor:GetRGBA())
 
     -- font/text positions/
     -- left texts(spell + target)
     -- after 3.2, allow change the font size but change the margin to 0 for formatting more information
     self.frame.spellText:SetFont(
-        addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
-    self.frame.spellText:SetPoint("LEFT", self.frame, "LEFT", addon.db[MOD_KEY]["Height"], 0)
-    self.frame.spellText:SetSize(0.7 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"]) -- how much propotion of space is allowd
+    self.frame.spellText:SetPoint("LEFT", self.frame, "LEFT", addon.db[self.modName]["Height"], 0)
+    self.frame.spellText:SetSize(0.7 * (addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"]), addon.db[self.modName]["FontSize"]) -- how much propotion of space is allowd
     -- right texts(time)
     self.frame.timeText:SetFont(
-        addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
-    self.frame.timeText:SetSize(0.3 * (addon.db[MOD_KEY]["Width"] - addon.db[MOD_KEY]["Height"]), addon.db[MOD_KEY]["FontSize"]) -- how much propotion of space is allowd
+    self.frame.timeText:SetSize(0.3 * (addon.db[self.modName]["Width"] - addon.db[self.modName]["Height"]), addon.db[self.modName]["FontSize"]) -- how much propotion of space is allowd
 
     if self.kickIcon then
         UpdateIcons(self)
@@ -507,7 +507,7 @@ end
 ---Test Mode for FocusInterrupt
 ---@param on boolean turn the Test mode on or off
 function FocusInterrupt:Test(on)
-    if not addon.db[MOD_KEY]["Enabled"] or addon.db[MOD_KEY]["Hidden"] then
+    if not addon.db[self.modName]["Enabled"] or addon.db[self.modName]["Hidden"] then
         self.active = false
         self.frame:Hide()
         return
@@ -517,7 +517,7 @@ function FocusInterrupt:Test(on)
         -- generate a demo cast bar
 		self.active = true
         local name, target = "MaximumTestSpell", "Target"
-        if addon.db[MOD_KEY]["ShowTarget"] then
+        if addon.db[self.modName]["ShowTarget"] then
             self.frame.spellText:SetText(string.sub(name, 1, 16) .. "-" .. "|c" .. C_ClassColor.GetClassColor("WARLOCK"):GenerateHexColor() .. target .. "|r")
         else
             self.frame.spellText:SetText(string.sub(name, 1, 16))
@@ -529,7 +529,7 @@ function FocusInterrupt:Test(on)
         testDuration:SetTimeFromStart(GetTime(), 30)
         UpdateInterruptId(self)
 
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
+        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y", function() -- drag for re-positioning and capable of running test mode simultaneously
             Update(self, testDuration, false, false)
         end)
 
@@ -573,20 +573,20 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
     local UpdateID = function () UpdateInterruptId(self) end
 
     -- active cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_START", MOD_KEY, "focus", StartCastHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", MOD_KEY, "focus", StartCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_START", self.modName, "focus", StartCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", self.modName, "focus", StartCastHandle)
     -- switch focus
-    addon.core:RegisterEvent("PLAYER_FOCUS_CHANGED", MOD_KEY, nil, StartCastHandle)
+    addon.core:RegisterEvent("PLAYER_FOCUS_CHANGED", self.modName, nil, StartCastHandle)
     -- switch spec
-    addon.core:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", MOD_KEY, nil, UpdateID)
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, UpdateID)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, UpdateID)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, UpdateID)
     -- stop cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_STOP", MOD_KEY, "focus", StopCastHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_FAILED", MOD_KEY, "focus", StopCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_STOP", self.modName, "focus", StopCastHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_FAILED", self.modName, "focus", StopCastHandle)
     -- interrupted/stop cast
-    addon.core:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", MOD_KEY, "focus", InterruptedHandle)
-    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", MOD_KEY, "focus", InterruptedHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", self.modName, "focus", InterruptedHandle)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", self.modName, "focus", InterruptedHandle)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return FocusInterrupt:Initialize() end, function() FocusInterrupt:RegisterEvents() end)
+addon.core:RegisterModule(FocusInterrupt.modName, function() return FocusInterrupt:Initialize() end, function() FocusInterrupt:RegisterEvents() end)

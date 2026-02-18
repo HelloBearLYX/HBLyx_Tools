@@ -6,11 +6,12 @@
 ---@field auras.tail frame the tail of the showing auras linked-list, nil if there is no showing aura
 ---@field specAuras table a table store auras for each spec to load
 ---@field spareFrames table a table store the spare frames that can be reused when needed
-CustomAuraTracker = {
+local CustomAuraTracker = {
     auras = {},
     specAuras = {},
     spareFrames = {},
     lastSpec = -1,
+    modName = "CustomAuraTracker"
 }
 
 local ADDON_NAME, addon = ...
@@ -18,7 +19,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
 -- TODO: The key for the module, used for databse, core, and other things. Replace "CustomIconTracker" with your module key
-local MOD_KEY = "CustomAuraTracker"
 local UNKNOWN_SPELL_TEXTURE = 134400
 
 -- MARK: Initialize
@@ -50,7 +50,7 @@ end
 ---@param self CustomAuraTracker self
 ---@param frame frame the frame of the aura to show
 local function ShowAura(self, frame)
-    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
+    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[self.modName]["Grow"])
 
     if not self.auras.tail then -- if tail is head, return the first position
         frame:ClearAllPoints()
@@ -74,7 +74,7 @@ end
 ---@param self CustomAuraTracker self
 ---@param frame frame the frame of the aura to hide
 local function HideAura(self, frame)
-    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[MOD_KEY]["Grow"])
+    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[self.modName]["Grow"])
 
     if frame.prev == self.auras.head then -- if the first showing aura
         if frame.next then -- if there is another showing aura after this one, set it to first position
@@ -120,7 +120,7 @@ local function Handler(self, spellID)
         ShowAura(self, frame)
         frame.cooldown:SetCooldown(GetTime(), frame.duration)
         if frame.activeSound then
-            PlaySoundFile(addon.LSM:Fetch("sound", frame.activeSound), addon.db[MOD_KEY]["SoundChannel"] or "Master")
+            PlaySoundFile(addon.LSM:Fetch("sound", frame.activeSound), addon.db[self.modName]["SoundChannel"] or "Master")
         end
 
         -- after duration
@@ -129,7 +129,7 @@ local function Handler(self, spellID)
             -- set cooldown timer, make a callback after cooldown to play ready sound if exist
             frame.timer = C_Timer.NewTimer(math.max(frame.cd - frame.duration, 0), function()
                 if frame.expireSound then
-                    PlaySoundFile(addon.LSM:Fetch("sound", frame.expireSound), addon.db[MOD_KEY]["SoundChannel"] or "Master")
+                    PlaySoundFile(addon.LSM:Fetch("sound", frame.expireSound), addon.db[self.modName]["SoundChannel"] or "Master")
                 end
                 frame.timer = nil
             end)
@@ -215,15 +215,15 @@ local function CreateNewFrame(self)
 
     frame.icon = frame:CreateTexture(nil, "BACKGROUND")
     frame.icon:SetAllPoints()
-    frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
+    frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
     
     frame.border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.border:SetAllPoints()
     frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     frame.border:SetBackdropBorderColor(0, 0, 0, 1)
 
-    frame:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
-    frame.cooldown:SetScale(addon.db[MOD_KEY]["TimeFontScale"])
+    frame:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
+    frame.cooldown:SetScale(addon.db[self.modName]["TimeFontScale"])
 
     frame.active = false
 
@@ -308,7 +308,7 @@ local function SwitchSpec(self)
     -- load auras for current spec
     for spellID, _ in pairs(self.specAuras[currentSpec] or {}) do
         if not alreadyLoaded[spellID] then -- if the aura is not already loaded, load it
-            local auraData = addon.db[MOD_KEY].spells[spellID] -- find aura data in the database
+            local auraData = addon.db[self.modName].spells[spellID] -- find aura data in the database
             if auraData then
                 LoadAura(self, spellID, auraData.duration, auraData.cooldown, auraData.activeSound, auraData.expireSound)
             end
@@ -322,8 +322,9 @@ end
 -- MARK: Load Saved Auras
 
 ---Handle old data(3.6.0 - 3.6.1)
+---@param self CustomAuraTracker self
 ---@param auraList any
-local function HanlerOldAuraData(auraList)
+local function HanlerOldAuraData(self, auraList)
     local oldAuras= {}
 
     for id, auraData in pairs(auraList) do
@@ -342,9 +343,9 @@ local function HanlerOldAuraData(auraList)
     end
 
     for spellID, auraData in pairs(oldAuras) do
-        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[MOD_KEY].spells[auraData.index].id))
-        addon.db[MOD_KEY].spells[auraData.index] = nil
-        addon.db[MOD_KEY].spells[spellID] = {
+        addon.Utilities:print(string.format("Replace old aura data with new format: %d", addon.db[self.modName].spells[auraData.index].id))
+        addon.db[self.modName].spells[auraData.index] = nil
+        addon.db[self.modName].spells[spellID] = {
             duration = auraData.duration,
             cooldown = auraData.cooldown,
             activeSound = auraData.activeSound,
@@ -357,11 +358,11 @@ end
 ---Load saved auras from database and initialize them
 ---@param self CustomAuraTracker self
 local function LoadSavedAuras(self)
-    local auraList = addon.db[MOD_KEY].spells
+    local auraList = addon.db[self.modName].spells
     self.lastSpec = addon.states["playerSpec"] -- set last spec to current spec when loading
 
     if auraList then
-        HanlerOldAuraData(auraList)
+        HanlerOldAuraData(self, auraList)
 
         -- load auras(IDs only) for quick access when needed
         for spellID, auraData in pairs(auraList) do
@@ -390,16 +391,16 @@ end
 
 ---Update style settings and render them in-game
 function CustomAuraTracker:UpdateStyle()
-    local iconSize = addon.db[MOD_KEY]["IconSize"]
-    local scale = addon.db[MOD_KEY]["TimeFontScale"]
+    local iconSize = addon.db[self.modName]["IconSize"]
+    local scale = addon.db[self.modName]["TimeFontScale"]
 
     self.auras.head:SetSize(iconSize, iconSize)
-    self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
+    self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
 
     for _, frame in pairs(self.auras.loaded) do
         frame:SetSize(iconSize, iconSize)
         frame.cooldown:SetScale(scale)
-        frame.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
+        frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
     end
 end
 
@@ -433,7 +434,7 @@ function CustomAuraTracker:RemoveAura(spellID)
         UnloadAura(self, self.auras.loaded[spellID])
         return true
     else
-        if not addon.db[MOD_KEY].spells[spellID] then
+        if not addon.db[self.modName].spells[spellID] then
             return false
         end
 
@@ -446,13 +447,13 @@ end
 ---Test Mode
 ---@param on boolean turn the Test mode on or off
 function CustomAuraTracker:Test(on)
-    if not addon.db[MOD_KEY]["Enabled"] then -- if the module is not enabled, do not allow test mode
+    if not addon.db[self.modName]["Enabled"] then -- if the module is not enabled, do not allow test mode
         return
     end
 
     if on then
         addon.Utilities:ShowDragRegion(self.auras.head, L["AuraSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.auras.head, MOD_KEY, "X", "Y")
+        addon.Utilities:MakeFrameDragPosition(self.auras.head, self.modName, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.auras.head)
     end
@@ -469,14 +470,14 @@ function CustomAuraTracker:RegisterEvents()
         end
     end
 
-    addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", MOD_KEY, "player", OnUpdate)
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, function ()
+    addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.modName, "player", OnUpdate)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, function ()
         LoadSavedAuras(self)
     end)
-    addon.core:RegisterStateMonitor("playerSpec", MOD_KEY, function()
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function()
         SwitchSpec(self)
     end)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return CustomAuraTracker:Initialize() end, function() CustomAuraTracker:RegisterEvents() end)
+addon.core:RegisterModule(CustomAuraTracker.modName, function() return CustomAuraTracker:Initialize() end, function() CustomAuraTracker:RegisterEvents() end)

@@ -2,17 +2,17 @@
 ---@field pet frame pet frame
 ---@field candy frame candy frame
 ---@field timer C_Timer timer to keep track of mount state
-WarlockReminder = {
+local WarlockReminder = {
     pet = nil,
     candy = nil,
     timer = nil,
+    modName = "WarlockReminders"
 }
 
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
-local MOD_KEY = "WarlockReminders"
 local HEALSTONE_ID = {
     HEALTHSTONE = 5512,
     DEMONIC_HEALTHSTONE = 224464,
@@ -138,7 +138,7 @@ end
 ---Handler for pet frame
 ---@param self WarlockReminder self
 local function PetHandler(self)
-    if not addon.db[MOD_KEY]["PetEnabled"] or addon.states["inCombat"] or IsMounted() then
+    if not addon.db[self.modName]["PetEnabled"] or addon.states["inCombat"] or IsMounted() then
         self.pet:Hide()
         return
     end
@@ -156,28 +156,28 @@ local function PetHandler(self)
         else
             self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
         end
-        self.pet.text:SetText(addon.db[MOD_KEY]["PetMissingText"])
+        self.pet.text:SetText(addon.db[self.modName]["PetMissingText"])
         self.pet:Show()
     else -- check pet type
-        if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelguardEnabled"] then
+        if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelguardEnabled"] then
             if petFamily ~= L["PetFamily"]["Felguard"] then -- wrong type for demonology
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
-                self.pet.text:SetText(addon.db[MOD_KEY]["PetWrongTypeText"])
+                self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
                 self.pet:Show()
                 return
             end
-        elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[MOD_KEY]["FelhunterEnabled"] then 
+        elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelhunterEnabled"] then 
             if petFamily ~= L["PetFamily"]["Felhunter"] and petFamily ~= L["PetFamily"]["Imp"] then -- wrong type for afflication/destruction
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
-                self.pet.text:SetText(addon.db[MOD_KEY]["PetWrongTypeText"])
+                self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
                 self.pet:Show()
                 return
             end
         end
 
-        if addon.db[MOD_KEY]["StanceEnabled"] then -- check stance if needed
+        if addon.db[self.modName]["StanceEnabled"] then -- check stance if needed
             local curStance = GetPetStance()
             if curStance == -1 or curStance == PET_STANCE.ASSIST then -- stance error or stance correct
                 self.pet.text:SetText(L["PetStance"]["ASSIST"])
@@ -205,7 +205,7 @@ end
 ---Handler for candy frame
 ---@param self WarlockReminder self
 local function CandyHandler(self)
-    if not addon.db[MOD_KEY]["CandyEnabled"] or addon.states["inCombat"] then
+    if not addon.db[self.modName]["CandyEnabled"] or addon.states["inCombat"] then
         self.candy:Hide()
         return
     end
@@ -238,31 +238,31 @@ end
 
 ---Update style settings and render them in-game for WarlockReminder
 function WarlockReminder:UpdateStyle()
-    self.pet:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["PetX"], addon.db[MOD_KEY]["PetY"])
-    self.pet:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+    self.pet:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["PetX"], addon.db[self.modName]["PetY"])
+    self.pet:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 
-    self.candy:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["CandyX"], addon.db[MOD_KEY]["CandyY"])
-    self.candy:SetSize(addon.db[MOD_KEY]["IconSize"], addon.db[MOD_KEY]["IconSize"])
+    self.candy:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["CandyX"], addon.db[self.modName]["CandyY"])
+    self.candy:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 
-    self.pet.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
-    self.candy.icon:SetTexCoord(addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"], addon.db[MOD_KEY]["IconZoom"], 1 - addon.db[MOD_KEY]["IconZoom"])
+    self.pet.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
+    self.candy.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
 
     self.pet.text:SetPoint("CENTER", self.pet, "BOTTOM", 0, 0)
     self.pet.text:SetFont(addon.LSM:Fetch(
-        "font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        "font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
     self.pet.text:SetTextColor(255, 255, 255)
 
     self.candy.text:SetPoint("CENTER", self.candy, "BOTTOM", 0, 0)
     self.candy.text:SetFont(addon.LSM:Fetch(
-        "font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        "font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
     self.candy.text:SetTextColor(255, 255, 255)
-    self.candy.text:SetText(addon.db[MOD_KEY]["CandyMissingText"])
+    self.candy.text:SetText(addon.db[self.modName]["CandyMissingText"])
 end
 
 -- MARK: Test
@@ -272,10 +272,10 @@ end
 function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
 		self.pet:Show()
-        addon.Utilities:MakeFrameDragPosition(self.pet, MOD_KEY, "PetX", "PetY")
+        addon.Utilities:MakeFrameDragPosition(self.pet, self.modName, "PetX", "PetY")
 
         self.candy:Show()
-         addon.Utilities:MakeFrameDragPosition(self.candy, MOD_KEY, "CandyX", "CandyY")
+         addon.Utilities:MakeFrameDragPosition(self.candy, self.modName, "CandyX", "CandyY")
     else
         Handler(self)
     end
@@ -290,15 +290,15 @@ function WarlockReminder:RegisterEvents()
     local HandleCandy = function() Handler(self, "candy") end
 
     -- Both events
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", MOD_KEY, nil, HandleBoth)
-    addon.core:RegisterStateMonitor("inCombat", MOD_KEY, HandleBoth)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.modName, nil, HandleBoth)
+    addon.core:RegisterStateMonitor("inCombat", self.modName, HandleBoth)
     -- Pet events
-    addon.core:RegisterEvent("UNIT_PET", MOD_KEY, "player", HandlePet)
-    addon.core:RegisterEvent("PET_BAR_UPDATE", MOD_KEY, nil, HandlePet)
-    addon.core:RegisterEvent("PET_DISMISS_START", MOD_KEY, nil, HandlePet)
-    addon.core:RegisterEvent("PLAYER_ALIVE", MOD_KEY, nil, HandlePet)
-    addon.core:RegisterStateMonitor("playerSpec", MOD_KEY, HandlePet)
-    addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", MOD_KEY, nil, function ()
+    addon.core:RegisterEvent("UNIT_PET", self.modName, "player", HandlePet)
+    addon.core:RegisterEvent("PET_BAR_UPDATE", self.modName, nil, HandlePet)
+    addon.core:RegisterEvent("PET_DISMISS_START", self.modName, nil, HandlePet)
+    addon.core:RegisterEvent("PLAYER_ALIVE", self.modName, nil, HandlePet)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, HandlePet)
+    addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.modName, nil, function ()
         if IsMounted() then
             HandlePet()
         else
@@ -311,8 +311,8 @@ function WarlockReminder:RegisterEvents()
         end
     end)
     -- Candy events
-    addon.core:RegisterEvent("BAG_UPDATE", MOD_KEY, nil, HandleCandy)
+    addon.core:RegisterEvent("BAG_UPDATE", self.modName, nil, HandleCandy)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return WarlockReminder:Initialize() end, function() WarlockReminder:RegisterEvents() end)
+addon.core:RegisterModule(WarlockReminder.modName, function() return WarlockReminder:Initialize() end, function() WarlockReminder:RegisterEvents() end)

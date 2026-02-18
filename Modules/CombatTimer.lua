@@ -1,13 +1,13 @@
 ---@class CombatTimer
-CombatTimer = {
+local CombatTimer = {
     frame = nil,
     updateTimer = nil,
     startTime = 0,
+    modName = "CombatTimer"
 }
 
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
-local MOD_KEY = "CombatTimer"
 
 -- MARK: Initialize
 
@@ -20,7 +20,7 @@ function CombatTimer:Initialize()
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
     self.frame.text:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
 
-    if addon.db[MOD_KEY]["CombatShow"] then
+    if addon.db[self.modName]["CombatShow"] then
        self.frame:Hide()
     else
        self.frame:Show()
@@ -72,11 +72,11 @@ local function Handler(self)
             self.updateTimer = nil
         end
 
-        if addon.db[MOD_KEY]["PrintEnabled"] then
+        if addon.db[self.modName]["PrintEnabled"] then
             addon.Utilities:print(string.format(L["TimerPrintTextIntro"] .. GetDuration(self)))
         end
 
-        if addon.db[MOD_KEY]["CombatShow"] then
+        if addon.db[self.modName]["CombatShow"] then
             self.frame:Hide()
         end
     end
@@ -87,12 +87,12 @@ end
 
 ---Update style settings and render it in-game for CombatTimer
 function CombatTimer:UpdateStyle()
-    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[MOD_KEY]["X"], addon.db[MOD_KEY]["Y"])
-    self.frame:SetSize(3 * addon.db[MOD_KEY]["FontSize"], addon.db[MOD_KEY]["FontSize"])
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
+    self.frame:SetSize(3 * addon.db[self.modName]["FontSize"], addon.db[self.modName]["FontSize"])
 
     self.frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[MOD_KEY]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[MOD_KEY]["FontSize"],
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
 end
@@ -105,11 +105,11 @@ function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
         addon.Utilities:ShowDragRegion(self.frame, L["TimerSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, MOD_KEY, "X", "Y")
+        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.frame)
 
-        if addon.db[MOD_KEY]["CombatShow"] then
+        if addon.db[self.modName]["CombatShow"] then
 			self.frame:Hide()
 		end
     end
@@ -120,8 +120,8 @@ end
 ---Register events needed by CombatTimer on addon.EventsHandler
 function CombatTimer:RegisterEvents()
     local Handle = function () Handler(self) end
-    addon.core:RegisterStateMonitor("inCombat", MOD_KEY, Handle)
+    addon.core:RegisterStateMonitor("inCombat", self.modName, Handle)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MOD_KEY, function() return CombatTimer:Initialize() end, function() CombatTimer:RegisterEvents() end)
+addon.core:RegisterModule(CombatTimer.modName, function() return CombatTimer:Initialize() end, function() CombatTimer:RegisterEvents() end)

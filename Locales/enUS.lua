@@ -13,6 +13,16 @@ L["NotificationContent"] = "The tabs shows modules contained in this addon, you 
 "|cff8788eeMidnightFocusInterrupt|r: Focus Interrupt module standalone version" .. "\n" ..
 "|cff8788eeSharedMedia_HBLyx|r: an AI-generated Chinese sound pack(LibSharedMedia)"
 
+-- MARK: Change Log
+L["ChangeLog"] = "Change Log"
+L["ChangeLogContent"] =
+"v3.8\n" ..
+"-Focus Interrupt: Added an option for a target cast bar, which can create a target cast bar similar to the focus cast bar\n" ..
+"v3.7\n" ..
+"-Custom Auras Tracker: auras can be loaded by specializations(a new corresponding custom option)\n" ..
+"v3.6\n" ..
+"-Custom Auras Tracker: add a new module \"Custom Aura Tracker\" which Track aura that are triggered by \"player\" and display and play sound alert with customizable options\n"
+
 --MARK: Issues
 L["Issues"] = "Issues"
 L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"
@@ -160,11 +170,11 @@ L["FocusInterruptSettingsDesc"] = "Focus Interrupt alert and Focus Cast Bar sett
 L["Interrupted"] = "Interrupted"
 L["InterruptedColor"] = "Interrupted Color"
 -- Focus Cast Bar Settings
-L["FocusCastBarHidden"] = "Hide Cast Bar"
+L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > InterruptNotReadyColor"
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
-L["InteruptSettings"] = "Interupt Settings"
+L["FocusInteruptSettings"] = "Focus Interupt Settings"
 L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"
 L["FocusInterruptNotReadyColor"] = "Interrupt Not Ready Color"
 L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
@@ -177,10 +187,8 @@ L["InterruptedSettingsDesc"] = "When the focus is interrupted, there is a short 
 L["InterruptIconsSettings"] = "Interrupt Icon Settings"
 L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
 L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
--- Target Interrupt Settings
-L["TargetBarSettings"] = "Target Cast Bar Settings"
-L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the focus cast bar|r. Most settings are shared, only the style settings below are independent|r"
-
+ 
+-- MARK: BattleRes
 L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"
 
@@ -221,11 +229,11 @@ L["STREET"] = "Street"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "Custom Aura Tracker"
-L["CustomAuraTrackerSettingsDesc"] = "Track aura that are triggered by \"player\" and display and play sound alert with customizable options\n\n|cffff0000NOTE|r: this is |cffff0000not a real aura tracker|r, it highly depends on |cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r of |cffff0000\"player\"|r. In other words, it can only track things from the cast success event, and it is highly hard-coded(no dynamic duration/cooldown)."
+L["CustomAuraTrackerSettingsDesc"] = "Track aura that are triggered by \"player\" and display and play sound alert with customizable options \n\n|cffff0000NOTE|r: this is |cffff0000not a real aura tracker|r, it highly depends on |cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r of |cffff0000\"player\"|r. In other words, it can only track things from the cast success event, and it is highly hard-coded(no dynamic duration/cooldown)."
 L["AuraSettings"] = "Auras Settings"
-L["AuraSettingsDesc"] = "Although the functionality is limited, but it still can be supportive. For example, you can track your potion and active trinkets.\n\n" ..
+L["AuraSettingsDesc"] = "Although the function is limited, but it still can be supportive. For example, you can track your potion and active trinkets\n\n" ..
 "Taking 12.0 potion as an example, you can add \"Light's Potential\" with its spell ID(1236616) + duration(30s) + cooldown(300s) + expire sound(X sound effect), and then you will get a 30s icon to show aura when you use the potion and a sound alert played after the cooldown time(300s).\n\n" ..
-"You can also use it as a simple sound alert after a period of time after you cast a certain spell. For example, after 300s of using \"health potion\" play a sound effect, you can set spell ID=\"spell ID of health potion\" + duration=0 + cooldown=300 + expire sound.\n\n" ..
+"You can also use it as a simple sound alert after a period of time after you cast a certain spell. For example, after 300s of using \"health potion\" play a sound effect, you can set spell ID=\"spell ID of health potion\" + duration=0 + cooldown=300 + expire sound\n\n" ..
 "|cffff0000NOTE|r: Spell IDs for items are |cffff0000\"spell ID\"|r instead of |cffff0000\"item ID\"|r(you can aquire them with other addon like \"idTip\"), and you can delete/update(delete/add button below) an aura by entering spell ID manually or selecting an existing aura by the dropdown menu below. Additionally, duration and cooldown are in seconds. Eventually, if you want to cancel a sound effect, you can select |cffff0000\"None\"|r for the sound effect to cancel it.\n\n" ..
 "|cffffff00TO ADD/UPDATE|r: |cffffff00Spell ID, Duration, and Cooldown are required|r to add/update an aura. Spell ID must be a positive integer and exist in the game, Duration and Cooldown must be non-negative numbers(can be decimal/float or zero).\n\n" ..
 "|cffffff00TO REMOVE|r: Only |cffffff00Spell ID is required|r, and it must be an existing aura's spell ID. You can also select an existing aura from the dropdown menu to auto-fill the spell ID for deletion or update."

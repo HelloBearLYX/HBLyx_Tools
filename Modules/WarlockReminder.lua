@@ -284,7 +284,7 @@ end
 
 ---Register events for WarlockReminder on EventsHandler
 function WarlockReminder:RegisterEvents()
-    local function OnUpdate(_, event, ...)
+    local function OnEvent(_, event, ...)
         if event == "UNIT_PET" or event == "PET_BAR_UPDATE" or event == "PET_DISMISS_START" or event == "PLAYER_ALIVE" then
             Handler(self, "pet")
         elseif event == "BAG_UPDATE" then
@@ -316,7 +316,7 @@ function WarlockReminder:RegisterEvents()
     -- Candy events
     addon.core:RegisterEvent("BAG_UPDATE", self.frame, self.modName)
 
-    self.frame:SetScript("OnEvent", OnUpdate)
+    self.frame:SetScript("OnEvent", OnEvent)
 end
 
 -- MARK: Register Module

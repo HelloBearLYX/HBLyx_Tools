@@ -1,3 +1,6 @@
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class FocusInterrupt
 ---@field frame frame frame for FocusInterrupt cast bar
 ---@field active boolean if the FocusInterrupt active
@@ -10,23 +13,13 @@
 ---@field interruptedColor ColorMixin? color for interrupted fade time
 ---@field kick Frame? Interrupt icon
 ---@field subKickIcon Frame? sub-interrupt icon
+---@field modName string module name for db access
 local FocusInterrupt = {
-    frame = nil,
+    modName = "FocusInterrupt",
+    frame = CreateFrame("Frame", ADDON_NAME .. "_FocusInterrupt", UIParent),
     active = false,
-    interruptID = nil,
     subInterrupt = nil,
-    timer = nil,
-    cooldownColor = nil,
-    interruptibleColor = nil,
-    notInterruptibleColor = nil,
-    interruptedColor = nil,
-    kickIcon = nil,
-    subKickIcon = nil,
-    modName = "FocusInterrupt"
 }
-
-local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
 local UNKNOWN_SPELL_TEXTURE = 134400
@@ -51,7 +44,6 @@ local INTERRUPT_BY_CLASS = {
 ---Initialize(Constructor)
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
-    self.frame = CreateFrame("Frame", ADDON_NAME .. "_FocusCastBar", UIParent)
     self.frame:SetFrameStrata("HIGH")
     self.frame:Hide()
 
@@ -86,8 +78,6 @@ function FocusInterrupt:Initialize()
     self.frame.timeText:SetJustifyH("RIGHT")
     self.frame.timeText:SetTextColor(1, 1, 1, 1)
 
-    self.active = false
-    self.subInterrupt = nil
     self:UpdateStyle()
 
     return self

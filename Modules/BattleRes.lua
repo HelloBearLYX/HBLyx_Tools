@@ -1,11 +1,12 @@
+local ADDON_NAME, addon = ...
+
 ---@class BattleRes
 ---@field frame frame BattleRes frame
+---@field modName string module name for registering in core
 local BattleRes = {
-    frame = nil,
     modName = "BattleRes",
+    frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent),
 }
-
-local ADDON_NAME, addon = ...
 
 --MARK: Constants
 local BATTLE_RES_ID = 20484
@@ -16,7 +17,6 @@ local BATTLE_RES_TEXTURE = 136080
 ---Initialize(Constructor)
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
-    self.frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
     
     self.frame.cooldown = CreateFrame("Cooldown", nil, self.frame, "CooldownFrameTemplate")

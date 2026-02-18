@@ -1,16 +1,14 @@
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class WarlockReminder
 ---@field pet frame pet frame
 ---@field candy frame candy frame
 ---@field timer C_Timer timer to keep track of mount state
+---@field modName string module name for registering in core
 local WarlockReminder = {
-    pet = nil,
-    candy = nil,
-    timer = nil,
-    modName = "WarlockReminders"
+    modName = "WarlockReminders",
 }
-
-local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
 local HEALSTONE_ID = {

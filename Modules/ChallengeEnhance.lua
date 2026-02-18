@@ -1,14 +1,15 @@
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class ChallengeEnhance
 ---@field buttons table ChallengeEnhance buttons
 ---@field eventFrame frame Handle Blizzard PVEFrame loaded
+---@field modName string module name for registering in core
 local ChallengeEnhance = {
+    modName = "ChallengeEnhance",
     buttons = {},
-    eventFrame = nil,
-    modName = "ChallengeEnhance"
+    eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
-
-local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
 local MAP_PORTAL = {
@@ -37,9 +38,6 @@ local MAP_PORTAL = {
 ---Intialize(Constructor)
 ---@return ChallengeEnhance ChallengeEnhance a ChallengeEnhance object
 function ChallengeEnhance:Initialize()
-    self.buttons = {}
-    self.eventFrame = CreateFrame("Frame")
-
     return self
 end
 

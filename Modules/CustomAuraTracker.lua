@@ -1,3 +1,6 @@
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class CustomAuraTracker
 ---@field auras table a table contains loaded auras and informations
 ---@field auras.loaded table a table mapping spell IDs to their corresponding aura frames
@@ -6,16 +9,20 @@
 ---@field auras.tail frame the tail of the showing auras linked-list, nil if there is no showing aura
 ---@field specAuras table a table store auras for each spec to load
 ---@field spareFrames table a table store the spare frames that can be reused when needed
+---@field lastSpec integer the last specialization of the player, used for checking if spec is switched
+---@field modName string module name for registering in core
 local CustomAuraTracker = {
-    auras = {},
+    modName = "CustomAuraTracker",
+    auras = {
+        loaded = {},
+        size = 0,
+        head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent),
+        tail = nil,
+    },
     specAuras = {},
     spareFrames = {},
     lastSpec = -1,
-    modName = "CustomAuraTracker"
 }
-
-local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 -- MARK: Constants
 -- TODO: The key for the module, used for databse, core, and other things. Replace "CustomIconTracker" with your module key
@@ -26,15 +33,6 @@ local UNKNOWN_SPELL_TEXTURE = 134400
 ---Initialize (Constructor)
 ---@return CustomAuraTracker CustomAuraTracker a CustomAuraTracker object
 function CustomAuraTracker:Initialize()
-    self.auras = {}
-    self.auras.loaded = {} -- a loaded frame pool
-    self.auras.size = 0
-    self.auras.head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent)
-    self.auras.tail = nil
-    self.specAuras = {}
-    self.spareFrames = {}
-    self.lastSpec = -1
-
     self.auras.head:Show()
 
     self:UpdateStyle() -- Update style on initialization, so you do not have to duplicate code of rendering style in both Initialize and UpdateStyle functions

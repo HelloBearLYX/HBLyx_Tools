@@ -1,20 +1,23 @@
----@class CombatTimer
-local CombatTimer = {
-    frame = nil,
-    updateTimer = nil,
-    startTime = 0,
-    modName = "CombatTimer"
-}
-
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
+---@class CombatTimer
+---@field frame frame the main frame of CombatTimer
+---@field updateTimer C_Timer timer to keep track of the update timer for combat duration display
+---@field startTime number the time when the player enters combat, used to calculate combat duration
+---@field modName string module name for registering in core
+local CombatTimer = {
+    modName = "CombatTimer",
+    frame = CreateFrame("Frame", ADDON_NAME .. "_CombatTimer", UIParent),
+    updateTimer = nil,
+    startTime = nil,
+}
 
 -- MARK: Initialize
 
 ---Intialize(Constructor)
 ---@return CombatTimer CombatTimer a CombatTimer object
 function CombatTimer:Initialize()
-    self.frame = CreateFrame("Frame", ADDON_NAME .. "TimerFrame", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
 
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
@@ -29,9 +32,6 @@ function CombatTimer:Initialize()
     self:UpdateStyle()
 
     self.frame.text:SetText(string.format("%02d:%02d", 0, 0))
-
-    self.updateTimer = nil
-    self.startTime = GetTime()
 
     return self
 end

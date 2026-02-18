@@ -1,20 +1,19 @@
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+
 ---@class CombatIndicator
 ---@field frame frame CombatIndicator frame
 ---@field timer C_Timer timer to keep track of fade time
+---@field modName string module name for registering in core
 local CombatIndicator = {
-    frame = nil,
-    timer = nil,
-    modName = "CombatIndicator"
+    modName = "CombatIndicator",
+    frame = CreateFrame("Frame", ADDON_NAME .. "_CombatIndicator", UIParent),
 }
-
-local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 --MARK: Initialize
 ---Initialzie(Constructor)
 ---@return CombatIndicator CombatIndicator a CombatIndicator object
 function CombatIndicator:Initialize()
-    self.frame = CreateFrame("Frame", ADDON_NAME .. "_CommbatIndicator", UIParent)
     self.frame:SetFrameStrata("BACKGROUND")
     self.frame:SetSize(300, 40)
     self.frame:Hide()

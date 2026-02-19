@@ -212,7 +212,7 @@ L["ChallengeEnhanceSettings"] = "大秘境面板增强"
 L["ChallengeEnhanceSettingsDesc"] = "在M+面板上显示分数、地下城名称以及可点击的M+地下城传送门"
 L["ChallengeEnhanceLevelSettings"] = "最高层数设置"
 L["ChallengeEnhanceScoreSettings"] = " 分数设置"
-L["ChallengeEnhanceScoreSettingsDesc"] = "|cffff0000注意: 对于BigWigs用户|r, 最近(02/17/2026) BigWigs在M+面板上也添加了M+分数显示, 为了防止两个分数重叠, 你可以禁用此模块的分数显示。"
+L["ChallengeEnhanceScoreSettingsDesc"] = "|cffff0000注意: 对于BigWigs用户|r, 最近(02/17/2026) BigWigs在M+面板上也添加了M+分数显示, 为了防止多个分数重叠, 你可以禁用此模块的分数显示。"
 L["ChallengeEnhanceNameSettings"] = "名称设置"
 -- current season
 L["AA"] = "艾杰斯亚学院"

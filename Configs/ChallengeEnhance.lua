@@ -67,11 +67,11 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.LevelFontSize = value
         update()
     end)
-    local levelXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.LevelX, function(value)
+    local levelXSlider = GUI:CreateSlider(nil, L["X"], -100, 100, 1, addon.db.ChallengeEnhance.LevelX, function(value)
         addon.db.ChallengeEnhance.LevelX = value
         update()
     end)
-    local levelYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.LevelY, function(value)
+    local levelYSlider = GUI:CreateSlider(nil, L["Y"], -100, 100, 1, addon.db.ChallengeEnhance.LevelY, function(value)
         addon.db.ChallengeEnhance.LevelY = value
         update()
     end)
@@ -107,11 +107,11 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.ScoreFontSize = value
         update()
     end)
-    local scoreXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
+    local scoreXSlider = GUI:CreateSlider(nil, L["X"], -100, 100, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
         addon.db.ChallengeEnhance.ScoreX = value
         update()
     end)
-    local scoreYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
+    local scoreYSlider = GUI:CreateSlider(nil, L["Y"], -100, 100, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
         addon.db.ChallengeEnhance.ScoreY = value
         update()
     end)
@@ -146,11 +146,11 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.NameFontSize = value
         update()
     end)
-    local nameXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.NameX, function(value)
+    local nameXSlider = GUI:CreateSlider(nil, L["X"], -100, 100, 1, addon.db.ChallengeEnhance.NameX, function(value)
         addon.db.ChallengeEnhance.NameX = value
         update()
     end)
-    local nameYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.NameY, function(value)
+    local nameYSlider = GUI:CreateSlider(nil, L["Y"], -100, 100, 1, addon.db.ChallengeEnhance.NameY, function(value)
         addon.db.ChallengeEnhance.NameY = value
         update()
     end)

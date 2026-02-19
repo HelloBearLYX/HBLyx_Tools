@@ -144,7 +144,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         addon.db.CustomAuraTracker.IconSize = value
         update()
     end)
-    GUI:CreateSlider(iconStyleGroup, L["TimeFontScale"], 0.5, 2, 0.1, addon.db.CustomAuraTracker.TimeFontScale, function(value)
+    GUI:CreateSlider(iconStyleGroup, L["TimeFontScale"], 0.5, 2, 0.01, addon.db.CustomAuraTracker.TimeFontScale, function(value)
         addon.db.CustomAuraTracker.TimeFontScale = value
         update()
     end)

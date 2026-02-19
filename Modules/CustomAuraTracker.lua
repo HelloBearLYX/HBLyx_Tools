@@ -21,7 +21,6 @@ local CustomAuraTracker = {
     },
     specAuras = {},
     spareFrames = {},
-    lastSpec = -1,
 }
 
 -- MARK: Constants
@@ -160,33 +159,13 @@ local function UpdateAuraInfo(frame, spellID, duration, cooldown, activeSound, e
     end
 end
 
--- MARK: Update Spec Loading
-
----Update spec loading map
----@param self CustomAuraTracker self
----@param newLoadingSpecs table<table<integer>> the new specialization table
----@param spellID integer the spell ID of updating specialization map
-local function UpdateSpecLoading(self, newLoadingSpecs, spellID)
-    for spec, auras in pairs(self.specAuras) do
-        if auras[spellID] then -- if the aura is already associated
-            if not newLoadingSpecs or not newLoadingSpecs[spec] then -- if the association should be removed
-                self.specAuras[spec][spellID] = nil -- remove the spec association
-            end
-        else
-            if newLoadingSpecs and newLoadingSpecs[spec] then -- if the association should be added
-                self.specAuras[spec][spellID] = true -- add the spec association
-            end
-        end
-    end
-end
-
 -- MARK: Should Load
 
 ---Check if the spell should be load by spell's loading spec map
 ---@param self CustomAuraTracker self
 ---@param loadingSpecs table<table<integer>> the loading spec map
 ---@return boolean success if the spell should be loaded for current spec
-local function ShouldLoad(self, loadingSpecs)
+local function ShouldLoad(loadingSpecs)
     -- if loadingSpecs is nil, it means the aura is a general aura for all specs, return true directly
     if not loadingSpecs then
         return true
@@ -285,14 +264,14 @@ end
 
 ---Handle after switch specialization to unload unneccessary auras and load needed auras
 ---@param self CustomAuraTracker self
-local function SwitchSpec(self)
+---@param lastSpec integer the last specialization
+local function SwitchSpec(self, lastSpec)
     local currentSpec = addon.states["playerSpec"]
-    if currentSpec == self.lastSpec then return end
 
     local alreadyLoaded = {}
 
     -- delete all auras for last spec
-    for spellID, _ in pairs(self.specAuras[self.lastSpec] or {}) do
+    for spellID, _ in pairs(self.specAuras[lastSpec] or {}) do
         local frame = self.auras.loaded[spellID]
         if frame and not self.specAuras[currentSpec][spellID] then -- if the aura is not for current spec, hide it and put the frame into spare pool
             UnloadAura(self, frame)
@@ -310,9 +289,26 @@ local function SwitchSpec(self)
             end
         end
     end
+end
 
-    -- update last spec
-    self.lastSpec = currentSpec
+-- MARK: Update Spec Loading
+
+---Update spec loading map
+---@param self CustomAuraTracker self
+---@param newLoadingSpecs table<table<integer>> the new specialization table
+---@param spellID integer the spell ID of updating specialization map
+local function UpdateSpecLoading(self, newLoadingSpecs, spellID)
+    for spec, auras in pairs(self.specAuras) do
+        if auras[spellID] then -- if the aura is already associated
+            if not newLoadingSpecs or not newLoadingSpecs[spec] then -- if the association should be removed
+                self.specAuras[spec][spellID] = nil -- remove the spec association
+            end
+        else
+            if newLoadingSpecs and newLoadingSpecs[spec] then -- if the association should be added
+                self.specAuras[spec][spellID] = true -- add the spec association
+            end
+        end
+    end
 end
 
 -- MARK: Load Saved Auras
@@ -413,11 +409,15 @@ end
 function CustomAuraTracker:AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
     UpdateSpecLoading(self, loadingSpecs, spellID) -- update the spec loading
 
-    if ShouldLoad(self, loadingSpecs) then -- if the aura should be loaded for current spec, load it    
+    if ShouldLoad(loadingSpecs) then -- if the aura should be loaded for current spec, load it    
         return LoadAura(self, spellID, duration, cooldown, activeSound, expireSound)
-    end
+    else
+        if self.auras.loaded[spellID] then -- if the aura is currently loaded but should not be loaded, unload it
+            UnloadAura(self, self.auras.loaded[spellID])
+        end
 
-    return false
+        return false
+    end
 end
 
 -- MARK: Remove Aura
@@ -472,7 +472,7 @@ function CustomAuraTracker:RegisterEvents()
 
     addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.auras.head, self.modName, "player")
     addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.auras.head, self.modName)
-    addon.core:RegisterStateMonitor("playerSpec", self.modName, function() SwitchSpec(self) end)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function(lastSpec) SwitchSpec(self, lastSpec) end)
 
     self.auras.head:SetScript("OnEvent", OnEvent)
 end

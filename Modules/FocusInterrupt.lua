@@ -331,6 +331,9 @@ local function LoadInterruptIcon(self, unit)
             if not self.bars[unit].subKickIcon then
                 self.bars[unit].subKickIcon = CreateKickIcon(self, unit)
             end
+
+            self.bars[unit].kickIcon:Show()
+            self.bars[unit].subKickIcon:Show()
         else -- if not demo warlock, only load main kick icon
             if not self.bars[unit].kickIcon then
                 self.bars[unit].kickIcon = CreateKickIcon(self, unit)
@@ -339,6 +342,7 @@ local function LoadInterruptIcon(self, unit)
                 self.bars[unit].subKickIcon:Hide()
             end
 
+            self.bars[unit].kickIcon:Show()
         end
 
         UpdateKickIconsStyle(self, unit) -- update icons' position and size according to settings

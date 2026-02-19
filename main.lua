@@ -94,20 +94,45 @@ local function InitializeStates()
 	-- if the player is in combat
 	addon.states["inCombat"] = InCombatLockdown()
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
+		local previous = addon.states["inCombat"] or false
 		addon.states["inCombat"] = true
-		return addon.states["inCombat"]
+		return previous
 	end)
 	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function()
+		local previous = addon.states["inCombat"] or false
 		addon.states["inCombat"] = false
-		return addon.states["inCombat"]
+		return previous
 	end)
 
 	-- player spec state
 	local GetSpec = function ()
+		local previous = addon.states["playerSpec"] or 0
 		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
+		return previous
 	end
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
 	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", nil, "playerSpec", GetSpec)
+
+	-- instance info state
+	local GetInstanceInfo = function ()
+		local previous = addon.states["instanceInfo"] or {inInstance = false, instanceType = "none", difficultyID = 0}
+		local inInstance, instanceType = IsInInstance()
+		local difficultyID = select(3, GetInstanceInfo())
+
+		addon.states["instanceInfo"] = {inInstance = inInstance, instanceType = instanceType, difficultyID = difficultyID}
+		return previous
+	end
+	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "instanceInfo", GetInstanceInfo)
+	addon.core:RegisterState("ZONE_CHANGED_NEW_AREA", nil, "instanceInfo", GetInstanceInfo)
+
+	-- player party or raid state
+	local GetGroupInfo = function ()
+		local previous = addon.states["groupInfo"] or {inParty = false, inRaid = false, role = "NONE"}
+		addon.states["groupInfo"] = {inParty = IsInGroup(), inRaid = IsInRaid(), role = UnitGroupRolesAssigned("player")}
+		return previous
+	end
+	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "groupInfo", GetGroupInfo)
+	addon.core:RegisterState("GROUP_ROSTER_UPDATE", nil, "groupInfo", GetGroupInfo)
 end
 
 -- MARK: Initialize

@@ -105,16 +105,21 @@ local function GetStatesInfo()
     table.sort(vars)
 
     local output = "|cff8788EEStates Info|r:\n"
-    
+
     for _, var in ipairs(vars) do
-        output = output .. string.format("|cff0070DD%s|r|cffC41E3A(%s)|r: %s, ", var, type(addon.states[var]), tostring(addon.states[var]))
+        if type(addon.states[var]) == "table" then
+            for name, value in pairs(addon.states[var]) do
+                output = output .. string.format("|cff0070DD%s|r.|cffffff00%s|r|cffC41E3A(%s)|r: %s\n", var, name, type(value), tostring(value))
+            end
+        else
+            output = output .. string.format("|cff0070DD%s|r|cffC41E3A(%s)|r: %s\n", var, type(addon.states[var]), tostring(addon.states[var]))
+        end
     end
-    output = output .. "\n"
 
     for event, states in pairs(addon.core.statesUpdate) do
         output = output .. string.format("|cff00ff00%s|r: ", event)
         for state, _ in pairs(states) do
-            output = output .. string.format("%s, ", state)
+                output = output .. string.format("|cff0070DD%s|r, ", state)
         end
         output = output .. "\n"
     end

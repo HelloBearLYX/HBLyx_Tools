@@ -28,6 +28,7 @@ function Core:Initialize()
     self.statesMonitor = {}
 
     self.eventFrame:RegisterEvent("ADDON_LOADED") -- "ADDON_LOADED" is automatically registered
+    self.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD") -- "PLAYER_ENTERING_WORLD" is automatically registered
 
     return self
 end
@@ -62,19 +63,20 @@ local function Handle(self, event, ...)
         if name == ADDON_NAME then
             addon:Initialize()
         end
-    else
-        if event == "PLAYER_ENTERING_WORLD" then
-            for mod, _ in pairs(self.modules) do
-                self:GetSafeUpdate(mod)()
-            end
+    end
+    -- move all UpdateStyle after "PLAYER_ENTERING_WORLD" to make sure all addon has loaded medias
+    -- prevent cannot load the medias which is loaded by other addons loaded later than this addon
+    if event == "PLAYER_ENTERING_WORLD" then
+        for mod, _ in pairs(self.modules) do
+            self:GetSafeUpdate(mod)()
         end
+    end
 
-        -- let state update first
-        for name, func in pairs(self.statesUpdate[event] or {}) do
-            local delta = func(...)
-            for _, monitorFunc in pairs(self.statesMonitor[name] or {}) do
-                monitorFunc(delta)
-            end
+    -- let state update first
+    for name, func in pairs(self.statesUpdate[event] or {}) do
+        local delta = func(...)
+        for _, monitorFunc in pairs(self.statesMonitor[name] or {}) do
+            monitorFunc(delta)
         end
     end
 end

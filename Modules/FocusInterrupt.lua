@@ -668,7 +668,6 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
         addon.core:RegisterEvent("PLAYER_TARGET_CHANGED", self.bars.target, self.modName)
     end
     -- switch spec
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
     addon.core:RegisterStateMonitor("playerSpec", self.modName, UpdateID)
     -- stop cast
     for unit, bar in pairs(self.bars) do
@@ -686,10 +685,6 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
     for _, bar in pairs(self.bars) do
         bar:SetScript("OnEvent", BarOnEvent)
     end
-    -- global events
-    self.frame:SetScript("OnEvent", function ()
-        UpdateID()
-    end)
 end
 
 -- MARK: Register Module

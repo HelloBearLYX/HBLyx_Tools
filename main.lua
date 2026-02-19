@@ -82,17 +82,6 @@ function addon:GetVersion()
 	return addon.version
 end
 
--- MARK: State functions
-
-local function CreateState(name, initializeFunc)
-	if addon.states[name] then
-		addon:debug("State " .. name .. " already exists.")
-		return
-	end
-
-	addon.states[name] = initializeFunc and initializeFunc()
-end
-
 -- MARK: States
 
 ---Initialize addon states
@@ -100,10 +89,10 @@ local function InitializeStates()
 	addon.states = {}
 
 	-- player class
-	CreateState("playerClass", function() return select(2, UnitClass("player")) end)
+	addon.states["playerClass"] = select(2, UnitClass("player")) -- "ADDON_LOADED"
 	
 	-- if the player is in combat
-	CreateState("inCombat", function() return InCombatLockdown() end)
+	addon.states["inCombat"] = InCombatLockdown()
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
 		addon.states["inCombat"] = true
 		return addon.states["inCombat"]

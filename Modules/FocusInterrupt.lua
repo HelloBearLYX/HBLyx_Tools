@@ -331,9 +331,6 @@ local function LoadInterruptIcon(self, unit)
             if not self.bars[unit].subKickIcon then
                 self.bars[unit].subKickIcon = CreateKickIcon(self, unit)
             end
-
-            self.bars[unit].kickIcon:Show()
-            self.bars[unit].subKickIcon:Show()
         else -- if not demo warlock, only load main kick icon
             if not self.bars[unit].kickIcon then
                 self.bars[unit].kickIcon = CreateKickIcon(self, unit)
@@ -341,14 +338,14 @@ local function LoadInterruptIcon(self, unit)
             if self.bars[unit].subKickIcon then
                 self.bars[unit].subKickIcon:Hide()
             end
-
-            self.bars[unit].kickIcon:Show()
         end
 
         UpdateKickIconsStyle(self, unit) -- update icons' position and size according to settings
         self.bars[unit].kickIcon.icon:SetTexture(C_Spell.GetSpellInfo(self.interruptID).iconID or UNKNOWN_SPELL_TEXTURE) -- set main kick icon texture
+        self.bars[unit].kickIcon:Show()
         if self.bars[unit].subKickIcon and self.subInterrupt then
             self.bars[unit].subKickIcon.icon:SetTexture(C_Spell.GetSpellInfo(self.subInterrupt).iconID or UNKNOWN_SPELL_TEXTURE) -- set sub kick icon texture
+            self.bars[unit].subKickIcon:Show()
         end
     else
         if self.bars[unit].kickIcon then

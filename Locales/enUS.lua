@@ -211,6 +211,7 @@ L["ChallengeEnhanceSettings"] = "M+ Panel Enhance"
 L["ChallengeEnhanceSettingsDesc"] = "Display score and dungeon name and clickable M+ dungeon portal on the M+ Panel"
 L["ChallengeEnhanceLevelSettings"] = "Highest Level Settings"
 L["ChallengeEnhanceScoreSettings"] = " Score Settings"
+L["ChallengeEnhanceScoreSettingsDesc"] = "|cffff0000NOTE: for BigWigs users|r, as recently(02/17/2026) BigWigs added a M+ score display as well, to prevent the overlapping of two scores, you may disable the score display of this module."
 L["ChallengeEnhanceNameSettings"] = "Name Settings"
 --current season
 L["AA"] = "Academy"

@@ -16,17 +16,20 @@ addon.configurationList[MOD_KEY] = {
     LevelEnabled = true,
     LevelFontSize = 20,
     LevelX = 0,
-    LevelY = -1,
+    LevelY = -10,
+    LevelAnchor = "TOP",
     -- score settings
     ScoreEnabled = true,
     ScoreFontSize = 20,
     ScoreX = 0,
-    ScoreY = -5,
+    ScoreY = 0,
+    ScoreAnchor = "CENTER",
     -- name settings
     NameEnabled = true,
     NameFontSize = 12,
     NameX = 0,
-    NameY = 2,
+    NameY = 0,
+    NameAnchor = "BOTTOM",
 }
 
 -- GUI
@@ -60,60 +63,121 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
 
     -- MARK: Level Settings
     local levelGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceLevelSettings"])
-    GUI:CreateToggleCheckBox(levelGroup, L["Enable"], addon.db.ChallengeEnhance.LevelEnabled, function(value)
-        addon.db.ChallengeEnhance.LevelEnabled = value
-        update()
-    end)
-    GUI:CreateSlider(levelGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.LevelFontSize, function(value)
+    local levelFontSizeSlider = GUI:CreateSlider(nil, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.LevelFontSize, function(value)
         addon.db.ChallengeEnhance.LevelFontSize = value
         update()
     end)
-    GUI:CreateSlider(levelGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.LevelX, function(value)
+    local levelXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.LevelX, function(value)
         addon.db.ChallengeEnhance.LevelX = value
         update()
     end)
-    GUI:CreateSlider(levelGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.LevelY, function(value)
+    local levelYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.LevelY, function(value)
         addon.db.ChallengeEnhance.LevelY = value
         update()
     end)
+    local levelAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.LevelAnchor, false, function(value)
+        addon.db.ChallengeEnhance.LevelAnchor = value
+        update()
+    end, {"TOP", "CENTER", "BOTTOM"})
+    GUI:CreateToggleCheckBox(levelGroup, L["Enable"], addon.db.ChallengeEnhance.LevelEnabled, function(value)
+        addon.db.ChallengeEnhance.LevelEnabled = value
+        levelFontSizeSlider:SetDisabled(not value)
+        levelXSlider:SetDisabled(not value)
+        levelYSlider:SetDisabled(not value)
+        levelAnchorDropdown:SetDisabled(not value)
+        update()
+    end):SetRelativeWidth(0.15)
+    levelFontSizeSlider:SetRelativeWidth(0.2)
+    levelXSlider:SetRelativeWidth(0.2)
+    levelYSlider:SetRelativeWidth(0.2)
+    levelAnchorDropdown:SetRelativeWidth(0.2)
+    levelFontSizeSlider:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
+    levelXSlider:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
+    levelYSlider:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
+    levelAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
+    levelGroup:AddChild(levelFontSizeSlider)
+    levelGroup:AddChild(levelXSlider)
+    levelGroup:AddChild(levelYSlider)
+    levelGroup:AddChild(levelAnchorDropdown)
 
     -- MARK: Score Settings
     local scoreGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceScoreSettings"])
-    GUI:CreateToggleCheckBox(scoreGroup, L["Enable"], addon.db.ChallengeEnhance.ScoreEnabled, function(value)
-        addon.db.ChallengeEnhance.ScoreEnabled = value
-        update()
-    end)
-    GUI:CreateSlider(scoreGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.ScoreFontSize, function(value)
+    GUI:CreateInformationTag(scoreGroup, L["ChallengeEnhanceScoreSettingsDesc"], "LEFT")
+    local scoreFontSizeSlider = GUI:CreateSlider(nil, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.ScoreFontSize, function(value)
         addon.db.ChallengeEnhance.ScoreFontSize = value
         update()
     end)
-    GUI:CreateSlider(scoreGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
+    local scoreXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreX, function(value)
         addon.db.ChallengeEnhance.ScoreX = value
         update()
     end)
-    GUI:CreateSlider(scoreGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
+    local scoreYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.ScoreY, function(value)
         addon.db.ChallengeEnhance.ScoreY = value
         update()
     end)
+    local scoreAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.ScoreAnchor, false, function(value)
+        addon.db.ChallengeEnhance.ScoreAnchor = value
+        update()
+    end, {"TOP", "CENTER", "BOTTOM"})
+    GUI:CreateToggleCheckBox(scoreGroup, L["Enable"], addon.db.ChallengeEnhance.ScoreEnabled, function(value)
+        addon.db.ChallengeEnhance.ScoreEnabled = value
+        scoreFontSizeSlider:SetDisabled(not value)
+        scoreXSlider:SetDisabled(not value)
+        scoreYSlider:SetDisabled(not value)
+        scoreAnchorDropdown:SetDisabled(not value)
+        update()
+    end):SetRelativeWidth(0.15)
+    scoreFontSizeSlider:SetRelativeWidth(0.2)
+    scoreXSlider:SetRelativeWidth(0.2)
+    scoreYSlider:SetRelativeWidth(0.2)
+    scoreAnchorDropdown:SetRelativeWidth(0.2)
+    scoreFontSizeSlider:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
+    scoreXSlider:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
+    scoreYSlider:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
+    scoreAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
+    scoreGroup:AddChild(scoreFontSizeSlider)
+    scoreGroup:AddChild(scoreXSlider)
+    scoreGroup:AddChild(scoreYSlider)
+    scoreGroup:AddChild(scoreAnchorDropdown)
 
     -- MARK: Name Settings
     local nameGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceNameSettings"])
-    GUI:CreateToggleCheckBox(nameGroup, L["Enable"], addon.db.ChallengeEnhance.NameEnabled, function(value)
-        addon.db.ChallengeEnhance.NameEnabled = value
-        update()
-    end)
-    GUI:CreateSlider(nameGroup, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.NameFontSize, function(value)
+    local nameFontSizeSlider = GUI:CreateSlider(nil, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.NameFontSize, function(value)
         addon.db.ChallengeEnhance.NameFontSize = value
         update()
     end)
-    GUI:CreateSlider(nameGroup, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.NameX, function(value)
+    local nameXSlider = GUI:CreateSlider(nil, L["X"], -50, 50, 1, addon.db.ChallengeEnhance.NameX, function(value)
         addon.db.ChallengeEnhance.NameX = value
         update()
     end)
-    GUI:CreateSlider(nameGroup, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.NameY, function(value)
+    local nameYSlider = GUI:CreateSlider(nil, L["Y"], -50, 50, 1, addon.db.ChallengeEnhance.NameY, function(value)
         addon.db.ChallengeEnhance.NameY = value
         update()
     end)
+    local nameAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.NameAnchor, false, function(value)
+        addon.db.ChallengeEnhance.NameAnchor = value
+        update()
+    end, {"TOP", "CENTER", "BOTTOM"})
+    GUI:CreateToggleCheckBox(nameGroup, L["Enable"], addon.db.ChallengeEnhance.NameEnabled, function(value)
+        addon.db.ChallengeEnhance.NameEnabled = value
+        nameFontSizeSlider:SetDisabled(not value)
+        nameXSlider:SetDisabled(not value)
+        nameYSlider:SetDisabled(not value)
+        nameAnchorDropdown:SetDisabled(not value)
+        update()
+    end):SetRelativeWidth(0.15)
+    nameFontSizeSlider:SetRelativeWidth(0.2)
+    nameXSlider:SetRelativeWidth(0.2)
+    nameYSlider:SetRelativeWidth(0.2)
+    nameAnchorDropdown:SetRelativeWidth(0.2)
+    nameFontSizeSlider:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
+    nameXSlider:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
+    nameYSlider:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
+    nameAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
+    nameGroup:AddChild(nameFontSizeSlider)
+    nameGroup:AddChild(nameXSlider)
+    nameGroup:AddChild(nameYSlider)
+    nameGroup:AddChild(nameAnchorDropdown)
 
     return frame
 end

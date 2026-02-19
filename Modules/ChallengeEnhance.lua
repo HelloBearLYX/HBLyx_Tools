@@ -158,21 +158,24 @@ function ChallengeEnhance:UpdateStyle()
             addon.db[self.modName]["LevelFontSize"],
             "OUTLINE"
         )
-        button.level:SetPoint("TOP", button, "TOP", addon.db[self.modName]["LevelX"], addon.db[self.modName]["LevelY"])
+        button.level:ClearAllPoints()
+        button.level:SetPoint("CENTER", button, addon.db[self.modName]["LevelAnchor"], addon.db[self.modName]["LevelX"], addon.db[self.modName]["LevelY"])
 
         button.score:SetFont(
             addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
             addon.db[self.modName]["ScoreFontSize"],
             "OUTLINE"
         )
-        button.score:SetPoint("CENTER", button, "CENTER", addon.db[self.modName]["ScoreX"], addon.db[self.modName]["ScoreY"])
+        button.score:ClearAllPoints()
+        button.score:SetPoint("CENTER", button, addon.db[self.modName]["ScoreAnchor"], addon.db[self.modName]["ScoreX"], addon.db[self.modName]["ScoreY"])
 
         button.mapName:SetFont(
             addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
             addon.db[self.modName]["NameFontSize"],
             "OUTLINE"
         )
-        button.mapName:SetPoint("BOTTOM", button, "BOTTOM", addon.db[self.modName]["NameX"], addon.db[self.modName]["NameY"])
+        button.mapName:ClearAllPoints()
+        button.mapName:SetPoint("CENTER", button, addon.db[self.modName]["NameAnchor"], addon.db[self.modName]["NameX"], addon.db[self.modName]["NameY"])
         
         -- update text info and colors
         if not addon.db[self.modName]["LevelEnabled"] then -- blizzard assign it, we only disable it when needed

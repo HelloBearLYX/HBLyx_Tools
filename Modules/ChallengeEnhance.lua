@@ -80,75 +80,10 @@ local function UpdateTooltip(parent, mapID)
     GameTooltip:Show()
 end
 
----Create buttons and stored them in self.buttons
----@param self ChallengeEnhance self
-local function CreateButtons(self)
-    for _, icon in pairs(ChallengesFrame.DungeonIcons) do
-        local mapID = icon.mapID
-        -- level text on the icon, keep a reference in button.level
-        local level = icon.HighestLevel
-
-        if mapID then
-            local portalID = MAP_PORTAL[mapID].id
-            local button = CreateFrame("Button", nil, icon, "InsecureActionButtonTemplate")
-            button:SetAllPoints()
-            button:RegisterForClicks("AnyDown", "AnyUp")
-            button:SetAttribute("type", "spell")
-            button:SetAttribute("spell", portalID)
-
-            button.selectOverlay = button:CreateTexture(nil, "HIGHLIGHT") 
-            button.selectOverlay:SetAllPoints()
-            button.selectOverlay:SetBlendMode("ADD")
-            button.selectOverlay:SetColorTexture(1, 1, 1, 0.25)
-            
-            button.score = button:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-            button.mapName = button:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-
-            button.level = level
-
-            button:SetScript("OnEnter", function(self)
-                UpdateTooltip(icon, mapID)
-            end)
-            button:SetScript("OnLeave", function(self)
-                if GameTooltip:IsOwned(icon) then
-                    GameTooltip:Hide()
-                end
-            end)
-
-            self.buttons[mapID] = button
-
-            self.buttons[mapID]:Show()
-            self:UpdateStyle()
-        end
-    end
-end
-
----Create buttons for dungeons in the PVEFrame
----This must be executed after Blizzard_ChallengesUI loaded the PVEFrame and its icons
----@return boolean success if the buttons are created
-function ChallengeEnhance:Create()
-    if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
-
-    if ChallengesFrame.Update then
-        local firstExecute = true
-        hooksecurefunc(ChallengesFrame, "Update", function()
-            -- only execute once when all dungeon icons are set up by Blizzard_ChallengesUI
-            -- and #ChallengesFrame.DungeonIcons >= #ChallengesFrame.maps -> latent callback can wait till the dungeon icons are set, not need to check whether Blizzard_ChallengesUI set all icons up
-            if firstExecute  then
-                -- use a callback function to execute this later after all dungeon icons are sorted
-                C_Timer.After(0.25, function () CreateButtons(self) end)
-                firstExecute = false
-            end
-        end)
-    end
-
-    return true
-end
-
 --MARK: UpdateStyle
 
 ---Update style settings and render it in-game for ChallengeEnhance
-function ChallengeEnhance:UpdateStyle()
+local function UpdateStyle(self)
     for mapID, button in pairs(self.buttons) do
         local _, score = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
         local name = MAP_PORTAL[mapID].name
@@ -197,6 +132,71 @@ function ChallengeEnhance:UpdateStyle()
     end
 end
 
+---Create buttons and stored them in self.buttons
+---@param self ChallengeEnhance self
+local function CreateButtons(self)
+    for _, icon in pairs(ChallengesFrame.DungeonIcons) do
+        local mapID = icon.mapID
+        -- level text on the icon, keep a reference in button.level
+        local level = icon.HighestLevel
+
+        if mapID then
+            local portalID = MAP_PORTAL[mapID].id
+            local button = CreateFrame("Button", nil, icon, "InsecureActionButtonTemplate")
+            button:SetAllPoints()
+            button:RegisterForClicks("AnyDown", "AnyUp")
+            button:SetAttribute("type", "spell")
+            button:SetAttribute("spell", portalID)
+
+            button.selectOverlay = button:CreateTexture(nil, "HIGHLIGHT") 
+            button.selectOverlay:SetAllPoints()
+            button.selectOverlay:SetBlendMode("ADD")
+            button.selectOverlay:SetColorTexture(1, 1, 1, 0.25)
+            
+            button.score = button:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+            button.mapName = button:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+
+            button.level = level
+
+            button:SetScript("OnEnter", function(self)
+                UpdateTooltip(icon, mapID)
+            end)
+            button:SetScript("OnLeave", function(self)
+                if GameTooltip:IsOwned(icon) then
+                    GameTooltip:Hide()
+                end
+            end)
+
+            self.buttons[mapID] = button
+
+            self.buttons[mapID]:Show()
+            UpdateStyle(self)
+        end
+    end
+end
+
+---Create buttons for dungeons in the PVEFrame
+---This must be executed after Blizzard_ChallengesUI loaded the PVEFrame and its icons
+---@return boolean success if the buttons are created
+function ChallengeEnhance:Create()
+    if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
+
+    if ChallengesFrame.Update then
+        local firstExecute = true
+        hooksecurefunc(ChallengesFrame, "Update", function()
+            -- only execute once when all dungeon icons are set up by Blizzard_ChallengesUI
+            -- and #ChallengesFrame.DungeonIcons >= #ChallengesFrame.maps -> latent callback can wait till the dungeon icons are set, not need to check whether Blizzard_ChallengesUI set all icons up
+            if firstExecute  then
+                -- use a callback function to execute this later after all dungeon icons are sorted
+                C_Timer.After(0.25, function () CreateButtons(self) end)
+                firstExecute = false
+            end
+        end)
+    end
+
+    return true
+end
+
 --MARK: Register Event
 
 ---Register ChallengeEnhance for "Blizzard_ChallengesUI" loaded
@@ -215,4 +215,4 @@ function ChallengeEnhance:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(ChallengeEnhance.modName, function() return ChallengeEnhance:Initialize() end, function() ChallengeEnhance:RegisterEvents() end)
+addon.core:RegisterModule(ChallengeEnhance.modName, function() return ChallengeEnhance:Initialize() end)

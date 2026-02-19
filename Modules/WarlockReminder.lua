@@ -88,8 +88,6 @@ function WarlockReminder:Initialize()
     self.candy.border:SetAllPoints()
     self.candy.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.candy.border:SetBackdropBorderColor(0, 0, 0, 1)
-    
-    self:UpdateStyle()
 
     addon.Utilities:print(L["WarlockWelecome"])
     return self
@@ -320,4 +318,4 @@ function WarlockReminder:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(WarlockReminder.modName, function() return WarlockReminder:Initialize() end, function() WarlockReminder:RegisterEvents() end)
+addon.core:RegisterModule(WarlockReminder.modName, function() return WarlockReminder:Initialize() end)

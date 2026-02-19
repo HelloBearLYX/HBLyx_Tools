@@ -35,8 +35,6 @@ local UNKNOWN_SPELL_TEXTURE = 134400
 function CustomAuraTracker:Initialize()
     self.auras.head:Show()
 
-    self:UpdateStyle() -- Update style on initialization, so you do not have to duplicate code of rendering style in both Initialize and UpdateStyle functions
-
     return self
 end
 
@@ -480,4 +478,4 @@ function CustomAuraTracker:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(CustomAuraTracker.modName, function() return CustomAuraTracker:Initialize() end, function() CustomAuraTracker:RegisterEvents() end)
+addon.core:RegisterModule(CustomAuraTracker.modName, function() return CustomAuraTracker:Initialize() end)

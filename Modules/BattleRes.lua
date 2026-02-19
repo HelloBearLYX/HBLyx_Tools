@@ -43,8 +43,6 @@ function BattleRes:Initialize()
     self.frame.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.frame.border:SetBackdropBorderColor(0, 0, 0, 1)
 
-    self:UpdateStyle()
-
     if addon.db[self.modName]["HideInactive"] then
         self.frame:Hide()
     else
@@ -145,4 +143,4 @@ function BattleRes:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(BattleRes.modName, function() return BattleRes:Initialize() end, function() BattleRes:RegisterEvents() end)
+addon.core:RegisterModule(BattleRes.modName, function() return BattleRes:Initialize() end)

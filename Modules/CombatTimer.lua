@@ -29,7 +29,11 @@ function CombatTimer:Initialize()
        self.frame:Show()
     end
 
-    self:UpdateStyle()
+    self.frame.text:SetFont(
+        "Fonts\\FRIZQT__.TTF",
+        20,
+        "OUTLINE"
+    )
 
     self.frame.text:SetText(string.format("%02d:%02d", 0, 0))
 
@@ -124,4 +128,4 @@ function CombatTimer:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(CombatTimer.modName, function() return CombatTimer:Initialize() end, function() CombatTimer:RegisterEvents() end)
+addon.core:RegisterModule(CombatTimer.modName, function() return CombatTimer:Initialize() end)

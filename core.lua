@@ -63,6 +63,12 @@ local function Handle(self, event, ...)
             addon:Initialize()
         end
     else
+        if event == "PLAYER_ENTERING_WORLD" then
+            for mod, _ in pairs(self.modules) do
+                self:GetSafeUpdate(mod)()
+            end
+        end
+
         -- let state update first
         for name, func in pairs(self.statesUpdate[event] or {}) do
             local delta = func(...)
@@ -127,9 +133,8 @@ end
 ---Register module to the manager(not initialized so far)
 ---@param mod string module key
 ---@param initializeFunc function function used to initialize module
----@param eventRegisterFunc function function used to register events for the module, this will only run after the module is initialized and loaded
-function Core:RegisterModule(mod, initializeFunc, eventRegisterFunc)
-    self.registeredMods[mod] = {initialize = initializeFunc, eventRegister = eventRegisterFunc}
+function Core:RegisterModule(mod, initializeFunc)
+    self.registeredMods[mod] = {initialize = initializeFunc}
     self.totalMods = self.totalMods + 1
 end
 
@@ -152,8 +157,8 @@ function Core:LoadModule(mod)
 
     if not loadedAlready and self.registeredMods[mod] and addon.db[mod]["Enabled"] then
         self.modules[mod] = self.registeredMods[mod].initialize()
-        if self.modules[mod] and self.registeredMods[mod].eventRegister then
-            self.registeredMods[mod].eventRegister()
+        if self.modules[mod] and self.modules[mod].RegisterEvents then
+            self.modules[mod]:RegisterEvents()
             self.loadedMods = self.loadedMods + 1
         end
         return true

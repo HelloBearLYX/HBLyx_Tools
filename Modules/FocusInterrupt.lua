@@ -60,8 +60,6 @@ function FocusInterrupt:Initialize()
         self.bars.target.active = false
     end
 
-    self:UpdateStyle()
-
     return self
 end
 
@@ -253,7 +251,7 @@ local function OnUpdate(self, unit, duration, isChannel, notInterruptible)
 
     -- general interrupt cooldown check
     local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
-    
+
     -- for Demonology Warlocks/Two interrupts specs
     -- since the GRIMOIRE is also a kick, this part can only used for Demo Warlock so far. Prot Paladin cannot use this as GCD issue(IsZero includes GCD)
     local subInterruptReady
@@ -688,4 +686,4 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(FocusInterrupt.modName, function() return FocusInterrupt:Initialize() end, function() FocusInterrupt:RegisterEvents() end)
+addon.core:RegisterModule(FocusInterrupt.modName, function() return FocusInterrupt:Initialize() end)

@@ -21,8 +21,6 @@ function CombatIndicator:Initialize()
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
     self.frame.text:SetAllPoints()
 
-    self:UpdateStyle()
-
     return self
 end
 
@@ -125,4 +123,4 @@ function CombatIndicator:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(CombatIndicator.modName, function() return CombatIndicator:Initialize() end, function() CombatIndicator:RegisterEvents() end)
+addon.core:RegisterModule(CombatIndicator.modName, function() return CombatIndicator:Initialize() end)

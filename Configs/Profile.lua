@@ -138,7 +138,7 @@ function addon:ImportModuleProfile(data, mod)
     end
 
     addon.db[mod] = profileData[mod]
-    addon.Utilities:print(string.format("Module %s profile imported successfully.", mod))
+    addon.Utilities:print(mod .. "-" .. L["ImportSuccess"])
 
     return true
 end

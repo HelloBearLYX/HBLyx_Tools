@@ -51,7 +51,14 @@ function GUI.TagPanels.TalentsReminders:CreateTabPanel(parent)
 		)
 	end)
 
-    local dungeonGroup = GUI:CreateInlineGroup(frame, L["SelectDungeon"])
+    local dungeonGroup = GUI:CreateDropdownGroup(frame, L["SelectDungeon"], {}, nil, nil, nil)
+    GUI:CreateInformationTag(dungeonGroup, L["LoadingSpecsDesc"], "LEFT")
+    local inputSpellID = GUI:CreateEditBox(dungeonGroup, L["SpellID"], "", nil)
+    -- MARK: Specs Selection
+    local SpecsSelection = GUI:CreateSpecSelectDropdown(dungeonGroup, L["LoadingSpecs"])
+    local clearSpecsButton = GUI:CreateButton(dungeonGroup, L["ClearSpecsSelection"], function ()
+        SpecsSelection:ClearSpecSelection()
+    end)
 
     return frame
 end

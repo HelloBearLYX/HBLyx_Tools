@@ -461,7 +461,6 @@ function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callbac
             dropdown:SetList(list)
         end
     end
-    dropdown:SetText(get)
     dropdown:SetValue(get)
     dropdown:SetCallback("OnValueChanged", function(_, _, key, checked)
         if callback then
@@ -498,6 +497,51 @@ function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
         parent:AddChild(editBox)
     end
     return editBox
+end
+
+-- MARK: Create Specialization Select Dropdown
+
+function addon.GUI:CreateSpecSelectDropdown(parent, label)
+    local self = {} -- re-defined self for this component
+    local specClassList = addon.Utilities:GetAllSpecIconList(true)
+    local specsList, specsOrder = {}, {}
+    for _, specs in pairs(specClassList) do
+        for specID, specStr in pairs(specs) do
+            specsList[specID] = specStr
+            table.insert(specsOrder, specID)
+        end
+    end
+
+    self.selectedSpecs = {}
+
+    self.dropdown = addon.GUI:CreateDropDown(parent, label, specsList, nil, true, function(key, checked)
+        if checked then
+            self.selectedSpecs[key] = true
+        else
+            self.selectedSpecs[key] = nil
+        end
+    end, specsOrder)
+
+    function self:ClearSpecSelection()
+        for specID, _ in pairs(self.selectedSpecs) do
+            self.selectedSpecs[specID] = nil
+            self.dropdown:SetItemValue(specID, false)
+        end
+    end
+
+    function self:GetSelectedSpecs()
+        return next(self.selectedSpecs) and self.selectedSpecs or nil
+    end
+
+    function self:SetSelectedSpecs(specs)
+        self:ClearSpecSelection()
+        for specID, _ in pairs(specs or {}) do
+            self.selectedSpecs[specID] = true
+            self.dropdown:SetItemValue(specID, true)
+        end
+    end
+
+    return self
 end
 
 -- MARK: Open/Close GUI

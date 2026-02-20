@@ -244,6 +244,7 @@ L["AuraSettingsDesc"] = "虽然功能有限, 但它仍然可以提供支持, 比
 "|cffffff00添加/更新|r: 添加/更新光环时, |cffffff00法术ID、持续时间和冷却时间是必填项|r。法术ID必须是正整数并且存在于游戏中, 持续时间和冷却时间必须是非负数(可以是小数/浮点数或零)。\n\n" ..
 "|cffffff00删除|r: 删除光环时, 只有 |cffffff00法术ID是必填项|r, 并且它必须是一个已经存在的光环的法术ID。你也可以从下面的下拉菜单选择一个已经存在的光环来自动填充法术ID以进行删除或更新。"
 L["SelectAura"] = "选择一个存在的光环"
+L["ClearSpecsSelection"] = "清除专精选择"
 
 -- MARK: Talents Reminders
 L["TalentsRemindersSettings"] = "大秘境天赋提醒"

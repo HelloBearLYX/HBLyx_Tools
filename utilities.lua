@@ -323,30 +323,22 @@ end
 ---Get all specializations' Icon List
 ---@param withColor boolean whether to include class color in the output
 ---@return table<string, table<string>> specsList a table of specID to Icon_Name(specID) string for all specs, indexed by class name
----@return table<string> specsOrder a table of class names in the stable order(Druid last)
 function addon.Utilities:GetAllSpecIconList(withColor)
 	local output = {}
-	local order = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 11}
-	local outputOrder = {}
 
-	for _, class in ipairs(order) do
-		local className, classFileName = GetClassInfo(class)
-		local classColor = C_ClassColor.GetClassColor(classFileName):GenerateHexColor()
-		if withColor then
-			className = string.format("|c%s%s|r", classColor, className)
-		end
-		output[className] = {}
-		table.insert(outputOrder, className)
+	for class = 1, 13 do
+		local classColor = C_ClassColor.GetClassColor(select(2, GetClassInfo(class))):GenerateHexColor()
 		local specsCount = C_SpecializationInfo.GetNumSpecializationsForClassID(class)
+		output[class] = {}
 		for specIndex = 1, specsCount do
 			local specID, name, _, icon = GetSpecializationInfoForClassID(class, specIndex)
 			if withColor then
-				output[className][specID] = string.format("|T%d:0|t|c%s%s|r", icon, classColor, name)
+				output[class][specID] = string.format("|T%d:0|t|c%s%s|r", icon, classColor, name)
 			else
-				output[className][specID] = string.format("|T%d:0|t%s", icon, name)
+				output[class][specID] = string.format("|T%d:0|t%s", icon, name)
 			end
 		end
 	end
 
-	return output, outputOrder
+	return output
 end

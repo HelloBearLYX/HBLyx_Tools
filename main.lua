@@ -112,26 +112,6 @@ local function InitializeStates()
 	end
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
 	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", nil, "playerSpec", GetSpec)
-
-	-- instance info state
-	local GetInstanceInfo = function ()
-		local previous = addon.states["instanceInfo"] or {difficultyID = 0, instanceID = 0}
-		local _, _, difficultyID, _, _, _, _, instanceID = GetInstanceInfo()
-
-		addon.states["instanceInfo"] = {difficultyID = difficultyID, instanceID = instanceID}
-		return previous
-	end
-	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "instanceInfo", GetInstanceInfo)
-	addon.core:RegisterState("ZONE_CHANGED_NEW_AREA", nil, "instanceInfo", GetInstanceInfo)
-
-	-- player party or raid state
-	local GetGroupInfo = function ()
-		local previous = addon.states["groupInfo"] or {inParty = false, inRaid = false, role = "NONE"}
-		addon.states["groupInfo"] = {inParty = IsInGroup(), inRaid = IsInRaid(), role = UnitGroupRolesAssigned("player")}
-		return previous
-	end
-	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "groupInfo", GetGroupInfo)
-	addon.core:RegisterState("GROUP_ROSTER_UPDATE", nil, "groupInfo", GetGroupInfo)
 end
 
 -- MARK: Initialize

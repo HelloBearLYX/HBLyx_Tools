@@ -244,10 +244,3 @@ L["AuraSettingsDesc"] = "Although the function is limited, but it still can be s
 "|cffffff00TO REMOVE|r: Only |cffffff00Spell ID is required|r, and it must be an existing aura's spell ID. You can also select an existing aura from the dropdown menu to auto-fill the spell ID for deletion or update."
 L["SelectAura"] = "Select an existing aura"
 L["ClearSpecsSelection"] = "Clear Specializations Selection"
-
--- MARK: Talents Reminders
-L["TalentsRemindersSettings"] = "M+ Talents Reminders"
-L["TalentsRemindersSettingsDesc"] = "Display reminders for the missing important talents before you start a M+ dungeon"
-L["SelectDungeon"] = "Select a Dungeon"
-L["SelectDungeonDesc"] = "First select a dungeon you want the reminder for, then edit the spell ID and select the specializations for the reminder.\n" .. 
-"|cffff0000NOTE|r: the spell ID and at least one specialization are required."

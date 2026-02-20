@@ -245,10 +245,3 @@ L["AuraSettingsDesc"] = "虽然功能有限, 但它仍然可以提供支持, 比
 "|cffffff00删除|r: 删除光环时, 只有 |cffffff00法术ID是必填项|r, 并且它必须是一个已经存在的光环的法术ID。你也可以从下面的下拉菜单选择一个已经存在的光环来自动填充法术ID以进行删除或更新。"
 L["SelectAura"] = "选择一个存在的光环"
 L["ClearSpecsSelection"] = "清除专精选择"
-
--- MARK: Talents Reminders
-L["TalentsRemindersSettings"] = "M+天赋提醒"
-L["TalentsRemindersSettingsDesc"] = "在你开始一个大秘境之前, 显示缺失重要天赋的提醒"
-L["SelectDungeon"] = "选择一个副本"
-L["SelectDungeonDesc"] = "首先选择你想要提醒的副本, 然后编辑法术ID并选择提醒的专精。\n" ..
-"|cffff0000注意|r: 法术ID和至少一个专精是必须的"

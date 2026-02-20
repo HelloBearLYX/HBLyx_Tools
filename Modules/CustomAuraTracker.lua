@@ -7,9 +7,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field auras.size integer the number of loaded auras, used for calculating the size of
 ---@field auras.head frame the head of the showing auras linked-list, a dummy frame used for anchoring the first showing aura
 ---@field auras.tail frame the tail of the showing auras linked-list, nil if there is no showing aura
----@field specMap table<integer, table<integer>> specMap[specID] = {spellID1 = true, spellID2 = true, ...} to map indicates which spells should be loaded for the spec
 ---@field spareFrames table a table store the spare frames that can be reused when needed
----@field lastSpec integer the last specialization of the player, used for checking if spec is switched
 ---@field modName string module name for registering in core
 local CustomAuraTracker = {
     modName = "CustomAuraTracker",
@@ -30,7 +28,6 @@ function CustomAuraTracker:Initialize()
         head = CreateFrame("Frame", ADDON_NAME .. "_CustomAuraTracker", UIParent),
         tail = nil,
     }
-    self.specMap = {}
     self.spareFrames = {}
 
     self.auras.head:Show()
@@ -139,6 +136,17 @@ local function Handler(self, spellID)
     end
 end
 
+-- MARK: Should Load
+
+---Check if the aura should be load
+---@param self CustomAuraTracker
+---@param spellID integer spell id
+---@return boolean shouldLoad if the aura should be loaded, false otherwise
+local function ShouldLoad(self, spellID)
+    local loadingSpecs = addon.db[self.modName].spells[spellID].loadingSpecs
+    return not loadingSpecs or loadingSpecs[addon.states["playerSpec"]]
+end
+
 -- MARK: Update Aura Info
 
 ---Update aura information for a frame
@@ -234,43 +242,20 @@ end
 ---Handle after switch specialization to unload unneccessary auras and load needed auras
 ---@param self CustomAuraTracker self
 local function SwitchSpec(self)
-    local currentSpec = addon.states["playerSpec"]
-
     local alreadyLoaded = {}
 
     for spellID, frame in pairs(self.auras.loaded) do -- go over all loaded auras
-        local data = addon.db[self.modName].spells[spellID]
-        if not data.loadingSpecs or data.loadingSpecs[currentSpec] then -- if the aura should be loaded for current spec
+        if ShouldLoad(self, spellID) then -- if the aura should be loaded for current spec
             alreadyLoaded[spellID] = true
         else -- otherwise, unload the aura that is not needed for current spec
             UnloadAura(self, frame)
         end
     end
 
-    for spellID, _ in pairs(self.specMap[currentSpec] or {}) do -- go over all auras that should be loaded for current spec
-        if not alreadyLoaded[spellID] then -- load the aura that is needed for current spec but not loaded yet
+    for spellID, auraData in pairs(addon.db[self.modName].spells) do -- go over all auras in the databse
+        -- if the aura should be loaded for current spec but is not loaded yet, load it
+        if ShouldLoad(self, spellID) and not alreadyLoaded[spellID] then
             LoadAura(self, spellID)
-        end
-    end
-end
-
--- MARK: Update Spec Map
-
----Update specs loading map
----@param self CustomAuraTracker self
----@param spellID integer the spell ID of updating specialization map
-local function UpdateSpecMap(self, spellID)
-    local newLoadingSpecs = addon.db[self.modName].spells[spellID].loadingSpecs
-
-    for spec, specSpells in pairs(self.specMap) do
-        if specSpells[spellID] then -- if the spell is already associated with the spec
-            if not newLoadingSpecs or not newLoadingSpecs[spec] then -- if the association should be removed(nil or new loading specs does not contain this spec)
-                self.specMap[spec][spellID] = nil -- remove the spec association
-            end
-        else
-            if newLoadingSpecs and newLoadingSpecs[spec] then -- if the association should be added
-                self.specMap[spec][spellID] = true -- add the spec association
-            end
         end
     end
 end
@@ -322,21 +307,10 @@ local function LoadSavedAuras(self)
     if auraList then
         HanlerOldAuraData(self, auraList)
 
-        -- load auras(IDs only) for quick access when needed
         for spellID, auraData in pairs(auraList) do
-            if auraData.loadingSpecs then
-                for spec, _ in pairs(auraData.loadingSpecs) do
-                    -- update the spec map for quick access when switch spec
-                    if not self.specMap[spec] then
-                        self.specMap[spec] = {}
-                    end
-                    self.specMap[spec][spellID] = true
-
-                    if spec == addon.states["playerSpec"] then -- if the aura is for current spec, load it
-                        LoadAura(self, spellID)
-                    end
-                end
-            else -- if no spec is specified, it is a general aura for all specs, load it directly
+            -- if the aura should be loaded for current spec, load it
+            -- nil loadingSpecs means load for all specs, otherwise only load when current spec is in loadingSpecs
+            if ShouldLoad(self, spellID) then
                 LoadAura(self, spellID)
             end
         end
@@ -373,10 +347,7 @@ end
 ---Add a new aura from option UI, all inputs are checked and pre-processed
 ---@param spellID integer spellID to add(key)
 function CustomAuraTracker:RegisterAura(spellID)
-    UpdateSpecMap(self, spellID) -- update the spec loading
-
-    local loadingSpecs = addon.db[self.modName].spells[spellID].loadingSpecs
-    if not loadingSpecs or loadingSpecs[addon.states["playerSpec"]] then -- if the aura should be loaded for current spec, load it    
+    if ShouldLoad(self, spellID) then -- if the aura should be loaded for current spec, load it    
         LoadAura(self, spellID)
     else -- should not be loaded
         if self.auras.loaded[spellID] then -- if the aura is currently loaded but should not be loaded, unload it
@@ -405,7 +376,7 @@ function CustomAuraTracker:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowDragRegion(self.auras.head, L["AuraSettings"])
+        addon.Utilities:ShowDragRegion(self.auras.head, L["CustomAuraTrackerSettings"])
         addon.Utilities:MakeFrameDragPosition(self.auras.head, self.modName, "X", "Y")
     else
         addon.Utilities:HideDragRegion(self.auras.head)

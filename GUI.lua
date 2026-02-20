@@ -403,7 +403,6 @@ function addon.GUI:CreateColorPicker(parent, label, hasAlpha, get, callback)
     colorPicker:SetColor(addon.Utilities:HexToRGB(get))
     colorPicker:SetCallback("OnValueChanged", function(_, _, r, g, b, a)
         if callback then
-            addon.Utilities:print("converted color: " .. addon.Utilities:RGBToHex(r, g, b, a))
             callback(addon.Utilities:RGBToHex(r, g, b, a))
         end
     end)

@@ -243,3 +243,8 @@ L["AuraSettingsDesc"] = "Although the function is limited, but it still can be s
 "|cffffff00TO ADD/UPDATE|r: |cffffff00Spell ID, Duration, and Cooldown are required|r to add/update an aura. Spell ID must be a positive integer and exist in the game, Duration and Cooldown must be non-negative numbers(can be decimal/float or zero).\n\n" ..
 "|cffffff00TO REMOVE|r: Only |cffffff00Spell ID is required|r, and it must be an existing aura's spell ID. You can also select an existing aura from the dropdown menu to auto-fill the spell ID for deletion or update."
 L["SelectAura"] = "Select an existing aura"
+
+-- MARK: Talents Reminders
+L["TalentsRemindersSettings"] = "M+ Talents Reminders"
+L["TalentsRemindersSettingsDesc"] = "Display reminders for the missing important talents before you start a M+ dungeon"
+L["SelectDungeon"] = "Select a Dungeon"

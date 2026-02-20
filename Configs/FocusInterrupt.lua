@@ -5,11 +5,6 @@ local MOD_KEY = "FocusInterrupt"
 
 addon.LSM:Register("sound", ADDON_NAME.. "_FocusDefault", L["FocusDefaultSound"])
 
--- MARK: Safe update
-local function update()
-    return addon.core:GetSafeUpdate(MOD_KEY)()
-end
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
@@ -56,6 +51,11 @@ addon.configurationList[MOD_KEY] = {
     targetY = 100,
     targetIconZoom = 0.07,
 }
+
+-- MARK: Safe update
+local function update()
+    return addon.core:GetSafeUpdate(MOD_KEY)()
+end
 
 -- GUI
 GUI.TagPanels.FocusInterrupt = {}

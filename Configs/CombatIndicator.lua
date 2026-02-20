@@ -7,11 +7,6 @@ local MOD_KEY = "CombatIndicator"
 addon.LSM:Register("sound", ADDON_NAME.. "_EnterCombat", L["CombatInSoundDefault"])
 addon.LSM:Register("sound", ADDON_NAME.. "_LeaveCombat", L["CombatOutSoundDefault"])
 
--- MARK: Safe update
-local function update()
-	return addon.core:GetSafeUpdate(MOD_KEY)()
-end
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
@@ -29,6 +24,11 @@ addon.configurationList[MOD_KEY] = {
 	OutCombatSoundMedia = ADDON_NAME.. "_LeaveCombat",
 	SoundChannel = "Master",
 }
+
+-- MARK: Safe update
+local function update()
+	return addon.core:GetSafeUpdate(MOD_KEY)()
+end
 
 -- GUI
 GUI.TagPanels.CombatIndicator = {}

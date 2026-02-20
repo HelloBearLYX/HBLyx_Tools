@@ -3,6 +3,18 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "CustomAuraTracker"
 
+-- MARK: Defaults
+addon.configurationList[MOD_KEY] = {
+	Enabled = true,
+    IconSize = 35,
+    TimeFontScale = 1,
+    X = 0,
+    Y = 0,
+    Grow = "LEFT",
+    SoundChannel = "Master",
+    IconZoom = 0.07,
+}
+
 -- MARK: Safe update
 
 local function update()
@@ -74,6 +86,9 @@ local function AddAura(spellID, duration, cooldown, activeSound, expireSound, lo
     return isUpdate
 end
 
+---Remove an aura after validate inputs
+---@param spellID integer spellID
+---@return boolean success true if the aura is successfully removed, false if the aura is not found in the database
 local function RemoveAura(spellID)
     -- if the aura is not found in the database, return false
     if not addon.db.CustomAuraTracker.spells or not addon.db.CustomAuraTracker.spells[spellID] then
@@ -92,6 +107,9 @@ end
 
 -- MARK: Input Check
 
+---Check if the input value is a valid time (non-negative number)
+---@param value any
+---@return number|nil data the valid time value, or nil if invalid
 local function CheckTimeInput(value)
     local data = tonumber(value)
     if not data then
@@ -105,6 +123,9 @@ local function CheckTimeInput(value)
     return data
 end
 
+---Check if the input value is a valid spell ID (positive integer and exists in the game)
+---@param value any
+---@return number|nil data the valid spell ID, or nil if invalid
 local function CheckSpellIDInput(value)
     local data = tonumber(value)
     if not data or data <= 0 or data % 1 ~= 0 then
@@ -117,18 +138,6 @@ local function CheckSpellIDInput(value)
 
     return data
 end
-
--- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
-	Enabled = true,
-    IconSize = 35,
-    TimeFontScale = 1,
-    X = 0,
-    Y = 0,
-    Grow = "LEFT",
-    SoundChannel = "Master",
-    IconZoom = 0.07,
-}
 
 -- GUI
 GUI.TagPanels.CustomAuraTracker = {}

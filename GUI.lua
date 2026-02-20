@@ -19,6 +19,7 @@ local TABS = {
     {text = L["BattleResSettings"], value = "BattleRes"},
     {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
     {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
+    {text = L["TalentsRemindersSettings"], value = "TalentsReminders"},
     {text = L["WarlockReminders"], value = "WarlockReminder"},
     {text = L["Profile"], value = "Profile"},
 }
@@ -124,6 +125,9 @@ function addon.GUI:Render()
             panel:DoLayout()
         elseif tab == "CustomAuraTracker" then
             local panel = addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container)
+            panel:DoLayout()
+        elseif tab == "TalentsReminders" then
+            local panel = addon.GUI.TagPanels.TalentsReminders:CreateTabPanel(container)
             panel:DoLayout()
         elseif tab == "WarlockReminder" then
             local panel = addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container)

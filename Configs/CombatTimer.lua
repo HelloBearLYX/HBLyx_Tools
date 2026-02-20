@@ -3,11 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "CombatTimer"
 
--- MARK: Safe update
-local function update()
-	return addon.core:GetSafeUpdate(MOD_KEY)()
-end
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
@@ -18,6 +13,11 @@ addon.configurationList[MOD_KEY] = {
 	X = -180,
 	Y = -260,
 }
+
+-- MARK: Safe update
+local function update()
+	return addon.core:GetSafeUpdate(MOD_KEY)()
+end
 
 -- GUI
 GUI.TagPanels.CombatTimer = {}

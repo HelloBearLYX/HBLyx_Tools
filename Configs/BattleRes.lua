@@ -3,11 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "BattleRes"
 
--- MARK: Safe update
-local function update()
-	return addon.core:GetSafeUpdate(MOD_KEY)()
-end
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
@@ -20,6 +15,11 @@ addon.configurationList[MOD_KEY] = {
 	IconSize = 35,
 	IconZoom = 0.07,
 }
+
+-- MARK: Safe update
+local function update()
+	return addon.core:GetSafeUpdate(MOD_KEY)()
+end
 
 -- GUI
 GUI.TagPanels.BattleRes = {}

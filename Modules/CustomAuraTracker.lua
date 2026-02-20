@@ -229,7 +229,6 @@ local function UnloadAura(self, frame)
         frame.timer = nil
     end
 
-    frame.spellID = nil
     frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
 
     table.insert(self.spareFrames, frame) -- put the frame into spare pool for later re-use
@@ -342,11 +341,11 @@ function CustomAuraTracker:UpdateStyle()
     end
 end
 
--- MARK: Register Aura
+-- MARK: Handle Add Aura
 
----Add a new aura from option UI, all inputs are checked and pre-processed
----@param spellID integer spellID to add(key)
-function CustomAuraTracker:RegisterAura(spellID)
+---Handle the aura added or updated
+---@param spellID integer spellID
+function CustomAuraTracker:HandleAddAura(spellID)
     if ShouldLoad(self, spellID) then -- if the aura should be loaded for current spec, load it    
         LoadAura(self, spellID)
     else -- should not be loaded
@@ -356,11 +355,11 @@ function CustomAuraTracker:RegisterAura(spellID)
     end
 end
 
--- MARK: Unregister Aura
+-- MARK: Handle Remove Aura
 
----Remove an existing aura by spellID, and unload it if it is currently loaded
----@param spellID integer spellID to remove
-function CustomAuraTracker:UnregisterAura(spellID)
+---Handle the aura removed
+---@param spellID integer spellID
+function CustomAuraTracker:HandleRemoveAura(spellID)
     if self.auras.loaded[spellID] then -- if the aura is currently loaded, unload it and remove from loaded pool
         UnloadAura(self, self.auras.loaded[spellID])
     end

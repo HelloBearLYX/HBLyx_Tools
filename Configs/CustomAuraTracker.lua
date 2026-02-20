@@ -45,20 +45,49 @@ end
 
 -- MARK: I/O Functions
 
-local function Register(spellID)
-    if addon.core.modules[MOD_KEY] then
-        return addon.core.modules[MOD_KEY]:RegisterAura(spellID)
-    else
-        return nil
+---Add an aura after validate inputs
+---@param spellID integer spellID
+---@param duration number duration
+---@param cooldown number cooldown
+---@param activeSound string|nil active sound file ID or path, nil for no sound
+---@param expireSound string|nil expire sound file ID or path, nil for no sound
+---@param loadingSpecs table|nil a hash set of specIDs to load the aura, nil for all specs
+---@return boolean isUpdate true if the aura is updated, false if it's a new aura
+local function AddAura(spellID, duration, cooldown, activeSound, expireSound, loadingSpecs)
+    -- save to the database
+    if not addon.db.CustomAuraTracker.spells then
+        addon.db.CustomAuraTracker.spells = {}
     end
+    local isUpdate = addon.db.CustomAuraTracker.spells[spellID] or false
+    addon.db.CustomAuraTracker.spells[spellID] = {
+        duration = duration,
+        cooldown = cooldown,
+        activeSound = activeSound,
+        expireSound = expireSound,
+        loadingSpecs = loadingSpecs,
+    }
+
+    if addon.core.modules[MOD_KEY] then
+        addon.core.modules[MOD_KEY]:HandleAddAura(spellID)
+    end
+
+    return isUpdate
 end
 
-local function Unregister(spellID)
-    if addon.core.modules[MOD_KEY] then
-        return addon.core.modules[MOD_KEY]:UnregisterAura(spellID)
-    else
+local function RemoveAura(spellID)
+    -- if the aura is not found in the database, return false
+    if not addon.db.CustomAuraTracker.spells or not addon.db.CustomAuraTracker.spells[spellID] then
         return false
     end
+
+    -- remove from the database
+    addon.db.CustomAuraTracker.spells[spellID] = nil
+
+    if addon.core.modules[MOD_KEY] then
+        addon.core.modules[MOD_KEY]:HandleRemoveAura(spellID)
+    end
+
+    return true
 end
 
 -- MARK: Input Check
@@ -249,21 +278,8 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             loadingSpecs = selectedSpecs
         end
 
-        -- save to the database
-        if not addon.db.CustomAuraTracker.spells then
-            addon.db.CustomAuraTracker.spells = {}
-        end
-        local isUpdate = addon.db.CustomAuraTracker.spells[id]
-        addon.db.CustomAuraTracker.spells[id] = {
-            duration = duration,
-            cooldown = cooldown,
-            activeSound = activeSound,
-            expireSound = expireSound,
-            loadingSpecs = loadingSpecs,
-        }
-
         -- add the aura
-        Register(id)
+        local isUpdate = AddAura(id, duration, cooldown, activeSound, expireSound, loadingSpecs)
         
         -- update the aura selected dropdown list
         local val = addon.Utilities:GetSpellIconString(id)
@@ -276,23 +292,27 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         end
     end)
 
-    -- MARK: Unregister Aura
+    -- MARK: Remove Aura
     GUI:CreateButton(auraGroup, L["Remove"], function ()
         -- check input
         local id = CheckSpellIDInput(inputSpellID:GetText())
-        if not id or not addon.db.CustomAuraTracker.spells[id] then -- if the id not valid or the aura is not found in the database
+        if not id then -- if the id not valid or the aura is not found in the database
             addon.Utilities:print(L["RemoveFailed"]) -- show error
             return
         end
 
         -- remove the aura
-        addon.db.CustomAuraTracker.spells[id] = nil
-        Unregister(id)
-        -- update the aura selected dropdown list
-        auraSelected:SetList(FetchAurasList())
-        auraSelected:SetText("")
+        local success = RemoveAura(id)
 
-        addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], addon.Utilities:GetSpellIconString(id)))
+        if success then
+            -- update the aura selected dropdown list
+            auraSelected:SetList(FetchAurasList())
+            auraSelected:SetText("")
+
+            addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], addon.Utilities:GetSpellIconString(id)))
+        else
+            addon.Utilities:print(string.format("%s-" .. L["RemoveFailed"], addon.Utilities:GetSpellIconString(id)))
+        end
     end)
 
     -- create these option after select/add/remove

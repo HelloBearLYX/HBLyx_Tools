@@ -83,7 +83,7 @@ end
 --MARK: UpdateStyle
 
 ---Update style settings and render it in-game for ChallengeEnhance
-local function UpdateStyle(self)
+function ChallengeEnhance:UpdateStyle()
     for mapID, button in pairs(self.buttons) do
         local _, score = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
         local name = MAP_PORTAL[mapID].name
@@ -170,7 +170,7 @@ local function CreateButtons(self)
             self.buttons[mapID] = button
 
             self.buttons[mapID]:Show()
-            UpdateStyle(self)
+            self:UpdateStyle()
         end
     end
 end

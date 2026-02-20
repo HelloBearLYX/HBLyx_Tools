@@ -115,11 +115,11 @@ local function InitializeStates()
 
 	-- instance info state
 	local GetInstanceInfo = function ()
-		local previous = addon.states["instanceInfo"] or {inInstance = false, instanceType = "none", difficultyID = 0}
+		local previous = addon.states["instanceInfo"] or {inInstance = false, instanceType = "none", difficultyID = 0, instanceID = 0}
 		local inInstance, instanceType = IsInInstance()
-		local difficultyID = select(3, GetInstanceInfo())
+		local _, _, difficultyID, _, _, _, _, instanceID = GetInstanceInfo()
 
-		addon.states["instanceInfo"] = {inInstance = inInstance, instanceType = instanceType, difficultyID = difficultyID}
+		addon.states["instanceInfo"] = {inInstance = inInstance, instanceType = instanceType, difficultyID = difficultyID, instanceID = instanceID}
 		return previous
 	end
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "instanceInfo", GetInstanceInfo)

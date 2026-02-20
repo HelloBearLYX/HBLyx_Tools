@@ -12,6 +12,7 @@ local TalentsReminders = {
 }
 
 -- MARK: Constants
+local UNKNOWN_SPELL_TEXTURE = 134400
 
 -- MARK: Initialize
 
@@ -29,12 +30,51 @@ end
 
 -- privete methods
 
-local function LoadReminder(self, instanceID, spellID)
-    local new = false
-    local frame = self.reminders[instanceID][spellID]
+local function UpdateReminderInfo(frame, spellID)
+    frame.spellID = spellID
+    frame.icon:SetTexture(C_Spell.GetSpellInfo(spellID).iconID or UNKNOWN_SPELL_TEXTURE)
 end
 
-local function UnloadReminder(self)
+local function CreateReminder(self, spellID)
+    local frame = CreateFrame("Frame", nil, self.head)
+
+    frame.icon = frame:CreateTexture(nil, "BACKGROUND")
+    frame.icon:SetAllPoints()
+
+    frame.text = frame:CreateFontString(nil, "OVERLAY")
+    frame.text:SetPoint("LEFT", frame, "RIGHT", 0, 0)
+    frame.text:SetTextColor(1, 1, 1, 1)
+
+    return frame
+end
+
+local function LoadReminder(self, instanceID, spellID)
+    local frame = self.reminders[instanceID][spellID]
+
+    if not frame then
+        if #self.spareFrames > 0 then
+            frame = table.remove(self.spareFrames) -- reuse a spare frame if available
+        else
+            frame = CreateReminder(self, spellID) -- create a new frame if no spare frame is available
+        end
+
+        self.reminders[instanceID][spellID] = frame
+    end
+
+    UpdateReminderInfo(frame, spellID) -- update the reminder info such as icon and text 
+end
+
+local function UnloadReminder(self, instanceID, spellID)
+    if not self.reminders[instanceID] or not self.reminders[instanceID][spellID] then
+        return
+    end
+
+    local frame = self.reminders[instanceID][spellID]
+    frame:Hide()
+    frame.spellID = nil
+    frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
+
+    table.insert(self.spareFrames, frame) -- put the frame into spare pool for later re-use 
 end
 
 -- MARK: UpdateStyle

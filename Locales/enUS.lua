@@ -249,3 +249,5 @@ L["ClearSpecsSelection"] = "Clear Specializations Selection"
 L["TalentsRemindersSettings"] = "M+ Talents Reminders"
 L["TalentsRemindersSettingsDesc"] = "Display reminders for the missing important talents before you start a M+ dungeon"
 L["SelectDungeon"] = "Select a Dungeon"
+L["SelectDungeonDesc"] = "First select a dungeon you want the reminder for, then edit the spell ID and select the specializations for the reminder.\n" .. 
+"|cffff0000NOTE|r: the spell ID and at least one specialization are required."

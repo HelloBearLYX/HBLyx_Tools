@@ -18,8 +18,8 @@ local TABS = {
     {text = L["TimerSettings"], value = "CombatTimer"},
     {text = L["BattleResSettings"], value = "BattleRes"},
     {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
-    {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
     {text = L["TalentsRemindersSettings"], value = "TalentsReminders"},
+    {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
     {text = L["WarlockReminders"], value = "WarlockReminder"},
     {text = L["Profile"], value = "Profile"},
 }

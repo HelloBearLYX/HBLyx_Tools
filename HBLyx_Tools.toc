@@ -25,8 +25,8 @@ Modules\CombatIndicator.lua
 Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
-Modules\CustomAuraTracker.lua
 Modules\TalentsReminders.lua
+Modules\CustomAuraTracker.lua
 Modules\WarlockReminder.lua
 
 # handle configuration and options
@@ -36,8 +36,8 @@ Configs\CombatIndicator.lua
 Configs\CombatTimer.lua
 Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
-Configs\CustomAuraTracker.lua
 Configs\TalentsReminders.lua
+Configs\CustomAuraTracker.lua
 Configs\WarlockReminder.lua
 Configs\Profile.lua
 

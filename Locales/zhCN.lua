@@ -208,8 +208,8 @@ L["FelhunterEnable"] = "启用地狱猎犬/小鬼检查"
 L["CandySetting"] = "治疗石提醒设置"
 
 -- MARK: ChallengeEnhance
-L["ChallengeEnhanceSettings"] = "大秘境面板增强"
-L["ChallengeEnhanceSettingsDesc"] = "在M+面板上显示分数、地下城名称以及可点击的M+地下城传送门"
+L["ChallengeEnhanceSettings"] = "M+面板增强"
+L["ChallengeEnhanceSettingsDesc"] = "在大秘境(PVE)面板上显示分数、地下城名称以及可点击的M+地下城传送门"
 L["ChallengeEnhanceLevelSettings"] = "最高层数设置"
 L["ChallengeEnhanceScoreSettings"] = " 分数设置"
 L["ChallengeEnhanceScoreSettingsDesc"] = "|cffff0000注意: 对于BigWigs用户|r, 最近(02/17/2026) BigWigs在M+面板上也添加了M+分数显示, 为了防止多个分数重叠, 你可以禁用此模块的分数显示。"
@@ -247,6 +247,8 @@ L["SelectAura"] = "选择一个存在的光环"
 L["ClearSpecsSelection"] = "清除专精选择"
 
 -- MARK: Talents Reminders
-L["TalentsRemindersSettings"] = "大秘境天赋提醒"
+L["TalentsRemindersSettings"] = "M+天赋提醒"
 L["TalentsRemindersSettingsDesc"] = "在你开始一个大秘境之前, 显示缺失重要天赋的提醒"
 L["SelectDungeon"] = "选择一个副本"
+L["SelectDungeonDesc"] = "首先选择你想要提醒的副本, 然后编辑法术ID并选择提醒的专精。\n" ..
+"|cffff0000注意|r: 法术ID和至少一个专精是必须的"

@@ -10,6 +10,7 @@ addon.configurationList[MOD_KEY] = {
     IconZoom = 0.07,
     X = 0,
     Y = 0,
+    reminders = {},
 }
 
 -- MARK: Safe update
@@ -26,6 +27,7 @@ function GUI.TagPanels.TalentsReminders:CreateTabPanel(parent)
 	frame:SetLayout("Flow")
 	frame:SetFullWidth(true)
 
+    GUI:CreateInformationTag(frame, L["TalentsRemindersSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["TalentsRemindersSettings"] .. "|r", addon.db.TalentsReminders.Enabled, function(value)
 		addon.db.TalentsReminders.Enabled = value
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
@@ -52,7 +54,7 @@ function GUI.TagPanels.TalentsReminders:CreateTabPanel(parent)
 	end)
 
     local dungeonGroup = GUI:CreateDropdownGroup(frame, L["SelectDungeon"], {}, nil, nil, nil)
-    GUI:CreateInformationTag(dungeonGroup, L["LoadingSpecsDesc"], "LEFT")
+    GUI:CreateInformationTag(dungeonGroup, L["SelectDungeonDesc"], "LEFT")
     local inputSpellID = GUI:CreateEditBox(dungeonGroup, L["SpellID"], "", nil)
     -- MARK: Specs Selection
     local SpecsSelection = GUI:CreateSpecSelectDropdown(dungeonGroup, L["LoadingSpecs"])

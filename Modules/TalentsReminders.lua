@@ -13,6 +13,17 @@ local TalentsReminders = {
 
 -- MARK: Constants
 local UNKNOWN_SPELL_TEXTURE = 134400
+local INSTANCE_NAME = {
+    -- current season
+    [2526] = L["AA"],    -- Algeth'ar Academy
+    [2811] = L["MT"],   -- Magister's Terrace
+    [2874] = L["MC"],   -- Maisara Caverns
+    [2915] = L["NPX"],   -- Nexus-Point Xenas
+    [658] = L["PS"],   -- Pit of Saron
+    [1753] = L["ST"],   -- Seat of the Triumvirate
+    [1209] = L["Skyreach"],   -- Skyreach
+    [2805] = L["WS"],   -- Windrunner Spire
+}
 
 -- MARK: Initialize
 
@@ -28,7 +39,7 @@ function TalentsReminders:Initialize()
     return self
 end
 
--- privete methods
+-- private methods
 
 local function UpdateReminderInfo(frame, spellID)
     frame.spellID = spellID
@@ -62,6 +73,7 @@ local function LoadReminder(self, instanceID, spellID)
     end
 
     UpdateReminderInfo(frame, spellID) -- update the reminder info such as icon and text 
+    self.reminders[spellID] = frame
 end
 
 local function UnloadReminder(self, instanceID, spellID)
@@ -75,6 +87,33 @@ local function UnloadReminder(self, instanceID, spellID)
     frame.icon:SetTexture(UNKNOWN_SPELL_TEXTURE)
 
     table.insert(self.spareFrames, frame) -- put the frame into spare pool for later re-use 
+end
+
+-- MARK: On Update
+
+local function OnUpdate(self)
+    -- only show in Myhic dungeon
+    if not addon.states["instanceInfo"]["inInstance"] or addon.states["instanceInfo"]["difficultyID"] ~= 23 then
+        return
+    elseif addon.states["instanceInfo"]["difficultyID"] == 8 then -- start the Keystone
+        for _, frame in ipairs(self.reminders) do
+            frame:Hide()
+        end
+        return
+    end
+
+    local instanceID = addon.states["instanceInfo"]["instanceID"]
+    local playerSpec = addon.states["playerSpec"]
+
+    if addon.db[self.modName]["reminders"] then
+        for spellID, specs in pairs(addon.db[self.modName]["reminders"][instanceID] or {}) do
+            if not specs or not specs[playerSpec] then
+            
+            else
+                LoadReminder(self, instanceID, spellID)
+            end
+        end
+    end
 end
 
 -- MARK: UpdateStyle
@@ -106,9 +145,12 @@ end
 
 ---Register events
 function TalentsReminders:RegisterEvents()
-    -- TODO: Register events needed by your module here, for example:
-    -- local handle = function() Handler(self) end
-    -- addon.core:RegisterEvent("EVENT_NAME", handle)
+    addon.core:RegisterStateMonitor("instanceInfo", self.modName, function()
+        OnUpdate(self)
+    end)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function()
+        OnUpdate(self)
+    end)
 end
 
 -- MARK: Register Module

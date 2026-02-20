@@ -114,7 +114,7 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	local outSoundSelect = GUI:CreateSoundSelect(nil, L["CombatOutSoundMedia"], addon.db.CombatIndicator.OutCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.OutCombatSoundMedia = value
 	end)
-	local soundChannelSelect = GUI:CreateDropDown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CombatIndicator.SoundChannel, false, function(value)
+	local soundChannelSelect = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.CombatIndicator.SoundChannel, function(value)
         addon.db.CombatIndicator.SoundChannel = value
     end)
 	GUI:CreateToggleCheckBox(soundGroup, L["Mute"], addon.db.CombatIndicator.Mute, function(value)

@@ -75,7 +75,7 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.LevelY = value
         update()
     end)
-    local levelAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.LevelAnchor, false, function(value)
+    local levelAnchorDropdown = GUI:CreateDropdown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, nil, addon.db.ChallengeEnhance.LevelAnchor, function(value)
         addon.db.ChallengeEnhance.LevelAnchor = value
         update()
     end, {"TOP", "CENTER", "BOTTOM"})
@@ -115,7 +115,7 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.ScoreY = value
         update()
     end)
-    local scoreAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.ScoreAnchor, false, function(value)
+    local scoreAnchorDropdown = GUI:CreateDropdown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, nil, addon.db.ChallengeEnhance.ScoreAnchor, function(value)
         addon.db.ChallengeEnhance.ScoreAnchor = value
         update()
     end, {"TOP", "CENTER", "BOTTOM"})
@@ -154,7 +154,7 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.NameY = value
         update()
     end)
-    local nameAnchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, addon.db.ChallengeEnhance.NameAnchor, false, function(value)
+    local nameAnchorDropdown = GUI:CreateDropdown(nil, L["Anchor"], {TOP = "TOP", CENTER = "CENTER", BOTTOM = "BOTTOM"}, nil, addon.db.ChallengeEnhance.NameAnchor, function(value)
         addon.db.ChallengeEnhance.NameAnchor = value
         update()
     end, {"TOP", "CENTER", "BOTTOM"})

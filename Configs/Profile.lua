@@ -52,7 +52,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
         addon:ImportModuleProfile(value, mod)
     end)
 
-    GUI:CreateDropDown(modProfileGroup, L["SelectModule"], GetModuleNameList(), "", false, function(key)
+    GUI:CreateDropdown(modProfileGroup, L["SelectModule"], GetModuleNameList(), nil, "", function(key)
         modBox:SetText(addon:ExportModuleProfile(key))
     end)
     GUI:CreateInformationTag(modProfileGroup, "\n", "LEFT")

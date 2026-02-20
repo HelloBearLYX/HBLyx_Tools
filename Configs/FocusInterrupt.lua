@@ -146,11 +146,11 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
         addon.db.FocusInterrupt.KickIconSize = value
         update()
     end)
-    local anchorDropdown = GUI:CreateDropDown(nil, L["Anchor"], addon.Utilities.Anchors, addon.db.FocusInterrupt.KickIconAnchor, false, function(value)
+    local anchorDropdown = GUI:CreateDropdown(nil, L["Anchor"], addon.Utilities.Anchors, nil, addon.db.FocusInterrupt.KickIconAnchor, function(value)
         addon.db.FocusInterrupt.KickIconAnchor = value
         update()
     end)
-    local growDropdown = GUI:CreateDropDown(nil, L["Grow"], addon.Utilities.Grows, addon.db.FocusInterrupt.KickIconGrow, false, function(value)
+    local growDropdown = GUI:CreateDropdown(nil, L["Grow"], addon.Utilities.Grows, nil, addon.db.FocusInterrupt.KickIconGrow, function(value)
         addon.db.FocusInterrupt.KickIconGrow = value
         update()
     end)
@@ -178,7 +178,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     local soundSelect = GUI:CreateSoundSelect(nil, L["Sound"], addon.db.FocusInterrupt.SoundMedia, function(value)
         addon.db.FocusInterrupt.SoundMedia = value
     end)
-    local soundChannelDropdown = GUI:CreateDropDown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.FocusInterrupt.SoundChannel, false, function(value)
+    local soundChannelDropdown = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.FocusInterrupt.SoundChannel, function(value)
         addon.db.FocusInterrupt.SoundChannel = value
     end)
     GUI:CreateToggleCheckBox(soundGroup, L["Mute"], addon.db.FocusInterrupt.Mute, function(value)

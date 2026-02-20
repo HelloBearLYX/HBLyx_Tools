@@ -446,14 +446,14 @@ end
 ---@param parent AceGUIWidget the parent container
 ---@param label string label
 ---@param list table the list of items to display in the dropdown
+---@param order table? optional display order for list items
 ---@param get string the value to set
----@param multiSelect boolean whether the dropdown allows multiple selections
 ---@param callback fun(key: string, checked: boolean) callback function when value changed
 ---@return AceGUIWidget
-function addon.GUI:CreateDropDown(parent, label, list, get, multiSelect, callback, order)
+function addon.GUI:CreateDropdown(parent, label, list, order, get, callback)
     local dropdown = AceGUI:Create("Dropdown")
     dropdown:SetLabel(label)
-    dropdown:SetMultiselect(multiSelect)
+    dropdown:SetMultiselect(false)
     if list then
         if order then
             dropdown:SetList(list, order)
@@ -499,7 +499,7 @@ function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
     return editBox
 end
 
--- MARK: Create Specialization Select Dropdown
+-- MARK: Specs Dropdown
 
 function addon.GUI:CreateSpecSelectDropdown(parent, label)
     local self = {} -- re-defined self for this component
@@ -514,13 +514,14 @@ function addon.GUI:CreateSpecSelectDropdown(parent, label)
 
     self.selectedSpecs = {}
 
-    self.dropdown = addon.GUI:CreateDropDown(parent, label, specsList, nil, true, function(key, checked)
+    self.dropdown = addon.GUI:CreateDropdown(parent, label, specsList, specsOrder, "", function(key, checked)
         if checked then
             self.selectedSpecs[key] = true
         else
             self.selectedSpecs[key] = nil
         end
-    end, specsOrder)
+    end)
+    self.dropdown:SetMultiselect(true)
 
     function self:ClearSpecSelection()
         for specID, _ in pairs(self.selectedSpecs) do

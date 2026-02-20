@@ -162,7 +162,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
             end
         end
 	end)
-    GUI:CreateDropDown(frame, L["SoundChannelSettings"], addon.Utilities.SoundChannels, addon.db.CustomAuraTracker.SoundChannel, false, function(key)
+    GUI:CreateDropdown(frame, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.CustomAuraTracker.SoundChannel, function(key)
         addon.db.CustomAuraTracker.SoundChannel = key
     end)
 	GUI:CreateButton(frame, L["ResetMod"], function ()
@@ -199,7 +199,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         addon.db.CustomAuraTracker.IconZoom = value
         update()
     end)
-    GUI:CreateDropDown(iconStyleGroup, L["Grow"], addon.Utilities.Grows, addon.db.CustomAuraTracker.Grow, false, function(key)
+    GUI:CreateDropdown(iconStyleGroup, L["Grow"], addon.Utilities.Grows, nil, addon.db.CustomAuraTracker.Grow, function(key)
         addon.db.CustomAuraTracker.Grow = key
         update()
     end)
@@ -228,7 +228,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     end)
 
     -- MARK: Aura Selected Dropdown
-    local auraSelected = GUI:CreateDropDown(auraGroup, L["SelectAura"], FetchAurasList(), "", false, function(key)
+    local auraSelected = GUI:CreateDropdown(auraGroup, L["SelectAura"], FetchAurasList(), nil, "", function(key)
         local spellInfo = FetchAuraInfo(key)
         if spellInfo then
             inputSpellID:SetText(spellInfo.spellID or "")

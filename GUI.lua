@@ -499,8 +499,60 @@ function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
     return editBox
 end
 
+-- MARK: Multi Dropdown
+
+---Create a multi-select dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@param list table the list of items to display in the dropdown
+---@param order table? optional display order for list items
+---@param get table the values to set
+function addon.GUI:CreateMultiDropdown(parent, label, list, order, get)
+    local self = {} -- re-defined self for this component
+
+    self.selectedKeys = {}
+
+    self.widget = addon.GUI:CreateDropdown(parent, label, list, order, get, function(key, checked)
+        if checked then
+            self.selectedKeys[key] = true
+        else
+            self.selectedKeys[key] = nil
+        end
+    end)
+    self.widget:SetMultiselect(true)
+    
+    function self:GetSelectedKeys()
+        return next(self.selectedKeys) and self.selectedKeys or nil
+    end
+
+    function self:ClearSelections()
+        for key, _ in pairs(self.selectedKeys) do
+            self.selectedKeys[key] = nil
+            self.widget:SetItemValue(key, false)
+        end
+    end
+
+    function self:SetSelectedKeys(keys)
+        self:ClearSelections()
+        for key, _ in pairs(keys or {}) do
+            self.selectedKeys[key] = true
+            self.widget:SetItemValue(key, true)
+        end
+    end
+
+    function self:GetWidget()
+        return self.widget
+    end
+
+    return self
+end
+
 -- MARK: Specs Dropdown
 
+---Create a specialization select dropdown
+---@param parent AceGUIWidget the parent container
+---@param label string label
+---@return table component GUI component with GetSelectedSpecs, ClearSpecSelection and SetSelectedSpecs methods
 function addon.GUI:CreateSpecSelectDropdown(parent, label)
     local self = {} -- re-defined self for this component
     local specClassList = addon.Utilities:GetAllSpecIconList(true)
@@ -512,34 +564,22 @@ function addon.GUI:CreateSpecSelectDropdown(parent, label)
         end
     end
 
-    self.selectedSpecs = {}
-
-    self.dropdown = addon.GUI:CreateDropdown(parent, label, specsList, specsOrder, "", function(key, checked)
-        if checked then
-            self.selectedSpecs[key] = true
-        else
-            self.selectedSpecs[key] = nil
-        end
-    end)
-    self.dropdown:SetMultiselect(true)
-
-    function self:ClearSpecSelection()
-        for specID, _ in pairs(self.selectedSpecs) do
-            self.selectedSpecs[specID] = nil
-            self.dropdown:SetItemValue(specID, false)
-        end
-    end
+    self.dropdown = addon.GUI:CreateMultiDropdown(parent, label, specsList, specsOrder, nil)
 
     function self:GetSelectedSpecs()
-        return next(self.selectedSpecs) and self.selectedSpecs or nil
+        return self.dropdown:GetSelectedKeys()
     end
 
-    function self:SetSelectedSpecs(specs)
-        self:ClearSpecSelection()
-        for specID, _ in pairs(specs or {}) do
-            self.selectedSpecs[specID] = true
-            self.dropdown:SetItemValue(specID, true)
-        end
+    function self:ClearSpecSelection()
+        self.dropdown:ClearSelections()
+    end
+
+    function self:SetSelectedSpecs(loadingSpecs)
+        self.dropdown:SetSelectedKeys(loadingSpecs)
+    end
+
+    function self:GetWidget()
+        return self.dropdown:GetWidget()
     end
 
     return self

@@ -222,7 +222,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     -- MARK: Specs Selection
     GUI:CreateInformationTag(auraGroup, L["LoadingSpecsDesc"], "LEFT")
     local SpecsSelection = GUI:CreateSpecSelectDropdown(nil, L["LoadingSpecs"])
-    SpecsSelection.dropdown:SetRelativeWidth(0.5)
+    SpecsSelection:GetWidget():SetRelativeWidth(0.5)
     local clearSpecsButton = GUI:CreateButton(nil, L["ClearSpecsSelection"], function ()
         SpecsSelection:ClearSpecSelection()
     end)
@@ -309,7 +309,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
     auraGroup:AddChild(inputCooldown)
     auraGroup:AddChild(inputActiveSound)
     auraGroup:AddChild(inputExpireSound)
-    auraGroup:AddChild(SpecsSelection.dropdown)
+    auraGroup:AddChild(SpecsSelection:GetWidget())
     auraGroup:AddChild(clearSpecsButton)
 
     return frame

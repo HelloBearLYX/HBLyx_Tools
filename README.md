@@ -3,7 +3,7 @@
 ### **CurseForge**:  https://www.curseforge.com/wow/addons/hblyx-tools
 ### **Wago**: https://addons.wago.io/addons/hblyx-tools
 
-# **Features**
+# **Modules/模组**
 ### **Focus Interrupt**: support Focus Interrupt task in various ways, and helps users to identify whether the cast of focus is interruptible/interrupt ready/ interrupt in cooldown.
 ### **焦点打断**: 以多种方式支持焦点打断，并帮助用户识别当前焦点施放的技能是否可打断/已准备好打断/处于打断冷却状态
 

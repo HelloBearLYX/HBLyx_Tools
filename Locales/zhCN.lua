@@ -113,7 +113,7 @@ L["IconSettings"] = "图标设置"
 L["TextureSettings"] = "材质设置"
 L["SizeSettings"] = "大小设置"
 L["ColorSettings"] = "颜色设置"
-L["TextSettings"] = "文字设置"
+L["TextSettings"] = "文本设置"
 L["InterruptibleColor"] = "可打断颜色"
 L["NotInterruptibleColor"] = "不可打断颜色"
 

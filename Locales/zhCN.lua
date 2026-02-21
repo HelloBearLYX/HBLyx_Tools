@@ -9,10 +9,14 @@ L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r配置面板"
 L["Notifications"] = "通知"
 L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
-"你可以在|cff8788eeHBLyx|r的CurseForge页面里找到:" .. "\n" ..
+"你可以在|cff8788eeHBLyx|r的页面里找到:" .. "\n" ..
 "|cff8788eeHBLyx_Tools|r: 一个包含战斗指示器, 战斗计时器, 焦点打断以及更多模块的集合" .. "\n" ..
 "|cff8788eeMidnightFocusInterrupt|r: 焦点打断模块的独立版本" .. "\n" ..
 "|cff8788eeSharedMedia_HBLyx|r: 一个AI生成的中文语音素材包(LibSharedMedia)"
+
+-- MARK： Downloads/Update
+L["Downloads/Update"] = "下载/更新"
+L["Release_Info"] = "官方发布版本|cffff0000仅在以下地址提供, 其他所有版本均非作者发布|r"
 
 -- MARK: Change Log
 L["ChangeLog"] = "更新日志"

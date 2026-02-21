@@ -1,7 +1,9 @@
 # A World of Warcraft addon integreting multiple tools made by HBLyx
-## **Downloads**:  https://www.curseforge.com/wow/addons/hblyx-tools
+# **Downloads/下载**: official releases are only published below, all others are not from the author/官方版本仅在以下地址发布, 所有其他均不来自作者
+### **CurseForge**:  https://www.curseforge.com/wow/addons/hblyx-tools
+### **Wago**: https://addons.wago.io/addons/hblyx-tools
 
-## **Features**
+# **Features**
 ### **Focus Interrupt**: support Focus Interrupt task in various ways, and helps users to identify whether the cast of focus is interruptible/interrupt ready/ interrupt in cooldown.
 ### **焦点打断**: 以多种方式支持焦点打断，并帮助用户识别当前焦点施放的技能是否可打断/已准备好打断/处于打断冷却状态
 
@@ -25,7 +27,7 @@
 ### **Warlock Reminders**: Icon+Text reminder for pet and healthstones for warlocks.
 ### **术士提醒**: 为术士提供宠物和治疗石提醒
 
-### To customize the addon, please use: ESC->Options->Addons->HBLyx\_Tools
-### 若需要自定义,请使用: ESC->选项->插件->HBLyx\_Tools
+## To customize the addon, please use: /hblyx or ESC->Options->Addons->HBLyx\_Tools
+## 若需要自定义,请使用: /hblyx 或 ESC->选项->插件->HBLyx\_Tools
 *   Under the Test mode, you can drag to adjust position of all elements shown (recommendation: after adjustment, please turn off the test mode and reload)
 *   在测试模式下，您可以拖动调整所有显示元素的位位置(建议：调整完成后，请关闭测试模式并重新加载) 

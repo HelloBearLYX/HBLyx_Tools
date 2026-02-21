@@ -7,11 +7,15 @@ L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or o
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r Configurations Panel"
 L["Notifications"] = "Notifications"
-L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" .. 
-"You can find on |cff8788eeHBLyx|r's CurseForge page:" .. "\n" ..
+L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" ..
+"You can find on |cff8788eeHBLyx|r's page:" .. "\n" ..
 "|cff8788eeHBLyx_Tools|r: a collection of modules including Combat Indicator, Combat Timer, Focus Interrupt and more modules" .. "\n" ..
 "|cff8788eeMidnightFocusInterrupt|r: Focus Interrupt module standalone version" .. "\n" ..
 "|cff8788eeSharedMedia_HBLyx|r: an AI-generated Chinese sound pack(LibSharedMedia)"
+
+-- MARK： Downloads/Update
+L["Downloads/Update"] = "Downloads/Update"
+L["Release_Info"] = "The official release version is |cffff0000only available on the following sites, all others are not from the author|r"
 
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"

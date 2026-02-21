@@ -107,7 +107,6 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 		addon.db.WarlockReminders.PetY = value
 		update()
 	end)
-
 	-- MARK: Pet Type
 	local petTypeGroup = GUI:CreateInlineGroup(petGroup, L["PetTypeSettings"])
 	GUI:CreateInformationTag(petTypeGroup, L["PetTypeSettingsDesc"], "LEFT")
@@ -116,6 +115,16 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 	end)
 	GUI:CreateToggleCheckBox(petTypeGroup, L["FelhunterEnable"], addon.db.WarlockReminders.FelhunterEnabled, function(value)
 		addon.db.WarlockReminders.FelhunterEnabled = value
+	end)
+	-- MARK: Pet Texts
+	local petTextGroup = GUI:CreateInlineGroup(petGroup, L["TextSettings"])
+	GUI:CreateEditBox(petTextGroup, L["PetMissingTextSettings"], addon.db.WarlockReminders.PetMissingText, function(value)
+		addon.db.WarlockReminders.PetMissingText = value
+		update()
+	end)
+	GUI:CreateEditBox(petTextGroup, L["PetWrongTypeTextSettings"], addon.db.WarlockReminders.PetWrongTypeText, function(value)
+		addon.db.WarlockReminders.PetWrongTypeText = value
+		update()
 	end)
 
 	-- MARK: Candy Settings
@@ -132,6 +141,11 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 	end)
 	GUI:CreateSlider(candyPositionGroup, L["Y"], -1000, 1000, 1, addon.db.WarlockReminders.CandyY, function(value)
 		addon.db.WarlockReminders.CandyY = value
+		update()
+	end)
+	local candyTextGroup = GUI:CreateInlineGroup(candyGroup, L["TextSettings"])
+	GUI:CreateEditBox(candyTextGroup, L["CandyMissingTextSettings"], addon.db.WarlockReminders.CandyMissingText, function(value)
+		addon.db.WarlockReminders.CandyMissingText = value
 		update()
 	end)
 

@@ -207,8 +207,11 @@ L["WarlockRemindersIntro"] = "This module provides pet and healthstone reminders
 L["PetTypeSettingsDesc"] = "Felguard check for Demonology, and Felhunter/Imp check for other specs"
 L["FelguardEnable"] = "Enable Felguard Check"
 L["FelhunterEnable"] = "Enable Felhunter/Imp Check"
+L["PetMissingTextSettings"] = "Pet Missing Text"
+L["PetWrongTypeTextSettings"] = "Pet Wrong Type Text"
 -- Warlock Candy settings
 L["CandySetting"] = "Healthstone Reminder Settings"
+L["CandyMissingTextSettings"] = "Healthstone Missing Text"
 
 -- MARK: ChallengeEnhance
 L["ChallengeEnhanceSettings"] = "M+ Panel Enhance"

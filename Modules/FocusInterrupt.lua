@@ -406,8 +406,8 @@ local function Handler(self, unit)
     -- channel target is not naturally provided through API, a complicated way is to use focus's target but involves more events and too much excessive information
     local target = UnitSpellTargetName(unit) -- only attempt to get non-channel cast target
     if addon.db[self.modName]["ShowTarget"] and target then
-        local color = C_ClassColor.GetClassColor(UnitSpellTargetClass(unit)):GenerateHexColor() or "FFFFFF" -- 8 digits Hex(also secret-value, do not directly compute it)
-        self.bars[unit].spellText:SetText(string.format("%.16s", name) .. "-" .. "|c" .. color .. target .. "|r")
+        local color = C_ClassColor.GetClassColor(UnitSpellTargetClass(unit) or "PRIEST"):GenerateHexColor() -- 8 digits Hex(also secret-value, do not directly compute it)
+        self.bars[unit].spellText:SetText(string.format("%.16s-|c%s%s|r", name, color, target))
     else
         self.bars[unit].spellText:SetText(name)
     end

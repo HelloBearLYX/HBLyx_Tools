@@ -1,5 +1,5 @@
 # A World of Warcraft addon integreting multiple tools made by HBLyx
-# **Downloads/下载**: official releases are only published below, all others are not from the author/官方版本仅在以下地址发布, 所有其他均不来自作者
+# **Downloads/下载**: official releases are only published below, other release are not from the author/官方版本仅在以下地址发布, 所有其他均不来自作者
 ### **CurseForge**:  https://www.curseforge.com/wow/addons/hblyx-tools
 ### **Wago**: https://addons.wago.io/addons/hblyx-tools
 

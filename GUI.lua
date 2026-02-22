@@ -177,9 +177,6 @@ function addon.GUI:CloseGUI()
     end
 end
 
--- Initialize Tag Panels
-addon.GUI.TagPanels = {}
-
 -- MARK: Inline Group
 
 ---Create an inline group to its parent
@@ -639,3 +636,6 @@ function addon.GUI:CreateFrameStrataDropdown(parent, get, callback)
         end
     end)
 end
+
+-- Initialize Tag Panels
+addon.GUI.TagPanels = {}

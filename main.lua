@@ -63,6 +63,29 @@ local function InitializeConfig()
 
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(ADDON_NAME, options)
   	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON_NAME, "|cff8788ee"..  ADDON_NAME .. "|r")
+
+	-- LDB register
+	local ldb = LibStub("LibDataBroker-1.1"):NewDataObject(ADDON_NAME, {
+		type = "data source",
+		text = ADDON_NAME,
+		label = "|cff8788ee" .. ADDON_NAME .. "|r",
+		icon = "Interface\\AddOns\\HBLyx_Tools\\Media\\HBLyx.png",
+		OnClick = function(_, button)
+			if button == "LeftButton" then
+				addon.GUI:OpenGUI()
+			elseif button == "RightButton" then
+				addon.core:TestMode()
+			end
+		end,
+
+		OnTooltipShow = function(tooltip)
+			tooltip:AddLine("|cff8788ee" .. ADDON_NAME .. "|r")
+			tooltip:AddLine(string.format("|cff00ff00%s|r: %s", L["LeftButton"], L["ConfigPanel"]))
+			tooltip:AddLine(string.format("|cff00ff00%s|r: %s", L["RightButton"], L["Test"]))
+		end,
+	})
+	LibStub("LibDBIcon-1.0"):Register(ADDON_NAME, ldb, nil)
+
 	addon.Utilities:print(L["WelecomeSetting"])
 end
 

@@ -92,7 +92,7 @@ function addon.GUI:Render()
     -- create main frame
     self.isOpened = true
     self.frame = AceGUI:Create("Frame")
-    self.frame:SetTitle("|TInterface\\AddOns\\HBLyx_tools\\Media\\HBLyx.png:20:20|t " .. L["GUITitle"])
+    self.frame:SetTitle("|TInterface\\AddOns\\HBLyx_Tools\\Media\\HBLyx.png:20:20|t " .. L["GUITitle"])
     self.frame:SetLayout("Flow")
     self.frame:SetWidth(900)
     self.frame:SetHeight(600)

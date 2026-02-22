@@ -18,8 +18,6 @@ local CombatTimer = {
 ---Intialize(Constructor)
 ---@return CombatTimer CombatTimer a CombatTimer object
 function CombatTimer:Initialize()
-    self.frame:SetFrameStrata("BACKGROUND")
-
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
     self.frame.text:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
 
@@ -91,6 +89,7 @@ end
 
 ---Update style settings and render it in-game for CombatTimer
 function CombatTimer:UpdateStyle()
+    self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame:SetSize(3 * addon.db[self.modName]["FontSize"], addon.db[self.modName]["FontSize"])
 

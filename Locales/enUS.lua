@@ -115,6 +115,7 @@ L["ColorSettings"] = "Color Settings"
 L["TextSettings"] = "Text Settings"
 L["InterruptibleColor"] = "Interruptible Color"
 L["NotInterruptibleColor"] = "NotInterruptible Color"
+L["FrameStrata"] = "Frame Strata Level"
 
 -- MARK: Input
 L["InvalidInput"] = "Invalid input, please check all required inputs and their format and type."

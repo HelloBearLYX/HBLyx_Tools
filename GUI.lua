@@ -92,7 +92,7 @@ function addon.GUI:Render()
     -- create main frame
     self.isOpened = true
     self.frame = AceGUI:Create("Frame")
-    self.frame:SetTitle(L["GUITitle"])
+    self.frame:SetTitle("|TInterface\\AddOns\\HBLyx_tools\\Media\\HBLyx.png:20:20|t " .. L["GUITitle"])
     self.frame:SetLayout("Flow")
     self.frame:SetWidth(900)
     self.frame:SetHeight(600)
@@ -161,6 +161,24 @@ function addon.GUI:Render()
 
     tabs:SelectTab("General")
 end
+
+-- MARK: Open/Close GUI
+
+---Open GUI
+function addon.GUI:OpenGUI()
+    addon.GUI:Render()
+end
+
+---Close GUI
+function addon.GUI:CloseGUI()
+    if self.isOpened and self.frame then
+        self.frame:Hide()
+        self.isOpened = false
+    end
+end
+
+-- Initialize Tag Panels
+addon.GUI.TagPanels = {}
 
 -- MARK: Inline Group
 
@@ -605,20 +623,19 @@ function addon.GUI:CreateSpecSelectDropdown(parent, label)
     return self
 end
 
--- MARK: Open/Close GUI
+-- MARK: Create Frame Strata
 
----Open GUI
-function addon.GUI:OpenGUI()
-    addon.GUI:Render()
+---Create a frame strata select dropdown
+---@param parent AceGUIWidget the parent container
+---@param get string the value to set
+---@param callback fun(key: string) callback function when value changed
+---@return AceGUIWidget
+function addon.GUI:CreateFrameStrataDropdown(parent, get, callback)
+    local frameStrataList = addon.Utilities.FrameStrata
+    local order = {"BACKGROUND", "LOW", "MEDIUM", "HIGH", "DIALOG", "FULLSCREEN", "FULLSCREEN_DIALOG"}
+    return addon.GUI:CreateDropdown(parent, L["FrameStrata"], frameStrataList, order, get, function(key)
+        if callback then
+            callback(addon.Utilities.FrameStrata[key])
+        end
+    end)
 end
-
----Close GUI
-function addon.GUI:CloseGUI()
-    if self.isOpened and self.frame then
-        self.frame:Hide()
-        self.isOpened = false
-    end
-end
-
--- Initialize Tag Panels
-addon.GUI.TagPanels = {}

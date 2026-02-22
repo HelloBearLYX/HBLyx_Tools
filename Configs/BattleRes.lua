@@ -14,6 +14,7 @@ addon.configurationList[MOD_KEY] = {
 	Y = -260,
 	IconSize = 35,
 	IconZoom = 0.07,
+	FrameStrata = "BACKGROUND",
 }
 
 -- MARK: Safe update
@@ -60,6 +61,10 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.BattleRes.FrameStrata, function(value)
+		addon.db.BattleRes.FrameStrata = value
+		update()
+	end)
 	-- MARK: Icon
 	local iconGroup = GUI:CreateInlineGroup(styleGroup, L["IconSettings"])
 	GUI:CreateSlider(iconGroup, L["IconSize"], 10, 200, 1, addon.db.BattleRes.IconSize, function(value)

@@ -17,8 +17,6 @@ local BATTLE_RES_TEXTURE = 136080
 ---Initialize(Constructor)
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
-    self.frame:SetFrameStrata("BACKGROUND")
-    
     self.frame.cooldown = CreateFrame("Cooldown", nil, self.frame, "CooldownFrameTemplate")
     self.frame.cooldown:SetAllPoints()
     self.frame.cooldown:SetDrawEdge(false)
@@ -84,6 +82,7 @@ end
 
 ---Update style settings and render it in-game for BattleRes
 function BattleRes:UpdateStyle()
+    self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.frame:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 
     self.frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])

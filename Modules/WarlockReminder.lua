@@ -47,11 +47,9 @@ function WarlockReminder:Initialize()
     end
 
     self.pet = CreateFrame("Frame", nil, UIParent)
-    self.pet:SetFrameStrata("BACKGROUND")
     self.pet:Hide()
 
     self.candy = CreateFrame("Frame", nil, UIParent)
-    self.candy:SetFrameStrata("BACKGROUND")
     self.candy:Hide()
 
     -- icons
@@ -235,9 +233,11 @@ end
 
 ---Update style settings and render them in-game for WarlockReminder
 function WarlockReminder:UpdateStyle()
+    self.pet:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.pet:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["PetX"], addon.db[self.modName]["PetY"])
     self.pet:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 
+    self.candy:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.candy:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["CandyX"], addon.db[self.modName]["CandyY"])
     self.candy:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
 

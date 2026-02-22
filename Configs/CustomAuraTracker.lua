@@ -13,6 +13,7 @@ addon.configurationList[MOD_KEY] = {
     Grow = "LEFT",
     SoundChannel = "Master",
     IconZoom = 0.07,
+    FrameStrata = "MEDIUM",
     spells = {}, -- just for reset
 }
 
@@ -183,8 +184,8 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         addon.db.CustomAuraTracker.IconSize = value
         update()
     end)
-    GUI:CreateSlider(iconStyleGroup, L["TimeFontScale"], 0.5, 2, 0.01, addon.db.CustomAuraTracker.TimeFontScale, function(value)
-        addon.db.CustomAuraTracker.TimeFontScale = value
+    GUI:CreateSlider(iconStyleGroup, L["IconZoom"], 0, 0.5, 0.01, addon.db.CustomAuraTracker.IconZoom, function(value)
+        addon.db.CustomAuraTracker.IconZoom = value
         update()
     end)
     GUI:CreateSlider(iconStyleGroup, L["X"], -2000, 2000, 1, addon.db.CustomAuraTracker.X, function(value)
@@ -195,12 +196,16 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
         addon.db.CustomAuraTracker.Y = value
         update()
     end)
-    GUI:CreateSlider(iconStyleGroup, L["IconZoom"], 0, 0.5, 0.01, addon.db.CustomAuraTracker.IconZoom, function(value)
-        addon.db.CustomAuraTracker.IconZoom = value
+    GUI:CreateSlider(iconStyleGroup, L["TimeFontScale"], 0.5, 2, 0.01, addon.db.CustomAuraTracker.TimeFontScale, function(value)
+        addon.db.CustomAuraTracker.TimeFontScale = value
         update()
     end)
     GUI:CreateDropdown(iconStyleGroup, L["Grow"], addon.Utilities.Grows, nil, addon.db.CustomAuraTracker.Grow, function(key)
         addon.db.CustomAuraTracker.Grow = key
+        update()
+    end)
+    GUI:CreateFrameStrataDropdown(iconStyleGroup, addon.db.CustomAuraTracker.FrameStrata, function(key)
+        addon.db.CustomAuraTracker.FrameStrata = key
         update()
     end)
 

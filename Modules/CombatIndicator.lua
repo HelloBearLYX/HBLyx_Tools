@@ -14,7 +14,6 @@ local CombatIndicator = {
 ---Initialzie(Constructor)
 ---@return CombatIndicator CombatIndicator a CombatIndicator object
 function CombatIndicator:Initialize()
-    self.frame:SetFrameStrata("BACKGROUND")
     self.frame:SetSize(300, 40)
     self.frame:Hide()
 
@@ -70,6 +69,7 @@ end
 
 ---Update style settings and render it in-game for CombatIndicator
 function CombatIndicator:UpdateStyle()
+    self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame.text:SetFont(
         addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",

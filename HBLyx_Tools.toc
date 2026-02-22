@@ -5,7 +5,7 @@
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
 ## Version: 3.8.5
 ## SavedVariables: HBLyx_Tools_DB
-## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.tga
+## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
 ## Category-zhCN: 整合工具
 

@@ -25,10 +25,11 @@ addon.configurationList[MOD_KEY] = {
     KickIconSize = 30,
     KickIconAnchor = "BOTTOMLEFT",
     KickIconGrow = "RIGHT",
-    -- global style settings
+    -- global settings
     ShowTarget = true,
     ShowInterrupter = true,
     ShowTotalTime = true,
+    FrameStrata = "HIGH",
     -- bar-wise style settings
     focusBackgroundAlpha = 0.3,
     focusWidth = 280,
@@ -37,13 +38,13 @@ addon.configurationList[MOD_KEY] = {
     focusFont = "",
     focusFontSize = 12,
     focusX = 0,
-    focusY = 250,
+    focusY = 200,
     focusIconZoom = 0.07,
 
     EnabledTargetBar = false,
     targetBackgroundAlpha = 0.3,
-    targetWidth = 200,
-    targetHeight = 20,
+    targetWidth = 250,
+    targetHeight = 25,
     targetTexture = "Solid",
     targetFont = "",
     targetFontSize = 10,
@@ -76,9 +77,6 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
                 addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
             end
         end
-    end)
-    GUI:CreateToggleCheckBox(frame, L["FocusCastBarHidden"], addon.db.FocusInterrupt.Hidden, function(value)
-        addon.db.FocusInterrupt.Hidden = value
     end)
     GUI:CreateButton(frame, L["ResetMod"], function ()
         addon.Utilities:SetPopupDialog(
@@ -193,6 +191,13 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
 
     -- style
     local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+    GUI:CreateToggleCheckBox(styleGroup, L["FocusCastBarHidden"], addon.db.FocusInterrupt.Hidden, function(value)
+        addon.db.FocusInterrupt.Hidden = value
+    end)
+    GUI:CreateFrameStrataDropdown(styleGroup, addon.db.FocusInterrupt.FrameStrata, function(value)
+        addon.db.FocusInterrupt.FrameStrata = value
+        update()
+    end)
     -- MARK: Style - Texture
     local texttureGroup = GUI:CreateInlineGroup(styleGroup, L["TextureSettings"])
     GUI:CreateTextureSelect(texttureGroup, L["Texture"], addon.db.FocusInterrupt.focusTexture, function(value)

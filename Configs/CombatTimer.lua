@@ -12,6 +12,7 @@ addon.configurationList[MOD_KEY] = {
 	FontSize = 20,
 	X = -180,
 	Y = -260,
+	FrameStrata = "BACKGROUND",
 }
 
 -- MARK: Safe update
@@ -61,6 +62,10 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.CombatTimer.FrameStrata, function(value)
+		addon.db.CombatTimer.FrameStrata = value
+		update()
+	end)
 	-- MARK: Font
 	local fontGroup = GUI:CreateInlineGroup(styleGroup, L["FontSettings"])
 	GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.CombatTimer.Font, function(value)

@@ -23,6 +23,7 @@ addon.configurationList[MOD_KEY] = {
 	InCombatSoundMedia = ADDON_NAME.. "_EnterCombat",
 	OutCombatSoundMedia = ADDON_NAME.. "_LeaveCombat",
 	SoundChannel = "Master",
+	FrameStrata = "BACKGROUND",
 }
 
 -- MARK: Safe update
@@ -65,6 +66,10 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.CombatIndicator.FrameStrata, function(value)
+		addon.db.CombatIndicator.FrameStrata = value
+		update()
+	end)
 	GUI:CreateSlider(styleGroup, L["FadeTime"], 0.5, 10, 0.5, addon.db.CombatIndicator.FadeTime, function(value)
 		addon.db.CombatIndicator.FadeTime = value
 		update()

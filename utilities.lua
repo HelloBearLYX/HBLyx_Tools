@@ -35,6 +35,17 @@ addon.Utilities.SoundChannels = {
 	Dialog = L["SoundChannel"]["Dialog"],
 }
 
+---@enum frameStrata frame strata
+addon.Utilities.FrameStrata = {
+	BACKGROUND = "BACKGROUND",
+	LOW = "LOW",
+	MEDIUM = "MEDIUM",
+	HIGH = "HIGH",
+	DIALOG = "DIALOG",
+	FULLSCREEN = "FULLSCREEN",
+	FULLSCREEN_DIALOG = "FULLSCREEN_DIALOG",
+}
+
 -- MARK: print
 
 ---Use addon's identifier to print
@@ -51,6 +62,21 @@ function addon:debug(message, callback)
 	if callback then
 		callback()
 	end
+end
+
+-- MARK: FrameStrata Handle
+
+---Get the index of a frame strata
+---@param frameStrata string frame strata
+---@return integer|nil index index of the frame strata, nil if not found
+function addon.Utilities:GetFrameStrataIndex(frameStrata)
+	for index, strata in pairs(addon.Utilities.FrameStrata) do
+		if strata == frameStrata then
+			return index
+		end
+	end
+
+	return nil
 end
 
 -- MARK: RGB Handle

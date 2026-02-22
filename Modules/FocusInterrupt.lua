@@ -441,6 +441,8 @@ end
 ---@param self FocusInterrupt self
 ---@param unit string unit key for the bar to be updated style
 local function UpdateBarStyle(self, unit)
+    -- frame strata level for the bar
+    self.bars[unit]:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "HIGH")
     -- basic size and position of bar
     self.bars[unit]:SetSize(addon.db[self.modName][unit .. "Width"], addon.db[self.modName][unit .. "Height"])
     self.bars[unit]:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName][unit .. "X"], addon.db[self.modName][unit .. "Y"])
@@ -489,10 +491,9 @@ end
 ---@return frame bar the created FocusInterrupt Bar
 function FocusInterrupt:CreateBar()
     local bar = CreateFrame("Frame", nil, self.frame)
-    bar:SetFrameStrata("HIGH")
     bar:Hide()
 
-    bar.background = bar:CreateTexture(nil, "background")
+    bar.background = bar:CreateTexture(nil, "BACKGROUND")
     bar.background:SetAllPoints()
 
     bar.border = CreateFrame("Frame", nil, bar, "BackdropTemplate")

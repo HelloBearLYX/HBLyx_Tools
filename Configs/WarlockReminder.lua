@@ -8,8 +8,9 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = true,
 	Font = "",
 	FontSize = 12,
-	IconSize = 45,
+	IconSize = 40,
 	IconZoom = 0.07,
+	FrameStrata = "BACKGROUND",
 	-- pet settings
 	PetEnabled = true,
 	PetMissingText = L["PetMissingText"],
@@ -23,7 +24,7 @@ addon.configurationList[MOD_KEY] = {
 	CandyEnabled = true,
 	CandyMissingText = L["CandyMissingText"],
 	CandyX = 0,
-	CandyY = 350,
+	CandyY = 340,
 }
 
 -- MARK: Safe update
@@ -51,6 +52,10 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
                 addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
             end
         end
+	end)
+	GUI:CreateFrameStrataDropdown(frame, addon.db.WarlockReminders.FrameStrata, function(value)
+		addon.db.WarlockReminders.FrameStrata = value
+		update()
 	end)
 	GUI:CreateButton(frame, L["ResetMod"], function()
 		addon.Utilities:SetPopupDialog(

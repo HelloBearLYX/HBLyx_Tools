@@ -116,6 +116,7 @@ L["ColorSettings"] = "颜色设置"
 L["TextSettings"] = "文本设置"
 L["InterruptibleColor"] = "可打断颜色"
 L["NotInterruptibleColor"] = "不可打断颜色"
+L["FrameStrata"] = "框架层级"
 
 -- MARK: Input
 L["InvalidInput"] = "输入无效, 请检查所有必填项及其格式和类型"

@@ -325,6 +325,7 @@ function CustomAuraTracker:UpdateStyle()
     local iconSize = addon.db[self.modName]["IconSize"]
     local scale = addon.db[self.modName]["TimeFontScale"]
 
+    self.auras.head:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "MEDIUM")
     self.auras.head:SetSize(iconSize, iconSize)
     self.auras.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
 

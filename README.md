@@ -1,7 +1,6 @@
 # A World of Warcraft addon integreting multiple tools made by HBLyx
 ## **Downloads**: official releases are only published below, other release are not from the author
 - **CurseForge**:  https://www.curseforge.com/wow/addons/hblyx-tools
-- **Wago**: https://addons.wago.io/addons/hblyx-tools
 
 ## **Modules**
 - **Focus Interrupt**: support Focus Interrupt task in various ways, and helps users to identify whether the cast of focus is interruptible/interrupt ready/ interrupt in cooldown.

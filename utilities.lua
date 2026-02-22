@@ -64,21 +64,6 @@ function addon:debug(message, callback)
 	end
 end
 
--- MARK: FrameStrata Handle
-
----Get the index of a frame strata
----@param frameStrata string frame strata
----@return integer|nil index index of the frame strata, nil if not found
-function addon.Utilities:GetFrameStrataIndex(frameStrata)
-	for index, strata in pairs(addon.Utilities.FrameStrata) do
-		if strata == frameStrata then
-			return index
-		end
-	end
-
-	return nil
-end
-
 -- MARK: RGB Handle
 
 ---Convert a Hex string into a RGBa

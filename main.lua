@@ -46,6 +46,8 @@ local function ProfileHandler(configurationList)
 	end
 end
 
+-- MARK: Initialize Config
+
 ---Initialize the configrations: make sure addon.optionsList and addon.configurationList are both created before run this
 ---In HBLyx design, configure.lua created these List and run before main.lua
 local function InitializeConfig()

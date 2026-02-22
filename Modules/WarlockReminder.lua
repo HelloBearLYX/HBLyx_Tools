@@ -128,6 +128,33 @@ local function GetPetStance()
     return -1
 end
 
+-- MARK: Show Frame
+
+---Show the reminder frame according to different conditions
+---@param self WarlockReminder self
+---@param pattern? string either "pet", "candy", or nil(both)
+function WarlockReminder:ShowFrame(pattern)
+    if addon.db[self.modName]["ShowInInstance"] and addon.states["instanceInfo"].instanceID == 0 then
+        if pattern == "pet" then
+            self.pet:Hide()
+        elseif pattern == "candy" then
+            self.candy:Hide()
+        else
+            self.pet:Hide()
+            self.candy:Hide()
+        end
+    else
+        if pattern == "pet" then
+            self.pet:Show()
+        elseif pattern == "candy" then
+            self.candy:Show()
+        else
+            self.pet:Show()
+            self.candy:Show()
+        end
+    end
+end
+
 -- MARK: PetHandler
 
 ---Handler for pet frame
@@ -151,15 +178,18 @@ local function PetHandler(self)
         else
             self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
         end
+      
         self.pet.text:SetText(addon.db[self.modName]["PetMissingText"])
-        self.pet:Show()
+        self:ShowFrame("pet")
+        return
     else -- check pet type
         if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelguardEnabled"] then
             if petFamily ~= L["PetFamily"]["Felguard"] then -- wrong type for demonology
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
                 self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
-                self.pet:Show()
+                
+                self:ShowFrame("pet")
                 return
             end
         elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelhunterEnabled"] then 
@@ -167,7 +197,7 @@ local function PetHandler(self)
                 self.pet.icon:SetDesaturated(true)
                 self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
                 self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
-                self.pet:Show()
+                self:ShowFrame("pet")
                 return
             end
         end
@@ -188,7 +218,7 @@ local function PetHandler(self)
                     self.pet.text:SetText(L["PetStance"]["DEFENSIVE"])
                 end
 
-                self.pet:Show()
+                self:ShowFrame("pet")
                 return
             end
         end
@@ -208,7 +238,7 @@ local function CandyHandler(self)
     if IsCandyValid() then
         self.candy:Hide()
     else
-        self.candy:Show()
+        self:ShowFrame("candy")
     end
 end
 
@@ -217,7 +247,7 @@ end
 ---Handler for WarlockReminder
 ---@param self WarlockReminder self
 ---@param pattern? string either "pet", "candy", or nil(both)
-local function Handler(self, pattern)
+function WarlockReminder:Handler(pattern)
     if pattern == "pet" then
         PetHandler(self)
     elseif pattern == "candy" then
@@ -274,7 +304,7 @@ function WarlockReminder:Test(on)
         self.candy:Show()
          addon.Utilities:MakeFrameDragPosition(self.candy, self.modName, "CandyX", "CandyY")
     else
-        Handler(self)
+        self:Handler()
     end
 end
 
@@ -284,33 +314,33 @@ end
 function WarlockReminder:RegisterEvents()
     local function OnEvent(_, event, ...)
         if event == "UNIT_PET" or event == "PET_BAR_UPDATE" or event == "PET_DISMISS_START" or event == "PLAYER_ALIVE" then
-            Handler(self, "pet")
+            self:Handler("pet")
         elseif event == "BAG_UPDATE" then
-            Handler(self, "candy")
+            self:Handler("candy")
          elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
             if IsMounted() then
-                Handler(self)
+                self:Handler()
             else
                 if self.timer then
                     self.timer:Cancel()
                     self.timer = nil
                 end
 
-                self.timer = C_Timer.NewTimer(3, function () Handler(self) end)
+                self.timer = C_Timer.NewTimer(3, function () self:Handler() end)
             end
         end
     end
 
     -- Both events
     addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
-    addon.core:RegisterStateMonitor("inCombat", self.modName, function() Handler(self) end)
+    addon.core:RegisterStateMonitor("inCombat", self.modName, function() self:Handler() end)
     -- Pet events
     addon.core:RegisterEvent("UNIT_PET", self.frame, self.modName, "player")
     addon.core:RegisterEvent("PET_BAR_UPDATE", self.frame, self.modName)
     addon.core:RegisterEvent("PET_DISMISS_START", self.frame, self.modName)
     addon.core:RegisterEvent("PLAYER_ALIVE", self.frame, self.modName)
     addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.frame, self.modName)
-    addon.core:RegisterStateMonitor("playerSpec", self.modName, function() Handler(self, "pet") end)
+    addon.core:RegisterStateMonitor("playerSpec", self.modName, function() self:Handler("pet") end)
     -- Candy events
     addon.core:RegisterEvent("BAG_UPDATE", self.frame, self.modName)
 

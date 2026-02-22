@@ -102,6 +102,7 @@ L["LoadingSpecs"] = "Loading Specializations"
 L["LoadingSpecsDesc"] = "Select the specializations(none or multiple) for which the aura will be active. |cffff0000If none of specializations is selected, the aura will be active for all specializations|r.\n\nWhen you select an existing aura, the specializations information will also be automatically filled."
 L["LeftButton"] = "Left Click"
 L["RightButton"] = "Right Click"
+L["ShowInInstance"] = "Only Show in Instance"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -117,7 +118,7 @@ L["SizeSettings"] = "Size Settings"
 L["ColorSettings"] = "Color Settings"
 L["TextSettings"] = "Text Settings"
 L["InterruptibleColor"] = "Interruptible Color"
-L["NotInterruptibleColor"] = "NotInterruptible Color"
+L["NotInterruptibleColor"] = "Not Interruptible Color"
 L["FrameStrata"] = "Frame Strata Level"
 
 -- MARK: Input

@@ -11,6 +11,7 @@ addon.configurationList[MOD_KEY] = {
 	IconSize = 40,
 	IconZoom = 0.07,
 	FrameStrata = "BACKGROUND",
+	ShowInInstance = false,
 	-- pet settings
 	PetEnabled = true,
 	PetMissingText = L["PetMissingText"],
@@ -52,6 +53,12 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
                 addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
             end
         end
+	end)
+	GUI:CreateToggleCheckBox(frame, L["ShowInInstance"], addon.db.WarlockReminders.ShowInInstance, function(value)
+		addon.db.WarlockReminders.ShowInInstance = value
+		if addon.core:HasModuleLoaded(MOD_KEY) and not addon.core.testMode then
+			addon.core:GetModule(MOD_KEY):Handler()
+		end
 	end)
 	GUI:CreateFrameStrataDropdown(frame, addon.db.WarlockReminders.FrameStrata, function(value)
 		addon.db.WarlockReminders.FrameStrata = value

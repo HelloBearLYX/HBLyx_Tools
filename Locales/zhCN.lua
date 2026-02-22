@@ -103,6 +103,7 @@ L["LoadingSpecs"] = "加载专精"
 L["LoadingSpecsDesc"] = "选择光环将在哪些专精下生效(可以选择多个或不选择), |cffff0000如果没有选择任何专精, 光环将在所有专精下生效|r\n\n" .. "当你选择一个已经存在的光环时, 专精相关信息也会被自动填充到专精选择中"
 L["LeftButton"] = "左键"
 L["RightButton"] = "右键"
+L["ShowInInstance"] = "仅在副本中显示"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

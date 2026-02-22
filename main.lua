@@ -37,6 +37,9 @@ local function ProfileHandler(configurationList)
 
 	addon.db = HBLyx_Tools_DB
 	addon.db["Version"] = addon.version
+	if type(addon.db["MinimapIcon"]) ~= "table" then
+		addon.db["MinimapIcon"] = {hide = false}
+	end
 
 	-- after 3.0 configurationList: {mod1 = {option1 = defaultVal, option2 = defaultVal, ...}, mod2 = ...}
 	for mod, option in pairs(configurationList or {}) do
@@ -86,7 +89,7 @@ local function InitializeConfig()
 			tooltip:AddLine(string.format("|cff00ff00%s|r: %s", L["RightButton"], L["Test"]))
 		end,
 	})
-	LibStub("LibDBIcon-1.0"):Register(ADDON_NAME, ldb, nil)
+	LibStub("LibDBIcon-1.0"):Register(ADDON_NAME, ldb, addon.db["MinimapIcon"])
 
 	addon.Utilities:print(L["WelecomeSetting"])
 end

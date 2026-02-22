@@ -107,6 +107,15 @@ function addon.GUI:Render()
     end)
     self.frame:AddChild(self.TestButton)
 
+    addon.GUI:CreateToggleCheckBox(self.frame, L["HideMinimapIcon"], addon.db.MinimapIcon.hide, function(value)
+        addon.db.MinimapIcon.hide = value
+        if not addon.db.MinimapIcon.hide then
+            LibStub("LibDBIcon-1.0"):Show(ADDON_NAME)
+        else
+            LibStub("LibDBIcon-1.0"):Hide(ADDON_NAME)
+        end
+    end)
+
     -- create tabs
     local tabs = AceGUI:Create("TabGroup")
     tabs:SetLayout("Flow")

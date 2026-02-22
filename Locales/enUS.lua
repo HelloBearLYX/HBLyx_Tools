@@ -103,6 +103,7 @@ L["LoadingSpecsDesc"] = "Select the specializations(none or multiple) for which 
 L["LeftButton"] = "Left Click"
 L["RightButton"] = "Right Click"
 L["ShowInInstance"] = "Only Show in Instance"
+L["HideMinimapIcon"] = "Hide Minimap Icon"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

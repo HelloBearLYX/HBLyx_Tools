@@ -104,6 +104,7 @@ L["LoadingSpecsDesc"] = "选择光环将在哪些专精下生效(可以选择多
 L["LeftButton"] = "左键"
 L["RightButton"] = "右键"
 L["ShowInInstance"] = "仅在副本中显示"
+L["HideMinimapIcon"] = "隐藏小地图图标"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

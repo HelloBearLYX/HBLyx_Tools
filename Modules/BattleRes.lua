@@ -128,6 +128,9 @@ end
 ---Register events needed by CombatTimer
 function BattleRes:RegisterEvents()
     local function OnEvent()
+        if addon.core.testMode then
+            return
+        end
         Handler(self)
     end
 

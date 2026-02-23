@@ -27,7 +27,6 @@ Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
 Modules\CustomAuraTracker.lua
 Modules\WarlockReminder.lua
-
 # handle configuration and options
 GUI.lua
 Configs\FocusInterrupt.lua

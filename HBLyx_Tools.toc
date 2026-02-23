@@ -37,6 +37,7 @@ Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
 Configs\CustomAuraTracker.lua
 Configs\WarlockReminder.lua
+
 Configs\Profile.lua
 
 # developer use only

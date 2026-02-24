@@ -50,8 +50,11 @@ local function RenderDisplayFrame(self, info)
             for _, value in pairs(info) do
                 addonInfo = addonInfo .. value .. "\n------\n\n"
             end
-
             GUI:CreateMultiLineEditBox(panel, "Copy the addon info below:", addonInfo)
+            if info["Data"] then
+                GUI:CreateMultiLineEditBox(panel, "Copy the data below:", info["Data"])
+            end
+
             panel:DoLayout()
         elseif tab == "ModulesInfo" then
             local panel = GUI:CreateScrollFrame(container)
@@ -181,6 +184,9 @@ function addon.DeveloperTools:DisplayAddonInfo()
     local output = {}
     output["ModulesInfo"] = GetModulesInfo() .. "\n" .. GetEventsInfo()
     output["StatesInfo"] = GetStatesInfo() .. "\n" .. GetStateMonitorsInfo()
+    -- MARK: Fetch data
+    -- comment out the line below to avoide data fetch 
+    -- output["Data"] = self:AttemptsFetchAllEEInfo() or nil
 
     if self.isOpened and self.displayFrame then
         self.displayFrame:Hide()
@@ -189,4 +195,39 @@ function addon.DeveloperTools:DisplayAddonInfo()
     else
         RenderDisplayFrame(self, output)
     end
+end
+
+function addon.DeveloperTools:FetchEncounterEventInfo(encounterEventID)
+    local encounterEventInfo = C_EncounterEvents.GetEventInfo(encounterEventID)
+    local data = {
+        encounterEventID = encounterEventID,
+        severity = nil,
+        spellID = nil,
+        spellName = nil,
+    }
+
+    if encounterEventInfo then
+        data.spellID = encounterEventInfo.spellID or nil
+        data.severity = encounterEventInfo.severity or nil
+        data.spellName = encounterEventInfo.spellID and C_Spell.GetSpellInfo(encounterEventInfo.spellID).name or nil
+    else
+        data.encounterEventID = nil
+    end
+
+    return data
+end
+
+function addon.DeveloperTools:AttemptsFetchAllEEInfo()
+    local output = "EncounterEventID, Severity, SpellID, SpellName\n"
+    for i = 1, 1000 do
+        local data = self:FetchEncounterEventInfo(i)
+        output = output .. string.format("%d, %s, %s, %s\n",
+            data.encounterEventID or -1,
+            data.severity or "nil",
+            tostring(data.spellID),
+            data.spellName or "nil"
+        )
+    end
+
+    return output
 end

@@ -18,6 +18,7 @@ Locales\zhCN.lua
 utilities.lua
 configure.lua
 core.lua
+data.lua
 
 # modules
 Modules\FocusInterrupt.lua

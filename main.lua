@@ -122,32 +122,33 @@ local function InitializeStates()
 	-- if the player is in combat
 	addon.states["inCombat"] = InCombatLockdown()
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
-		local previous = addon.states["inCombat"] or false
 		addon.states["inCombat"] = true
-		return previous
 	end)
 	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function()
-		local previous = addon.states["inCombat"] or false
 		addon.states["inCombat"] = false
-		return previous
 	end)
 
 	local GetInstanceState = function()
-		local previous = addon.states["instanceInfo"] or {difficultyID = 0, instanceID = 0}
 		-- if difficultyID = 0: not in instance; if instanceID = 0: not in instance or in world
 		local _, _, difficultyID, _, _, _, _, instanceID = GetInstanceInfo()
 
 		addon.states["instanceInfo"] = {difficultyID = difficultyID, instanceID = instanceID}
-		return previous
 	end
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "instanceInfo", GetInstanceState)
 	addon.core:RegisterState("ZONE_CHANGED_NEW_AREA", nil, "instanceInfo", GetInstanceState)
 
+	addon.states["encounterInfo"] = {encounterID = 0, encounterName = ""} -- "ADDON_LOADED"
+	addon.core:RegisterState("ENCOUNTER_START", nil, "encounterInfo", function (...)
+		local encounterID, encounterName = ... -- the args passed by ENCOUNTER_START event
+		addon.states["encounterInfo"] = {encounterID = encounterID, encounterName = encounterName}
+	end)
+	addon.core:RegisterState("ENCOUNTER_END", nil, "encounterInfo", function (...)
+		addon.states["encounterInfo"] = {encounterID = 0, encounterName = ""}
+	end)
+
 	-- player spec state
 	local GetSpec = function ()
-		local previous = addon.states["playerSpec"] or 0
 		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
-		return previous
 	end
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerSpec", GetSpec) -- the spec cannot be initialized when "ADDON_LOADED", it must be initialized after "PLAYER_ENTERING_WORLD"
 	addon.core:RegisterState("PLAYER_SPECIALIZATION_CHANGED", nil, "playerSpec", GetSpec)

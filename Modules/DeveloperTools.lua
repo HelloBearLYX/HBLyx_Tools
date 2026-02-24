@@ -18,6 +18,7 @@ local TABS = {
 
 -- private methods
 
+-- MARK: Render
 local function RenderDisplayFrame(self, info)
     self.isOpened = true
     self.displayFrame = AceGUI:Create("Frame")
@@ -51,9 +52,7 @@ local function RenderDisplayFrame(self, info)
                 addonInfo = addonInfo .. value .. "\n------\n\n"
             end
             GUI:CreateMultiLineEditBox(panel, "Copy the addon info below:", addonInfo)
-            if info["Data"] then
-                GUI:CreateMultiLineEditBox(panel, "Copy the data below:", info["Data"])
-            end
+            GUI:CreateMultiLineEditBox(panel, "Copy the data below:", info["Data"] or "")
 
             panel:DoLayout()
         elseif tab == "ModulesInfo" then
@@ -70,6 +69,7 @@ local function RenderDisplayFrame(self, info)
     tabs:SelectTab("CopyInfo")
 end
 
+-- MARK: Events Info
 local function GetEventsInfo()
     local events = {}
     for event, _ in pairs(addon.core.eventMap) do
@@ -100,6 +100,7 @@ local function GetEventsInfo()
     return output
 end
 
+-- MARK: States Info
 local function GetStatesInfo()
     local vars = {}
     for var, _ in pairs(addon.states) do
@@ -119,7 +120,14 @@ local function GetStatesInfo()
         end
     end
 
-    for event, states in pairs(addon.core.statesUpdate) do
+    local eventKeys = {}
+    for event, _ in pairs(addon.core.statesUpdate) do
+        table.insert(eventKeys, event)
+    end
+    table.sort(eventKeys)
+
+    for _, event in ipairs(eventKeys) do
+        local states = addon.core.statesUpdate[event]
         output = output .. string.format("|cff00ff00%s|r: ", event)
         for state, _ in pairs(states) do
                 output = output .. string.format("|cff0070DD%s|r, ", state)
@@ -130,6 +138,7 @@ local function GetStatesInfo()
     return output
 end
 
+-- MARK: Modules Info
 local function GetModulesInfo()
     local output = "|cff8788EEModules Info|r:\n"
 
@@ -148,6 +157,7 @@ local function GetModulesInfo()
     return output
 end
 
+-- MARK: State Monitors Info
 local function GetStateMonitorsInfo()
     local output = "|cff8788EEState Monitors Info|r:\n"
 
@@ -184,7 +194,7 @@ function addon.DeveloperTools:DisplayAddonInfo()
     local output = {}
     output["ModulesInfo"] = GetModulesInfo() .. "\n" .. GetEventsInfo()
     output["StatesInfo"] = GetStatesInfo() .. "\n" .. GetStateMonitorsInfo()
-    -- MARK: Fetch data
+    -- Fetch data
     -- comment out the line below to avoide data fetch 
     -- output["Data"] = self:AttemptsFetchAllEEInfo() or nil
 
@@ -197,6 +207,7 @@ function addon.DeveloperTools:DisplayAddonInfo()
     end
 end
 
+-- MARK: Fetch Data
 function addon.DeveloperTools:FetchEncounterEventInfo(encounterEventID)
     local encounterEventInfo = C_EncounterEvents.GetEventInfo(encounterEventID)
     local data = {

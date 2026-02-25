@@ -38,8 +38,9 @@ function EncounterSound:RegisterEvents()
                         -- Handle sound trigger
                         local trigger = attribute
                         local sound = addon.LSM:Fetch("sound", value)
+                        local channel = addon.db.EncounterSound.SoundChannel or "Master"
                         if sound then
-                            C_EncounterEvents.SetEventSound(eventID, trigger, {file = sound, channel = "Master", volume = 1})
+                            C_EncounterEvents.SetEventSound(eventID, trigger, {file = sound, channel = channel, volume = 1})
                         end
                     end
                 end

@@ -6,6 +6,7 @@ local MOD_KEY = "EncounterSound"
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = false,
+	SoundChannel = "Master",
 	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
 }
 
@@ -179,6 +180,9 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
             end
         end
 	end)
+	GUI:CreateDropdown(frame, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.EncounterSound.SoundChannel, function(key)
+        addon.db.EncounterSound.SoundChannel = key
+    end)
 	GUI:CreateButton(frame, L["ResetMod"], function ()
 		addon.Utilities:SetPopupDialog(
 			ADDON_NAME .. "ResetMod",
@@ -191,9 +195,10 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 		)
 	end)
 
-    -- MARK: Map and Encounter Selection
+    -- MARK: Setting Part
 	local inputMap, inputEncounter = nil, nil
 	local selectGroup = GUI:CreateInlineGroup(frame, L["Select"])
+	GUI:CreateInformationTag(selectGroup, L["EncounterSoundInstruction"], "LEFT")
 	local settingsGroup = GUI:CreateInlineGroup(nil, L["EncounterSettings"])
 	local encounterGroup = 	GUI:CreateDropdown(nil, L["SelectEncounter"], {}, nil, nil, function (value)
 		settingsGroup:ReleaseChildren()

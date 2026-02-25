@@ -272,10 +272,12 @@ L["ClearSpecsSelection"] = "清除专精选择"
 
 -- MARK: Encounter Sound
 L["EncounterSoundSettings"] = "BOSS战音效"
-L["EncounterSoundSettingsDesc"] = "为BOSS战时间线事件自定义播放音效警报\n" ..
+L["EncounterSoundSettingsDesc"] = "为BOSS战时间轴事件自定义播放音效警报\n" ..
 "具体来说, 这个模块为副本中的每个BOSS战提供了一个自定义的音效警报设置(仅包括当前赛季的副本)\n\n" ..
 "首先添加了12.0第一赛季的大秘境, 然后很快会添加团队副本。由于这个模块高度依赖于对游戏数据的数据挖掘, 实际上获取数据是相对耗时的\n" ..
-"随着数据挖掘的过程, 许多问题将被修复, 模块也会得到改进, 感谢你的反馈和支持!"
+"随着数据挖掘的过程, 许多问题将被修复, 模块也会得到改进, 感谢你的反馈和支持!\n" ..
+"这个模块仍在开发中, 目前它无法替代DBM/BigWigs或其他BOSS模块插件, 然而希望这个模块可以为BOSS战提供更灵活的音效警报\n" ..
+"此外, 由于私人光环部分更依赖于数据挖掘, 它仍在开发中\n"
 L["EncounterSettings"] = "BOSS战设置"
 L["SelectEncounter"] = "选择BOSS战"
 L["SelectInstance"] = "选择副本"
@@ -285,3 +287,12 @@ L["OnTextWarningShown"] = "文本警告显示时"
 L["OnTimelineEventFinished"] = "事件完成时"
 L["OnTimelineEventHighlight"] = "事件高亮时"
 L["EventColor"] = "事件颜色"
+L["EncounterSoundInstruction"] = "选择|cffffff00一个副本|r和|cffffff00一个BOSS战|r后, 该BOSS战的设置将会在下面弹出\n\n" ..
+"要设置音效, 选择|cffffff00一个事件触发器|r和|cffffff00一个有效的音效|r, 设置自动套用。同时, 你可以使用|cffffff00\"删除\"|r来删除所选触发器的音效设置\n\n" ..
+"要设置颜色, 只需使用颜色选择器选择一个|cffffff00颜色|r, 它将被应用于该BOSS战事件。要删除颜色设置, 你可以类似地使用|cffffff00\"删除\"|r按钮\n\n" ..
+"|cffff0000注意|r: |cffffff00事件触发器|r由暴雪的API提供, 下面是描述:\n" ..
+"|cffff5c00文本警告显示时|r: 当|cffff5c00一个文本警告最初显示时|r触发\n" ..
+"|cffff5c00事件完成时|r: 当时间轴上的事件|cffff5c00完成|r时触发\n" ..
+"|cffff5c00事件高亮时|r: 当时间轴上的事件|cffff5c00将在5秒内完成|r时触发\n" ..
+"更多关于触发器的信息在: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
+"例子: 如果你需要一个\"准备AoE-3-2-1\", 你应该将\"准备AoE\"和倒计时音效合并到一个媒体文件中, 并设置在\"事件高亮\"触发器上播放(在AoE的5秒前播放)\n\n"

@@ -21,6 +21,8 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
 L["ChangeLogContent"] =
+"v3.9\n" ..
+"-Encounter Sound: add a new module \"Encounter Sound\" which set and play custom sound alert for encounter time line events\n" ..
 "v3.8\n" ..
 "-Focus Interrupt: Added an option for a target cast bar, which can create a target cast bar similar to the focus cast bar\n" ..
 "v3.7\n" ..
@@ -271,7 +273,7 @@ L["ClearSpecsSelection"] = "Clear Specializations Selection"
 
 -- MARK: Encounter Sound
 L["EncounterSoundSettings"] = "Encounter Sound"
-L["EncounterSoundSettingsDesc"] = "Custom play sound alert for encounter time line events.\n\n" ..
+L["EncounterSoundSettingsDesc"] = "Set and play custom sound alert for encounter time line events.\n\n" ..
 "Specifically, this module provide a customized sound alert setting for each Boss fight in the instances.(only include current season instances)\n\n\n" ..
 "Firstly, added M+ dungeons in 12.0 season 1, and then will add raids soon. As this module is highly dependent on data mining toward the game data, it is relatively costly to get data.\n\n" ..
 "Many issue will be fixed and module will be improved with the process of data mining, thanks for your feedback and support!\n\n" ..

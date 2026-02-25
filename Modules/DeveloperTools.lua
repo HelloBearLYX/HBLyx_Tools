@@ -200,7 +200,6 @@ function addon.DeveloperTools:DisplayAddonInfo()
 
     if self.isOpened and self.displayFrame then
         self.displayFrame:Hide()
-        self.displayFrame:Release()
         self.isOpened = false
     else
         RenderDisplayFrame(self, output)

@@ -31,9 +31,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Nexus-Point Xenas"],
 		short = L["Nexus-Point Xenas_short"],
 		encounters = {
-			[3328] = {events = {106, 107, 108, 172}},
-			[3332] = {events = {33, 34, 35, 36, 313}},
-			[3333] = {events = {109, 110, 111, 112}},
+			[3328] = {events = {106, 107, 108, 172}, journalID = 2813},
+			[3332] = {events = {33, 34, 35, 36, 313}, journalID = 2814},
+			[3333] = {events = {109, 110, 111, 112}, journalID = 2815},
 		},
 	},
 	[560] = {
@@ -41,9 +41,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Maisara Caverns"],
 		short = L["Maisara Caverns_short"],
 		encounters = {
-			[3212] = {events = {150, 151, 152, 153, 154, 155}},
-			[3213] = {events = {16, 17, 18, 19, 20}},
-			[3214] = {events = {156, 157, 158}},
+			[3212] = {events = {150, 151, 152, 153, 154, 155}, journalID = 2810},
+			[3213] = {events = {16, 17, 18, 19, 20}, journalID = 2811},
+			[3214] = {events = {156, 157, 158}, journalID = 2812},
 		},
 	},
 	[161] = {
@@ -62,10 +62,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Windrunner Spire"],
 		short = L["Windrunner Spire_short"],
 		encounters = {
-			[3056] = {events = {239, 241, 242}},
-			[3057] = {events = {25, 26, 27, 28, 29}},
-			[3058] = {events = {210, 211, 213, 212, 214, 215, 216}},
-			[3059] = {events = {21, 22, 23, 24, 538}},
+			[3056] = {events = {239, 241, 242}, journalID = 2655},
+			[3057] = {events = {25, 26, 27, 28, 29}, journalID = 2656},
+			[3058] = {events = {210, 211, 213, 212, 214, 215, 216}, journalID = 2657},
+			[3059] = {events = {21, 22, 23, 24, 538}, journalID = 2658},
 		},
 	},
 	[558] = {
@@ -73,10 +73,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Magister's Terrace"],
 		short = L["Magister's Terrace_short"],
 		encounters = {
-			[3071] = {events = {281, 286, 287, 288}},
-			[3072] = {events = {93, 94, 95, 513, 96}},
-			[3073] = {events = {635, 97, 98, 99, 100}},
-			[3074] = {events = {290, 292, 420}},
+			[3071] = {events = {281, 286, 287, 288}, journalID = 2659},
+			[3072] = {events = {93, 94, 95, 513, 96}, journalID = 2661},
+			[3073] = {events = {635, 97, 98, 99, 100}, journalID = 2660},
+			[3074] = {events = {290, 292, 420}, journalID = 2662},
 		},
 	},
 	[556] = {

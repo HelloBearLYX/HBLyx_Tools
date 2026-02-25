@@ -7,7 +7,7 @@ local MOD_KEY = "PrivateAuras"
 addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	SoundChannel = "Master",
-	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
+	data = {}, -- data structure: { [encounterID] = { [spellID] = sound } }
 }
 
 -- MARK: Adds
@@ -58,7 +58,7 @@ end
 -- MARK: Render Settings
 local function CreatePrivateAuraSettings(encounterID, spellID, container)
     local inputSound = nil
-    local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] and addon.db.PrivateAuras.data[encounterID][spellID][1] or nil
+    local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] or nil
     local soundSelect = GUI:CreateDropdown(container, L["SoundSettings"], addon.Utilities.Sounds, nil, currentSound, function (value)
         inputSound = value
         AddSound(encounterID, spellID, value)
@@ -115,6 +115,8 @@ function GUI.TagPanels.PrivateAuras:CreateTabPanel(parent)
 			end}
 		)
 	end)
+
+    -- MARK: TODO Private Anchor
 
     -- MARK: Setting Part
 	local inputMap, inputEncounter = nil, nil

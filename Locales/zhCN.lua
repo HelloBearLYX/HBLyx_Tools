@@ -7,6 +7,7 @@ L["WelecomeInfo"] = "欢迎! 感谢你使用|cff8788ee" .. ADDON_NAME .. "|r!"
 L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r 中打开配置面板来更改设置"
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r配置面板"
+L["CombatLock"] = "|cffff0000战斗中|r, 无法打开配置面板或开启测试模式"
 L["Notifications"] = "通知"
 L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
 "你可以在|cff8788eeHBLyx|r的页面里找到:" .. "\n" ..
@@ -105,6 +106,7 @@ L["LeftButton"] = "左键"
 L["RightButton"] = "右键"
 L["ShowInInstance"] = "仅在副本中显示"
 L["HideMinimapIcon"] = "隐藏小地图图标"
+L["Select"] = "选择"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"
@@ -267,3 +269,19 @@ L["AuraSettingsDesc"] = "虽然功能有限, 但它仍然可以提供支持, 比
 "|cffffff00删除|r: 删除光环时, 只有 |cffffff00法术ID是必填项|r, 并且它必须是一个已经存在的光环的法术ID。你也可以从下面的下拉菜单选择一个已经存在的光环来自动填充法术ID以进行删除或更新。"
 L["SelectAura"] = "选择一个存在的光环"
 L["ClearSpecsSelection"] = "清除专精选择"
+
+-- MARK: Encounter Sound
+L["EncounterSoundSettings"] = "BOSS战音效"
+L["EncounterSoundSettingsDesc"] = "为BOSS战时间线事件自定义播放音效警报\n" ..
+"具体来说, 这个模块为副本中的每个BOSS战提供了一个自定义的音效警报设置(仅包括当前赛季的副本)\n\n" ..
+"首先添加了12.0第一赛季的大秘境, 然后很快会添加团队副本。由于这个模块高度依赖于对游戏数据的数据挖掘, 实际上获取数据是相对耗时的\n" ..
+"随着数据挖掘的过程, 许多问题将被修复, 模块也会得到改进, 感谢你的反馈和支持!"
+L["EncounterSettings"] = "BOSS战设置"
+L["SelectEncounter"] = "选择BOSS战"
+L["SelectInstance"] = "选择副本"
+L["EncounterEventTrigger"] = "BOSS战事件触发器"
+L["EncounterEventSound"] = "BOSS战事件音效"
+L["OnTextWarningShown"] = "文本警告显示时"
+L["OnTimelineEventFinished"] = "事件完成时"
+L["OnTimelineEventHighlight"] = "事件高亮时"
+L["EventColor"] = "事件颜色"

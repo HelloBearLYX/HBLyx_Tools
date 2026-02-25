@@ -1,20 +1,217 @@
-local MAP_PORTAL = {
-    -- current season
-    [402] = {id = 393273, name = L["AA"]},    -- Algeth'ar Academy
-    [558] = {id = 1254572, name = L["MT"]},   -- Magister's Terrace
-    [560] = {id = 1254559, name = L["MC"]},   -- Maisara Caverns
-    [559] = {id = 1254563, name = L["NPX"]},   -- Nexus-Point Xenas
-    [556] = {id = 1254555, name = L["PS"]},   -- Pit of Saron
-    [239] = {id = 1254551, name = L["ST"]},   -- Seat of the Triumvirate
-    [161] = {id = 1254557, name = L["Skyreach"]},   -- Skyreach
-    [557] = {id = 1254400, name = L["WS"]},   -- Windrunner Spire
-    -- 11.2.7 Pre-Patch
-    [503] = {id = 445417, name = L["ARAK"]},
-    [505] = {id = 445414, name = L["TD"]},
-    [542] = {id = 1237215, name = L["ED"]},
-    [378] = {id = 354465, name = L["HOA"]},
-    [525] = {id = 1216786, name = L["OF"]},
-    [499] = {id = 445444, name = L["PSF"]},
-    [392] = {id = 367416, name = L["GAMBIT"]},
-    [391] = {id = 367416, name = L["STREET"]}          
+local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+local GUI = addon.GUI
+local MOD_KEY = "EncounterSound"
+
+-- MARK: Defaults
+addon.configurationList[MOD_KEY] = {
+	Enabled = false,
+	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
 }
+
+-- MARK: Constants
+local EVENT_TRIGGERS = {
+	[0] = L["OnTextWarningShown"],
+	[1] = L["OnTimelineEventFinished"],
+	[2] = L["OnTimelineEventHighlight"],
+}
+
+-- MARK: Safe update
+local function update()
+	return addon.core:GetSafeUpdate(MOD_KEY)()
+end
+
+-- MARK: Adds
+local function AddSound(encounterID, eventID, trigger, sound)
+	if not addon.db.EncounterSound.data then
+		addon.db.EncounterSound.data = {}
+	end
+
+	if not addon.db.EncounterSound.data[encounterID] then
+		addon.db.EncounterSound.data[encounterID] = {}
+	end
+
+	if not addon.db.EncounterSound.data[encounterID][eventID] then
+		addon.db.EncounterSound.data[encounterID][eventID] = {}
+	end
+
+	addon.db.EncounterSound.data[encounterID][eventID][trigger] = sound
+
+	addon.Utilities:print(string.format("%d-%d-%s-%s: %s", encounterID, eventID, EVENT_TRIGGERS[trigger], sound, L["AddSuccess"]))
+end
+
+local function AddColor(encounterID, eventID, color)
+	if not addon.db.EncounterSound.data then
+		addon.db.EncounterSound.data = {}
+	end
+
+	if not addon.db.EncounterSound.data[encounterID] then
+		addon.db.EncounterSound.data[encounterID] = {}
+	end
+
+	if not addon.db.EncounterSound.data[encounterID][eventID] then
+		addon.db.EncounterSound.data[encounterID][eventID] = {}
+	end
+
+	addon.db.EncounterSound.data[encounterID][eventID].color = color
+end
+
+-- MARK: Removes
+local function RemoveSound(encounterID, eventID, trigger)
+	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][trigger] then
+		addon.db.EncounterSound.data[encounterID][eventID][trigger] = nil
+	end
+end
+
+local function RemoveColor(encounterID, eventID)
+	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] then
+		addon.db.EncounterSound.data[encounterID][eventID].color = nil
+	end
+end
+
+-- MARK: Get Maps List
+local function GetMapsList()
+    local output = {}
+    for mapID, mapInfo in pairs(addon.data.MAP_ENCOUNTER_EVENTS) do
+        if mapInfo.name then
+            output[mapID] =  "|T" .. C_Spell.GetSpellInfo(mapInfo.portalID).iconID .. ":0|t " .. mapInfo.name
+        end
+    end
+    return output
+end
+
+-- MARK: Get Encounters List
+local function GetEncountersList(mapID)
+	local output = {}
+	if addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters then
+		for encounterID, encounterInfo in pairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters) do
+			output[encounterID] = encounterInfo.journalID and EJ_GetEncounterInfo(encounterInfo.journalID) or encounterID
+		end
+	end
+
+	return output
+end
+
+-- MARK: Render Settings
+local function CreateTimelineSettings(encounterID, eventID, container)
+	local soundGroup = GUI:CreateInlineGroup(container, L["SoundSettings"])
+	local inputTrigger, inputSound = nil, nil
+	local soundSelect = GUI:CreateSoundSelect(nil, L["EncounterEventSound"], nil, function(key)
+		inputSound = key
+		if inputTrigger then
+			AddSound(encounterID, eventID, inputTrigger, inputSound)
+		end
+	end)
+	GUI:CreateDropdown(soundGroup, L["EncounterEventTrigger"], EVENT_TRIGGERS, nil, nil, function(value)
+		inputTrigger = value
+		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][inputTrigger] then
+			inputSound = addon.db.EncounterSound.data[encounterID][eventID][inputTrigger]
+			soundSelect:SetValue(inputSound)
+		else
+			inputSound = nil
+			soundSelect:SetValue(nil)
+		end
+	end)
+	soundGroup:AddChild(soundSelect)
+	GUI:CreateButton(soundGroup, L["Remove"], function()
+		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][inputTrigger] then
+			RemoveSound(encounterID, eventID, inputTrigger)
+			inputSound = nil
+			soundSelect:SetValue(nil)
+			addon.Utilities:print(string.format("%d-%d-%s: %s", encounterID, eventID, EVENT_TRIGGERS[inputTrigger], L["RemoveSuccess"]))
+		else
+			addon.Utilities:print(L["RemoveFailed"])
+		end
+	end)
+
+	local inputColor = nil
+	local colorGroup = GUI:CreateInlineGroup(container, L["ColorSettings"])
+	local color = "ffffff"
+	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID].color then
+		color = addon.db.EncounterSound.data[encounterID][eventID].color
+	end
+	local colorPicker = GUI:CreateColorPicker(colorGroup, L["EventColor"], false, color, function(hex)
+		inputColor = hex
+		AddColor(encounterID, eventID, inputColor)
+	end)
+	GUI:CreateButton(colorGroup, L["Remove"], function()
+		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID].color then
+			RemoveColor(encounterID, eventID)
+			inputColor = "ffffff"
+			colorPicker:SetColor(addon.Utilities:HexToRGB("ffffff"))
+			addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveSuccess"]))
+		else
+			addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveFailed"]))
+		end
+	end)
+end
+
+local function RenderEncounterSettings(mapID, encounterID, container)
+	for _, eventID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].events) do
+		local encounterSpellID = C_EncounterEvents.GetEventInfo(eventID).spellID
+		local name = "UNKNOWN"
+		if encounterSpellID then
+			local spellInfo = C_Spell.GetSpellInfo(encounterSpellID)
+			name = "|T" .. spellInfo.iconID .. ":0|t " .. spellInfo.name
+		end
+		local group = GUI:CreateInlineGroup(container, name)
+		CreateTimelineSettings(encounterID, eventID, group)
+	end
+end
+
+-- GUI
+GUI.TagPanels.EncounterSound = {}
+function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
+	-- MARK: General
+	local frame = GUI:CreateScrollFrame(parent)
+
+    GUI:CreateInformationTag(frame, L["EncounterSoundSettingsDesc"], "LEFT")
+	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["EncounterSoundSettings"] .. "|r", addon.db.EncounterSound.Enabled, function(value)
+		addon.db.EncounterSound.Enabled = value
+		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
+            if not value then -- user try to disable the module
+                addon:ShowDialog(ADDON_NAME.."RLNeeded")
+            end
+        else -- if the module is not loaded yet
+            if value then -- user try to enable the module, just load it without asking for reload, since it will be loaded immediately
+                addon.core:LoadModule(MOD_KEY)
+                addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
+            end
+        end
+	end)
+	GUI:CreateButton(frame, L["ResetMod"], function ()
+		addon.Utilities:SetPopupDialog(
+			ADDON_NAME .. "ResetMod",
+			"|cffC41E3A" .. L["EncounterSoundSettings"] .. "|r: " .. L["ComfirmResetMod"],
+			true,
+			{button1 = YES, button2 = NO, OnButton1 = function ()
+		    	addon.Utilities:ResetModule(MOD_KEY)
+				ReloadUI()
+			end}
+		)
+	end)
+
+    -- MARK: Map and Encounter Selection
+	local inputMap, inputEncounter = nil, nil
+	local selectGroup = GUI:CreateInlineGroup(frame, L["Select"])
+	local settingsGroup = GUI:CreateInlineGroup(nil, L["EncounterSettings"])
+	local encounterGroup = 	GUI:CreateDropdown(nil, L["SelectEncounter"], {}, nil, nil, function (value)
+		settingsGroup:ReleaseChildren()
+		
+		inputEncounter = value
+		RenderEncounterSettings(inputMap, inputEncounter, settingsGroup)
+		frame:DoLayout()
+	end)
+	GUI:CreateDropdown(selectGroup, L["SelectInstance"], GetMapsList(), nil, nil, function (value)
+		inputMap = value
+		local list = GetEncountersList(value)
+		encounterGroup:SetList(list)
+		encounterGroup:SetValue(nil)
+		settingsGroup:ReleaseChildren()
+		frame:DoLayout()
+	end)
+	selectGroup:AddChild(encounterGroup)
+	selectGroup:AddChild(settingsGroup)
+
+	return frame
+end

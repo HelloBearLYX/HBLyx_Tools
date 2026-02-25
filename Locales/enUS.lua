@@ -6,6 +6,7 @@ L["WelecomeInfo"] = "Welecome! Thank you for using |cff8788ee" .. ADDON_NAME .. 
 L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or open configuration panel in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
 L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r Configurations Panel"
+L["CombatLock"] = "|cffff0000In combat|r, cannot open the configuration panel or turn on test mode"
 L["Notifications"] = "Notifications"
 L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" ..
 "You can find on |cff8788eeHBLyx|r's page:" .. "\n" ..
@@ -104,6 +105,7 @@ L["LeftButton"] = "Left Click"
 L["RightButton"] = "Right Click"
 L["ShowInInstance"] = "Only Show in Instance"
 L["HideMinimapIcon"] = "Hide Minimap Icon"
+L["Select"] = "Select"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -266,3 +268,19 @@ L["AuraSettingsDesc"] = "Although the function is limited, but it still can be s
 "|cffffff00TO REMOVE|r: Only |cffffff00Spell ID is required|r, and it must be an existing aura's spell ID. You can also select an existing aura from the dropdown menu to auto-fill the spell ID for deletion or update."
 L["SelectAura"] = "Select an existing aura"
 L["ClearSpecsSelection"] = "Clear Specializations Selection"
+
+-- MARK: Encounter Sound
+L["EncounterSoundSettings"] = "Encounter Sound"
+L["EncounterSoundSettingsDesc"] = "Custom play sound alert for encounter time line events.\n" ..
+"Specifically, this module provide a customized sound alert setting for each Boss fight in the instances.(only include current season instances)\n\n" ..
+"Firstly, added M+ dungeons in 12.0 season 1, and then will add raids soon. As this module is highly dependent on data mining toward the game data, it is relatively costly to get data.\n" ..
+"Many issue will be fixed and module will be improved with the process of data mining, thanks for your feedback and support!"
+L["EncounterSettings"] = "Encounter Settings"
+L["SelectEncounter"] = "Select Encounter"
+L["SelectInstance"] = "Select Instance"
+L["EncounterEventTrigger"] = "Encounter Event Trigger"
+L["EncounterEventSound"] = "Encounter Event Sound"
+L["OnTextWarningShown"] = "Text Warning Shown"
+L["OnTimelineEventFinished"] = "Event Finished"
+L["OnTimelineEventHighlight"] = "Event Highlighted"
+L["EventColor"] = "Event Color"

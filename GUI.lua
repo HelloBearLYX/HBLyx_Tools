@@ -19,6 +19,7 @@ local TABS = {
     {text = L["BattleResSettings"], value = "BattleRes"},
     {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
     {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
+    {text = L["EncounterSoundSettings"], value = "EncounterSound"},
     {text = L["WarlockReminders"], value = "WarlockReminder"},
     {text = L["Profile"], value = "Profile"},
 }
@@ -78,7 +79,13 @@ end
 
 ---Initialize/Constructor for GUI
 function addon.GUI:Render()
-    if self.isOpened or InCombatLockdown() then return end
+    if self.isOpened or addon.states["inCombat"] then
+        if addon.states["inCombat"] then
+            addon.Utilities:print(L["CombatLock"])
+        end
+        
+        return
+    end
 
     -- create main frame
     self.isOpened = true
@@ -150,6 +157,9 @@ function addon.GUI:Render()
         elseif tab == "CustomAuraTracker" then
             local panel = addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container)
             panel:DoLayout()
+        elseif tab == "EncounterSound" then
+            local panel = addon.GUI.TagPanels.EncounterSound:CreateTabPanel(container)
+            panel:DoLayout()
         elseif tab == "WarlockReminder" then
             local panel = addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container)
             panel:DoLayout()
@@ -204,7 +214,7 @@ end
 ---@param list table the list of items for the dropdown
 ---@param order table the order of items in the dropdown
 ---@param get any initial value for the dropdown
----@param callback fun(key) callback function when an item is selected
+---@param callback fun(self, key) callback function when an item is selected
 ---@return AceGUIWidget
 function addon.GUI:CreateDropdownGroup(parent, title, list, order, get, callback)
     local dropdownGroup = AceGUI:Create("DropdownGroup")
@@ -213,9 +223,9 @@ function addon.GUI:CreateDropdownGroup(parent, title, list, order, get, callback
     dropdownGroup:SetLayout("Flow")
     dropdownGroup:SetGroupList(list, order)
     dropdownGroup:SetGroup(get)
-    dropdownGroup:SetCallback("OnGroupSelected", function(_, _, group)
+    dropdownGroup:SetCallback("OnGroupSelected", function(self, _, group)
         if callback then
-            callback(group)
+            callback(self, group)
         end
     end)
 

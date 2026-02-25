@@ -9,10 +9,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Algeth'ar Academy"],
 		short = L["Algeth'ar Academy_short"],
 		encounters = {
-			[2562] = {274, 275, 276, 277},
-			[2563] = {282, 283, 284, 285},
-			[2564] = {278, 279, 280, 397},
-			[2565] = {293, 294, 295, 296},
+			[2562] = {events = {274, 275, 276, 277}, journalID = 2509},
+			[2563] = {events = {282, 283, 284, 285}, journalID = 2512},
+			[2564] = {events = {278, 279, 280, 397}, journalID = 2495},
+			[2565] = {events = {293, 294, 295, 296}, journalID = 2514},
 		},
 	},
 	[239] = {
@@ -20,10 +20,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Seat of the Triumvirate"],
 		short = L["Seat of the Triumvirate_short"],
 		encounters = {
-			[2065] = {223, 224, 225, 226, 238},
-			[2066] = {234, 235, 236, 237, 243},
-			[2067] = {246, 247, 376, 245},
-			[2068] = {248, 249, 250, 251, 252, 253, 254},
+			[2065] = {events = {223, 224, 225, 226, 238}, journalID = 1979},
+			[2066] = {events = {234, 235, 236, 237, 243}, journalID = 1980},
+			[2067] = {events = {246, 247, 376, 245}, journalID = 1981},
+			[2068] = {events = {248, 249, 250, 251, 252, 253, 254}, journalID = 1982},
 		},
 	},
 	[559] = {
@@ -31,9 +31,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Nexus-Point Xenas"],
 		short = L["Nexus-Point Xenas_short"],
 		encounters = {
-			[3328] = {106, 107, 108, 172},
-			[3332] = {33, 34, 35, 36, 313},
-			[3333] = {109, 110, 111, 112},
+			[3328] = {events = {106, 107, 108, 172}},
+			[3332] = {events = {33, 34, 35, 36, 313}},
+			[3333] = {events = {109, 110, 111, 112}},
 		},
 	},
 	[560] = {
@@ -41,9 +41,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Maisara Caverns"],
 		short = L["Maisara Caverns_short"],
 		encounters = {
-			[3212] = {150, 151, 152, 153, 154, 155},
-			[3213] = {16, 17, 18, 19, 20},
-			[3214] = {156, 157, 158},
+			[3212] = {events = {150, 151, 152, 153, 154, 155}},
+			[3213] = {events = {16, 17, 18, 19, 20}},
+			[3214] = {events = {156, 157, 158}},
 		},
 	},
 	[161] = {
@@ -51,10 +51,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Skyreach"],
 		short = L["Skyreach_short"],
 		encounters = {
-			[1698] = {298, 299, 300, 301},
-			[1699] = {302, 303, 304},
-			[1700] = {305, 306, 308, 603},
-			[1701] = {309, 310, 311, 312},
+			[1698] = {events = {298, 299, 300, 301}, journalID = 965},
+			[1699] = {events = {302, 303, 304}, journalID = 966},
+			[1700] = {events = {305, 306, 308, 603}, journalID = 967},
+			[1701] = {events = {309, 310, 311, 312}, journalID = 968},
 		},
 	},
 	[557] = {
@@ -62,10 +62,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Windrunner Spire"],
 		short = L["Windrunner Spire_short"],
 		encounters = {
-			[3056] = {239, 241, 242},
-			[3057] = {25, 26, 27, 28, 29},
-			[3058] = {210, 211, 213, 212, 214, 215, 216},
-			[3059] = {21, 22, 23, 24, 538},
+			[3056] = {events = {239, 241, 242}},
+			[3057] = {events = {25, 26, 27, 28, 29}},
+			[3058] = {events = {210, 211, 213, 212, 214, 215, 216}},
+			[3059] = {events = {21, 22, 23, 24, 538}},
 		},
 	},
 	[558] = {
@@ -73,10 +73,10 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Magister's Terrace"],
 		short = L["Magister's Terrace_short"],
 		encounters = {
-			[3071] = {281, 286, 287, 288},
-			[3072] = {93, 94, 95, 513, 96},
-			[3073] = {635, 97, 98, 99, 100},
-			[3074] = {290, 292, 420},
+			[3071] = {events = {281, 286, 287, 288}},
+			[3072] = {events = {93, 94, 95, 513, 96}},
+			[3073] = {events = {635, 97, 98, 99, 100}},
+			[3074] = {events = {290, 292, 420}},
 		},
 	},
 	[556] = {
@@ -84,9 +84,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Pit of Saron"],
 		short = L["Pit of Saron_short"],
 		encounters = {
-			[2001] = {203, 204, 205, 206, 561},
-			[1999] = {144, 145, 146, 147},
-			[2000] = {164, 165, 166, 167, 168, 375},
+			[2001] = {events = {203, 204, 205, 206, 561}, journalID = 609},
+			[1999] = {events = {144, 145, 146, 147}, journalID = 608},
+			[2000] = {events = {164, 165, 166, 167, 168, 375}, journalID = 610},
 		},
 	},
     -- MARK: Pre-patch 11.2.7

@@ -296,4 +296,5 @@ L["EncounterSoundInstruction"] = "选择|cffffff00一个副本|r和|cffffff00一
 "|cffff5c00事件完成时|r: 当时间轴上的事件|cffff5c00完成|r时触发\n" ..
 "|cffff5c00事件高亮时|r: 当时间轴上的事件|cffff5c00将在5秒内完成|r时触发\n" ..
 "更多关于触发器的信息在: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
-"例子: 如果你需要一个\"准备AoE-3-2-1\", 你应该将\"准备AoE\"和倒计时音效合并到一个媒体文件中, 并设置在\"事件高亮\"触发器上播放(在AoE的5秒前播放)\n\n"
+"例子: 如果你需要一个\"准备AoE-3-2-1\", 你应该将\"准备AoE\"和倒计时音效合并到一个媒体文件中, 并设置在\"事件高亮\"触发器上播放(在AoE的5秒前播放)\n\n" ..
+"|cffff0000注意|r: 你必须|cffffff00启用暴雪的首领预警(包括文本警告和时间轴)|r, 才能让相应的事件触发器激活"

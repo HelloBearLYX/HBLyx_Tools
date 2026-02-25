@@ -295,4 +295,5 @@ L["EncounterSoundInstruction"] = "After selected |cffffff00an instance|r and |cf
 "|cffff5c00Events Finished|r: trigger when the event is |cffff5c00finished|r on the timeline\n" ..
 "|cffff5c00Events Highlighted|r: trigger when the event |cffff5c00will be finished in 5 seconds|r on the timeline\n" ..
 "More information about the triggers on: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
-"e.g. If you want a \"AoE Incoming-3-2-1\", you should join the \"AoE Incoming\" and countdown sound into a single media file, and set it to play on the \"Event Highlighted\" trigger(play at 5 seconds before the AoE).\n\n"
+"e.g. If you want a \"AoE Incoming-3-2-1\", you should join the \"AoE Incoming\" and countdown sound into a single media file, and set it to play on the \"Event Highlighted\" trigger(play at 5 seconds before the AoE).\n\n" ..
+"|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active"

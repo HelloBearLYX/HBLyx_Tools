@@ -124,7 +124,10 @@ local function InitializeStates()
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
 		addon.states["inCombat"] = true
 		addon.GUI:CloseGUI() -- close GUI when enter combat
-		addon.core:TestMode(false) -- turn off test mode when enter combat
+		if addon.core:IsTestOn() then
+			addon.core:TestMode(false) -- turn off test mode when enter combat
+			addon.Utilities:print(L["CombatLock"])
+		end
 	end)
 	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function()
 		addon.states["inCombat"] = false

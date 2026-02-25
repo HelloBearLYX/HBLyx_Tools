@@ -1,5 +1,4 @@
 local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 ---@class Core
 ---@field eventFrame Frame the frame used to register events
@@ -208,14 +207,10 @@ end
 ---Turn on/off TestMode for all loaded modules
 ---@param on boolean|nil turn on or off the test mode, nil to toggle the test mode
 function Core:TestMode(on)
-    if addon.states["inCombat"] then
-        addon.Utilities:print(L["CombatLock"])
-    end
-
     if on == nil then
-        self.testMode = not self.testMode and not addon.states["inCombat"] -- toggle test mode if on is nil
+        self.testMode = not self.testMode -- toggle test mode if on is nil
     else
-        self.testMode = on and not addon.states["inCombat"] -- set test mode to on if on is not nil
+        self.testMode = on -- set test mode to on if on is not nil
     end
 
     for _, module in pairs(self.modules) do -- for all loaded modules, call the Test function if it exists

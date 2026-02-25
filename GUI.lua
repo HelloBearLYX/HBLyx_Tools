@@ -20,7 +20,7 @@ local TABS = {
     {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
     {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
     {text = L["EncounterSoundSettings"], value = "EncounterSound"},
-    -- {text = L["PrivateAurasSettings"], value = "PrivateAuras"},
+    {text = L["PrivateAurasSettings"], value = "PrivateAuras"},
     {text = L["WarlockReminders"], value = "WarlockReminder"},
     {text = L["Profile"], value = "Profile"},
 }
@@ -161,9 +161,9 @@ function addon.GUI:Render()
         elseif tab == "EncounterSound" then
             local panel = addon.GUI.TagPanels.EncounterSound:CreateTabPanel(container)
             panel:DoLayout()
-        -- elseif tab == "PrivateAuras" then
-        --     local panel = addon.GUI.TagPanels.PrivateAuras:CreateTabPanel(container)
-        --     panel:DoLayout()
+        elseif tab == "PrivateAuras" then
+            local panel = addon.GUI.TagPanels.PrivateAuras:CreateTabPanel(container)
+            panel:DoLayout()
         elseif tab == "WarlockReminder" then
             local panel = addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container)
             panel:DoLayout()

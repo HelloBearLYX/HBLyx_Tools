@@ -355,7 +355,6 @@ end
 function addon.GUI:CreateInformationTag(parent, description, textJustification)
     local informationLabel = AceGUI:Create("Label")
     informationLabel:SetText(description)
-    informationLabel:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     informationLabel:SetFullWidth(true)
     informationLabel:SetJustifyH(textJustification or "CENTER")
     informationLabel:SetHeight(24)

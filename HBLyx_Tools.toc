@@ -40,7 +40,6 @@ Configs\ChallengeEnhance.lua
 Configs\CustomAuraTracker.lua
 Configs\EncounterSound.lua
 Configs\WarlockReminder.lua
-Configs\PrivateAuras.lua
 
 Configs\Profile.lua
 

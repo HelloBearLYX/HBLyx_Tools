@@ -151,11 +151,19 @@ local function RenderEncounterSettings(mapID, encounterID, container)
 	for _, eventID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].events) do
 		local encounterSpellID = C_EncounterEvents.GetEventInfo(eventID).spellID
 		local name = "UNKNOWN"
+		local spell = nil
 		if encounterSpellID then
-			local spellInfo = C_Spell.GetSpellInfo(encounterSpellID)
-			name = "|T" .. spellInfo.iconID .. ":0|t " .. spellInfo.name
+			spell = Spell:CreateFromSpellID(encounterSpellID)
+			name = string.format("|T%s:0|t %s(%d)", spell:GetSpellTexture(), spell:GetSpellName(), encounterSpellID)
 		end
 		local group = GUI:CreateInlineGroup(container, name)
+		if spell then
+			local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
+			spell:ContinueOnSpellLoad(function()
+				description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
+				group:DoLayout()
+			end)
+		end
 		CreateTimelineSettings(encounterID, eventID, group)
 	end
 end

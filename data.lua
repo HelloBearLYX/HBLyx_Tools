@@ -74,7 +74,7 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		short = L["Magister's Terrace_short"],
 		encounters = {
 			[3071] = {events = {281, 286, 287, 288}, journalID = 2659, privateAuras = {1214038, 1214089, 1243905}},
-			[3072] = {events = {93, 94, 95, 513, 96}, journalID = 2661, privateAuras = {1225051, 1225205, 1225792, 1246446}},
+			[3072] = {events = {93, 94, 95, 513, 96}, journalID = 2661, privateAuras = {1225015, 1225205, 1225792, 1246446}},
 			[3073] = {events = {635, 97, 98, 99, 100}, journalID = 2660, privateAuras = {1224140, 1224401, 1284958, 1224299, 1253709}},
 			[3074] = {events = {290, 292, 420}, journalID = 2662, privateAuras = {1215157, 1215161, 1215897, 1269631}},
 		},
@@ -84,9 +84,9 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Pit of Saron"],
 		short = L["Pit of Saron_short"],
 		encounters = {
-			[2001] = {events = {203, 204, 205, 206, 561}, journalID = 609, privateAuras = {}},
-			[1999] = {events = {144, 145, 146, 147}, journalID = 608, privateAuras = {}},
-			[2000] = {events = {164, 165, 166, 167, 168, 375}, journalID = 610, privateAuras = {}},
+			[1999] = {events = {144, 145, 146, 147}, journalID = 608, privateAuras = {1261286, 1261799}},
+			[2000] = {events = {164, 165, 166, 167, 168, 375}, journalID = 610, privateAuras = {1262772}},
+			[2001] = {events = {203, 204, 205, 206, 561}, journalID = 609, privateAuras = {1264453, 1264299}},
 		},
 	},
     -- MARK: Pre-patch 11.2.7

@@ -57,9 +57,9 @@ end
 
 -- MARK: Render Settings
 local function CreatePrivateAuraSettings(encounterID, spellID, container)
-    local inputSound = nil
+	local inputSound = nil
     local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] or nil
-    local soundSelect = GUI:CreateDropdown(container, L["SoundSettings"], addon.Utilities.Sounds, nil, currentSound, function (value)
+    local soundSelect = GUI:CreateSoundSelect(container, L["SoundSettings"], currentSound, function (value)
         inputSound = value
         AddSound(encounterID, spellID, value)
     end)
@@ -71,12 +71,14 @@ end
 
 local function RenderEncounterSettings(mapID, encounterID, container)
 	for _, spellID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].privateAuras) do
-		local spellInfo = C_Spell.GetSpellInfo(spellID)
-		local name = "UNKNOWN"
-		if spellID then
-			name = "|T" .. spellInfo.iconID .. ":0|t " .. spellInfo.name
-		end
+		local spell = Spell:CreateFromSpellID(spellID)
+		local name = string.format("|T%d:0|t %s(%d)", spell:GetSpellTexture(), spell:GetSpellName(), spellID)
 		local group = GUI:CreateInlineGroup(container, name)
+		local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
+		spell:ContinueOnSpellLoad(function()
+			description:SetText(spell:GetSpellDescription() or "UNKNOWN")
+			group:DoLayout()
+		end)
 		CreatePrivateAuraSettings(encounterID, spellID, group)
 	end
 end

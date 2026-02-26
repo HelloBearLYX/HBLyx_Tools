@@ -15,6 +15,11 @@ local EncounterSound = {
 function EncounterSound:Initialize()
     self.privateAuras = {}
 
+    -- data change migration
+    if addon.db.EncounterSound.dataPA[3073] and addon.db.EncounterSound.dataPA[3073][1224104] then
+        addon.db.EncounterSound.dataPA[3073][1224104] = nil -- remove incorrect entry
+    end
+
     return self
 end
 

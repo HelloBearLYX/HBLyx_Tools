@@ -22,7 +22,7 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		encounters = {
 			[2065] = {events = {223, 224, 225, 226, 238}, journalID = 1979, privateAuras = {244588, 244599}},
 			[2066] = {events = {234, 235, 236, 237, 243}, journalID = 1980, privateAuras = {245742, 246026, 1263523}},
-			[2067] = {events = {246, 247, 376, 245}, journalID = 1981, privateAuras = {1263523, 1263542, 1268733}},
+			[2067] = {events = {246, 247, 376, 245}, journalID = 1981, privateAuras = {1263542, 1268733}},
 			[2068] = {events = {248, 249, 250, 251, 252, 253, 254}, journalID = 1982, privateAuras = {1265426, 1265650}},
 		},
 	},

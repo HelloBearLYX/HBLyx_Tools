@@ -23,6 +23,8 @@ function EncounterSound:Initialize()
     -- private aura
     if addon.db.EncounterSound.dataPA[3073] and addon.db.EncounterSound.dataPA[3073][1224104] then
         addon.db.EncounterSound.dataPA[3073][1224104] = nil -- remove incorrect entry
+    elseif addon.db.EncounterSound.dataPA[2067] and addon.db.EncounterSound.dataPA[2067][1263523] then
+        addon.db.EncounterSound.dataPA[2067][1263523] = nil -- remove incorrect entry
     end
 
     return self

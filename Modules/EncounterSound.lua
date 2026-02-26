@@ -30,7 +30,9 @@ end
 
 -- MARK: Load Event Sounds
 
-local function LoadEventSounds(self, encounterID)
+---Load event sounds for the given encounter ID
+---@param encounterID integer the encounter ID to load sounds for
+local function LoadEventSounds(encounterID)
     if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] then
         local encounterData = addon.db.EncounterSound.data[encounterID]
         for eventID, eventData in pairs(encounterData) do
@@ -56,6 +58,10 @@ local function LoadEventSounds(self, encounterID)
 end
 
 -- MARK: Load PA Sounds
+
+---Load private aura sounds for the given encounter ID
+---@param self EncounterSound self
+---@param encounterID integer the encounter ID to load private aura sounds for
 local function LoadPrivateAuraSounds(self, encounterID)
     if addon.db.EncounterSound.EnablePrivateAuras and addon.db.EncounterSound.dataPA and addon.db.EncounterSound.dataPA[encounterID] then
         local privateAuraData = addon.db.EncounterSound.dataPA[encounterID]
@@ -77,6 +83,8 @@ end
 
 -- MARK: Clear PA Sounds
 
+---Clear private aura sounds loaded
+---@param self EncounterSound self
 local function ClearPrivateAuraSounds(self)
     if self.privateAuras and #self.privateAuras > 0 then
         for _, pa in ipairs(self.privateAuras) do
@@ -100,7 +108,7 @@ function EncounterSound:RegisterEvents()
             ClearPrivateAuraSounds(self)
         end
 
-        LoadEventSounds(self, currentEncounter)
+        LoadEventSounds(currentEncounter)
         LoadPrivateAuraSounds(self, currentEncounter)
     end)
 end

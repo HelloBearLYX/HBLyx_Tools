@@ -51,7 +51,7 @@ local function AddColor(encounterID, eventID, color)
 	end
 
 	addon.db.EncounterSound.data[encounterID][eventID].color = color
-	addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["AddSuccess"]))
+	addon.Utilities:print(string.format("%d-%d-|cff%sColor|r: %s", encounterID, eventID, color, L["AddSuccess"]))
 end
 
 local function AddPASound(encounterID, spellID, sound)

@@ -62,7 +62,7 @@ end
 function ChallengeEnhance:UpdateStyle()
     for mapID, button in pairs(self.buttons) do
         local _, score = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
-        local name = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].name or ""
+        local name = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].short or ""
 
         button.level:SetFont(
             addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",

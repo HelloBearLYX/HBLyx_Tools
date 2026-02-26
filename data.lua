@@ -85,7 +85,7 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		short = L["Pit of Saron_short"],
 		encounters = {
 			[1999] = {events = {144, 145, 146, 147}, journalID = 608, privateAuras = {1261286, 1261799}},
-			[2000] = {events = {164, 165, 166, 167, 168, 375}, journalID = 610, privateAuras = {1262772}},
+			[2000] = {events = {164, 165, 166, 167, 168, 375}, journalID = 610, privateAuras = {1262772, 1262596}},
 			[2001] = {events = {203, 204, 205, 206, 561}, journalID = 609, privateAuras = {1264453, 1264299}},
 		},
 	},

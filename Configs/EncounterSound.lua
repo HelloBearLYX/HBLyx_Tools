@@ -8,6 +8,7 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	SoundChannel = "Master",
 	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
+	dataPA = {}, -- data structure: { [encounterID] = { [spellID] = sound } }
 }
 
 -- MARK: Constants
@@ -57,6 +58,20 @@ local function AddColor(encounterID, eventID, color)
 	addon.db.EncounterSound.data[encounterID][eventID].color = color
 end
 
+local function AddPASound(encounterID, spellID, sound)
+	if not addon.db.EncounterSound.dataPA then
+		addon.db.EncounterSound.dataPA = {}
+	end
+
+	if not addon.db.EncounterSound.dataPA[encounterID] then
+		addon.db.EncounterSound.dataPA[encounterID] = {}
+	end
+
+	addon.db.EncounterSound.dataPA[encounterID][spellID] = sound
+
+	addon.Utilities:print(string.format("%d-%d-%s: %s", encounterID, spellID, sound, L["AddSuccess"]))
+end
+
 -- MARK: Removes
 local function RemoveSound(encounterID, eventID, trigger)
 	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][trigger] then
@@ -67,6 +82,12 @@ end
 local function RemoveColor(encounterID, eventID)
 	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] then
 		addon.db.EncounterSound.data[encounterID][eventID].color = nil
+	end
+end
+
+local function RemovePASound(encounterID, spellID)
+	if addon.db.EncounterSound.dataPA and addon.db.EncounterSound.dataPA[encounterID] and addon.db.EncounterSound.dataPA[encounterID][spellID] then
+		addon.db.EncounterSound.dataPA[encounterID][spellID] = nil
 	end
 end
 
@@ -147,6 +168,17 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 	end)
 end
 
+local function CreatePrivateAuraSettings(encounterID, spellID, container)
+    local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] or nil
+    local soundSelect = GUI:CreateSoundSelect(container, L["SoundSettings"], currentSound, function (value)
+        AddPASound(encounterID, spellID, value)
+    end)
+    GUI:CreateButton(container, L["Remove"], function ()
+        RemovePASound(encounterID, spellID)
+        soundSelect:SetValue(nil)
+    end)
+end
+
 local function RenderEncounterSettings(mapID, encounterID, container)
 	for _, eventID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].events) do
 		local encounterSpellID = C_EncounterEvents.GetEventInfo(eventID).spellID
@@ -165,6 +197,20 @@ local function RenderEncounterSettings(mapID, encounterID, container)
 			end)
 		end
 		CreateTimelineSettings(encounterID, eventID, group)
+	end
+end
+
+local function RenderPrivateAuraSettings(mapID, encounterID, container)
+	for _, spellID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].privateAuras) do
+		local spell = Spell:CreateFromSpellID(spellID)
+		local name = string.format("|T%d:0|t %s(%d)", spell:GetSpellTexture(), spell:GetSpellName(), spellID)
+		local group = GUI:CreateInlineGroup(container, name)
+		local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
+		spell:ContinueOnSpellLoad(function()
+			description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
+			container:DoLayout()
+		end)
+		CreatePrivateAuraSettings(encounterID, spellID, group)
 	end
 end
 
@@ -208,11 +254,14 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 	local selectGroup = GUI:CreateInlineGroup(frame, L["Select"])
 	GUI:CreateInformationTag(selectGroup, L["EncounterSoundInstruction"], "LEFT")
 	local settingsGroup = GUI:CreateInlineGroup(nil, L["EncounterSettings"])
+	local privateAuraGroup = GUI:CreateInlineGroup(nil, L["PrivateAuraSettings"])
 	local encounterGroup = 	GUI:CreateDropdown(nil, L["SelectEncounter"], {}, nil, nil, function (value)
 		settingsGroup:ReleaseChildren()
+		privateAuraGroup:ReleaseChildren()
 		
 		inputEncounter = value
 		RenderEncounterSettings(inputMap, inputEncounter, settingsGroup)
+		RenderPrivateAuraSettings(inputMap, inputEncounter, privateAuraGroup)
 		frame:DoLayout()
 	end)
 	GUI:CreateDropdown(selectGroup, L["SelectInstance"], GetMapsList(), nil, nil, function (value)
@@ -225,6 +274,7 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 	end)
 	selectGroup:AddChild(encounterGroup)
 	selectGroup:AddChild(settingsGroup)
+	selectGroup:AddChild(privateAuraGroup)
 
 	return frame
 end

@@ -16,6 +16,11 @@ function EncounterSound:Initialize()
     self.privateAuras = {}
 
     -- data change migration
+    -- events
+    if addon.db.EncounterSound.data and addon.db.EncounterSound.data[3073] and addon.db.EncounterSound.data[3073][99] then
+        addon.db.EncounterSound.data[3073][99] = nil -- remove incorrect entry
+    end
+    -- private aura
     if addon.db.EncounterSound.dataPA[3073] and addon.db.EncounterSound.dataPA[3073][1224104] then
         addon.db.EncounterSound.dataPA[3073][1224104] = nil -- remove incorrect entry
     end

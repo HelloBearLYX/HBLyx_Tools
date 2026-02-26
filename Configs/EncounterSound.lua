@@ -287,7 +287,7 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 		GUI:CreateInformationTag(privateAuraGroup, L["PrivateAuraInstruction"], "LEFT")
 		RenderPrivateAuraSettings(inputMap, inputEncounter, privateAuraGroup)
 		
-		C_Timer.After(0.25, function() frame:DoLayout() end) -- make a latency for render to let spell info loaded
+		C_Timer.After(0.5, function() frame:DoLayout() end) -- make a latency for render to let spell info loaded
 	end)
 	GUI:CreateDropdown(selectGroup, L["SelectInstance"], GetMapsList(), nil, nil, function (value)
 		inputMap = value

@@ -296,7 +296,7 @@ L["OnTimelineEventHighlight"] = "Event Highlighted"
 L["EventColor"] = "Event Color"
 L["PrivateAuraSettings"] = "Private Aura Settings"
 L["EncounterEvent"] = "Encounter Event"
-L["EncounterSoundInstruction"] = "After selected |cffffff00an instance|r and |cffffff00an encounter|r, the settings for the encounter will pop up below.\n"
+L["EncounterSoundInstruction"] = "After selected |cffffff00an instance|r and |cffffff00an encounter|r, the settings for the encounter will pop up below.\nThere is a 0.5 second delay for the settings to render, as game need to take time to load spell descriptions.\n\n"
 L["EncounterEventsInstruction"] = "To set sound, select |cffffff00an event trigger|r and |cffffff00a valid sound|r, the settings will be applied accordingly. Also, you can use |cffffff00\"Remove\"|r to remove the sound setting for the trigger selected.\n\n"..
 "To set color(Text Color of Event), just use the color picker to select a |cffffff00color|r, and it will be applied to the encounter event. To remove the color setting, you can use the |cffffff00\"Remove\"|r button similarly.\n\n"..
 "|cffff0000NOTE|r: |cffffff00Event Triggers|r are provided by Blizzard's APIs, and descriptions below:\n" ..

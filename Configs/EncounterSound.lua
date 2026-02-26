@@ -161,7 +161,7 @@ local function RenderEncounterSettings(mapID, encounterID, container)
 			local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
 			spell:ContinueOnSpellLoad(function()
 				description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
-				group:DoLayout()
+				container:DoLayout()
 			end)
 		end
 		CreateTimelineSettings(encounterID, eventID, group)

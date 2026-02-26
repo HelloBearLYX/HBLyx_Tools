@@ -77,7 +77,7 @@ local function RenderEncounterSettings(mapID, encounterID, container)
 		local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
 		spell:ContinueOnSpellLoad(function()
 			description:SetText(spell:GetSpellDescription() or "UNKNOWN")
-			group:DoLayout()
+			container:DoLayout()
 		end)
 		CreatePrivateAuraSettings(encounterID, spellID, group)
 	end

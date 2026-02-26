@@ -450,7 +450,7 @@ function addon.GUI:CreateColorPicker(parent, label, hasAlpha, get, callback)
     colorPicker:SetLabel(label)
     colorPicker:SetHasAlpha(hasAlpha)
     colorPicker:SetColor(addon.Utilities:HexToRGB(get))
-    colorPicker:SetCallback("OnValueConfirmed", function(_, _, r, g, b, a)
+    colorPicker:SetCallback("OnValueChanged", function(_, _, r, g, b, a)
         if callback then
             callback(addon.Utilities:RGBToHex(r, g, b, a))
         end

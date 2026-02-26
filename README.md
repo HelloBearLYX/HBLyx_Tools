@@ -10,6 +10,7 @@
 - **BattleRes**: Indicator: display the BattleRes states
 - **M+ Panel Enhance**: Display score and dungeon name and clickable M+ dungeon portal on the M+ Panel
 - **Custom Aura Tracker**: Track aura that are triggered by "player" and display and play sound alert with customizable options
+- **Encounter Sound**: set and play custom sound alert for encounter time line events
 - **Warlock Reminders**: Icon+Text reminder for pet and healthstones for warlocks.
 
 ## To customize the addon, please use: /hblyx or ESC->Options->Addons->HBLyx\_Tools
@@ -28,6 +29,7 @@
 - **战复指示器**：显示战复状态（目前适用于正式服，但不适用于测试服）。
 - **大秘境面板增强**: 在M+面板上显示分数、地下城名称以及可点击的M+地下城传送门
 - **自定义光环追踪**：追踪玩家触发的光环，并显示和播放声音警报，支持自定义选项
+- **BOSS战语音**: 为BOSS战时间线事件设置和播放自定义音效
 - **术士提醒**: 为术士提供宠物和治疗石提醒
 
 

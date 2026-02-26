@@ -41,7 +41,7 @@ local function LoadEventSounds(self, encounterID)
                 end
             end
         end
-        addon.Utilities:print("Encounter Sound: |cffffff00" .. addon.states["encounterInfo"].encounterName .. "|r")
+        addon.Utilities:print(L["EncounterSoundSettings"] .. ": |cffffff00" .. addon.states["encounterInfo"].encounterName .. "|r")
     end
 end
 
@@ -56,12 +56,12 @@ local function LoadPrivateAuraSounds(self, encounterID)
                     spellID = spellID,
                     unitToken = "player",
                     soundFileName = sound,
-                    soundChannel = addon.db.EncounterSound.SoundChannel or "Master",
+                    outputChannel = addon.db.EncounterSound.SoundChannel or "Master",
                 })
                 table.insert(self.privateAuras, pa)
             end
         end
-        addon.Utilities:print("Private Auras: |cffffff00" .. addon.states["encounterInfo"].encounterName .. "|r")
+        addon.Utilities:print(L["PrivateAuraSettings"] .. ": |cffffff00" .. addon.states["encounterInfo"].encounterName .. "|r")
     end
 end
 

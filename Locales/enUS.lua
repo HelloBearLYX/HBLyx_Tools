@@ -21,6 +21,8 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
 L["ChangeLogContent"] =
+"v3.10\n" ..
+"-Encounter Sound: Private Auras sub-module has been implemented\n" ..
 "v3.9\n" ..
 "-Encounter Sound: add a new module \"Encounter Sound\" which set and play custom sound alert for encounter time line events\n" ..
 "v3.8\n" ..
@@ -34,7 +36,9 @@ L["ChangeLogContent"] =
 L["Issues"] = "Issues"
 L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"
 L["IssuesContent"] = "Q: Can you add XXX spell as an interrupt spell in Focus Interrupt module?\nA: No, spells with GCD cannot be added due to Blizzard's API restrictions. If you want to add a spell without GCD, please inform me with the spell details" .. "\n\n" ..
-"Q: The BattleRes cannot display at the start of some Beta M+ dungeons and \"reload\" can fix it, why?\nA: It is caused by Blizzard's failure to trigger the CHALLENGE_MODE_START event in some dungeons with M+ mode, there is currently no good solution, wait for Blizzard to fix it"
+"Q: The BattleRes cannot display at the start of some Beta M+ dungeons and \"reload\" can fix it, why?\nA: It is caused by Blizzard's failure to trigger the CHALLENGE_MODE_START event in some dungeons with M+ mode, there is currently no good solution, wait for Blizzard to fix it\n\n" ..
+"Q: There are some missing/incorrect events/private auras in Encounter Sound module, will them be corrected?\nA: Yes, as this module is highly dependent on data mining toward the game and Blizzard is constantly changing the Boss fight, it takes some time to fetch new data\n\n" ..
+"Thanks for your understanding and support!"
 
 -- MARK: Contact
 L["Contact"] = "Contact"
@@ -278,7 +282,9 @@ L["EncounterSoundSettingsDesc"] = "Set and play custom sound alert for encounter
 "Specifically, this module provide a customized sound alert setting for each Boss fight in the instances.(only include current season instances)\n\n\n" ..
 "Firstly, added M+ dungeons in 12.0 season 1, and then will add raids soon. As this module is highly dependent on data mining toward the game data, it is relatively costly to get data.\n\n" ..
 "Many issue will be fixed and module will be improved with the process of data mining, thanks for your feedback and support!\n\n" ..
-"This module is still working in progress, and hope this module can provide more flexible sound alerts for encounters.\n\n"
+"This module is still working in progress, and hope this module can provide more flexible sound alerts for encounters.\n\n" ..
+"|cffff0000NOTE|r: This module is defaultly disabled, as it is still in early stage and changing may be frequent. You can enable it by the checkbox below.\n"
+
 L["EncounterSettings"] = "Encounter Events Settings"
 L["SelectEncounter"] = "Select Encounter"
 L["SelectInstance"] = "Select Instance"
@@ -300,4 +306,5 @@ L["EncounterEventsInstruction"] = "To set sound, select |cffffff00an event trigg
 "More information about the triggers on: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
 "e.g. If you want a \"AoE Incoming-3-2-1\", you should join the \"AoE Incoming\" and countdown sound into a single media file, and set it to play on the \"Event Highlighted\" trigger(play at 5 seconds before the AoE).\n\n" ..
 "|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active\n"
-L["PrivateAuraInstruction"] = "PLACE HOLDER: PrivateAuraInstruction"
+L["PrivateAuraInstruction"] = "Apply a sound alert for private auras, and the sound alert is played when the private aura is applied on \"player\".\n\n" ..
+"To prevent unneccessary conflicts or redundancy, private auras' anchor are not provided in this module, since there are many UI addons offer the customized position of private auras.\n"

@@ -34,7 +34,6 @@ local function AddSound(encounterID, eventID, trigger, sound)
 	end
 
 	addon.db.EncounterSound.data[encounterID][eventID][trigger] = sound
-
 	addon.Utilities:print(string.format("%d-%d-%s-%s: %s", encounterID, eventID, EVENT_TRIGGERS[trigger], sound, L["AddSuccess"]))
 end
 
@@ -52,6 +51,7 @@ local function AddColor(encounterID, eventID, color)
 	end
 
 	addon.db.EncounterSound.data[encounterID][eventID].color = color
+	addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["AddSuccess"]))
 end
 
 local function AddPASound(encounterID, spellID, sound)
@@ -72,18 +72,32 @@ end
 local function RemoveSound(encounterID, eventID, trigger)
 	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][trigger] then
 		addon.db.EncounterSound.data[encounterID][eventID][trigger] = nil
+		addon.Utilities:print(string.format("%d-%d-%s: %s", encounterID, eventID, EVENT_TRIGGERS[trigger], L["RemoveSuccess"]))
+		return true
 	end
+
+	return false
 end
 
 local function RemoveColor(encounterID, eventID)
 	if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] then
 		addon.db.EncounterSound.data[encounterID][eventID].color = nil
+		addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveSuccess"]))
+		return true
+	else
+		addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveFailed"]))
+		return false
 	end
 end
 
 local function RemovePASound(encounterID, spellID)
 	if addon.db.EncounterSound.dataPA and addon.db.EncounterSound.dataPA[encounterID] and addon.db.EncounterSound.dataPA[encounterID][spellID] then
 		addon.db.EncounterSound.dataPA[encounterID][spellID] = nil
+		addon.Utilities:print(string.format("%d-%d: %s", encounterID, spellID, L["RemoveSuccess"]))
+		return true
+	else
+		addon.Utilities:print(string.format("%d-%d: %s", encounterID, spellID, L["RemoveFailed"]))
+		return false
 	end
 end
 
@@ -132,13 +146,9 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 	end)
 	soundGroup:AddChild(soundSelect)
 	GUI:CreateButton(soundGroup, L["Remove"], function()
-		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][inputTrigger] then
-			RemoveSound(encounterID, eventID, inputTrigger)
+		if RemoveSound(encounterID, eventID, inputTrigger) then
 			inputSound = nil
 			soundSelect:SetValue(nil)
-			addon.Utilities:print(string.format("%d-%d-%s: %s", encounterID, eventID, EVENT_TRIGGERS[inputTrigger], L["RemoveSuccess"]))
-		else
-			addon.Utilities:print(L["RemoveFailed"])
 		end
 	end)
 
@@ -154,10 +164,10 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 	end)
 	GUI:CreateButton(colorGroup, L["Remove"], function()
 		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID].color then
-			RemoveColor(encounterID, eventID)
-			inputColor = "ffffff"
-			colorPicker:SetColor(addon.Utilities:HexToRGB("ffffff"))
-			addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveSuccess"]))
+			if RemoveColor(encounterID, eventID) then
+				inputColor = "ffffff"
+				colorPicker:SetColor(addon.Utilities:HexToRGB("ffffff"))
+			end
 		else
 			addon.Utilities:print(string.format("%d-%d-Color: %s", encounterID, eventID, L["RemoveFailed"]))
 		end
@@ -188,13 +198,14 @@ local function RenderEncounterSettings(mapID, encounterID, container)
 end
 
 local function CreatePrivateAuraSettings(encounterID, spellID, container)
-    local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] or nil
+    local currentSound = addon.db.EncounterSound.dataPA and addon.db.EncounterSound.dataPA[encounterID] and addon.db.EncounterSound.dataPA[encounterID][spellID] or nil
     local soundSelect = GUI:CreateSoundSelect(container, L["SoundSettings"], currentSound, function (value)
         AddPASound(encounterID, spellID, value)
     end)
     GUI:CreateButton(container, L["Remove"], function ()
-        RemovePASound(encounterID, spellID)
-        soundSelect:SetValue(nil)
+        if RemovePASound(encounterID, spellID) then
+            soundSelect:SetValue(nil)
+        end
     end)
 end
 

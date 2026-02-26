@@ -7,6 +7,7 @@ local MOD_KEY = "EncounterSound"
 addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	SoundChannel = "Master",
+	EnablePrivateAuras = true,
 	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
 	dataPA = {}, -- data structure: { [encounterID] = { [spellID] = sound } }
 }
@@ -17,11 +18,6 @@ local EVENT_TRIGGERS = {
 	[1] = L["OnTimelineEventFinished"],
 	[2] = L["OnTimelineEventHighlight"],
 }
-
--- MARK: Safe update
-local function update()
-	return addon.core:GetSafeUpdate(MOD_KEY)()
-end
 
 -- MARK: Adds
 local function AddSound(encounterID, eventID, trigger, sound)
@@ -168,6 +164,29 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 	end)
 end
 
+local function RenderEncounterSettings(mapID, encounterID, container)
+	for _, eventID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].events) do
+		local encounterSpellID = C_EncounterEvents.GetEventInfo(eventID).spellID
+		local name = "UNKNOWN"
+		local spell = nil
+		
+		if encounterSpellID then
+			spell = Spell:CreateFromSpellID(encounterSpellID)
+			name = string.format("|T%s:0|t %s(%s)", spell:GetSpellTexture(), spell:GetSpellName(), L["EncounterEvent"])
+		end
+		
+		local group = GUI:CreateInlineGroup(container, name)
+		
+		if spell then
+			local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
+			spell:ContinueOnSpellLoad(function()
+				description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
+			end)
+		end
+		CreateTimelineSettings(encounterID, eventID, group)
+	end
+end
+
 local function CreatePrivateAuraSettings(encounterID, spellID, container)
     local currentSound = addon.db.PrivateAuras.data and addon.db.PrivateAuras.data[encounterID] and addon.db.PrivateAuras.data[encounterID][spellID] or nil
     local soundSelect = GUI:CreateSoundSelect(container, L["SoundSettings"], currentSound, function (value)
@@ -179,37 +198,22 @@ local function CreatePrivateAuraSettings(encounterID, spellID, container)
     end)
 end
 
-local function RenderEncounterSettings(mapID, encounterID, container)
-	for _, eventID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].events) do
-		local encounterSpellID = C_EncounterEvents.GetEventInfo(eventID).spellID
-		local name = "UNKNOWN"
-		local spell = nil
-		if encounterSpellID then
-			spell = Spell:CreateFromSpellID(encounterSpellID)
-			name = string.format("|T%s:0|t %s(%d)", spell:GetSpellTexture(), spell:GetSpellName(), encounterSpellID)
-		end
-		local group = GUI:CreateInlineGroup(container, name)
-		if spell then
-			local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
-			spell:ContinueOnSpellLoad(function()
-				description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
-				container:DoLayout()
-			end)
-		end
-		CreateTimelineSettings(encounterID, eventID, group)
-	end
-end
-
 local function RenderPrivateAuraSettings(mapID, encounterID, container)
 	for _, spellID in ipairs(addon.data.MAP_ENCOUNTER_EVENTS[mapID].encounters[encounterID].privateAuras) do
-		local spell = Spell:CreateFromSpellID(spellID)
-		local name = string.format("|T%d:0|t %s(%d)", spell:GetSpellTexture(), spell:GetSpellName(), spellID)
+		local spell = Spell:CreateFromSpellID(spellID) or nil
+		local name = "UNKNOWN"
+		if spell then
+			name = string.format("|T%s:0|t %s(%s)", spell:GetSpellTexture(), spell:GetSpellName(), L["PrivateAura"])
+		end
+		
 		local group = GUI:CreateInlineGroup(container, name)
 		local description = GUI:CreateInformationTag(group, "UNKNOWN", "LEFT")
-		spell:ContinueOnSpellLoad(function()
-			description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
-			container:DoLayout()
-		end)
+		
+		if spell then
+			spell:ContinueOnSpellLoad(function()
+				description:SetText((spell:GetSpellDescription() or "UNKNOWN") .. "\n")
+			end)
+		end
 		CreatePrivateAuraSettings(encounterID, spellID, group)
 	end
 end
@@ -221,8 +225,13 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 	local frame = GUI:CreateScrollFrame(parent)
 
     GUI:CreateInformationTag(frame, L["EncounterSoundSettingsDesc"], "LEFT")
+	local togglePA = GUI:CreateToggleCheckBox(nil, L["Enable"] .. "|cffffff00" .. L["PrivateAuraSettings"] .. "|r", addon.db.EncounterSound.EnablePrivateAuras, function(value)
+		addon.db.EncounterSound.EnablePrivateAuras = value
+	end)
+	togglePA:SetDisabled(not addon.db.EncounterSound.Enabled)
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["EncounterSoundSettings"] .. "|r", addon.db.EncounterSound.Enabled, function(value)
 		addon.db.EncounterSound.Enabled = value
+		togglePA:SetDisabled(not value)
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
             if not value then -- user try to disable the module
                 addon:ShowDialog(ADDON_NAME.."RLNeeded")
@@ -234,6 +243,7 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
             end
         end
 	end)
+	frame:AddChild(togglePA)
 	GUI:CreateDropdown(frame, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.EncounterSound.SoundChannel, function(key)
         addon.db.EncounterSound.SoundChannel = key
     end)
@@ -260,9 +270,13 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 		privateAuraGroup:ReleaseChildren()
 		
 		inputEncounter = value
+
+		GUI:CreateInformationTag(settingsGroup, L["EncounterEventsInstruction"], "LEFT")
 		RenderEncounterSettings(inputMap, inputEncounter, settingsGroup)
+		GUI:CreateInformationTag(privateAuraGroup, L["PrivateAuraInstruction"], "LEFT")
 		RenderPrivateAuraSettings(inputMap, inputEncounter, privateAuraGroup)
-		frame:DoLayout()
+		
+		C_Timer.After(0.25, function() frame:DoLayout() end) -- make a latency for render to let spell info loaded
 	end)
 	GUI:CreateDropdown(selectGroup, L["SelectInstance"], GetMapsList(), nil, nil, function (value)
 		inputMap = value
@@ -270,6 +284,8 @@ function GUI.TagPanels.EncounterSound:CreateTabPanel(parent)
 		encounterGroup:SetList(list)
 		encounterGroup:SetValue(nil)
 		settingsGroup:ReleaseChildren()
+		privateAuraGroup:ReleaseChildren()
+
 		frame:DoLayout()
 	end)
 	selectGroup:AddChild(encounterGroup)

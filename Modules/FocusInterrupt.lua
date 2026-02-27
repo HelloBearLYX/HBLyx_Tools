@@ -371,6 +371,12 @@ end
 ---@param self FocusInterrupt self
 ---@param unit string the unit to handle
 local function Handler(self, unit)
+    if addon.db[self.modName][unit .. "HideFriendly"] and UnitIsFriend("player", unit) then
+        self.bars[unit].active = false
+        self.bars[unit]:Hide()
+        return
+    end
+
     -- auto detemine isChannel and handle focus change situation
     -- check if this cast is a channel cast -> check if it is a cast
     local name, _, texture, _, _, _, notInterruptible, _ = UnitChannelInfo(unit)

@@ -40,6 +40,7 @@ addon.configurationList[MOD_KEY] = {
     focusX = 0,
     focusY = 200,
     focusIconZoom = 0.07,
+    focusHideFriendly = false,
 
     EnabledTargetBar = false,
     targetBackgroundAlpha = 0.3,
@@ -51,6 +52,7 @@ addon.configurationList[MOD_KEY] = {
     targetX = 0,
     targetY = 100,
     targetIconZoom = 0.07,
+    targetHideFriendly = false,
 }
 
 -- MARK: Safe update
@@ -194,6 +196,9 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     GUI:CreateToggleCheckBox(styleGroup, L["FocusCastBarHidden"], addon.db.FocusInterrupt.Hidden, function(value)
         addon.db.FocusInterrupt.Hidden = value
     end)
+    GUI:CreateToggleCheckBox(styleGroup, L["HideIfFriendly"], addon.db.FocusInterrupt.focusHideFriendly, function(value)
+        addon.db.FocusInterrupt.focusHideFriendly = value
+    end)
     GUI:CreateFrameStrataDropdown(styleGroup, addon.db.FocusInterrupt.FrameStrata, function(value)
         addon.db.FocusInterrupt.FrameStrata = value
         update()
@@ -246,6 +251,9 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     -- MARK: Target Bar Settings
     local targetStyleGroup = GUI:CreateInlineGroup(styleGroup, L["TargetBarSettings"])
     GUI:CreateInformationTag(targetStyleGroup, L["TargetBarSettingsDesc"], "LEFT")
+    local targetHideFriendlyToggle = GUI:CreateToggleCheckBox(nil, L["HideIfFriendly"], addon.db.FocusInterrupt.targetHideFriendly, function(value)
+        addon.db.FocusInterrupt.targetHideFriendly = value
+    end)
     -- MARK: Target Style - Texture
     local targetTexttureGroup = GUI:CreateInlineGroup(nil, L["TextureSettings"])
     local targetTextureSelect = GUI:CreateTextureSelect(targetTexttureGroup, L["Texture"], addon.db.FocusInterrupt.targetTexture, function(value)
@@ -293,6 +301,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     
     GUI:CreateToggleCheckBox(targetStyleGroup, L["Enable"], addon.db.FocusInterrupt.EnabledTargetBar, function(value)
         addon.db.FocusInterrupt.EnabledTargetBar = value
+        targetHideFriendlyToggle:SetDisabled(not value)
         targetTextureSelect:SetDisabled(not value)
         targetBackgroundAlphaSlider:SetDisabled(not value)
         targetXSlider:SetDisabled(not value)
@@ -304,6 +313,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
         targetFontSizeSlider:SetDisabled(not value)
         addon:ShowDialog(ADDON_NAME.."RLNeeded")
     end)
+    targetHideFriendlyToggle:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
     targetTextureSelect:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
     targetBackgroundAlphaSlider:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
     targetXSlider:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
@@ -313,6 +323,7 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     targetIconZoomSlider:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
     targetFontSelect:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
     targetFontSizeSlider:SetDisabled(not addon.db.FocusInterrupt.EnabledTargetBar)
+    targetStyleGroup:AddChild(targetHideFriendlyToggle)
     targetStyleGroup:AddChild(targetTexttureGroup)
     targetStyleGroup:AddChild(targetPositionGroup)
     targetStyleGroup:AddChild(targetSizeGroup)

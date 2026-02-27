@@ -113,6 +113,7 @@ L["ShowInInstance"] = "Only Show in Instance"
 L["HideMinimapIcon"] = "Hide Minimap Icon"
 L["Select"] = "Select"
 L["PrivateAura"] = "Private Aura"
+L["HideIfFriendly"] = "Hide if Friendly"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

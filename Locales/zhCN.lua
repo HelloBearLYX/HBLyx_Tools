@@ -114,6 +114,7 @@ L["ShowInInstance"] = "仅在副本中显示"
 L["HideMinimapIcon"] = "隐藏小地图图标"
 L["Select"] = "选择"
 L["PrivateAura"] = "私有光环"
+L["HideIfFriendly"] = "友方则隐藏"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

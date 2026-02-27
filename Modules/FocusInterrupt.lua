@@ -371,12 +371,6 @@ end
 ---@param self FocusInterrupt self
 ---@param unit string the unit to handle
 local function Handler(self, unit)
-    -- after 3.2 self.active is handled in RegisterEvent part, although self.active is still a key variable for Update(CastHandler)
-    if not addon.db[self.modName]["Enabled"] then
-        self.frame:Hide()
-        return
-    end
-
     -- auto detemine isChannel and handle focus change situation
     -- check if this cast is a channel cast -> check if it is a cast
     local name, _, texture, _, _, _, notInterruptible, _ = UnitChannelInfo(unit)
@@ -407,7 +401,8 @@ local function Handler(self, unit)
     local target = UnitSpellTargetName(unit) -- only attempt to get non-channel cast target
     if addon.db[self.modName]["ShowTarget"] and target then
         local color = C_ClassColor.GetClassColor(UnitSpellTargetClass(unit) or "PRIEST"):GenerateHexColor() -- 8 digits Hex(also secret-value, do not directly compute it)
-        self.bars[unit].spellText:SetText(string.format("%.16s-|c%s%s|r", name, color, target))
+        local targetNameTrimed = select(1, UnitName(target)) or target -- trim server name for formatting
+        self.bars[unit].spellText:SetText(string.format("%.16s-|c%s%.16s|r", name, color, targetNameTrimed))
     else
         self.bars[unit].spellText:SetText(name)
     end

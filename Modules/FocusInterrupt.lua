@@ -119,7 +119,7 @@ end
 ---@return string class class of the interrupter
 local function GetInterrupter(guid)
     local name, class
-    name = UnitNameFromGUID(guid)
+    name = UnitNameFromGUID(guid) -- server is trimmed automatically
     _, class = GetPlayerInfoByGUID(guid)
     
     return name, class

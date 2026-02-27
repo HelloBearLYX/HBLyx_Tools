@@ -401,11 +401,13 @@ local function Handler(self, unit)
     local target = UnitSpellTargetName(unit) -- only attempt to get non-channel cast target
     if addon.db[self.modName]["ShowTarget"] and target then
         local color = C_ClassColor.GetClassColor(UnitSpellTargetClass(unit) or "PRIEST"):GenerateHexColor() -- 8 digits Hex(also secret-value, do not directly compute it)
-        local targetNameTrimed = select(1, UnitName(target)) or target -- trim server name for formatting
+        local targetNameTrimed = (select(1, UnitName(target))) or target -- trim server name for formatting
         self.bars[unit].spellText:SetText(string.format("%.16s-|c%s%.16s|r", name, color, targetNameTrimed))
     else
         self.bars[unit].spellText:SetText(name)
     end
+
+    
 
     -- handle icon
     self.bars[unit].icon:SetTexture(texture or UNKNOWN_SPELL_TEXTURE)

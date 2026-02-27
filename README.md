@@ -19,7 +19,6 @@
 # 魔兽世界的工具合集插件 by HBLyx
 ## **下载**: 官方版本仅在以下地址发布, 所有其他均不来自作者
 - **CurseForge**:  https://www.curseforge.com/wow/addons/hblyx-tools
-- **Wago**: https://addons.wago.io/addons/hblyx-tools
 
 ## **模组**
 - **焦点打断**: 以多种方式支持焦点打断，并帮助用户识别当前焦点施放的技能是否可打断/已准备好打断/处于打断冷却状态

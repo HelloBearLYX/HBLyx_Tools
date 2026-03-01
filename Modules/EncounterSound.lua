@@ -17,7 +17,7 @@ function EncounterSound:Initialize()
     self.role = nil
 
     -- 3.11 data change migration
-    if not addon.db.EncounterSound.version or addon.db.EncounterSound.version < "3.11" then
+    if not addon.db.EncounterSound.version or addon.Utilities:CheckVersion(addon.db.EncounterSound.version, "3.11") then
         local events = {}
         events[3073] = {[99] = nil}
         local pa = {}

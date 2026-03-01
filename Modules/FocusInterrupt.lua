@@ -42,7 +42,7 @@ local INTERRUPT_BY_CLASS = {
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
     -- after 3.8, as implemented target bar, we need to migrate part of the database to new format(for style settings)
-    if not addon.db[self.modName].version or addon.db[self.modName].version < 3.8 then
+    if not addon.db[self.modName].version or addon.Utilities:CheckVersion(addon.db[self.modName].version, "3.8") then
         local oldDBKeys = {"BackgroundAlpha", "Width", "Height", "X", "Y", "IconZoom", "Font", "FontSize"}
         for _, key in pairs(oldDBKeys) do
             if addon.db[self.modName][key] then

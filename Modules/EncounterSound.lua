@@ -57,6 +57,7 @@ function EncounterSound:Initialize()
         end
 
         addon.db.EncounterSound.version = addon.version -- update version after migration
+        addon.Utilities:print("EncounterSound data has been migrated to the new format")
     end
 
     return self

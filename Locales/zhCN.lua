@@ -152,6 +152,11 @@ L["PetStance"] = {
 	DEFENSIVE = "防御姿态",
 	PASSIVE = "被动姿态",
 }
+L["GroupRole"] = {
+	TANK = "坦克",
+	HEALER = "治疗",
+	DAMAGER = "输出",
+}
 
 -- MARK: Default values
 -- combat indicator
@@ -307,6 +312,7 @@ L["EncounterEventsInstruction"] = "要设置音效, 选择|cffffff00一个事件
 "|cffff5c00事件高亮时|r: 当时间轴上的事件|cffff5c00将在5秒内完成|r时触发\n" ..
 "更多关于触发器的信息在: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
 "例子: 如果你需要一个\"准备AoE-3-2-1\", 你应该将\"准备AoE\"和倒计时音效合并到一个媒体文件中, 并设置在\"事件高亮\"触发器上播放(在AoE的5秒前播放)\n\n" ..
-"|cffff0000注意|r: 你必须|cffffff00启用暴雪的首领预警(包括文本警告和时间轴)|r, 才能让相应的事件触发器激活\n"
+"|cffff0000注意|r: 你必须|cffffff00启用暴雪的首领预警(包括文本警告和时间轴)|r, 才能让相应的事件触发器激活\n" ..
+"|cffff0000注意|r: 对于|cffff5c00职责|r, 推荐|cffffff00不选择任何职责来对所有职责生效|r\n"
 L["PrivateAuraInstruction"] = "为私有光环应用一个声音警报, 当私有光环被施加在\"玩家\"身上时播放声音警报\n\n" ..
 "为了防止不必要的冲突或冗余, 私有光环的锚点在这个模块中没有提供, 因为有许多UI插件提供了私有光环的自定义位置\n"

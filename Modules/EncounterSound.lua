@@ -14,43 +14,92 @@ local EncounterSound = {
 ---@return EncounterSound EncounterSound a EncounterSound object
 function EncounterSound:Initialize()
     self.privateAuras = {}
+    self.role = nil
 
-    -- data change migration
-    -- events
-    if addon.db.EncounterSound.data and addon.db.EncounterSound.data[3073] and addon.db.EncounterSound.data[3073][99] then
-        addon.db.EncounterSound.data[3073][99] = nil -- remove incorrect entry
-    end
-    -- private aura
-    if addon.db.EncounterSound.dataPA[3073] and addon.db.EncounterSound.dataPA[3073][1224104] then
-        addon.db.EncounterSound.dataPA[3073][1224104] = nil -- remove incorrect entry
-    elseif addon.db.EncounterSound.dataPA[2067] and addon.db.EncounterSound.dataPA[2067][1263523] then
-        addon.db.EncounterSound.dataPA[2067][1263523] = nil -- remove incorrect entry
+    -- 3.11 data change migration
+    if not addon.db.EncounterSound.version or addon.db.EncounterSound.version < "3.11" then
+        local events = {}
+        events[3073] = {[99] = nil}
+        local pa = {}
+        pa[3073] = {[1224104] = nil}
+        pa[2067] = {[1263523] = nil}
+
+        -- remove incorrect event entry
+        for encounterID, eventData in pairs(events) do
+            if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] then
+                for eventID, _ in pairs(eventData) do
+                    if addon.db.EncounterSound.data[encounterID][eventID] then
+                        addon.db.EncounterSound.data[encounterID][eventID] = nil -- remove incorrect entry
+                    end
+                end
+            end
+        end
+        -- remove incorrect PA entries
+        for encounterID, spellData in pairs(pa) do
+            if addon.db.EncounterSound.dataPA and addon.db.EncounterSound.dataPA[encounterID] then
+                for spellID, _ in pairs(spellData) do
+                    if addon.db.EncounterSound.dataPA[encounterID][spellID] then
+                        addon.db.EncounterSound.dataPA[encounterID][spellID] = nil -- remove incorrect entry
+                    end
+                end
+            end
+        end
+
+        -- a general data parse for new version
+        for encounterID, encounterData in pairs(addon.db.EncounterSound.data or {}) do
+            for eventID, eventData in pairs(encounterData) do
+                for attribute, sound in pairs(eventData) do
+                    if type(attribute) ~= "string" then
+                        eventData[attribute] = {sound = sound}
+                    end
+                end
+            end
+        end
+
+        addon.db.EncounterSound.version = addon.version -- update version after migration
     end
 
     return self
+end
+
+-- MARK: Check Role
+
+---Check whether the role condition is satisfied
+---@param self EncounterSound self
+---@param eventRole table|nil the role requirement for the event, can be nil for no role requirement
+---@return boolean true if the role condition is satisfied, false otherwise
+local function CheckRole(self, eventRole)
+    if not eventRole or not self.role then
+        return true
+    end
+
+    -- eventRole is a hash set, e.g. {TANK = true, HEALER = true}
+    return eventRole[self.role]
 end
 
 -- MARK: Load Event Sounds
 
 ---Load event sounds for the given encounter ID
 ---@param encounterID integer the encounter ID to load sounds for
-local function LoadEventSounds(encounterID)
+local function LoadEventSounds(self, encounterID)
     if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] then
         local encounterData = addon.db.EncounterSound.data[encounterID]
         for eventID, eventData in pairs(encounterData) do
             for attribute, value in pairs(eventData) do
-                if attribute == "color" then
+                if type(attribute) == "string" then
                     -- Handle color
                     C_EncounterEvents.SetEventColor(eventID, CreateColorFromHexString(addon.db.EncounterSound.data[encounterID][eventID].color))
                 else
-                    -- Handle sound trigger
-                    local sound = addon.LSM:Fetch("sound", value)
-                    if sound then
-                        C_EncounterEvents.SetEventSound(
-                            eventID,
-                            attribute, -- trigger
-                            {file = sound, channel = addon.db.EncounterSound.SoundChannel or "Master", volume = 1}
-                        )
+                    if CheckRole(self, value.role) then -- handle role, role can be nil
+                        -- Handle sound trigger
+                        local sound = addon.LSM:Fetch("sound", value.sound)
+                        if sound then
+                            C_EncounterEvents.SetEventSound(
+                                eventID,
+                                attribute, -- trigger
+                                {file = sound, channel = addon.db.EncounterSound.SoundChannel or "Master", volume = 1}
+                            )
+                        end
                     end
                 end
             end
@@ -110,7 +159,8 @@ function EncounterSound:RegisterEvents()
             ClearPrivateAuraSounds(self)
         end
 
-        LoadEventSounds(currentEncounter)
+        self.role = UnitGroupRolesAssigned("player") or nil -- update current role
+        LoadEventSounds(self, currentEncounter)
         LoadPrivateAuraSounds(self, currentEncounter)
     end)
 end

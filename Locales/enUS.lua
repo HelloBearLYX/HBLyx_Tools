@@ -151,6 +151,11 @@ L["PetStance"] = {
 	DEFENSIVE = "DEFENSIVE",
 	PASSIVE = "PASSIVE",
 }
+L["GroupRole"] = {
+	TANK = "TANK",
+	HEALER = "HEALER",
+	DAMAGER = "DAMAGER",
+}
 
 -- MARK: Default values
 -- combat indicator
@@ -307,6 +312,7 @@ L["EncounterEventsInstruction"] = "To set sound, select |cffffff00an event trigg
 "|cffff5c00Events Highlighted|r: trigger when the event |cffff5c00will be finished in 5 seconds|r on the timeline\n" ..
 "More information about the triggers on: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
 "e.g. If you want a \"AoE Incoming-3-2-1\", you should join the \"AoE Incoming\" and countdown sound into a single media file, and set it to play on the \"Event Highlighted\" trigger(play at 5 seconds before the AoE).\n\n" ..
-"|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active\n"
+"|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active\n" ..
+"|cffff00NOTE|r: For |cffff5c00roles|r, recommend |cffffff00select no roles to make it loading for all roles|r\n"
 L["PrivateAuraInstruction"] = "Apply a sound alert for private auras, and the sound alert is played when the private aura is applied on \"player\".\n\n" ..
 "To prevent unneccessary conflicts or redundancy, private auras' anchor are not provided in this module, since there are many UI addons offer the customized position of private auras.\n"

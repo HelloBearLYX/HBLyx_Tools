@@ -42,14 +42,18 @@ local INTERRUPT_BY_CLASS = {
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
     -- after 3.8, as implemented target bar, we need to migrate part of the database to new format(for style settings)
-    local oldDBKeys = {"BackgroundAlpha", "Width", "Height", "X", "Y", "IconZoom", "Font", "FontSize"}
-    for _, key in pairs(oldDBKeys) do
-        if addon.db[self.modName][key] then
-            addon.Utilities:print("Migrating data: " .. key)
-            addon.db[self.modName]["focus" .. key] = addon.db[self.modName][key]
-        end
+    if not addon.db[self.modName].version or addon.db[self.modName].version < 3.8 then
+        local oldDBKeys = {"BackgroundAlpha", "Width", "Height", "X", "Y", "IconZoom", "Font", "FontSize"}
+        for _, key in pairs(oldDBKeys) do
+            if addon.db[self.modName][key] then
+                addon.Utilities:print("Migrating data: " .. key)
+                addon.db[self.modName]["focus" .. key] = addon.db[self.modName][key]
+            end
 
-        addon.db[self.modName][key] = nil -- remove old keys after migration
+            addon.db[self.modName][key] = nil -- remove old keys after migration
+            addon.db[self.modName].version = addon.version -- update version after migration
+        end
+        addon.Utilities:print("FocusInterrupt database migrated to " .. addon.version)
     end
 
     self.bars.focus = self:CreateBar()

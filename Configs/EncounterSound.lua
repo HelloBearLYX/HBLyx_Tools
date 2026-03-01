@@ -8,7 +8,7 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	SoundChannel = "Master",
 	EnablePrivateAuras = true,
-	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = sound, color = color } } }
+	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = {sound = sound, role = {role = true}}, color = color} } }
 	dataPA = {}, -- data structure: { [encounterID] = { [spellID] = sound } }
 }
 
@@ -20,7 +20,7 @@ local EVENT_TRIGGERS = {
 }
 
 -- MARK: Adds
-local function AddSound(encounterID, eventID, trigger, sound)
+local function AddSound(encounterID, eventID, trigger, sound, role)
 	if not addon.db.EncounterSound.data then
 		addon.db.EncounterSound.data = {}
 	end
@@ -34,6 +34,10 @@ local function AddSound(encounterID, eventID, trigger, sound)
 	end
 
 	addon.db.EncounterSound.data[encounterID][eventID][trigger] = sound
+	if role then
+		addon.db.EncounterSound.data[encounterID][eventID].role = role
+	end
+
 	addon.Utilities:print(string.format("%d-%d-%s-%s: %s", encounterID, eventID, EVENT_TRIGGERS[trigger], sound, L["AddSuccess"]))
 end
 
@@ -127,10 +131,11 @@ end
 local function CreateTimelineSettings(encounterID, eventID, container)
 	local soundGroup = GUI:CreateInlineGroup(container, L["SoundSettings"])
 	local inputTrigger, inputSound = nil, nil
+	local roleSelect = GUI:CreateMultiDropdown(nil, "Role", addon.Utilities.GroupRoles, nil, nil)
 	local soundSelect = GUI:CreateSoundSelect(nil, L["EncounterEventSound"], nil, function(key)
 		inputSound = key
 		if inputTrigger then
-			AddSound(encounterID, eventID, inputTrigger, inputSound)
+			AddSound(encounterID, eventID, inputTrigger, inputSound, roleSelect:GetSelectedKeys())
 		end
 	end)
 	GUI:CreateDropdown(soundGroup, L["EncounterEventTrigger"], EVENT_TRIGGERS, nil, nil, function(value)
@@ -141,8 +146,11 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 		else
 			inputSound = nil
 			soundSelect:SetValue(nil)
+
+			roleSelect:ClearSelections()
 		end
 	end)
+	soundGroup:AddChild(roleSelect:GetWidget())
 	soundGroup:AddChild(soundSelect)
 	GUI:CreateButton(soundGroup, L["Remove"], function()
 		if RemoveSound(encounterID, eventID, inputTrigger) then

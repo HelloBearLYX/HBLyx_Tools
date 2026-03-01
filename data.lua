@@ -89,13 +89,5 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 			[2001] = {events = {203, 204, 205, 206, 561}, journalID = 609, privateAuras = {1264186, 1264453, 1264299}},
 		},
 	},
-    -- MARK: Pre-patch 11.2.7
-    [503] = {portalID = 445417, short = L["ARAK"]},
-    [505] = {portalID = 445414, short = L["TD"]},
-    [542] = {portalID = 1237215, short = L["ED"]},
-    [378] = {portalID = 354465, short = L["HOA"]},
-    [525] = {portalID = 1216786, short = L["OF"]},
-    [499] = {portalID = 445444, short = L["PSF"]},
-    [392] = {portalID = 367416, short = L["GAMBIT"]},
-    [391] = {portalID = 367416, short = L["STREET"]}
+    -- MARK: Raid
 }

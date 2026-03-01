@@ -48,9 +48,11 @@ function EncounterSound:Initialize()
         -- a general data parse for new version
         for encounterID, encounterData in pairs(addon.db.EncounterSound.data or {}) do
             for eventID, eventData in pairs(encounterData) do
-                for attribute, sound in pairs(eventData) do
+                for attribute, data in pairs(eventData) do
                     if type(attribute) ~= "string" then
-                        eventData[attribute] = {sound = sound}
+                        if type(data) == "string" then
+                            data = {sound = data, role = nil} -- migrate old sound setting to new format with role = nil
+                        end
                     end
                 end
             end
@@ -75,7 +77,7 @@ local function CheckRole(self, eventRole)
     end
 
     -- eventRole is a hash set, e.g. {TANK = true, HEALER = true}
-    return eventRole[self.role]
+    return eventRole[self.role] or false
 end
 
 -- MARK: Load Event Sounds
@@ -143,7 +145,7 @@ local function ClearPrivateAuraSounds(self)
             C_UnitAuras.RemovePrivateAuraAppliedSound(pa)
         end
         self.privateAuras = {}
-        addon.Utilities:print("End of encounter: cleared private aura sounds")
+        addon.Utilities:print("End of encounter: cleared registed")
     end
 end
 

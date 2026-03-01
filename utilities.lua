@@ -46,7 +46,7 @@ addon.Utilities.FrameStrata = {
 	FULLSCREEN_DIALOG = "FULLSCREEN_DIALOG",
 }
 
----enum groupRole group role
+---@enum groupRole group role
 addon.Utilities.GroupRoles = {
 	TANK = L["GroupRole"]["TANK"],
 	HEALER = L["GroupRole"]["HEALER"],

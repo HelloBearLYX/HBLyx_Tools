@@ -5,7 +5,8 @@ local MOD_KEY = "EncounterSound"
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-	Enabled = false,
+	Enabled = true,
+	version = "3.11",
 	SoundChannel = "Master",
 	EnablePrivateAuras = true,
 	data = {}, -- data structure: { [encounterID] = { [eventID] = { [trigger] = {sound = sound, role = {role = true}}, color = color} } }
@@ -33,10 +34,7 @@ local function AddSound(encounterID, eventID, trigger, sound, role)
 		addon.db.EncounterSound.data[encounterID][eventID] = {}
 	end
 
-	addon.db.EncounterSound.data[encounterID][eventID][trigger] = sound
-	if role then
-		addon.db.EncounterSound.data[encounterID][eventID].role = role
-	end
+	addon.db.EncounterSound.data[encounterID][eventID][trigger] = { sound = sound, role = role }
 
 	addon.Utilities:print(string.format("%d-%d-%s-%s: %s", encounterID, eventID, EVENT_TRIGGERS[trigger], sound, L["AddSuccess"]))
 end
@@ -131,7 +129,7 @@ end
 local function CreateTimelineSettings(encounterID, eventID, container)
 	local soundGroup = GUI:CreateInlineGroup(container, L["SoundSettings"])
 	local inputTrigger, inputSound = nil, nil
-	local roleSelect = GUI:CreateMultiDropdown(nil, "Role", addon.Utilities.GroupRoles, nil, nil)
+	local roleSelect = GUI:CreateMultiDropdown(nil, L["SelectGroupRole"], addon.Utilities.GroupRoles, nil, nil)
 	local soundSelect = GUI:CreateSoundSelect(nil, L["EncounterEventSound"], nil, function(key)
 		inputSound = key
 		if inputTrigger then
@@ -141,7 +139,11 @@ local function CreateTimelineSettings(encounterID, eventID, container)
 	GUI:CreateDropdown(soundGroup, L["EncounterEventTrigger"], EVENT_TRIGGERS, nil, nil, function(value)
 		inputTrigger = value
 		if addon.db.EncounterSound.data and addon.db.EncounterSound.data[encounterID] and addon.db.EncounterSound.data[encounterID][eventID] and addon.db.EncounterSound.data[encounterID][eventID][inputTrigger] then
-			inputSound = addon.db.EncounterSound.data[encounterID][eventID][inputTrigger]
+			inputSound = addon.db.EncounterSound.data[encounterID][eventID][inputTrigger].sound
+			roleSelect:ClearSelections()
+			if addon.db.EncounterSound.data[encounterID][eventID][inputTrigger].role then
+				roleSelect:SetSelectedKeys(addon.db.EncounterSound.data[encounterID][eventID][inputTrigger].role)
+			end
 			soundSelect:SetValue(inputSound)
 		else
 			inputSound = nil

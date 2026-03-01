@@ -8,6 +8,7 @@ addon.LSM:Register("sound", ADDON_NAME.. "_FocusDefault", L["FocusDefaultSound"]
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
+    version = "3.11",
     Mute = true,
     SoundMedia = ADDON_NAME .. "_FocusDefault",
     SoundChannel = "Master",

@@ -303,6 +303,7 @@ L["OnTimelineEventHighlight"] = "事件高亮时"
 L["EventColor"] = "事件颜色"
 L["PrivateAuraSettings"] = "私有光环设置"
 L["EncounterEvent"] = "BOSS战事件"
+L["SelectGroupRole"] = "团队职责"
 L["EncounterSoundInstruction"] = "选择|cffffff00一个副本|r和|cffffff00一个BOSS战|r后, 该BOSS战的设置将会在下面弹出\n由于游戏需要时间加载法术描述, 设置的渲染会有0.5秒的延迟\n\n"
 L["EncounterEventsInstruction"] = "要设置音效, 选择|cffffff00一个事件触发器|r和|cffffff00一个有效的音效|r, 设置自动套用。同时, 你可以使用|cffffff00\"删除\"|r来删除所选触发器的音效设置\n\n" ..
 "要设置颜色(事件的文本颜色), 只需使用颜色选择器选择一个|cffffff00颜色|r, 它将被应用于该BOSS战事件。要删除颜色设置, 你可以类似地使用|cffffff00\"删除\"|r按钮\n\n" ..

@@ -22,6 +22,8 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
 L["ChangeLogContent"] =
+"v3.11\n" ..
+"-Encounter Sound: add a new option to set group role for encounter events sound alert\n" ..
 "v3.10\n" ..
 "-Encounter Sound: Private Auras sub-module has been implemented\n" ..
 "v3.9\n" ..
@@ -154,7 +156,7 @@ L["PetStance"] = {
 L["GroupRole"] = {
 	TANK = "TANK",
 	HEALER = "HEALER",
-	DAMAGER = "DAMAGER",
+	DAMAGER = "DPS",
 }
 
 -- MARK: Default values
@@ -314,6 +316,6 @@ L["EncounterEventsInstruction"] = "To set sound, select |cffffff00an event trigg
 "More information about the triggers on: |cff00ffffhttps://warcraft.wiki.gg/wiki/API_C_EncounterEvents.SetEventSound|r\n\n" ..
 "e.g. If you want a \"AoE Incoming-3-2-1\", you should join the \"AoE Incoming\" and countdown sound into a single media file, and set it to play on the \"Event Highlighted\" trigger(play at 5 seconds before the AoE).\n\n" ..
 "|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active\n" ..
-"|cffff00NOTE|r: For |cffff5c00roles|r, recommend |cffffff00select no roles to make it loading for all roles|r\n"
+"|cffff00NOTE|r: For |cffff5c00roles|r, recommend |cffffff00select no group roles to make it loading for all group roles|r\n"
 L["PrivateAuraInstruction"] = "Apply a sound alert for private auras, and the sound alert is played when the private aura is applied on \"player\".\n\n" ..
 "To prevent unneccessary conflicts or redundancy, private auras' anchor are not provided in this module, since there are many UI addons offer the customized position of private auras.\n"

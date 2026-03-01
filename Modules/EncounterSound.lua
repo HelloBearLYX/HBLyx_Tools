@@ -51,7 +51,7 @@ function EncounterSound:Initialize()
                 for attribute, data in pairs(eventData) do
                     if type(attribute) ~= "string" then
                         if type(data) == "string" then
-                            data = {sound = data, role = nil} -- migrate old sound setting to new format with role = nil
+                            eventData[attribute] = {sound = data} -- migrate old sound setting to new format
                         end
                     end
                 end

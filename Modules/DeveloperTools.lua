@@ -195,8 +195,18 @@ function addon.DeveloperTools:DisplayAddonInfo()
     output["ModulesInfo"] = GetModulesInfo() .. "\n" .. GetEventsInfo()
     output["StatesInfo"] = GetStatesInfo() .. "\n" .. GetStateMonitorsInfo()
     -- Fetch data
-    -- comment out the line below to avoide data fetch 
-    -- output["Data"] = self:AttemptsFetchAllEEInfo() or nil
+    -- local ScanPrivateAuras = function()
+    --     local output = "SpellID,Result\n"
+    --     local data = {}
+
+    --     for _, spellID in ipairs(data) do
+    --         local result = C_UnitAuras.AuraIsPrivate(spellID)
+    --         output = output .. string.format("%d,%s\n", spellID, tostring(result))
+    --     end
+
+    --     return output
+    -- end
+    -- output["Data"] = ScanPrivateAuras()
 
     if self.isOpened and self.displayFrame then
         self.displayFrame:Hide()
@@ -239,5 +249,35 @@ function addon.DeveloperTools:AttemptsFetchAllEEInfo()
         )
     end
 
+    return output
+end
+
+local function FetchSection(currentSectionID, output)
+    local info = C_EncounterJournal.GetSectionInfo(currentSectionID)
+    if not info.filteredByDifficulty then
+        local spellID = info.spellID or -1
+        if spellID == 0 then spellID = -1 end
+        output = output .. string.format("%d,%s\n", spellID, info.title or "nil")
+    end
+
+    -- child sections first
+    if info.firstChildSectionID then
+        output = FetchSection(info.firstChildSectionID, output)
+    end
+
+    -- then, same level sections
+    if info.siblingSectionID then
+        output = FetchSection(info.siblingSectionID, output)
+    end
+
+    return output
+end
+
+function addon.DeveloperTools:FecthAllEncounterSections(encounterID, difficultyID)
+    EJ_SetDifficulty(difficultyID)
+    local output = "SpellID,SpellName\n"
+    local currentSectionID = select(4, EJ_GetEncounterInfo(encounterID))
+
+    output = FetchSection(currentSectionID, output)
     return output
 end

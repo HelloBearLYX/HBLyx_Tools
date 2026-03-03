@@ -318,4 +318,5 @@ L["EncounterEventsInstruction"] = "To set sound, select |cffffff00an event trigg
 "|cffff0000NOTE|r: Must |cffffff00enable Blizzard's Boss Warnings(including Boss Text Warning and Boss Ability Timeline)|r to make the corresponding event triggers active\n" ..
 "|cffff00NOTE|r: For |cffff5c00roles|r, recommend |cffffff00select no group roles to make it loading for all group roles|r\n"
 L["PrivateAuraInstruction"] = "Apply a sound alert for private auras, and the sound alert is played when the private aura is applied on \"player\".\n\n" ..
-"To prevent unneccessary conflicts or redundancy, private auras' anchor are not provided in this module, since there are many UI addons offer the customized position of private auras.\n"
+"To prevent unneccessary conflicts or redundancy, private auras' anchor are not provided in this module, since there are many UI addons offer the customized position of private auras.\n\n" ..
+"|cffff0000NOTE|r: As Blizzard just removed a huge amount of private auras in dungeons(03/02/2026), |cffff0000some private auras settings are temperarily not working|r. Even though, the private aura alerts are still working if have been set before if the private aura still exists."

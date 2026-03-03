@@ -131,8 +131,10 @@ end
 local function GetMapsList()
     local output = {}
     for mapID, mapInfo in pairs(addon.data.MAP_ENCOUNTER_EVENTS) do
+		local portalInfo = C_Spell.GetSpellInfo(mapInfo.portalID)
+		local icon =  portalInfo and portalInfo.iconID or 134400
         if mapInfo.name then
-            output[mapID] =  "|T" .. C_Spell.GetSpellInfo(mapInfo.portalID).iconID .. ":0|t " .. mapInfo.name
+            output[mapID] =  "|T" .. icon .. ":0|t " .. mapInfo.name
         end
     end
     return output

@@ -142,15 +142,6 @@ local function InitializeStates()
 	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "instanceInfo", GetInstanceState)
 	addon.core:RegisterState("ZONE_CHANGED_NEW_AREA", nil, "instanceInfo", GetInstanceState)
 
-	addon.states["encounterInfo"] = {encounterID = 0, encounterName = ""} -- "ADDON_LOADED"
-	addon.core:RegisterState("ENCOUNTER_START", nil, "encounterInfo", function (...)
-		local encounterID, encounterName = ... -- the args passed by ENCOUNTER_START event
-		addon.states["encounterInfo"] = {encounterID = encounterID, encounterName = encounterName}
-	end)
-	addon.core:RegisterState("ENCOUNTER_END", nil, "encounterInfo", function (...)
-		addon.states["encounterInfo"] = {encounterID = 0, encounterName = ""}
-	end)
-
 	-- player spec state
 	local GetSpec = function ()
 		addon.states["playerSpec"] = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
@@ -163,7 +154,7 @@ end
 
 ---Initialization before main
 function addon:Initialize()
-	addon.version = "3.11"
+	addon.version = "3.12"
 
 	-- set up profile and configures
 	InitializeConfig()

@@ -154,7 +154,7 @@ end
 
 ---Initialization before main
 function addon:Initialize()
-	addon.version = "3.12"
+	addon.version = "3.13"
 
 	-- set up profile and configures
 	InitializeConfig()

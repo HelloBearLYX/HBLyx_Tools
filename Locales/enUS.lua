@@ -22,27 +22,15 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
 L["ChangeLogContent"] =
+"v3.13\n" ..
+"-Focus Interrupt: seperate interrupt icon from cast bars, make it an independent sub-module\n" ..
 "v3.12\n" ..
-"-Encounter Sound: totally dispatch the Encounter Sound module from |cff8788eeHBLyx_Tools|r, and put it as a standalone module |cff8788eeHBLyx_Encounter_Sound|r\n" ..
-"v3.11\n" ..
-"-Encounter Sound: add a new option to set group role for encounter events sound alert\n" ..
-"v3.10\n" ..
-"-Encounter Sound: Private Auras sub-module has been implemented\n" ..
-"v3.9\n" ..
-"-Encounter Sound: add a new module \"Encounter Sound\" which set and play custom sound alert for encounter time line events\n" ..
-"v3.8\n" ..
-"-Focus Interrupt: Added an option for a target cast bar, which can create a target cast bar similar to the focus cast bar\n" ..
-"v3.7\n" ..
-"-Custom Auras Tracker: auras can be loaded by specializations(a new corresponding custom option)\n" ..
-"v3.6\n" ..
-"-Custom Auras Tracker: add a new module \"Custom Aura Tracker\" which Track aura that are triggered by \"player\" and display and play sound alert with customizable options\n"
-
+"-Encounter Sound: totally dispatch the Encounter Sound module from |cff8788eeHBLyx_Tools|r, and put it as a standalone module |cff8788eeHBLyx_Encounter_Sound|r\n"
 --MARK: Issues
 L["Issues"] = "Issues"
 L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"
 L["IssuesContent"] = "Q: Can you add XXX spell as an interrupt spell in Focus Interrupt module?\nA: No, spells with GCD cannot be added due to Blizzard's API restrictions. If you want to add a spell without GCD, please inform me with the spell details" .. "\n\n" ..
 "Q: The BattleRes cannot display at the start of some Beta M+ dungeons and \"reload\" can fix it, why?\nA: It is caused by Blizzard's failure to trigger the CHALLENGE_MODE_START event in some dungeons with M+ mode, there is currently no good solution, wait for Blizzard to fix it\n\n" ..
-"Q: There are some missing/incorrect events/private auras in Encounter Sound module, will them be corrected?\nA: Yes, as this module is highly dependent on data mining toward the game and Blizzard is constantly changing the Boss fight, it takes some time to fetch new data\n\n" ..
 "Thanks for your understanding and support!"
 
 -- MARK: Contact
@@ -134,7 +122,7 @@ L["SizeSettings"] = "Size Settings"
 L["ColorSettings"] = "Color Settings"
 L["TextSettings"] = "Text Settings"
 L["InterruptibleColor"] = "Interruptible Color"
-L["NotInterruptibleColor"] = "Not Interruptible Color"
+L["NotInterruptibleColor"] = "Non-Interruptible Color"
 L["FrameStrata"] = "Frame Strata Level"
 
 -- MARK: Input
@@ -205,9 +193,9 @@ L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > Inte
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
 L["InteruptSettings"] = "Focus Interupt Settings"
-L["FocusInterruptCooldownFilter"] = "Disable when Interrupt NOT Ready"
-L["FocusInterruptNotReadyColor"] = "Interrupt Not Ready Color"
-L["FocusInterruptibleFilter"] = "Disable when NOT Interrupible"
+L["FocusInterruptCooldownFilter"] = "Hide if Kick NOT Ready"
+L["FocusInterruptNotReadyColor"] = "Kick Not Ready Color"
+L["FocusInterruptibleFilter"] = "Hide if Non-Interruptible"
 L["FocusMuteDesc"] = "Due to Blizzard's restrictions(02/06/2026), the sound alert will still play no matter how cast is\n\nRecommend keep sound alert off(this module contains multiple version of visual display to identify focus casting and interrupt information)"
 L["InterruptedFadeTime"] = "Interrpted Fade Time"
 L["ShowInterrupter"] = "Show Interrupter"
@@ -216,7 +204,7 @@ L["InterruptedSettings"] = "Interrupted Settings"
 L["InterruptedSettingsDesc"] = "When the focus is interrupted, there is a short fade time for the cast bar, you can make the fade time zero to make it disappear immediately.\n\nAlso, there is information showing during the fade time"
 L["InterruptIconsSettings"] = "Interrupt Icon Settings"
 L["InterruptIconDesc"] = "When the player is capable of interrupt(interruptible + interrupt ready), display an icon of interrupt\n\nThis is mainly designed for Demonology Warlock, display which interrupt is available"
-L["ShowDemoWarlockOnly"] = "Show Only if Demonology Warlock"
+L["ShowDemoWarlockOnly"] = "Show Only Demonology"
 -- Target Interrupt Settings
 L["TargetBarSettings"] = "Target Cast Bar Settings"
 L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the focus cast bar|r. Most settings are shared, only the style settings below are independent."

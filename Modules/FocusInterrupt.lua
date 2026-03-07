@@ -50,6 +50,8 @@ local function DataMigration(self, version)
                 addon.db[self.modName][key] = nil
             end
         end
+
+        addon.db[self.modName].version = addon.version
     end
 end
 

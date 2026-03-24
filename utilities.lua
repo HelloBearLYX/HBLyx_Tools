@@ -345,13 +345,13 @@ function addon.Utilities:GetAllSpecIconList(withColor)
 	local output = {}
 
 	for class = 1, 13 do
-		local classColor = C_ClassColor.GetClassColor(select(2, GetClassInfo(class))):GenerateHexColor()
+		local classColorObj = C_ClassColor.GetClassColor(select(2, GetClassInfo(class)))
 		local specsCount = C_SpecializationInfo.GetNumSpecializationsForClassID(class)
 		output[class] = {}
 		for specIndex = 1, specsCount do
 			local specID, name, _, icon = GetSpecializationInfoForClassID(class, specIndex)
 			if withColor then
-				output[class][specID] = string.format("|T%d:0|t|c%s%s|r", icon, classColor, name)
+				output[class][specID] = string.format("|T%d:0|t", icon) .. classColorObj:WrapTextInColorCode(name)
 			else
 				output[class][specID] = string.format("|T%d:0|t%s", icon, name)
 			end

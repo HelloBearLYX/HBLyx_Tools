@@ -115,7 +115,8 @@ function addon:ImportProfile(data)
         return false
     end
 
-    addon.db = profileData.profile
+    HBLyx_Tools_DB = profileData.profile
+    addon.db = HBLyx_Tools_DB
     addon.Utilities:print(L["ImportSuccess"])
 
     return true

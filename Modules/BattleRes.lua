@@ -134,7 +134,7 @@ function BattleRes:RegisterEvents()
         Handler(self)
     end
 
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
+    -- addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
     addon.core:RegisterEvent("ENCOUNTER_START", self.frame, self.modName)
     addon.core:RegisterEvent("ENCOUNTER_END", self.frame, self.modName)
     addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)

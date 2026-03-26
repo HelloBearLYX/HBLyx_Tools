@@ -19,6 +19,25 @@ function ChallengeEnhance:Initialize()
     return self
 end
 
+-- MARK: GetPortalID
+
+---Get portalID for a specific mapID
+---@param mapID integer mapID of the dungeon
+---@return integer|nil portalID of the dungeon, return nil if not found
+local function GetPortalID(mapID)
+    local portalID = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].portalID or nil
+    if type(portalID) == "table" then
+        for _, id in ipairs(portalID) do
+            if C_SpellBook.IsSpellInSpellBook(id) then
+                return id
+            end
+        end
+        return portalID[1]
+    end
+
+    return portalID
+end
+
 -- MARK:Tooltip
 
 ---UpdateTooltip for ChallengeEnhance buttons
@@ -35,7 +54,7 @@ local function UpdateTooltip(parent, mapID)
         return
     end
 
-    local portalID = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].portalID or nil
+    local portalID = GetPortalID(mapID)
     local portalName = C_Spell.GetSpellInfo(portalID).name or ""
 
     if not C_SpellBook.IsSpellInSpellBook(portalID) then
@@ -117,7 +136,7 @@ local function CreateButtons(self)
         local level = icon.HighestLevel
 
         if mapID then
-            local portalID = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].portalID or nil
+            local portalID = GetPortalID(mapID)
             local button = CreateFrame("Button", nil, icon, "InsecureActionButtonTemplate")
             button:SetAllPoints()
             button:RegisterForClicks("AnyDown", "AnyUp")

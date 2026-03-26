@@ -25,7 +25,7 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		short = L["Maisara Caverns_short"],
 	},
 	[161] = {
-		portalID = 1254557,
+		portalID = {1254557, 159898},
 		name = L["Skyreach"],
 		short = L["Skyreach_short"],
 	},

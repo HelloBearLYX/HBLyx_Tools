@@ -7,6 +7,7 @@ local MOD_KEY = "ChallengeEnhance"
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Font = "",
+    PortalPartyMessage = true,
     -- level settings
     LevelEnabled = true,
     LevelFontSize = 20,
@@ -43,6 +44,10 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     GUI:CreateInformationTag(frame, L["ChallengeEnhanceSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChallengeEnhanceSettings"] .. "|r", addon.db.ChallengeEnhance.Enabled, function(value)
         addon.db.ChallengeEnhance.Enabled = value
+        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+    end)
+    GUI:CreateToggleCheckBox(frame, L["PortalPartyMessage"], addon.db.ChallengeEnhance.PortalPartyMessage, function(value)
+        addon.db.ChallengeEnhance.PortalPartyMessage = value
         addon:ShowDialog(ADDON_NAME.."RLNeeded")
     end)
     GUI:CreateFontSelect(frame, L["Font"], addon.db.ChallengeEnhance.Font, function(value)

@@ -16,6 +16,8 @@ local ChallengeEnhance = {
 ---Intialize(Constructor)
 ---@return ChallengeEnhance ChallengeEnhance a ChallengeEnhance object
 function ChallengeEnhance:Initialize()
+    self.portals = {}
+
     return self
 end
 
@@ -162,10 +164,13 @@ local function CreateButtons(self)
                 end
             end)
 
+            if portalID then
+                self.portals[portalID] = button.mapName
+            end
+
             self.buttons[mapID] = button
 
             self.buttons[mapID]:Show()
-            self:UpdateStyle()
         end
     end
 end
@@ -183,7 +188,10 @@ function ChallengeEnhance:Create()
             -- and #ChallengesFrame.DungeonIcons >= #ChallengesFrame.maps -> latent callback can wait till the dungeon icons are set, not need to check whether Blizzard_ChallengesUI set all icons up
             if firstExecute  then
                 -- use a callback function to execute this later after all dungeon icons are sorted
-                C_Timer.After(0.25, function () CreateButtons(self) end)
+                C_Timer.After(0.25, function ()
+                    CreateButtons(self)
+                    self:UpdateStyle()
+                end)
                 firstExecute = false
             end
         end)
@@ -199,11 +207,25 @@ end
 function ChallengeEnhance:RegisterEvents()
     -- this feature only load on Blizzard_ChallengesUI loaded
     self.eventFrame:RegisterEvent("ADDON_LOADED")
+    if addon.db.ChallengeEnhance.PortalPartyMessage then
+        addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName)
+    end
 
-    self.eventFrame:SetScript("OnEvent", function(self, event, name)
-        if event == "ADDON_LOADED" and name == "Blizzard_ChallengesUI" then
-            if addon.core:GetModule(ChallengeEnhance.modName):Create() then
-                self:UnregisterEvent("ADDON_LOADED")
+    self.eventFrame:SetScript("OnEvent", function(_, event, ...)
+        if event == "ADDON_LOADED" then
+            local name = ...
+            if name == "Blizzard_ChallengesUI" then
+                if addon.core:GetModule(ChallengeEnhance.modName):Create() then
+                    self.eventFrame:UnregisterEvent("ADDON_LOADED")
+                end
+            end
+        elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+            local unit, _, spellID = ...
+            if unit == "player" and self.portals[spellID] then
+                local spellLink = C_Spell.GetSpellLink(spellID)
+                if IsInGroup() then
+                    C_ChatInfo.SendChatMessage(L["PortalUsed"] .. spellLink, "PARTY")
+                end
             end
         end
     end)

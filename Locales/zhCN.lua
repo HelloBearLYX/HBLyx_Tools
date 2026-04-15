@@ -51,6 +51,9 @@ L["SoundChannel"] = {
 }
 
 -- MARK: Config
+L["Modules"] = "模组"
+L["ClassSpecificModules"] = "职业模组"
+L["Others"] = "其他"
 L["ConfigPanel"] = "打开配置面板"
 L["Test"] = "测试/解锁(拖动移动)"
 L["Mute"] = "静音"
@@ -263,7 +266,8 @@ L["Pit of Saron_short"] = "萨隆矿坑"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "自定义光环追踪"
-L["CustomAuraTrackerSettingsDesc"] = "追踪由\"玩家\"触发的光环, 并以可自定义的选项显示和播放声音警报。\n\n|cffff0000注意|r: 这|cffff0000不是真正的光环追踪器|r, 它高度依赖于|cffff0000\"玩家\"|r的|cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r事件, 换句话说, 它只能追踪施放成功事件触发的东西, 并且它是高度硬编码的(没有动态持续时间/冷却时间)。"
+L["CustomAuraTrackerSettingsDesc"] = "追踪由\"玩家\"触发的光环, 并以可自定义的选项显示和播放声音警报"
+L["CustomAuraTrackerDesc"] = "|cffff0000注意|r: 这|cffff0000不是真正的光环追踪器|r, 它高度依赖于|cffff0000\"玩家\"|r的|cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r事件, 换句话说, 它只能追踪施放成功事件触发的东西, 并且它是高度硬编码的(没有动态持续时间/冷却时间)。"
 L["AuraSettings"] = "光环设置"
 L["AuraSettingsDesc"] = "虽然功能有限, 但它仍然可以提供支持, 比方说, 你可以追踪你的药水和主动饰品。\n\n" .. 
 "例如12.0版本的\"圣光潜力\"药水, 你可以添加它的法术ID(1236616) + 持续时间(30秒) + 冷却时间(300秒) + 过期声音(X音效), 然后当你使用药水时会显示一个持续30秒的图标, 并且在300秒冷却时间结束后播放一个声音警报。\n\n" ..

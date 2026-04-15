@@ -48,13 +48,13 @@ addon.configurationList[MOD_KEY] = {
 
     EnabledTargetBar = false,
     targetBackgroundAlpha = 0.3,
-    targetWidth = 250,
-    targetHeight = 25,
+    targetWidth = 280,
+    targetHeight = 30,
     targetTexture = "Solid",
     targetFont = "",
-    targetFontSize = 10,
+    targetFontSize = 12,
     targetX = 0,
-    targetY = 100,
+    targetY = 160,
     targetIconZoom = 0.07,
     targetHideFriendly = false,
 }

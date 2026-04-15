@@ -27,7 +27,6 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 	local frame = GUI:CreateScrollFrame(parent)
 	frame:SetLayout("Flow")
 
-	GUI:CreateInformationTag(frame, L["TimerSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["TimerSettings"] .. "|r", addon.db.CombatTimer.Enabled, function(value)
 		addon.db.CombatTimer.Enabled = value
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded

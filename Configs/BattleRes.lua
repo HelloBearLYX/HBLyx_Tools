@@ -30,7 +30,6 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 	frame:SetLayout("Flow")
 	frame:SetFullWidth(true)
 
-	GUI:CreateInformationTag(frame, L["BattleResSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BattleResSettings"] .. "|r", addon.db.BattleRes.Enabled, function(value)
 		addon.db.BattleRes.Enabled = value
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded

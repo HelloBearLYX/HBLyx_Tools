@@ -3,7 +3,7 @@
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
-## Version: 3.13.4
+## Version: 4.0.0
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
@@ -37,7 +37,6 @@ Configs\CombatTimer.lua
 Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
 Configs\CustomAuraTracker.lua
-Configs\EncounterSound.lua
 Configs\WarlockReminder.lua
 
 Configs\Profile.lua

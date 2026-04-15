@@ -10,20 +10,6 @@ addon.GUI = {
     isOpened = false,
 }
 
--- MARK: TABS
-local TABS = {
-    {text = L["General"], value = "General"},
-    {text = L["FocusInterruptSettings"], value = "FocusInterrupt"},
-    {text = L["CombatSettings"], value = "CombatIndicator"},
-    {text = L["TimerSettings"], value = "CombatTimer"},
-    {text = L["BattleResSettings"], value = "BattleRes"},
-    {text = L["ChallengeEnhanceSettings"], value = "ChallengeEnhance"},
-    {text = L["CustomAuraTrackerSettings"], value = "CustomAuraTracker"},
-    {text = L["EncounterSoundSettings"], value = "EncounterSound"},
-    {text = L["WarlockReminders"], value = "WarlockReminder"},
-    {text = L["Profile"], value = "Profile"},
-}
-
 -- MARK: General Panel
 
 local function CreateGeneralPanel(container)
@@ -99,6 +85,22 @@ local function CreateGeneralPanel(container)
     return panel
 end
 
+-- MARK: TABS
+local TABS = {
+    {text = L["General"], type = "Button", panelFunction = function(container) return CreateGeneralPanel(container) end},
+    {text = L["Modules"], type = "Text"},
+    {text = L["FocusInterruptSettings"], type = "Button", tooltip = L["FocusInterruptSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.FocusInterrupt:CreateTabPanel(container) end},
+    {text = L["CombatSettings"], type = "Button", tooltip = L["CombatSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatIndicator:CreateTabPanel(container) end},
+    {text = L["TimerSettings"], type = "Button", tooltip = L["TimerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatTimer:CreateTabPanel(container) end},
+    {text = L["BattleResSettings"], type = "Button", tooltip = L["BattleResSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BattleRes:CreateTabPanel(container) end},
+    {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
+    {text = L["CustomAuraTrackerSettings"], type = "Button", tooltip = L["CustomAuraTrackerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container) end},
+    {text = L["ClassSpecificModules"], type = "Text"},
+    {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockWelecome"] .. "\n" .. L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
+    {text = L["Others"], type = "Text"},
+    {text = L["Profile"], type = "Button", panelFunction = function(container) return addon.GUI.TagPanels.Profile:CreateTabPanel(container) end},
+}
+
 -- MARK: Initialize GUI
 
 ---Initialize/Constructor for GUI
@@ -127,6 +129,10 @@ function addon.GUI:Render()
 
         self.isOpened = false
         addon.core:TestMode(false) -- turn off test mode when closing GUI
+
+        if self.tabsFrame then
+            self.tabsFrame:Hide()
+        end
     end)
 
     -- MARK: Test button
@@ -147,53 +153,60 @@ function addon.GUI:Render()
         end
     end)
 
-    -- create tabs
-    local tabs = AceGUI:Create("TabGroup")
-    tabs:SetLayout("Flow")
-    tabs:SetFullWidth(true)
-    tabs:SetFullHeight(true)
-    tabs:SetTabs(TABS)
-    self.frame:AddChild(tabs)
-    
-    -- MARK: Tab Callback
-    tabs:SetCallback("OnGroupSelected", function(container, _, tab)
-        container:ReleaseChildren()
+    -- create tag selected group
+     -- create tag selected group
+    local tabSelectedGroup = addon.GUI:CreateInlineGroup(self.frame, "")
+    tabSelectedGroup:SetLayout("Flow")
+    tabSelectedGroup:SetFullWidth(true)
+    tabSelectedGroup:SetFullHeight(true)
 
-        -- General Panel
-        if tab == "General" then
-            local panel = CreateGeneralPanel(container)
-            panel:DoLayout()
-        elseif tab == "FocusInterrupt" then
-            local panel = addon.GUI.TagPanels.FocusInterrupt:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "CombatIndicator" then
-            local panel = addon.GUI.TagPanels.CombatIndicator:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "CombatTimer" then
-            local panel = addon.GUI.TagPanels.CombatTimer:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "BattleRes" then
-            local panel = addon.GUI.TagPanels.BattleRes:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "ChallengeEnhance" then
-            local panel = addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "CustomAuraTracker" then
-            local panel = addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "EncounterSound" then
-            local panel = addon.GUI.TagPanels.EncounterSound:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "WarlockReminder" then
-            local panel = addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container)
-            panel:DoLayout()
-        elseif tab == "Profile" then
-            local panel = addon.GUI.TagPanels.Profile:CreateTabPanel(container)
-            panel:DoLayout()
+    -- create the tabs group
+    self.tabsFrame = AceGUI:Create("Window")
+    self.tabsFrame:SetLayout("Flow")
+    self.tabsFrame:SetWidth(200)
+    self.tabsFrame:SetHeight(600)
+    self.tabsFrame:EnableResize(false)
+    self.tabsFrame.closebutton:Hide()
+    self.tabsFrame.closebutton:Disable()
+    -- AceGUI windows are created with a default anchor; clear it before attaching
+    -- the sidebar so dragging the main frame does not leave conflicting points.
+    self.tabsFrame.frame:ClearAllPoints()
+    self.tabsFrame.frame:SetPoint("TOPRIGHT", self.frame.frame, "TOPLEFT", 0, 0)
+    self.tabsFrame:SetCallback("OnClose", function(widgets)
+        if widgets then
+            AceGUI:Release(widgets)
         end
     end)
 
-    tabs:SelectTab("General")
+    -- create tab buttons
+    for _, tabInfo in ipairs(TABS) do
+        if tabInfo.type == "Button" then
+            local tabButton = AceGUI:Create("Button")
+            tabButton:SetText(tabInfo.text)
+            tabButton:SetCallback("OnClick", function()
+                tabSelectedGroup:ReleaseChildren()
+                local panel = tabInfo.panelFunction(tabSelectedGroup)
+                panel:DoLayout()
+            end)
+            if tabInfo.tooltip then
+                tabButton:SetCallback("OnEnter", function()
+                    GameTooltip:SetOwner(tabButton.frame, "ANCHOR_BOTTOMRIGHT")
+                    GameTooltip:SetText(tabInfo.tooltip, nil, nil, nil, nil, true)
+                    GameTooltip:Show()
+                end)
+                tabButton:SetCallback("OnLeave", function()
+                    GameTooltip:Hide()
+                end)
+            end
+            self.tabsFrame:AddChild(tabButton)
+        elseif tabInfo.type == "Text" then
+            addon.GUI:CreateInformationTag(self.tabsFrame, tabInfo.text, "CENTER")
+        end
+    end
+
+    -- select general panel by default
+    CreateGeneralPanel(tabSelectedGroup)
+    self.frame:DoLayout()
 end
 
 -- MARK: Open/Close GUI

@@ -49,6 +49,9 @@ L["SoundChannel"] = {
 }
 
 -- MARK: Config
+L["Modules"] = "Modules"
+L["ClassSpecificModules"] = "Class Modules"
+L["Others"] = "Others"
 L["ConfigPanel"] = "Open Configurations Panel"
 L["Test"] = "Test/Unlock(Drag to Move)"
 L["Mute"] = "Mute"
@@ -261,7 +264,8 @@ L["Pit of Saron_short"] = "PoS"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "Custom Aura Tracker"
-L["CustomAuraTrackerSettingsDesc"] = "Track aura that are triggered by \"player\" and display and play sound alert with customizable options \n\n|cffff0000NOTE|r: this is |cffff0000not a real aura tracker|r, it highly depends on |cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r of |cffff0000\"player\"|r. In other words, it can only track things from the cast success event, and it is highly hard-coded(no dynamic duration/cooldown)."
+L["CustomAuraTrackerSettingsDesc"] = "Track aura that are triggered by \"player\" and display and play sound alert with customizable options"
+L["CustomAuraTrackerDesc"] = "|cffff0000NOTE|r: this is |cffff0000not a real aura tracker|r, it highly depends on |cffff0000\"UNIT_SPELLCAST_SUCCEEDED\"|r of |cffff0000\"player\"|r. In other words, it can only track things from the cast success event, and it is highly hard-coded(no dynamic duration/cooldown)"
 L["AuraSettings"] = "Auras Settings"
 L["AuraSettingsDesc"] = "Although the function is limited, but it still can be supportive. For example, you can track your potion and active trinkets\n\n" ..
 "Taking 12.0 potion as an example, you can add \"Light's Potential\" with its spell ID(1236616) + duration(30s) + cooldown(300s) + expire sound(X sound effect), and then you will get a 30s icon to show aura when you use the potion and a sound alert played after the cooldown time(300s).\n\n" ..

@@ -38,7 +38,6 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	local frame = GUI:CreateScrollFrame(parent)
 	frame:SetLayout("Flow")
 
-	GUI:CreateInformationTag(frame, L["CombatSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["CombatSettings"] .. "|r", addon.db.CombatIndicator.Enabled, function(value)
 		addon.db.CombatIndicator.Enabled = value
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded

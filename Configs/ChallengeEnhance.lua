@@ -41,7 +41,6 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     frame:SetLayout("Flow")
 	frame:SetFullWidth(true)
 
-    GUI:CreateInformationTag(frame, L["ChallengeEnhanceSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChallengeEnhanceSettings"] .. "|r", addon.db.ChallengeEnhance.Enabled, function(value)
         addon.db.ChallengeEnhance.Enabled = value
         addon:ShowDialog(ADDON_NAME.."RLNeeded")

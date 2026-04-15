@@ -99,8 +99,17 @@ end
 ---Register in-game Slash Command
 local function SetUpSlashCommand()
 	SLASH_HBLYX1 = "/hblyx"
-	SlashCmdList["HBLYX"] = function()
-		addon.GUI:OpenGUI()
+	SlashCmdList["HBLYX"] = function(message)
+		local command, rest = strsplit(" ", message, 2)
+		if command == "" then
+			if addon.GUI and addon.GUI.isOpened then
+				addon.GUI:CloseGUI()
+			else
+				addon.GUI:OpenGUI()
+			end
+		elseif command == "dev" or command == "developer" then
+			addon.DeveloperTools:DisplayAddonInfo()
+		end
 	end
 end
 
@@ -154,7 +163,7 @@ end
 
 ---Initialization before main
 function addon:Initialize()
-	addon.version = "3.13"
+	addon.version = "4.0"
 
 	-- set up profile and configures
 	InitializeConfig()

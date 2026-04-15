@@ -149,7 +149,6 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
 	frame:SetLayout("Flow")
 	frame:SetFullWidth(true)
 
-	GUI:CreateInformationTag(frame, L["CustomAuraTrackerSettingsDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["CustomAuraTrackerSettings"] .. "|r", addon.db.CustomAuraTracker.Enabled, function(value)
 		addon.db.CustomAuraTracker.Enabled = value
 		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
@@ -177,6 +176,7 @@ function GUI.TagPanels.CustomAuraTracker:CreateTabPanel(parent)
 			end}
 		)
 	end)
+    GUI:CreateInformationTag(frame, L["CustomAuraTrackerDesc"], "LEFT")
 
     -- MARK: Style Settings
     local iconStyleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])

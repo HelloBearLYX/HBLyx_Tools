@@ -8,6 +8,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local ChallengeEnhance = {
     modName = "ChallengeEnhance",
     buttons = {},
+    loaded = false,
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
 
@@ -129,6 +130,26 @@ function ChallengeEnhance:UpdateStyle()
     end
 end
 
+-- MARK: UpdateButtons
+
+---Update buttons for ChallengeEnhance
+local function UpdateButtons(self)
+    if self.loaded == false then return end
+
+    for _, icon in pairs(ChallengesFrame.DungeonIcons) do
+        local mapID = icon.mapID
+        local button = self.buttons[mapID]
+        if button then
+            button:ClearAllPoints()
+            button:SetAllPoints(icon)
+
+            button.score:SetText(select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or "")
+        end
+    end
+end
+
+-- MARK: CreateButtons
+
 ---Create buttons and stored them in self.buttons
 ---@param self ChallengeEnhance self
 local function CreateButtons(self)
@@ -207,15 +228,18 @@ end
 function ChallengeEnhance:RegisterEvents()
     -- this feature only load on Blizzard_ChallengesUI loaded
     self.eventFrame:RegisterEvent("ADDON_LOADED")
+    -- refresh button status when new record or map update
+    self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
     if addon.db.ChallengeEnhance.PortalPartyMessage then
-        addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName)
+        addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName, "player")
     end
 
     self.eventFrame:SetScript("OnEvent", function(_, event, ...)
         if event == "ADDON_LOADED" then
             local name = ...
             if name == "Blizzard_ChallengesUI" then
-                if addon.core:GetModule(ChallengeEnhance.modName):Create() then
+                self.loaded = addon.core:GetModule(ChallengeEnhance.modName):Create()
+                if self.loaded then
                     self.eventFrame:UnregisterEvent("ADDON_LOADED")
                 end
             end
@@ -227,6 +251,8 @@ function ChallengeEnhance:RegisterEvents()
                     C_ChatInfo.SendChatMessage(L["PortalUsed"] .. spellLink, "PARTY")
                 end
             end
+        else
+            UpdateButtons(self)
         end
     end)
 end

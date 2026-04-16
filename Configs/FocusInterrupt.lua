@@ -70,7 +70,6 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     -- MARK: General
     local frame = GUI:CreateScrollFrame(parent)
     frame:SetLayout("Flow")
-    GUI:CreateInformationTag(frame, L["FocusInterruptSettingsDesc"], "LEFT")
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["FocusInterruptSettings"] .. "|r", addon.db.FocusInterrupt.Enabled, function(value)
         addon.db.FocusInterrupt.Enabled = value
         if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded

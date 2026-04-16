@@ -18,6 +18,7 @@ local ChallengeEnhance = {
 ---@return ChallengeEnhance ChallengeEnhance a ChallengeEnhance object
 function ChallengeEnhance:Initialize()
     self.portals = {}
+    self.lastUpdate = 0
 
     return self
 end
@@ -78,14 +79,33 @@ local function UpdateTooltip(parent, mapID)
     GameTooltip:Show()
 end
 
+-- MARK: Refresh Map Info
+
+local function RefreshMapInfo(self, mapID)
+    local button = self.buttons[mapID]
+    if button then
+        local score = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or ""
+        if score and addon.db[self.modName]["ScoreEnabled"] then
+            button.score:SetText(tostring(score))
+            button.score:SetTextColor(button.level:GetTextColor())
+        else
+            button.score:SetText("")
+        end
+
+        local name = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].short or ""
+        if name and addon.db[self.modName]["NameEnabled"] then
+            button.mapName:SetText(name)
+        else
+            button.mapName:SetText("")
+        end
+    end
+end
+
 --MARK: UpdateStyle
 
 ---Update style settings and render it in-game for ChallengeEnhance
 function ChallengeEnhance:UpdateStyle()
     for mapID, button in pairs(self.buttons) do
-        local _, score = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
-        local name = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].short or ""
-
         button.level:SetFont(
             addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
             addon.db[self.modName]["LevelFontSize"],
@@ -109,24 +129,8 @@ function ChallengeEnhance:UpdateStyle()
         )
         button.mapName:ClearAllPoints()
         button.mapName:SetPoint("CENTER", button, addon.db[self.modName]["NameAnchor"], addon.db[self.modName]["NameX"], addon.db[self.modName]["NameY"])
-        
-        -- update text info and colors
-        if not addon.db[self.modName]["LevelEnabled"] then -- blizzard assign it, we only disable it when needed
-            button.mapName:SetText("")
-        end
-
-        if addon.db[self.modName]["ScoreEnabled"] then
-            button.score:SetText(tostring(score or ""))
-        else
-            button.score:SetText("")
-        end
-        button.score:SetTextColor(button.level:GetTextColor())
-        
-        if addon.db[self.modName]["NameEnabled"] then
-            button.mapName:SetText(name or "")
-        else
-            button.mapName:SetText("")
-        end
+    
+        RefreshMapInfo(self, mapID)
     end
 end
 
@@ -134,7 +138,9 @@ end
 
 ---Update buttons for ChallengeEnhance
 local function UpdateButtons(self)
-    if self.loaded == false then return end
+    local now = GetTime()
+    if self.loaded == false or self.lastUpdate + 0.25 >= now then return end
+    self.lastUpdate = now
 
     for _, icon in pairs(ChallengesFrame.DungeonIcons) do
         local mapID = icon.mapID
@@ -142,8 +148,7 @@ local function UpdateButtons(self)
         if button then
             button:ClearAllPoints()
             button:SetAllPoints(icon)
-
-            button.score:SetText(select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or "")
+            RefreshMapInfo(self, mapID)
         end
     end
 end
@@ -194,6 +199,8 @@ local function CreateButtons(self)
             self.buttons[mapID]:Show()
         end
     end
+
+    self.lastUpdate = GetTime()
 end
 
 ---Create buttons for dungeons in the PVEFrame
@@ -212,6 +219,10 @@ function ChallengeEnhance:Create()
                 C_Timer.After(0.25, function ()
                     CreateButtons(self)
                     self:UpdateStyle()
+
+                    hooksecurefunc(ChallengesFrame, "Update", function()
+                        UpdateButtons(self)
+                    end)
                 end)
                 firstExecute = false
             end
@@ -229,7 +240,9 @@ function ChallengeEnhance:RegisterEvents()
     -- this feature only load on Blizzard_ChallengesUI loaded
     self.eventFrame:RegisterEvent("ADDON_LOADED")
     -- refresh button status when new record or map update
-    self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_LEADERS_UPDATE")
     if addon.db.ChallengeEnhance.PortalPartyMessage then
         addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName, "player")
     end

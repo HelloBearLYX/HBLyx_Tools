@@ -96,7 +96,7 @@ local TABS = {
     {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
     {text = L["CustomAuraTrackerSettings"], type = "Button", tooltip = L["CustomAuraTrackerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
-    {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockWelecome"] .. "\n" .. L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
+    {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
     {text = L["Others"], type = "Text"},
     {text = L["Profile"], type = "Button", panelFunction = function(container) return addon.GUI.TagPanels.Profile:CreateTabPanel(container) end},
 }

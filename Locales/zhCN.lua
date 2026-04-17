@@ -225,7 +225,7 @@ L["HideInactive"] = "未激活时隐藏"
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788ee术士|r提醒"
-L["WarlockRemindersIntro"] = "本恶魔提供宠物和治疗石的提醒\n\n当缺失宠物/治疗石(或者宠物姿态/类型错误)时会显示"
+L["WarlockRemindersIntro"] = "宠物和治疗石的提醒"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "恶魔卫士检查用于恶魔天赋, 地狱猎犬/小鬼检查用于其他天赋"
 L["FelguardEnable"] = "启用恶魔卫士检查"
@@ -278,9 +278,23 @@ L["AuraSettingsDesc"] = "虽然功能有限, 但它仍然可以提供支持, 比
 L["SelectAura"] = "选择一个存在的光环"
 L["ClearSpecsSelection"] = "清除专精选择"
 
--- MARK: Encounter Sound
-L["EncounterSoundSettings"] = "BOSS战音效"
-L["dispatch_notification"] = "这个模块已从 |cff8788eeHBLyx_Tools|r 永久分离，并作为独立模块 |cff8788eeHBLyx_Encounter_Sound|r 发布，你可以使用下面的配置字符串将你的配置迁移到新的独立模块。\n" ..
-"你可以在以下地址找到 |cff8788eeHBLyx_Encounter_Sound|r\n"
-L["clear_profile"] = "清除配置文件数据"
-L["clear_info"] = "数据迁移后，或者你看不到任何导出的数据，你可以清除这个模块的配置文件数据来释放一些空间，因为它不再被使用了。"
+-- MARK: Auto Roll
+L["AutoRollSettings"] = "自动Roll点"
+L["AutoRollSettingsDesc"] = "根据自定义规则自动在Roll点窗口上选择需要/贪婪/放弃"
+L["AutoRollMessage"] = "自动Roll点: %s 对于 %s"
+L["AlwaysNeed"] = "总是需求"
+L["SecondaryChoice"] = "次要选择"
+-- roll type
+L["RollType"] = {
+	PASS = "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:16|t放弃",
+	NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:16|t需求",
+	GREED = "|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:16|t贪婪",
+	TRANSMOG = "|TInterface\\Minimap\\Tracking\\Transmogrifier:16|t幻化",
+}
+L["ItemType"] = {
+	Gear = "装备",
+	Housing = "住宅",
+	Recipe = "配方",
+	Mount = "坐骑",
+	Toy = "玩具",
+}

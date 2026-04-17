@@ -223,7 +223,7 @@ L["HideInactive"] = "Hide When Inactive"
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"
-L["WarlockRemindersIntro"] = "This module provides pet and healthstone reminders\n\nThe reminder will show up when you are missing your pet/healthstone(or incorrect pet stance/type)"
+L["WarlockRemindersIntro"] = "Pet and healthstone reminders"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "Felguard check for Demonology, and Felhunter/Imp check for other specs"
 L["FelguardEnable"] = "Enable Felguard Check"
@@ -276,9 +276,23 @@ L["AuraSettingsDesc"] = "Although the function is limited, but it still can be s
 L["SelectAura"] = "Select an existing aura"
 L["ClearSpecsSelection"] = "Clear Specializations Selection"
 
--- MARK: Encounter Sound
-L["EncounterSoundSettings"] = "Encounter Sound"
-L["dispatch_notification"] = "This module has been permanently dispatched from |cff8788eeHBLyx_Tools|r and put as a standalone module |cff8788eeHBLyx_Encounter_Sound|r, you can use the configuration string below to migrate your profile to the new standalone module.\n" ..
-"You can find |cff8788eeHBLyx_Encounter_Sound|r on the address below.\n"
-L["clear_profile"] = "Clear Profile Data"
-L["clear_info"] = "After data migration, or you see no exported data, you can clear the profile data of this module to free up some space since it is no longer used."
+-- MARK: Auto Roll
+L["AutoRollSettings"] = "Auto Roll"
+L["AutoRollSettingsDesc"] = "Automatically select Need/Greed/Pass on the loot roll window based on customizable rules"
+L["AutoRollMessage"] = "Auto Rolled: %s on %s"
+L["AlwaysNeed"] = "Always Need"
+L["SecondaryChoice"] = "Secondary Choice"
+-- roll type
+L["RollType"] = {
+	PASS = "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:16|tPass",
+	NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:16|tNeed",
+	GREED = "|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:16|tGreed",
+	TRANSMOG = "|TInterface\\Minimap\\Tracking\\Transmogrifier:16|tTransmog",
+}
+L["ItemType"] = {
+	Gear = "Gear",
+	Recipe = "Recipe",
+	Mount = "Mount",
+	Toy = "Toy",
+	Housing = "Housing",
+}

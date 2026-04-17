@@ -92,7 +92,7 @@ end
 function AutoRoll:RegisterEvents()
     addon.core:RegisterEvent("START_LOOT_ROLL", self.eventFrame, self.modName)
 
-    self.eventFrame:SetScript("OnEvent", function(_, event, ...)
+    self.eventFrame:SetScript("OnEvent", function(_, _, ...)
         local rollID = ...
         local itemLink = GetLootRollItemLink(rollID)
 

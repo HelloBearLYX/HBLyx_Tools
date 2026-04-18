@@ -28,32 +28,66 @@ end
 -- MARK: Get Roll Type
 
 local function NonGearHelper(self, lootStates, itemType)
-    local alwaysNeed = addon.db[self.modName]["AlwaysNeed_" .. itemType] or false
+    local firstChoice = ROLL_TYPE[addon.db[self.modName]["FirstChoice_" .. itemType] or "NEED"]
     local secondaryChoice = ROLL_TYPE[addon.db[self.modName]["SecondaryChoice_" .. itemType] or "GREED"]
-    if lootStates.canNeed and alwaysNeed then
-        return ROLL_TYPE.NEED
-    elseif lootStates.canGreed then
+
+    if firstChoice == ROLL_TYPE.PASS
+        or (firstChoice == ROLL_TYPE.NEED and lootStates.canNeed)
+        or (firstChoice == ROLL_TYPE.GREED and lootStates.canGreed)
+        or (firstChoice == ROLL_TYPE.TRANSMOG and lootStates.canTransmog) then
+        return firstChoice
+    elseif secondaryChoice == ROLL_TYPE.PASS
+        or (secondaryChoice == ROLL_TYPE.NEED and lootStates.canNeed)
+        or (secondaryChoice == ROLL_TYPE.GREED and lootStates.canGreed)
+        or (secondaryChoice == ROLL_TYPE.TRANSMOG and lootStates.canTransmog) then
         return secondaryChoice
-    else
-        return ROLL_TYPE.PASS
     end
+
+    return nil
+end
+
+local function ResolveGearChoice(choice, lootStates)
+    if choice == ROLL_TYPE.PASS then
+        return ROLL_TYPE.PASS
+    elseif choice == ROLL_TYPE.NEED and lootStates.canNeed then
+        return ROLL_TYPE.NEED
+    elseif choice == ROLL_TYPE.TRANSMOG then
+        if lootStates.canTransmog then
+            return ROLL_TYPE.TRANSMOG
+        elseif lootStates.canGreed then
+            return ROLL_TYPE.GREED
+        end
+    elseif choice == ROLL_TYPE.GREED and lootStates.canGreed then
+        return ROLL_TYPE.GREED
+    end
+
+    return nil
 end
 
 local function GetRollType(self, itemType, lootStates)
-    if itemType == "Gear" then
-        local secondaryChoice = ROLL_TYPE[addon.db[self.modName]["SecondaryChoice_" .. itemType] or "GREED"]
-        if lootStates.canNeed and addon.db[self.modName]["AlwaysNeed_" .. itemType] then
-            return ROLL_TYPE.NEED
-        elseif lootStates.canGreed and secondaryChoice == ROLL_TYPE.GREED then
-            return ROLL_TYPE.GREED
-        elseif lootStates.canTransmog and secondaryChoice == ROLL_TYPE.TRANSMOG then
-            return ROLL_TYPE.TRANSMOG
-        else
-            return ROLL_TYPE.PASS
-        end
-    else -- for non-gear items, only roll greed or pass
-        return NonGearHelper(self, lootStates, itemType)
+    local toggle = addon.db[self.modName]["Toggle_" .. itemType] or false
+    if not toggle then
+        return nil
     end
+
+    if itemType == "Gear" then
+        local firstChoice = ROLL_TYPE[addon.db[self.modName]["FirstChoice_" .. itemType] or "NEED"]
+        local secondaryChoice = ROLL_TYPE[addon.db[self.modName]["SecondaryChoice_" .. itemType] or "GREED"]
+
+        local firstResolved = ResolveGearChoice(firstChoice, lootStates)
+        if firstResolved then
+            return firstResolved
+        end
+
+        local secondaryResolved = ResolveGearChoice(secondaryChoice, lootStates)
+        if secondaryResolved then
+            return secondaryResolved
+        end
+
+        return nil
+    end
+
+    return NonGearHelper(self, lootStates, itemType)
 end
 
 -- MARK: Roll

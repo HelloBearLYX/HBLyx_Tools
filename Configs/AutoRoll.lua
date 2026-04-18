@@ -7,27 +7,35 @@ local MOD_KEY = "AutoRoll"
 addon.configurationList[MOD_KEY] = {
 	Enabled = false,
     -- gear section
-    AlwaysNeed_Gear = true,
+    Toggle_Gear = true,
+    FirstChoice_Gear = "NEED", -- options: "NEED", "GREED", "TRANSMOG", "PASS"
     SecondaryChoice_Gear = "TRANSMOG", -- options: "GREED", "TRANSMOG", "PASS"
     -- non-gear section
-    AlwaysNeed_Recipe = true,
+    Toggle_Recipe = true,
+    FirstChoice_Recipe = "NEED", -- options: "NEED", "GREED", "PASS"
     SecondaryChoice_Recipe = "GREED", -- options: "GREED", "PASS"
-    AlwaysNeed_Mount = true,
+    Toggle_Mount = true,
+    FirstChoice_Mount = "NEED", -- options: "NEED", "GREED", "PASS"
     SecondaryChoice_Mount = "GREED", -- options: "GREED", "PASS"
-    AlwaysNeed_Toy = true,
+    Toggle_Toy = true,
+    FirstChoice_Toy = "NEED", -- options: "NEED", "GREED", "PASS"
     SecondaryChoice_Toy = "GREED", -- options: "GREED", "PASS"
-    AlwaysNeed_Housing = true,
+    Toggle_Housing = true,
+    FirstChoice_Housing = "NEED", -- options: "NEED", "GREED", "PASS"
     SecondaryChoice_Housing = "GREED", -- options: "GREED", "PASS"
 }
 
-local function CreateItemOptions(parentGroup, itemKey, itemLabel, secondaryChoices, secondaryOrder)
+local function CreateItemOptions(parentGroup, itemKey, itemLabel, firstChoices, firstOrder, secondaryChoices, secondaryOrder)
     local itemGroup = GUI:CreateInlineGroup(parentGroup, itemLabel)
-    GUI:CreateToggleCheckBox(itemGroup, L["AlwaysNeed"], addon.db.AutoRoll["AlwaysNeed_" .. itemKey], function(value)
-        addon.db.AutoRoll["AlwaysNeed_" .. itemKey] = value
-    end)
+    GUI:CreateToggleCheckBox(itemGroup, L["ApplyAutoRoll"], addon.db.AutoRoll["Toggle_" .. itemKey], function(value)
+        addon.db.AutoRoll["Toggle_" .. itemKey] = value
+    end):SetRelativeWidth(0.1)
+    GUI:CreateDropdown(itemGroup, L["FirstChoice"], firstChoices, firstOrder, addon.db.AutoRoll["FirstChoice_" .. itemKey], function(key)
+        addon.db.AutoRoll["FirstChoice_" .. itemKey] = key
+    end):SetRelativeWidth(0.25)
     GUI:CreateDropdown(itemGroup, L["SecondaryChoice"], secondaryChoices, secondaryOrder, addon.db.AutoRoll["SecondaryChoice_" .. itemKey], function(key)
         addon.db.AutoRoll["SecondaryChoice_" .. itemKey] = key
-    end)
+    end):SetRelativeWidth(0.25)
 end
 
 -- GUI
@@ -63,11 +71,19 @@ function GUI.TagPanels.AutoRoll:CreateTabPanel(parent)
 		)
 	end)
 
-    CreateItemOptions(frame, "Gear", L["ItemType"]["Gear"], {GREED = L["RollType"]["GREED"], TRANSMOG = L["RollType"]["TRANSMOG"], PASS = L["RollType"]["PASS"]}, {"TRANSMOG", "GREED", "PASS"})
-    CreateItemOptions(frame, "Housing", L["ItemType"]["Housing"], {GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}, {"GREED", "PASS"})
-    CreateItemOptions(frame, "Recipe", L["ItemType"]["Recipe"], {GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}, {"GREED", "PASS"})
-    CreateItemOptions(frame, "Mount", L["ItemType"]["Mount"], {GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}, {"GREED", "PASS"})
-    CreateItemOptions(frame, "Toy", L["ItemType"]["Toy"], {GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}, {"GREED", "PASS"})
+    local gearFirstChoices = {NEED = L["RollType"]["NEED"], GREED = L["RollType"]["GREED"], TRANSMOG = L["RollType"]["TRANSMOG"], PASS = L["RollType"]["PASS"]}
+    local gearFirstOrder = {"NEED", "TRANSMOG", "GREED", "PASS"}
+    local gearSecondaryChoices = {GREED = L["RollType"]["GREED"], TRANSMOG = L["RollType"]["TRANSMOG"], PASS = L["RollType"]["PASS"]}
+    local gearSecondaryOrder = {"GREED", "TRANSMOG", "PASS"}
+    CreateItemOptions(frame, "Gear", L["ItemType"]["Gear"], gearFirstChoices, gearFirstOrder, gearSecondaryChoices, gearSecondaryOrder)
+    local nonGearFirstChoices = {NEED = L["RollType"]["NEED"], GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}
+    local nonGearFirstOrder = {"NEED", "GREED", "PASS"}
+    local nonGearSecondaryChoices = {GREED = L["RollType"]["GREED"], PASS = L["RollType"]["PASS"]}
+    local nonGearSecondaryOrder = {"GREED", "PASS"}
+    CreateItemOptions(frame, "Housing", L["ItemType"]["Housing"], nonGearFirstChoices, nonGearFirstOrder, nonGearSecondaryChoices, nonGearSecondaryOrder)
+    CreateItemOptions(frame, "Recipe", L["ItemType"]["Recipe"], nonGearFirstChoices, nonGearFirstOrder, nonGearSecondaryChoices, nonGearSecondaryOrder)
+    CreateItemOptions(frame, "Mount", L["ItemType"]["Mount"], nonGearFirstChoices, nonGearFirstOrder, nonGearSecondaryChoices, nonGearSecondaryOrder)
+    CreateItemOptions(frame, "Toy", L["ItemType"]["Toy"], nonGearFirstChoices, nonGearFirstOrder, nonGearSecondaryChoices, nonGearSecondaryOrder)
 
 	return frame
 end

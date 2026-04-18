@@ -280,10 +280,11 @@ L["ClearSpecsSelection"] = "清除专精选择"
 
 -- MARK: Auto Roll
 L["AutoRollSettings"] = "自动Roll点"
-L["AutoRollSettingsDesc"] = "根据自定义规则自动在Roll点窗口上选择需要/贪婪/放弃"
+L["AutoRollSettingsDesc"] = "根据自定义规则自动在Roll点窗口上选择"
 L["AutoRollMessage"] = "自动Roll点: %s 对于 %s"
-L["AlwaysNeed"] = "总是需求"
-L["SecondaryChoice"] = "次要选择"
+L["ApplyAutoRoll"] = "启用"
+L["FirstChoice"] = "第一选择"
+L["SecondaryChoice"] = "第二选择"
 -- roll type
 L["RollType"] = {
 	PASS = "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:16|t放弃",
@@ -292,9 +293,9 @@ L["RollType"] = {
 	TRANSMOG = "|TInterface\\Minimap\\Tracking\\Transmogrifier:16|t幻化",
 }
 L["ItemType"] = {
-	Gear = "装备",
-	Housing = "住宅",
-	Recipe = "配方",
-	Mount = "坐骑",
-	Toy = "玩具",
+	Gear = "|TInterface\\Icons\\ui_itemupgrade:16|t装备",
+	Housing = "|TInterface\\Housing\\inv_12ph_genericfixture:16|t住宅",
+	Recipe = "|TInterface\\Icons\\inv_scroll_03:16|t配方",
+	Mount = "|TInterface\\Icons\\MountJournalPortrait:16|t坐骑",
+	Toy = "|TInterface\\Icons\\inv_misc_toy_01:16|t玩具",
 }

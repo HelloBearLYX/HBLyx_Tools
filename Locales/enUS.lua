@@ -257,7 +257,7 @@ L["Algeth'ar Academy_short"] = "AA"
 L["Seat of the Triumvirate_short"] = "SoT"
 L["Nexus-Point Xenas_short"] = "NPX"
 L["Maisara Caverns_short"] = "MC"
-L["Skyreach_short"] = "Skyreach"
+L["Skyreach_short"] = "SR"
 L["Windrunner Spire_short"] = "WS"
 L["Magister's Terrace_short"] = "MT"
 L["Pit of Saron_short"] = "PoS"
@@ -280,7 +280,8 @@ L["ClearSpecsSelection"] = "Clear Specializations Selection"
 L["AutoRollSettings"] = "Auto Roll"
 L["AutoRollSettingsDesc"] = "Automatically select Need/Greed/Pass on the loot roll window based on customizable rules"
 L["AutoRollMessage"] = "Auto Rolled: %s on %s"
-L["AlwaysNeed"] = "Always Need"
+L["ApplyAutoRoll"] = "Apply"
+L["FirstChoice"] = "First Choice"
 L["SecondaryChoice"] = "Secondary Choice"
 -- roll type
 L["RollType"] = {
@@ -290,9 +291,9 @@ L["RollType"] = {
 	TRANSMOG = "|TInterface\\Minimap\\Tracking\\Transmogrifier:16|tTransmog",
 }
 L["ItemType"] = {
-	Gear = "Gear",
-	Recipe = "Recipe",
-	Mount = "Mount",
-	Toy = "Toy",
-	Housing = "Housing",
+	Gear = "|TInterface\\Icons\\ui_itemupgrade:16|tGear",
+	Recipe = "|TInterface\\Icons\\inv_scroll_03:16|tRecipe",
+	Mount = "|TInterface\\Icons\\MountJournalPortrait:16|tMount",
+	Toy = "|TInterface\\Icons\\inv_misc_toy_01:16|tToy",
+	Housing = "|TInterface\\Housing\\inv_12ph_genericfixture:16|tHousing",
 }

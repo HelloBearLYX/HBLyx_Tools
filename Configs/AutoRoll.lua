@@ -5,7 +5,7 @@ local MOD_KEY = "AutoRoll"
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-	Enabled = true,
+	Enabled = false,
     -- gear section
     AlwaysNeed_Gear = true,
     SecondaryChoice_Gear = "TRANSMOG", -- options: "GREED", "TRANSMOG", "PASS"

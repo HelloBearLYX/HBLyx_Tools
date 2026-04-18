@@ -70,7 +70,7 @@ local function Roll(self, rollID, itemLink, lootStates)
             choice = GetRollType(self, "Housing", lootStates)
         elseif classID == Enum.ItemClass.Miscellaneous and subClassID == Enum.ItemMiscellaneousSubclass.Mount then -- mount
             choice = GetRollType(self, "Mount", lootStates)
-        elseif C_ToyBox.IsToy(itemID) then -- toy
+        elseif C_ToyBox.GetToyInfo(itemID) then -- toy
             choice = GetRollType(self, "Toy", lootStates)
         elseif classID == Enum.ItemClass.Weapon or classID == Enum.ItemClass.Armor then -- gear
             choice = GetRollType(self, "Gear", lootStates)
@@ -81,7 +81,6 @@ local function Roll(self, rollID, itemLink, lootStates)
         -- only roll if have a valid choice and can actually roll that choice
         if choice then
             RollOnLoot(rollID, choice)
-            addon.Utilities:print(string.format(L["AutoRollMessage"], L["RollType"][choice], itemLink))
         end
     end
 end

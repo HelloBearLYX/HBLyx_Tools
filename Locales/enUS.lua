@@ -21,11 +21,7 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
-L["ChangeLogContent"] =
-"v3.13\n" ..
-"-Focus Interrupt: seperate interrupt icon from cast bars, make it an independent sub-module\n" ..
-"v3.12\n" ..
-"-Encounter Sound: totally dispatch the Encounter Sound module from |cff8788eeHBLyx_Tools|r, and put it as a standalone module |cff8788eeHBLyx_Encounter_Sound|r\n"
+L["ChangeLogContent"] = "The full change log can be found on: \n https://discord.gg/NkjEKddwDr"
 --MARK: Issues
 L["Issues"] = "Issues"
 L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"

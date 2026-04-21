@@ -240,9 +240,9 @@ function ChallengeEnhance:RegisterEvents()
     -- this feature only load on Blizzard_ChallengesUI loaded
     self.eventFrame:RegisterEvent("ADDON_LOADED")
     -- refresh button status when new record or map update
-    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
-    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_LEADERS_UPDATE")
+    self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    self.eventFrame:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
+    self.eventFrame:RegisterEvent("CHALLENGE_MODE_LEADERS_UPDATE")
     if addon.db.ChallengeEnhance.PortalPartyMessage then
         addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName, "player")
     end

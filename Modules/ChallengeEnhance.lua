@@ -220,9 +220,9 @@ function ChallengeEnhance:Create()
                     CreateButtons(self)
                     self:UpdateStyle()
 
-                    hooksecurefunc(ChallengesFrame, "Update", function()
-                        UpdateButtons(self)
-                    end)
+                    -- hooksecurefunc(ChallengesFrame, "Update", function()
+                    --     UpdateButtons(self)
+                    -- end)
                 end)
                 firstExecute = false
             end

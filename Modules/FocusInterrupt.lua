@@ -86,7 +86,8 @@ local function GetInterruptSpellID(self)
     self.subInterrupt = nil
 
     if addon.states["playerSpec"] == 266 then -- demonology warlock
-        self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY_SUB
+        -- 12.05 the GRIMOIRE and subInterrupt was removed from demo warlock, temperarily keep the code but diasable this function
+        -- self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY_SUB
         output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY
     elseif addon.states["playerSpec"] == 102 then -- balance druid
         output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].BALANCE

@@ -79,7 +79,6 @@ end
 
 ---Get interruptID depending on class and spec of the player
 ---@param self FocusInterrupt self
----@param class string Upper-case class string
 ---@return integer interruptID the interrupt spell ID
 local function GetInterruptSpellID(self)
     local output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEFAULT

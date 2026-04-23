@@ -148,6 +148,9 @@ local function UpdateButtons(self)
         if button then
             button:ClearAllPoints()
             button:SetAllPoints(icon)
+            if icon.HighestLevel then
+                button.level = icon.HighestLevel
+            end
             RefreshMapInfo(self, mapID)
         end
     end

@@ -166,12 +166,12 @@ local function PetHandler(self)
     end
 
     -- check existance of pet
-    local petFamily = ""
-    if UnitExists("pet") then -- pet is missing: petFamily == ""
-        petFamily = UnitCreatureFamily("pet")
+    local petFamily = nil
+    if UnitExists("pet") then -- if pet missing, the petFamily is nil
+        petFamily = UnitCreatureFamily("pet") or nil
     end
 
-    if petFamily == "" then -- if pet is missing
+    if not petFamily then -- if pet is missing
         self.pet.icon:SetDesaturated(true)
         if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY then -- assign correct pet icon depending on spec
             self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
@@ -183,26 +183,29 @@ local function PetHandler(self)
         self:ShowFrame("pet")
         return
     else -- check pet type
-        if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelguardEnabled"] then
-            if petFamily ~= L["PetFamily"]["Felguard"] then -- wrong type for demonology
-                self.pet.icon:SetDesaturated(true)
-                self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
-                self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
-                
-                self:ShowFrame("pet")
-                return
-            end
-        elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelhunterEnabled"] then 
-            if petFamily ~= L["PetFamily"]["Felhunter"] and petFamily ~= L["PetFamily"]["Imp"] then -- wrong type for afflication/destruction
-                self.pet.icon:SetDesaturated(true)
-                self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
-                self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
-                self:ShowFrame("pet")
-                return
+        if not issecretvalue(petFamily) then
+            if addon.states["playerSpec"] == SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelguardEnabled"] then
+                if petFamily ~= L["PetFamily"]["Felguard"] then -- wrong type for demonology
+                    self.pet.icon:SetDesaturated(true)
+                    self.pet.icon:SetTexture(TEXTURE_ID.FELGUARD)
+                    self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
+
+                    self:ShowFrame("pet")
+                    return
+                end
+            elseif addon.states["playerSpec"] ~= SPEC_ID.DEMONOLOGY and addon.db[self.modName]["FelhunterEnabled"] then 
+                if petFamily ~= L["PetFamily"]["Felhunter"] and petFamily ~= L["PetFamily"]["Imp"] then -- wrong type for afflication/destruction
+                    self.pet.icon:SetDesaturated(true)
+                    self.pet.icon:SetTexture(TEXTURE_ID.FELHUNTER)
+                    self.pet.text:SetText(addon.db[self.modName]["PetWrongTypeText"])
+                    self:ShowFrame("pet")
+                    return
+                end
             end
         end
 
-        if addon.db[self.modName]["StanceEnabled"] then -- check stance if needed
+        -- check stance if needed
+        if addon.db[self.modName]["StanceEnabled"] then
             local curStance = GetPetStance()
             if curStance == -1 or curStance == PET_STANCE.ASSIST then -- stance error or stance correct
                 self.pet.text:SetText(L["PetStance"]["ASSIST"])

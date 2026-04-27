@@ -82,7 +82,9 @@ end
 ---@return integer interruptID the interrupt spell ID
 local function GetInterruptSpellID(self)
     local output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEFAULT
-    self.subInterrupt = nil
+    if self.subInterrupt then
+        self.subInterrupt = nil
+    end
 
     if addon.states["playerSpec"] == 266 then -- demonology warlock
         -- 12.05 the GRIMOIRE and subInterrupt was removed from demo warlock, temperarily keep the code but diasable this function
@@ -250,6 +252,30 @@ local function InterruptHandler(self, unit, guid)
     end)
 end
 
+-- MARK: Get Interrupt Ready
+
+---Get if the interrupt is ready for use
+---@param self FocusInterrupt self
+---@param isSubInterrupt boolean if the interrupt to be checked is sub-interrupt
+---@return boolean if the interrupt is ready, if sub-interrupt is not enabled, only return false for sub-interrupt
+local function IsInterruptReady(self, isSubInterrupt)
+    if isSubInterrupt then
+        if not self.subInterrupt then
+            return false
+        end
+
+        if addon.states["playerSpec"] == 266 then -- demonology warlock
+            if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then
+                return C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"])
+            end
+        end
+
+        return C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
+    else
+        return C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
+    end
+end
+
 -- MARK: OnUpdate
 
 ---Handle Casts by passed information
@@ -283,21 +309,11 @@ local function OnUpdate(self, unit, duration, isChannel, notInterruptible)
     end
 
     -- general interrupt cooldown check
-    local isInterruptReady = C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
+    local isInterruptReady = IsInterruptReady(self, false)
 
     -- for Demonology Warlocks/Two interrupts specs
     -- since the GRIMOIRE is also a kick, this part can only used for Demo Warlock so far. Prot Paladin cannot use this as GCD issue(IsZero includes GCD)
-    local subInterruptReady
-    if self.subInterrupt then
-        -- the SpellLock(player version) is obtained to the SpellBook after used GRIMOIRE
-        if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then -- if SpellLock not in SpellBook-> GRIMOIRE not used yet/GRIMOIRE not learned(ignore it)
-            -- if GRIMOIRE in SpellBook -> GRIMOIRE not on cooldown yet -> also a sub-interrupt ready
-            subInterruptReady = C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"])
-        else -- SpellLock(player version) is in SpellBook -> GRIMOIRE used
-            -- check SpellLock(player version)
-            subInterruptReady = C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
-        end
-    end
+    local subInterruptReady = IsInterruptReady(self, true)
 
     -- handle colors for the statusBar
     -- after 3.2 use color constrol instead of overlays

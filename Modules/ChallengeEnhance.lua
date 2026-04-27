@@ -84,6 +84,14 @@ end
 local function RefreshMapInfo(self, mapID)
     local button = self.buttons[mapID]
     if button then
+        local mapBestInfo = C_MythicPlus.GetSeasonBestForMap(mapID)
+        local level = mapBestInfo and mapBestInfo.level or ""
+        if level and addon.db[self.modName]["LevelEnabled"] then
+            button.level:SetText(tostring(level))
+        else
+            button.level:SetText("")
+        end
+
         local score = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or ""
         if score and addon.db[self.modName]["ScoreEnabled"] then
             button.score:SetText(tostring(score))
@@ -137,9 +145,12 @@ end
 -- MARK: UpdateButtons
 
 ---Update buttons for ChallengeEnhance
-local function UpdateButtons(self)
+---@param self ChallengeEnhance self
+---@param delay number delay time for updating buttons, default is 0.25s to avoid
+local function UpdateButtons(self, delay)
+    if not delay then delay = 0.25 end
     local now = GetTime()
-    if self.loaded == false or self.lastUpdate + 0.25 >= now then return end
+    if self.loaded == false or self.lastUpdate + delay >= now then return end
     self.lastUpdate = now
 
     for _, icon in pairs(ChallengesFrame.DungeonIcons) do
@@ -148,9 +159,6 @@ local function UpdateButtons(self)
         if button then
             button:ClearAllPoints()
             button:SetAllPoints(icon)
-            if icon.HighestLevel then
-                button.level = icon.HighestLevel
-            end
             RefreshMapInfo(self, mapID)
         end
     end
@@ -268,7 +276,7 @@ function ChallengeEnhance:RegisterEvents()
                 end
             end
         else
-            UpdateButtons(self)
+            UpdateButtons(self, 2)
         end
     end)
 end

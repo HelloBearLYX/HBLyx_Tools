@@ -104,16 +104,16 @@ end
 local function Handler(self, spellID)
     local frame = self.auras.loaded[spellID]
     if frame then
-        if frame.timer then
+        if frame.timer then -- if there is already a timer for this aura, cancel it first to avoid unexpected behavior
             frame.timer:Cancel()
             frame.timer = nil
+            HideAura(self, frame) -- hide the aura first to reset the showing auras chain, and show it again with new timer
         end
 
         local duration = addon.db[self.modName].spells[spellID].duration
         local activeSound = addon.db[self.modName].spells[spellID].activeSound
         local soundChannel = addon.db[self.modName]["SoundChannel"] or "Master"
 
-        frame:Show()
         ShowAura(self, frame)
         frame.cooldown:SetCooldown(GetTime(), duration)
         if activeSound then

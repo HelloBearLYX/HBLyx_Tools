@@ -65,6 +65,8 @@ L["Texture"] = "材质"
 L["Width"] = "宽度"
 L["Height"] = "高度"
 L["Sound"] = "音效"
+L["Time"] = "时间"
+L["Count"] = "计数"
 L["TimeFontScale"] = "时间大小缩放"
 L["StackFontSize"] = "层数/充能字体大小"
 L["Reminders"] = "提醒"
@@ -295,3 +297,7 @@ L["ItemType"] = {
 	Mount = "|TInterface\\Icons\\MountJournalPortrait:16|t坐骑",
 	Toy = "|TInterface\\Icons\\inv_misc_toy_01:16|t玩具",
 }
+
+-- MARK: Demonology Portals
+L["DemonologyPortalsSettings"] = "|cff8788ee恶魔术|r传送门"
+L["DemonologyPortalsSettingsDesc"] = "显示本次/上次暴君期间的传送门数量"

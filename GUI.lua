@@ -98,6 +98,7 @@ local TABS = {
     {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
     {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
+    {text = L["DemonologyPortalsSettings"], type = "Button", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.DemonologyPortals:CreateTabPanel(container) end},
     {text = L["Others"], type = "Text"},
     {text = L["Profile"], type = "Button", panelFunction = function(container) return addon.GUI.TagPanels.Profile:CreateTabPanel(container) end},
 }

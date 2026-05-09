@@ -16,6 +16,7 @@ addon.Utilities.Anchors = {
 	BOTTOMLEFT = "BOTTOMLEFT",
 	TOPRIGHT = "TOPRIGHT",
 	BOTTOMRIGHT = "BOTTOMRIGHT",
+	CENTER = "CENTER",
 }
 
 ---@enum growDirection the direction to grow from anchor point
@@ -144,6 +145,8 @@ function addon.Utilities:GetAnchorFrom(anchorTo)
 		return "BOTTOMRIGHT"
 	elseif anchorTo == "BOTTOMRIGHT" then
 		return "TOPRIGHT"
+	elseif anchorTo == "CENTER" then
+		return "CENTER"
 	else
 		error("Invalid Input")
 	end

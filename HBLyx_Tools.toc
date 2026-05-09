@@ -3,7 +3,7 @@
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
-## Version: 3.14.4
+## Version: 3.14.5
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
@@ -29,6 +29,7 @@ Modules\ChallengeEnhance.lua
 Modules\CustomAuraTracker.lua
 Modules\AutoRoll.lua
 Modules\WarlockReminder.lua
+Modules\DemonologyPortals.lua
 
 # handle configuration and options
 GUI.lua
@@ -40,6 +41,7 @@ Configs\ChallengeEnhance.lua
 Configs\CustomAuraTracker.lua
 Configs\AutoRoll.lua
 Configs\WarlockReminder.lua
+Configs\DemonologyPortals.lua
 
 Configs\Profile.lua
 

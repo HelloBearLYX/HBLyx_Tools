@@ -305,7 +305,7 @@ function WarlockReminder:Test(on)
         addon.Utilities:MakeFrameDragPosition(self.pet, self.modName, "PetX", "PetY")
 
         self.candy:Show()
-         addon.Utilities:MakeFrameDragPosition(self.candy, self.modName, "CandyX", "CandyY")
+        addon.Utilities:MakeFrameDragPosition(self.candy, self.modName, "CandyX", "CandyY")
     else
         self:Handler()
     end
@@ -320,7 +320,7 @@ function WarlockReminder:RegisterEvents()
             self:Handler("pet")
         elseif event == "BAG_UPDATE" then
             self:Handler("candy")
-         elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
+        elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
             if IsMounted() then
                 self:Handler()
             else
@@ -335,7 +335,6 @@ function WarlockReminder:RegisterEvents()
     end
 
     -- Both events
-    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
     addon.core:RegisterStateMonitor("inCombat", self.modName, function() self:Handler() end)
     -- Pet events
     addon.core:RegisterEvent("UNIT_PET", self.frame, self.modName, "player")

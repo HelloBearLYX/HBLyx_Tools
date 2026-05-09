@@ -63,6 +63,8 @@ L["Texture"] = "Texture"
 L["Width"] = "Width"
 L["Height"] = "Height"
 L["Sound"] = "Sound"
+L["Time"] = "Time"
+L["Count"] = "Count"
 L["TimeFontScale"] = "Time Font Scale"
 L["StackFontSize"] = "Stack/Charge Font Size"
 L["Reminders"] = "Reminders"
@@ -293,3 +295,7 @@ L["ItemType"] = {
 	Toy = "|TInterface\\Icons\\inv_misc_toy_01:16|tToy",
 	Housing = "|TInterface\\Housing\\inv_12ph_genericfixture:16|tHousing",
 }
+
+-- MARK: Demonology Portals
+L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
+L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"

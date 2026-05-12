@@ -59,6 +59,7 @@ L["PetSettings"] = "宠物提醒设置"
 L["PetStanceEnable"] = "启用宠物姿态检查"
 L["PetTypeSettings"] = "启用宠物类型检查"
 L["FadeTime"] = "淡入/淡出时间"
+L["FadeOutTime"] = "淡出时间"
 L["IconSize"] = "图标大小"
 L["BackgroundAlpha"] = "背景透明度"
 L["Texture"] = "材质"
@@ -301,3 +302,4 @@ L["ItemType"] = {
 -- MARK: Demonology Portals
 L["DemonologyPortalsSettings"] = "|cff8788ee恶魔术|r传送门"
 L["DemonologyPortalsSettingsDesc"] = "显示本次/上次暴君期间的传送门数量"
+L["PortalExpiredMessage"] = "本次传送门数量: %s"

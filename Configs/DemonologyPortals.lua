@@ -6,6 +6,9 @@ local MOD_KEY = "DemonologyPortals"
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
+	HideWhenInactive = true,
+	PrintToChat = true,
+	HideDelay = 5,
 	CountFont = "",
 	CountFontSize = 12,
 	TimeFontScale = 1,
@@ -57,6 +60,20 @@ function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
 		)
 	end)
 
+	-- behavior settings
+	local behaviorGroup = GUI:CreateInlineGroup(frame, L["General"])
+	GUI:CreateToggleCheckBox(behaviorGroup, L["HideInactive"], addon.db.DemonologyPortals.HideWhenInactive, function(value)
+		addon.db.DemonologyPortals.HideWhenInactive = value
+		update()
+	end)
+	GUI:CreateSlider(behaviorGroup, L["FadeOutTime"], 0, 10, 1, addon.db.DemonologyPortals.HideDelay, function(value)
+		addon.db.DemonologyPortals.HideDelay = value
+		update()
+	end)
+	GUI:CreateToggleCheckBox(behaviorGroup, L["TimerPrintEnabled"], addon.db.DemonologyPortals.PrintToChat, function(value)
+		addon.db.DemonologyPortals.PrintToChat = value
+		update()
+	end)
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
 	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.DemonologyPortals.FrameStrata, function(value)

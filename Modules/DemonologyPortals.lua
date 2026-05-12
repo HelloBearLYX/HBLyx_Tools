@@ -40,8 +40,6 @@ function DemonologyPortals:Initialize()
     self.frame.text = self.frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     self.frame.text:SetTextColor(1, 1, 1, 1)
 
-    self:UpdateStyle()
-
     self.frame.active = false
     self.frame.timer = nil
     self.frame.count = 0
@@ -52,7 +50,7 @@ end
 -- MARK: Spec Activate
 ---Activate the module when the player is in Demonology spec
 local function SpecActivate(self)
-    if addon.db[self.modName]["Enabled"] and addon.states["playerSpec"] == 266 then
+    if addon.db[self.modName]["Enabled"] and addon.states["playerSpec"] == 266 and not addon.db[self.modName]["HideWhenInactive"] then
         self.frame:Show()
     else
         self.frame:Hide()
@@ -74,11 +72,23 @@ end
 local function DeactivateCount(self)
     self.frame.active = false
     self.frame.icon:SetDesaturated(true)
+    if addon.db[self.modName]["PrintToChat"] then
+        local message = string.format(L["PortalExpiredMessage"], ComputeCount(self.frame.count))
+        addon.Utilities:print(message)
+    end
+    if addon.db[self.modName]["HideWhenInactive"] then
+        self.timer = C_Timer.After(addon.db[self.modName]["HideDelay"] or 5, function()
+            if not self.frame.active then
+                self.frame:Hide()
+            end
+        end)
+    end
 end
 
 -- MARK: Activate Count
 ---Start the count of the number of portals
 local function ActivateCount(self)
+    self.frame:Show()
     self.frame.active = true
     self.frame.count = 0
     self.frame.text:SetText("")

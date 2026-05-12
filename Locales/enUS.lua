@@ -57,6 +57,7 @@ L["PetSettings"] = "Pet Reminder Settings"
 L["PetStanceEnable"] = "Enable Pet Stance Check"
 L["PetTypeSettings"] = "Enable Pet Type Check"
 L["FadeTime"] = "Fade Time"
+L["FadeOutTime"] = "Fade Out Time"
 L["IconSize"] = "Icon Size"
 L["BackgroundAlpha"] = "Background Alpha"
 L["Texture"] = "Texture"
@@ -299,3 +300,4 @@ L["ItemType"] = {
 -- MARK: Demonology Portals
 L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
 L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"
+L["PortalExpiredMessage"] = "The portal count: %s"

@@ -50,7 +50,7 @@ end
 -- MARK: Spec Activate
 ---Activate the module when the player is in Demonology spec
 local function SpecActivate(self)
-    if addon.db[self.modName]["Enabled"] and addon.states["playerSpec"] == 266 and not addon.db[self.modName]["HideWhenInactive"] then
+    if addon.db[self.modName]["Enabled"] and addon.states["playerSpec"] == DEMONOLOGY_SPEC_ID and not addon.db[self.modName]["HideWhenInactive"] then
         self.frame:Show()
     else
         self.frame:Hide()

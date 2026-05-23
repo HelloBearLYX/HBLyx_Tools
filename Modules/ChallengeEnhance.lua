@@ -160,6 +160,7 @@ local function UpdateButtons(self, delay)
             button:ClearAllPoints()
             button:SetAllPoints(icon)
             RefreshMapInfo(self, mapID)
+            UpdateTooltip(icon, mapID)
         end
     end
 end
@@ -276,7 +277,7 @@ function ChallengeEnhance:RegisterEvents()
                 end
             end
         else
-            UpdateButtons(self, 2)
+            UpdateButtons(self, 1) 
         end
     end)
 end

@@ -232,6 +232,11 @@ L["PetWrongTypeTextSettings"] = "Pet Wrong Type Text"
 -- Warlock Candy settings
 L["CandySetting"] = "Healthstone Reminder Settings"
 L["CandyMissingTextSettings"] = "Healthstone Missing Text"
+-- Warlock Portal settings
+L["PortalNotificationSettings"] = "Portal Notification Settings"
+L["PortalText"] = "Casting %s, please click the portal!"
+L["PortalTextSettings"] = "Portal Text"
+L["PortalTextSettingsDesc"] = "The text for notification when casting the portal, use \"%s\" to replace the portal name(spell link)"
 
 -- MARK: ChallengeEnhance
 L["ChallengeEnhanceSettings"] = "M+ Panel Enhance"

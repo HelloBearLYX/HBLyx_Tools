@@ -12,6 +12,7 @@ local WarlockReminder = {
 }
 
 -- MARK: Constants
+local PORTAL_ID = 698
 local HEALSTONE_ID = {
     HEALTHSTONE = 5512,
     DEMONIC_HEALTHSTONE = 224464,
@@ -261,6 +262,25 @@ function WarlockReminder:Handler(pattern)
     end
 end
 
+-- MARK: On Channel Cast
+--- Handler for when player starts channeling to meeting stone of warlock
+function WarlockReminder:OnChannelCast(spellID)
+    if not addon.db[self.modName]["PortalEnabled"] or spellID ~= PORTAL_ID then
+        return
+    end
+
+    local portalText = string.format(addon.db[self.modName]["PortalText"], C_Spell.GetSpellLink(PORTAL_ID))
+    if IsInRaid() then
+        if UnitIsGroupAssistant("player") then
+            C_ChatInfo.SendChatMessage(portalText, "RAID_WARNING")
+        else
+            C_ChatInfo.SendChatMessage(portalText, "RAID")
+        end
+    elseif IsInGroup() then
+        C_ChatInfo.SendChatMessage(portalText, "PARTY")
+    end
+end
+
 -- public methods
 -- MARK: UpdateStyle
 
@@ -331,6 +351,9 @@ function WarlockReminder:RegisterEvents()
 
                 self.timer = C_Timer.NewTimer(3, function () self:Handler() end)
             end
+        elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
+            local spellID = select(3, ...)
+            self:OnChannelCast(spellID)
         end
     end
 
@@ -342,6 +365,7 @@ function WarlockReminder:RegisterEvents()
     addon.core:RegisterEvent("PET_DISMISS_START", self.frame, self.modName)
     addon.core:RegisterEvent("PLAYER_ALIVE", self.frame, self.modName)
     addon.core:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.frame, self.modName)
+    addon.core:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", self.frame, self.modName, "player")
     addon.core:RegisterStateMonitor("playerSpec", self.modName, function() self:Handler("pet") end)
     -- Candy events
     addon.core:RegisterEvent("BAG_UPDATE", self.frame, self.modName)

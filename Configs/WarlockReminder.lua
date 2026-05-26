@@ -26,6 +26,9 @@ addon.configurationList[MOD_KEY] = {
 	CandyMissingText = L["CandyMissingText"],
 	CandyX = 0,
 	CandyY = 340,
+	-- portal settings
+	PortalEnabled = true,
+	PortalText = L["PortalText"],
 }
 
 -- MARK: Safe update
@@ -159,6 +162,17 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 	GUI:CreateEditBox(candyTextGroup, L["CandyMissingTextSettings"], addon.db.WarlockReminders.CandyMissingText, function(value)
 		addon.db.WarlockReminders.CandyMissingText = value
 		update()
+	end)
+
+	-- MARK: Portal Settings
+	local portalGroup = GUI:CreateInlineGroup(frame, L["PortalNotificationSettings"])
+	GUI:CreateToggleCheckBox(portalGroup, L["Enable"], addon.db.WarlockReminders.PortalEnabled, function(value)
+		addon.db.WarlockReminders.PortalEnabled = value
+	end)
+	local portalTextGroup = GUI:CreateInlineGroup(portalGroup, L["TextSettings"])
+	GUI:CreateInformationTag(portalTextGroup, L["PortalTextSettingsDesc"], "LEFT")
+	GUI:CreateEditBox(portalTextGroup, L["PortalTextSettings"], addon.db.WarlockReminders.PortalText, function(value)
+		addon.db.WarlockReminders.PortalText = value
 	end)
 
 	return frame

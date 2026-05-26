@@ -234,6 +234,11 @@ L["PetWrongTypeTextSettings"] = "宠物类型错误文本"
 -- Warlock Candy settings
 L["CandySetting"] = "治疗石提醒设置"
 L["CandyMissingTextSettings"] = "治疗石缺失文本"
+-- Warlock Portal settings
+L["PortalNotificationSettings"] = "传送门通告设置"
+L["PortalText"] = "正在使用%s, 请点门!"
+L["PortalTextSettings"] = "传送门文本设置"
+L["PortalTextSettingsDesc"] = "施放传送门时的通知文本，使用 \"%s\" 替换传送门名称(法术链接)"
 
 -- MARK: ChallengeEnhance
 L["ChallengeEnhanceSettings"] = "M+面板增强"

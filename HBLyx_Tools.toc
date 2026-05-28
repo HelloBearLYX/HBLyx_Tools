@@ -30,6 +30,7 @@ Modules\CustomAuraTracker.lua
 Modules\AutoRoll.lua
 Modules\WarlockReminder.lua
 Modules\DemonologyPortals.lua
+Modules\TalentReminder.lua
 
 # handle configuration and options
 GUI.lua
@@ -42,6 +43,7 @@ Configs\CustomAuraTracker.lua
 Configs\AutoRoll.lua
 Configs\WarlockReminder.lua
 Configs\DemonologyPortals.lua
+Configs\TalentReminder.lua
 
 Configs\Profile.lua
 

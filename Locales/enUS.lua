@@ -109,6 +109,8 @@ L["HideMinimapIcon"] = "Hide Minimap Icon"
 L["Select"] = "Select"
 L["PrivateAura"] = "Private Aura"
 L["HideIfFriendly"] = "Hide if Friendly"
+L["Missing"] = "Missing"
+L["MissingText"] = "Missing Text"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -306,3 +308,10 @@ L["ItemType"] = {
 L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
 L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"
 L["PortalExpiredMessage"] = "The portal count: %s"
+
+-- Talent Reminder
+L["TalentReminderSettings"] = "Talent Reminder"
+L["TalentReminderSettingsDesc"] = "Display talent reminders when you enter a Mythic Dungeon"
+L["SelectDungeon"] = "Select Dungeon"
+L["SpellIDInput"] = "Spell ID"
+L["SelectTalentReminder"] = "Select Existing Talent Reminder"

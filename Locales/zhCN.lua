@@ -111,6 +111,8 @@ L["HideMinimapIcon"] = "隐藏小地图图标"
 L["Select"] = "选择"
 L["PrivateAura"] = "私有光环"
 L["HideIfFriendly"] = "友方则隐藏"
+L["Missing"] = "缺失"
+L["MissingText"] = "缺失文本"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"
@@ -308,3 +310,10 @@ L["ItemType"] = {
 L["DemonologyPortalsSettings"] = "|cff8788ee恶魔术|r传送门"
 L["DemonologyPortalsSettingsDesc"] = "显示本次/上次暴君期间的传送门数量"
 L["PortalExpiredMessage"] = "本次传送门数量: %s"
+
+-- MARK: Talent Reminder
+L["TalentReminderSettings"] = "天赋提醒"
+L["TalentReminderSettingsDesc"] = "当你进入一个史诗地下城时显示天赋提醒"
+L["SelectDungeon"] = "选择地下城"
+L["SpellIDInput"] = "法术ID"
+L["SelectTalentReminder"] = "选择已存在提醒"

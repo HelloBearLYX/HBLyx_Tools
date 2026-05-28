@@ -14,7 +14,6 @@ local CustomAuraTracker = {
 }
 
 -- MARK: Constants
--- TODO: The key for the module, used for databse, core, and other things. Replace "CustomIconTracker" with your module key
 local UNKNOWN_SPELL_TEXTURE = 134400
 
 -- MARK: Initialize

@@ -149,6 +149,7 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
 
     -- MARK: Data Settings
     local inputGroup = GUI:CreateInlineGroup(frame, L["General"])
+	GUI:CreateInformationTag(inputGroup, L["TalentInputRequirement"], "LEFT")
 	local instanceSelected = nil
 	local dungeonLabel = L["SelectDungeon"] or "Select Dungeon"
 	local spellLabel = L["SpellIDInput"] or L["SpellID"] or "Spell ID"

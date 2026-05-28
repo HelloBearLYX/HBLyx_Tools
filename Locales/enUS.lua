@@ -312,6 +312,7 @@ L["PortalExpiredMessage"] = "The portal count: %s"
 -- Talent Reminder
 L["TalentReminderSettings"] = "Talent Reminder"
 L["TalentReminderSettingsDesc"] = "Display talent reminders when you enter a Mythic Dungeon"
+L["TalentInputRequirement"] = "Dungeon, SpellID, Specialization are required to add a talent reminder. The existing entries are fetched after dungeon is selected."
 L["SelectDungeon"] = "Select Dungeon"
 L["SpellIDInput"] = "Spell ID"
 L["SelectTalentReminder"] = "Select Existing Talent Reminder"

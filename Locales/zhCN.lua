@@ -314,6 +314,7 @@ L["PortalExpiredMessage"] = "本次传送门数量: %s"
 -- MARK: Talent Reminder
 L["TalentReminderSettings"] = "天赋提醒"
 L["TalentReminderSettingsDesc"] = "当你进入一个史诗地下城时显示天赋提醒"
+L["TalentInputRequirement"] = "地下城、法术ID和专精是必须的。现有的条目会在选择地下城后加载。"
 L["SelectDungeon"] = "选择地下城"
 L["SpellIDInput"] = "法术ID"
 L["SelectTalentReminder"] = "选择已存在提醒"

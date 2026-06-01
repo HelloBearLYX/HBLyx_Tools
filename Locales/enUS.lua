@@ -21,13 +21,8 @@ L["Release_Info"] = "The official release version is |cffff0000only available on
 
 -- MARK: Change Log
 L["ChangeLog"] = "Change Log"
-L["ChangeLogContent"] = "The full change log can be found on: \n https://discord.gg/NkjEKddwDr"
---MARK: Issues
-L["Issues"] = "Issues"
-L["AnyIssues"] = "If you encounter any issue, please feedback to the author through the contact information"
-L["IssuesContent"] = "Q: Can you add XXX spell as an interrupt spell in Focus Interrupt module?\nA: No, spells with GCD cannot be added due to Blizzard's API restrictions. If you want to add a spell without GCD, please inform me with the spell details" .. "\n\n" ..
-"Q: The BattleRes cannot display at the start of some Beta M+ dungeons and \"reload\" can fix it, why?\nA: It is caused by Blizzard's failure to trigger the CHALLENGE_MODE_START event in some dungeons with M+ mode, there is currently no good solution, wait for Blizzard to fix it\n\n" ..
-"Thanks for your understanding and support!"
+L["ChangeLogContent"] = "The full change log can be found on:"
+L["ChangeLogLink"] = "https://discord.gg/NkjEKddwDr"
 
 -- MARK: Contact
 L["Contact"] = "Contact"

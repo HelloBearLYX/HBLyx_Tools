@@ -16,11 +16,8 @@ local function CreateGeneralPanel(container)
     local panel = addon.GUI:CreateScrollFrame(container)
     panel:SetFullWidth(true)
     addon.GUI:CreateInformationTag(panel, L["WelecomeInfo"], "CENTER")
-    -- nofitication
-    local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])
-    addon.GUI:CreateInformationTag(notificationsGroup, L["NotificationContent"], "LEFT")
-    -- notification-release
-    local releaseGroup = addon.GUI:CreateInlineGroup(notificationsGroup, L["Downloads/Update"])
+    -- release
+    local releaseGroup = addon.GUI:CreateInlineGroup(panel, L["Downloads/Update"])
     addon.GUI:CreateInformationTag(releaseGroup, L["Release_Info"], "LEFT")
     local curseForgeRelease = AceGUI:Create("InteractiveLabel")
     curseForgeRelease:SetText("|TInterface\\AddOns\\HBLyx_tools\\Media\\CurseForge.png:20:20|t |cFF8080FFCurseForge|r")
@@ -47,12 +44,13 @@ local function CreateGeneralPanel(container)
     NetEaseDD:SetCallback("OnEnter", function() NetEaseDD:SetText("|cFFFFFFFF网易DD|r") end)
     NetEaseDD:SetCallback("OnLeave", function() NetEaseDD:SetText("|cFF8080FF网易DD|r") end)
     releaseGroup:AddChild(NetEaseDD)
+    -- nofitication
+    local notificationsGroup = addon.GUI:CreateInlineGroup(panel, L["Notifications"])
+    addon.GUI:CreateInformationTag(notificationsGroup, L["NotificationContent"], "LEFT")
     -- change log
     local changeLogGroup = addon.GUI:CreateInlineGroup(panel, L["ChangeLog"])
     addon.GUI:CreateInformationTag(changeLogGroup, L["ChangeLogContent"], "LEFT")
-    -- issues
-    local issueGroup = addon.GUI:CreateInlineGroup(panel, L["Issues"])
-    addon.GUI:CreateInformationTag(issueGroup, L["IssuesContent"], "LEFT")
+    addon.GUI:CreateEditBox(changeLogGroup, nil, L["ChangeLogLink"], function() end)
     -- contact
     local contactGroup = addon.GUI:CreateInlineGroup(panel, L["Contact"])
     local discordInteractive = AceGUI:Create("InteractiveLabel")
@@ -124,7 +122,7 @@ function addon.GUI:Render()
     self.frame:SetWidth(900)
     self.frame:SetHeight(600)
     self.frame:EnableResize(false)
-    self.frame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion() .. " " .. L["AnyIssues"])
+    self.frame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion())
     self.frame:SetCallback("OnClose", function(widgets)
         if widgets then
             AceGUI:Release(widgets)

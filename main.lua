@@ -163,7 +163,7 @@ end
 
 ---Initialization before main
 function addon:Initialize()
-	addon.version = "3.15"
+	addon.version = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version")
 
 	-- set up profile and configures
 	InitializeConfig()

@@ -67,126 +67,216 @@ addon.data.DUNGEONS = {
 
 -- MARK: Auction Helper
 addon.data.AUCTION_HELPER = {
-	Consumerables = {
-		-- flasks
-		{itemID = 241326, category = "Flask", tag = "Crit"},
-		{itemID = 241324, category = "Flask", tag = "Haste"},
-		{itemID = 241322, category = "Flask", tag = "Mastery"},
-		{itemID = 241320, category = "Flask", tag = "Vers"},
-		-- runes
-		{itemID = 259085, category = "Rune", tag = "Rune"},
-		{itemID = 245879, category = "Rune", tag = "Vantus"},
-		-- oils
-		{itemID = 243737, category = "Oil", tag = "Proc"},
-		{itemID = 243735, category = "Oil", tag = "Healer"},
-		{itemID = 243733, category = "Oil", tag = "Secondary"},
-		{itemID = 237370, category = "Oil", tag = "Sharp"},
-		{itemID = 237367, category = "Oil", tag = "Blunt"},
-		-- foods
-			-- feasts
-		{itemID = 255846, category = "Food", tag = "Primary"},
-		{itemID = 255845, category = "Food", tag = "Primary"},
-		{itemID = 242273, category = "Food", tag = "Secondary"},
-		{itemID = 242272, category = "Food", tag = "Secondary"},
-			-- other foods
-		{itemID = 242275, category = "Food", tag = "Primary"},
-		{itemID = 255848, category = "Food", tag = "Secondary"},
-		{itemID = 242274, category = "Food", tag = "Secondary"},
-		-- potion
-		{itemID = 241308, category = "Potion", tag = "Primary"},
-		{itemID = 241288, category = "Potion", tag = "Secondary"},
-		{itemID = 241292, category = "Potion", tag = "Primary"},
-		{itemID = 241304, category = "Potion", tag = "Health"},
-		{itemID = 241302, category = "Potion", tag = "Invisible"},
-		{itemID = 241300, category = "Potion", tag = "Mana"},
-		{itemID = 241294, category = "Potion", tag = "Mana"},
-		{itemID = 241338, category = "Potion", tag = "Utility"},
-		-- utility
-		{itemID = 244639, category = "Utility", tag = "Bloodlust"},
-		{itemID = 248486, category = "Utility", tag = "BattleRes"},
-		{itemID = 132514, category = "Utility", tag = "Repair"},
+	{
+		category = "Consumerables",
+		subCategories = {
+			{
+				subCategory = "Flask",
+				items = {
+					{itemID = 241326, tag = "Crit"},
+					{itemID = 241324, tag = "Haste"},
+					{itemID = 241322, tag = "Mastery"},
+					{itemID = 241320, tag = "Vers"},
+				},
+			},
+			{
+				subCategory = "Rune",
+				items = {
+					{itemID = 259085, tag = "Rune"},
+					{itemID = 245879, tag = "Vantus"},
+				},
+			},
+			{
+				subCategory = "Oil",
+				items = {
+					{itemID = 243737, tag = "Proc"},
+					{itemID = 243735, tag = "Healer"},
+					{itemID = 243733, tag = "Secondary"},
+					{itemID = 237370, tag = "Sharp"},
+					{itemID = 237367, tag = "Blunt"},
+				},
+			},
+			{
+				subCategory = "Food",
+				items = {
+					{itemID = 255846, tag = "Primary"},
+					{itemID = 255845, tag = "Primary"},
+					{itemID = 242273, tag = "Secondary"},
+					{itemID = 242272, tag = "Secondary"},
+					{itemID = 242275, tag = "Primary"},
+					{itemID = 255848, tag = "Secondary"},
+					{itemID = 242274, tag = "Secondary"},
+				},
+			},
+			{
+				subCategory = "Potion",
+				items = {
+					{itemID = 241308, tag = "Primary"},
+					{itemID = 241288, tag = "Secondary"},
+					{itemID = 241292, tag = "Primary"},
+					{itemID = 241304, tag = "Health"},
+					{itemID = 241302, tag = "Invisible"},
+					{itemID = 241300, tag = "Mana"},
+					{itemID = 241294, tag = "Mana"},
+					{itemID = 241338, tag = "Utility"},
+				},
+			},
+			{
+				subCategory = "Utility",
+				items = {
+					{itemID = 244639, tag = "Bloodlust"},
+					{itemID = 248486, tag = "BattleRes"},
+					{itemID = 132514, tag = "Repair"},
+				},
+			},
+		},
 	},
-	Gems = {
-		-- diamond
-		{itemID = 240982, category = "Diamond", tag = "Primary"},
-		{itemID = 240970, category = "Diamond", tag = "Armor"},
-		{itemID = 240968, category = "Diamond", tag = "Mana"},
-		{itemID = 240966, category = "Diamond", tag = "Crit"},
-		-- Crit
-		{itemID = 240903, category = "Gem", tag = "Crit"},
-		{itemID = 240905, category = "Gem", tag = "Haste"},
-		{itemID = 240907, category = "Gem", tag = "Mastery"},
-		{itemID = 240909, category = "Gem", tag = "Vers"},
-		-- Haste
-		{itemID = 240889, category = "Gem", tag = "Crit"},
-		{itemID = 240887, category = "Gem", tag = "Haste"},
-		{itemID = 240891, category = "Gem", tag = "Mastery"},
-		{itemID = 240893, category = "Gem", tag = "Vers"},
-		-- Mastery
-		{itemID = 240897, category = "Gem", tag = "Crit"},
-		{itemID = 240899, category = "Gem", tag = "Haste"},
-		{itemID = 240895, category = "Gem", tag = "Mastery"},
-		{itemID = 240901, category = "Gem", tag = "Vers"},
-		-- Vers
-		{itemID = 240913, category = "Gem", tag = "Crit"},
-		{itemID = 240915, category = "Gem", tag = "Haste"},
-		{itemID = 240917, category = "Gem", tag = "Mastery"},
-		{itemID = 240911, category = "Gem", tag = "Vers"},
+	{
+		category = "Gems",
+		subCategories = {
+			{
+				subCategory = "Diamond",
+				items = {
+					{itemID = 240982, tag = "Primary"},
+					{itemID = 240970, tag = "Armor"},
+					{itemID = 240968, tag = "Mana"},
+					{itemID = 240966, tag = "Crit"},
+				},
+			},
+			{
+				subCategory = "Crit",
+				items = {
+					{itemID = 240903, tag = "Crit"},
+					{itemID = 240905, tag = "Haste"},
+					{itemID = 240907, tag = "Mastery"},
+					{itemID = 240909, tag = "Vers"},
+				},
+			},
+			{
+				subCategory = "Haste",
+				items = {
+					{itemID = 240889, tag = "Crit"},
+					{itemID = 240887, tag = "Haste"},
+					{itemID = 240891, tag = "Mastery"},
+					{itemID = 240893, tag = "Vers"},
+				},
+			},
+			{
+				subCategory = "Mastery",
+				items = {
+					{itemID = 240897, tag = "Crit"},
+					{itemID = 240899, tag = "Haste"},
+					{itemID = 240895, tag = "Mastery"},
+					{itemID = 240901, tag = "Vers"},
+				},
+			},
+			{
+				subCategory = "Vers",
+				items = {
+					{itemID = 240913, tag = "Crit"},
+					{itemID = 240915, tag = "Haste"},
+					{itemID = 240917, tag = "Mastery"},
+					{itemID = 240911, tag = "Vers"},
+				},
+			},
+		},
 	},
-	Enhancements = {
-		-- finger
-		{itemID = 243956, category = "Finger", tag = "Damage"},
-		{itemID = 243986, category = "Finger", tag = "Crit"},
-		{itemID = 244014, category = "Finger", tag = "Haste"},
-		{itemID = 243985, category = "Finger", tag = "Mastery"},
-		{itemID = 244016, category = "Finger", tag = "Vers"},
-		-- weapon
-		{itemID = 244028, category = "Weapon", tag = "Primary"},
-		{itemID = 243970, category = "Weapon", tag = "Crit"},
-		{itemID = 243972, category = "Weapon", tag = "Haste"},
-		{itemID = 244030, category = "Weapon", tag = "Mastery"},
-		{itemID = 244001, category = "Weapon", tag = "Vers"},
-		{itemID = 257745, category = "Weapon", tag = "Crit"},
-		{itemID = 257747, category = "Weapon", tag = "Mastery"},
-		-- chest
-		{itemID = 243976, category = "Chest", tag = "Primary"},
-		-- leg
-		{itemID = 240094, category = "Leg", tag = "Intelligence"},
-		{itemID = 240154, category = "Leg", tag = "Mana"},
-		{itemID = 244640, category = "Leg", tag = "Martial"},
-		{itemID = 244642, category = "Leg", tag = "Armor"},
-		-- head
-		{itemID = 244006, category = "Head", tag = "Avoidance"},
-		{itemID = 243950, category = "Head", tag = "Leech"},
-		{itemID = 243980, category = "Head", tag = "Speed"},
-		-- shoulder
-		{itemID = 243990, category = "Shoulder", tag = "Avoidance"},
-		{itemID = 244020, category = "Shoulder", tag = "Leech"},
-		{itemID = 243962, category = "Shoulder", tag = "Speed"},
-		-- feet
-		{itemID = 243952, category = "Feet", tag = "Avoidance"},
-		{itemID = 243982, category = "Feet", tag = "Leech"},
-		{itemID = 244008, category = "Feet", tag = "Speed"},
+	{
+		category = "Enhancements",
+		subCategories = {
+			{
+				subCategory = "Finger",
+				items = {
+					{itemID = 243956, tag = "Damage"},
+					{itemID = 243986, tag = "Crit"},
+					{itemID = 244014, tag = "Haste"},
+					{itemID = 243985, tag = "Mastery"},
+					{itemID = 244016, tag = "Vers"},
+				},
+			},
+			{
+				subCategory = "Weapon",
+				items = {
+					{itemID = 244028, tag = "Primary"},
+					{itemID = 243970, tag = "Crit"},
+					{itemID = 243972, tag = "Haste"},
+					{itemID = 244030, tag = "Mastery"},
+					{itemID = 244001, tag = "Vers"},
+					{itemID = 257745, tag = "Crit"},
+					{itemID = 257747, tag = "Mastery"},
+				},
+			},
+			{
+				subCategory = "Chest",
+				items = {
+					{itemID = 243976, tag = "Primary"},
+				},
+			},
+			{
+				subCategory = "Leg",
+				items = {
+					{itemID = 240094, tag = "Intelligence"},
+					{itemID = 240154, tag = "Mana"},
+					{itemID = 244640, tag = "Martial"},
+					{itemID = 244642, tag = "Armor"},
+				},
+			},
+			{
+				subCategory = "Head",
+				items = {
+					{itemID = 244006, tag = "Avoidance"},
+					{itemID = 243950, tag = "Leech"},
+					{itemID = 243980, tag = "Speed"},
+				},
+			},
+			{
+				subCategory = "Shoulder",
+				items = {
+					{itemID = 243990, tag = "Avoidance"},
+					{itemID = 244020, tag = "Leech"},
+					{itemID = 243962, tag = "Speed"},
+				},
+			},
+			{
+				subCategory = "Feet",
+				items = {
+					{itemID = 243952, tag = "Avoidance"},
+					{itemID = 243982, tag = "Leech"},
+					{itemID = 244008, tag = "Speed"},
+				},
+			},
+		},
 	},
-	Crafts = {
-		-- missive
-		{itemID = 245785, category = "Missive", tag = "CritHaste"},
-		{itemID = 245789, category = "Missive", tag = "CritMastery"},
-		{itemID = 245791, category = "Missive", tag = "CritVers"},
-		{itemID = 245783, category = "Missive", tag = "HasteMastery"},
-		{itemID = 245781, category = "Missive", tag = "HasteVers"},
-		{itemID = 245787, category = "Missive", tag = "MasteryVers"},
-		-- embellishment
-		{itemID = 248130, category = "Embellishment"},
-		{itemID = 240167, category = "Embellishment"},
-		{itemID = 240164, category = "Embellishment"},
-		{itemID = 251489, category = "Embellishment"},
-		{itemID = 244603, category = "Embellishment"},
-		{itemID = 244607, category = "Embellishment"},
-		{itemID = 244674, category = "Embellishment"},
-		{itemID = 245871, category = "Embellishment"},
-		{itemID = 245873, category = "Embellishment"},
-		{itemID = 245875, category = "Embellishment"},
-		{itemID = 245877, category = "Embellishment"},
-	}
+	{
+		category = "Crafts",
+		subCategories = {
+			{
+				subCategory = "Missive",
+				items = {
+					{itemID = 245785, tag = "CritHaste"},
+					{itemID = 245789, tag = "CritMastery"},
+					{itemID = 245791, tag = "CritVers"},
+					{itemID = 245783, tag = "HasteMastery"},
+					{itemID = 245781, tag = "HasteVers"},
+					{itemID = 245787, tag = "MasteryVers"},
+				},
+			},
+			{
+				subCategory = "Embellishment",
+				items = {
+					{itemID = 248130},
+					{itemID = 240167},
+					{itemID = 240164},
+					{itemID = 251489},
+					{itemID = 244603},
+					{itemID = 244607},
+					{itemID = 244674},
+					{itemID = 245871},
+					{itemID = 245873},
+					{itemID = 245875},
+					{itemID = 245877},
+				},
+			},
+		},
+	},
 }

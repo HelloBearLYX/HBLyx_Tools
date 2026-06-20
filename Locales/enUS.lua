@@ -106,6 +106,8 @@ L["PrivateAura"] = "Private Aura"
 L["HideIfFriendly"] = "Hide if Friendly"
 L["Missing"] = "Missing"
 L["MissingText"] = "Missing Text"
+L["Hide"] = "Hide"
+L["Show"] = "Show"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"
@@ -314,11 +316,12 @@ L["SelectTalentReminder"] = "Select Existing Talent Reminder"
 
 -- MARK: Auction Helper
 L["AuctionHelperSettings"] = "Auction Helper"
+L["AuctionHelperTitle"] = "HBLyx Auction Helper"
 L["AuctionHelperSettingsDesc"] = "A consumerables, enhancements, and craft quick search panel for the auction house"
 L["AuctionCategory"] = {
-	Consumable = "Consumable",
-	Enhancement = "Enhancement",
-	Craft = "Craft",
+	Consumerables = "Consumerables",
+	Enhancements = "Enhancements",
+	Crafts = "Crafts",
 	-- sub-categories
 	Flask = "Flask",
 	Rune = "Rune",
@@ -327,7 +330,11 @@ L["AuctionCategory"] = {
 	Potion = "Potion",
 	Utility = "Utility",
 	Diamond = "Diamond",
-	Gem = "Gem",
+	Crit = "Crit",
+	Haste = "Haste",
+	Mastery = "Mastery",
+	Vers = "Vers",
+	Gems = "Gems",
 	Finger = "Finger",
 	Weapon = "Weapon",
 	Chest = "Chest",

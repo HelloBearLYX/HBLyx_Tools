@@ -107,6 +107,8 @@ L["PrivateAura"] = "私有光环"
 L["HideIfFriendly"] = "友方则隐藏"
 L["Missing"] = "缺失"
 L["MissingText"] = "缺失文本"
+L["Hide"] = "隐藏"
+L["Show"] = "显示"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"
@@ -315,12 +317,12 @@ L["SelectTalentReminder"] = "选择已存在提醒"
 
 -- MARK: Auction Helper
 L["AuctionHelperSettings"] = "拍卖助手"
+L["AuctionHelperTitle"] = "HBLyx拍卖助手"
 L["AuctionHelperSettingsDesc"] = "一个用于拍卖行的消耗品、附魔和制作材料快速搜索面板"
 L["AuctionCategory"] = {
-	Consumable = "消耗品",
-	Enhancement = "强化",
-	Craft = "制作",
-	-- sub-categories
+	Consumerables = "消耗品",
+	Enhancements = "强化",
+	Crafts = "制作",
 	Flask = "合剂",
 	Rune = "符文",
 	Oil = "刀油",
@@ -328,7 +330,11 @@ L["AuctionCategory"] = {
 	Potion = "药水",
 	Utility = "实用",
 	Diamond = "钻石",
-	Gem = "宝石",
+	Crit = "暴击",
+	Haste = "急速",
+	Mastery = "精通",
+	Vers = "全能",
+	Gems = "宝石",
 	Finger = "戒指",
 	Weapon = "武器",
 	Chest = "胸甲",

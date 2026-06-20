@@ -174,6 +174,11 @@ local function CreateButton(self, itemID, tag, parent)
         button.name:SetTextColor(1, 1, 1, 1)
         button.name:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 
+        button.quantity = button.textFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        button.quantity:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
+        button.quantity:SetTextColor(1, 1, 1, 1)
+        button.quantity:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+
         button.border = CreateFrame("Frame", nil, button, "BackdropTemplate")
         button.border:SetAllPoints()
         button.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
@@ -190,15 +195,15 @@ local function CreateButton(self, itemID, tag, parent)
                     AuctionHouseFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
                 end
 
-                local name = GetItemInfo(self.itemID)
-                if name then
-                    AuctionHouseFrame.SearchBar.SearchBox:SetText(name)
+                local itemName = C_Item.GetItemNameByID(self.itemID)
+                if itemName then
+                    AuctionHouseFrame.SearchBar.SearchBox:SetText(itemName)
                     AuctionHouseFrame.SearchBar.SearchButton:Click()
                 else
                     C_Item.RequestLoadItemDataByID(self.itemID)
                     AuctionHouseFrame.SearchBar.SearchBox:SetText(self.itemID)
                     C_Timer.After(0.2, function()
-                        local loadedName = GetItemInfo(self.itemID)
+                        local loadedName = C_Item.GetItemNameByID(self.itemID)
                         if loadedName then
                             AuctionHouseFrame.SearchBar.SearchBox:SetText(loadedName)
                         end
@@ -216,6 +221,14 @@ local function CreateButton(self, itemID, tag, parent)
     local itemTexture = select(10, C_Item.GetItemInfo(itemID))
     button.texture:SetTexture(itemTexture or UNKNOWN_TEXTURE)
     button.name:SetText(FetchTagLocales(tag) or tag or "")
+    local quantity = C_Item.GetItemCount(C_Item.GetItemNameByID(itemID)) or 0
+    if quantity >= 1 then
+        button.quantity:SetText(quantity >= 1 and quantity or "")
+        button.texture:SetVertexColor(1, 1, 1, 1)
+    else
+        button.quantity:SetText("")
+        button.texture:SetVertexColor(0.66, 0.66, 0.66, 0.66)
+    end
     button:Show()
 
     return button
@@ -228,6 +241,7 @@ local function DeleteButton(self, button)
     button:SetParent(self.panel)
     button:Hide()
     button.name:ClearText()
+    button.quantity:ClearText()
     button.itemID = nil
 end
 
@@ -367,6 +381,8 @@ local function CreateMainFrame(self)
         local name = FetchCategoryLocales(categoryData.category) or categoryData.category or ""
         CreateMenuButton(self, name, i - 1, COLOR_CYCLE[i % #COLOR_CYCLE + 1], function() RenderPanel(self, categoryData) end)
     end
+    
+    C_Timer.After(0.5, function() RenderPanel(self, data[1]) end) -- render the first category by default
 end
 
 -- MARK: UpdateStyle

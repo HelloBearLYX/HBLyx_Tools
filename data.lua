@@ -118,7 +118,7 @@ addon.data.AUCTION_HELPER = {
 					{itemID = 241302, tag = "Invisible"},
 					{itemID = 241300, tag = "Mana"},
 					{itemID = 241294, tag = "Mana"},
-					{itemID = 241338, tag = "Utility"},
+					{itemID = 241338},
 				},
 			},
 			{
@@ -127,6 +127,8 @@ addon.data.AUCTION_HELPER = {
 					{itemID = 244639, tag = "Bloodlust"},
 					{itemID = 248486, tag = "BattleRes"},
 					{itemID = 132514, tag = "Repair"},
+					{itemID = 204370},
+					{itemID = 124640},
 				},
 			},
 		},

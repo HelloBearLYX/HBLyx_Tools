@@ -234,13 +234,25 @@ local function CreateButton(self, itemID, tag, parent)
         button.selectOverlay:SetBlendMode("ADD")
         button.selectOverlay:SetColorTexture(1, 1, 1, 0.25)
 
+        button:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            if self.itemID then
+                GameTooltip:SetItemByID(self.itemID)
+            end
+            GameTooltip:Show()
+        end)
+
+        button:SetScript("OnLeave", function()
+            GameTooltip:Hide()
+        end)
+
         button:SetScript("OnClick", function(self)
             if AuctionHouseFrame and AuctionHouseFrame.SearchBar and AuctionHouseFrame.SearchBar.SearchBox then
                 if AuctionHouseFrame.SetDisplayMode then
                     AuctionHouseFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
                 end
 
-                local itemName = select(1, C_Item.GetItemInfo(itemID))
+                local itemName = select(1, C_Item.GetItemInfo(self.itemID))
                 if itemName then
                     AuctionHouseFrame.SearchBar.SearchBox:SetText(itemName)
                     AuctionHouseFrame.SearchBar.SearchButton:Click()

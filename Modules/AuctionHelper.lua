@@ -158,6 +158,51 @@ local function CreateCategoryTab(tab, subCategoryData, color, parent, width)
 end
 
 -- MARK: CreateButton
+local function UpdateButtonVisuals(button, itemID)
+    if not button or button.itemID ~= itemID then
+        return
+    end
+
+    local itemName = select(1, C_Item.GetItemInfo(itemID))
+    local itemTexture = select(10, C_Item.GetItemInfo(itemID))
+    if not itemName or not itemTexture then
+        button.texture:SetTexture(UNKNOWN_TEXTURE)
+        button.texture:SetVertexColor(0.66, 0.66, 0.66, 0.66)
+        button.quantity:SetText("")
+
+        C_Timer.After(0.2, function()
+            if not button or button.itemID ~= itemID then
+                return
+            end
+
+            local loadedName, loadedTexture = select(1, C_Item.GetItemInfo(itemID)), select(10, C_Item.GetItemInfo(itemID))
+            local loadedQuantity = C_Item.GetItemCount(loadedName or itemID) or 0
+            button.texture:SetTexture(loadedTexture or UNKNOWN_TEXTURE)
+
+            if loadedQuantity >= 1 then
+                button.quantity:SetText(loadedQuantity)
+                button.texture:SetVertexColor(1, 1, 1, 1)
+            else
+                button.quantity:SetText("")
+                button.texture:SetVertexColor(0.66, 0.66, 0.66, 0.66)
+            end
+        end)
+        return
+    end
+
+    local quantity = C_Item.GetItemCount(itemName or itemID) or 0
+
+    if quantity >= 1 then
+        button.texture:SetTexture(itemTexture or UNKNOWN_TEXTURE)
+        button.quantity:SetText(quantity)
+        button.texture:SetVertexColor(1, 1, 1, 1)
+    else
+        button.texture:SetTexture(itemTexture or UNKNOWN_TEXTURE)
+        button.quantity:SetText("")
+        button.texture:SetVertexColor(0.66, 0.66, 0.66, 0.66)
+    end
+end
+
 local function CreateButton(self, itemID, tag, parent)
     local button = table.remove(self.spareButtons)
     if not button then
@@ -195,7 +240,7 @@ local function CreateButton(self, itemID, tag, parent)
                     AuctionHouseFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
                 end
 
-                local itemName = C_Item.GetItemNameByID(self.itemID)
+                local itemName = select(1, C_Item.GetItemInfo(itemID))
                 if itemName then
                     AuctionHouseFrame.SearchBar.SearchBox:SetText(itemName)
                     AuctionHouseFrame.SearchBar.SearchButton:Click()
@@ -203,7 +248,7 @@ local function CreateButton(self, itemID, tag, parent)
                     C_Item.RequestLoadItemDataByID(self.itemID)
                     AuctionHouseFrame.SearchBar.SearchBox:SetText(self.itemID)
                     C_Timer.After(0.2, function()
-                        local loadedName = C_Item.GetItemNameByID(self.itemID)
+                        local loadedName = select(1, C_Item.GetItemInfo(self.itemID))
                         if loadedName then
                             AuctionHouseFrame.SearchBar.SearchBox:SetText(loadedName)
                         end
@@ -218,17 +263,8 @@ local function CreateButton(self, itemID, tag, parent)
 
     button:ClearAllPoints()
     button.itemID = itemID
-    local itemTexture = select(10, C_Item.GetItemInfo(itemID))
-    button.texture:SetTexture(itemTexture or UNKNOWN_TEXTURE)
     button.name:SetText(FetchTagLocales(tag) or tag or "")
-    local quantity = C_Item.GetItemCount(C_Item.GetItemNameByID(itemID)) or 0
-    if quantity >= 1 then
-        button.quantity:SetText(quantity >= 1 and quantity or "")
-        button.texture:SetVertexColor(1, 1, 1, 1)
-    else
-        button.quantity:SetText("")
-        button.texture:SetVertexColor(0.66, 0.66, 0.66, 0.66)
-    end
+    UpdateButtonVisuals(button, itemID)
     button:Show()
 
     return button

@@ -5,7 +5,7 @@ local MOD_KEY = "AuctionHelper"
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-	Enabled = false,
+	Enabled = true,
 }
 
 -- GUI
@@ -28,5 +28,17 @@ function GUI.TagPanels.AuctionHelper:CreateTabPanel(parent)
                 addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
             end
         end
+	end)
+
+	GUI:CreateButton(frame, L["ResetMod"], function ()
+		addon.Utilities:SetPopupDialog(
+			ADDON_NAME .. "ResetMod",
+			"|cffC41E3A" .. L["AuctionHelperSettings"] .. "|r: " .. L["ComfirmResetMod"],
+			true,
+			{button1 = YES, button2 = NO, OnButton1 = function ()
+		    	addon.Utilities:ResetModule(MOD_KEY)
+				ReloadUI()
+			end}
+		)
 	end)
 end

@@ -20,6 +20,10 @@ local SPLITTER = "-"
 ---Initialize (Constructor)
 ---@return DemonologyPortals DemonologyPortals a DemonologyPortals object
 function DemonologyPortals:Initialize()
+    if addon.states["playerClass"] ~= "WARLOCK" then
+        return nil
+    end
+
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_DemonologyPortalsFrame", UIParent)
     self.frame.cooldown = CreateFrame("Cooldown", nil, self.frame, "CooldownFrameTemplate")
     self.frame.cooldown:SetAllPoints()
@@ -150,10 +154,6 @@ end
 ---Test Mode
 ---@param on boolean turn the Test mode on or off
 function DemonologyPortals:Test(on)
-    if not addon.db[self.modName]["Enabled"] then -- if the module is not enabled, do not allow test mode
-        return
-    end
-
     if on then
         self.frame:Show()
         SimulateCount(self, true)

@@ -304,10 +304,71 @@ L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
 L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"
 L["PortalExpiredMessage"] = "The portal count: %s"
 
--- Talent Reminder
+-- MARK: Talent Reminder
 L["TalentReminderSettings"] = "Talent Reminder"
 L["TalentReminderSettingsDesc"] = "Display talent reminders when you enter a Mythic Dungeon"
 L["TalentInputRequirement"] = "Dungeon, SpellID, Specialization are required to add a talent reminder. The existing entries are fetched after dungeon is selected."
 L["SelectDungeon"] = "Select Dungeon"
 L["SpellIDInput"] = "Spell ID"
 L["SelectTalentReminder"] = "Select Existing Talent Reminder"
+
+-- MARK: Auction Helper
+L["AuctionHelperSettings"] = "Auction Helper"
+L["AuctionHelperSettingsDesc"] = "A consumerables, enhancements, and craft quick search panel for the auction house"
+L["AuctionCategory"] = {
+	Consumable = "Consumable",
+	Enhancement = "Enhancement",
+	Craft = "Craft",
+	-- sub-categories
+	Flask = "Flask",
+	Rune = "Rune",
+	Oil = "Oil",
+	Food = "Food",
+	Potion = "Potion",
+	Utility = "Utility",
+	Diamond = "Diamond",
+	Gem = "Gem",
+	Finger = "Finger",
+	Weapon = "Weapon",
+	Chest = "Chest",
+	Leg = "Leg",
+	Head = "Head",
+	Shoulder = "Shoulder",
+	Feet = "Feet",
+	Missive = "Missive",
+	Embellishment = "Embellishment",
+}
+L["AuctionTag"] = {
+	Crit = "Crit",
+	Haste = "Haste",
+	Mastery = "Mastery",
+	Vers = "Vers",
+	Rune = "Rune",
+	Vantus = "Vantus",
+	Proc = "Proc",
+	Healer = "Healer",
+	Primary = "Primary",
+	Secondary = "Secondary",
+	Sharp = "Sharp",
+	Blunt = "Blunt",
+	Health = "Health",
+	Invisible = "Invisible",
+	Mana = "Mana",
+	Utility = "Utility",
+	Bloodlust = "BL",
+	BattleRes = "BR",
+	Repair = "Repair",
+	Armor = "Armor",
+	Damage = "Damage",
+	Intelligence = "Int",
+	Martial = "Martial",
+	Avoidance = "Avoid",
+	Leech = "Leech",
+	Speed = "Speed",
+	CritHaste = "C/H",
+	CritMastery = "C/M",
+	CritVers = "C/V",
+	HasteMastery = "H/M",
+	HasteVers = "H/V",
+	MasteryVers = "M/V",
+}

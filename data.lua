@@ -2,7 +2,7 @@ local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 addon.data = {}
 
-addon.data.MAP_ENCOUNTER_EVENTS = {
+addon.data.SEASON_MAP = {
 	-- MARK: current season 12.0
     [402] = {
 		portalID = 393273,
@@ -86,25 +86,6 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = select(1, EJ_GetInstanceInfo(1322)) or "Altar of Fangs",
 		short = L["Altar of Fangs_short"],
 	},
-}
-
--- MARK: Instance Journal
-addon.data.DUNGEONS = {
-	[1201] = {name = select(1, EJ_GetInstanceInfo(1201)) or "Algeth'ar Academy", enabled = true, instanceID = 2526},
-	[945] = {name = select(1, EJ_GetInstanceInfo(945)) or "Seat of the Triumvirate", enabled = true, instanceID = 1753},
-	[1316] = {name = select(1, EJ_GetInstanceInfo(1316)) or "Nexus-Point Xenas", enabled = true, instanceID = 2915},
-	[1315] = {name = select(1, EJ_GetInstanceInfo(1315)) or "Maisara Caverns", enabled = true, instanceID = 2874},
-	[476] = {name = select(1, EJ_GetInstanceInfo(476)) or "Skyreach", enabled = true, instanceID = 1209},
-	[1299] = {name = select(1, EJ_GetInstanceInfo(1299)) or "Windrunner Spire", enabled = true, instanceID = 2805},
-	[1300] = {name = select(1, EJ_GetInstanceInfo(1300)) or "Magister's Terrace", enabled = true, instanceID = 2811},
-	[278] = {name = select(1, EJ_GetInstanceInfo(278)) or "Pit of Saron", enabled = true, instanceID = 658},
-	[1309] = {name = select(1, EJ_GetInstanceInfo(1309)) or "The Blinding Vale", enabled = false, instanceID = 2859},
-	[1304] = {name = select(1, EJ_GetInstanceInfo(1304)) or "Murder Row", enabled = false, instanceID = 2813},
-	[1311] = {name = select(1, EJ_GetInstanceInfo(1311)) or "Den of Nalorakk", enabled = false, instanceID = 2825},
-	[1313] = {name = select(1, EJ_GetInstanceInfo(1313)) or "Voidscar Arena", enabled = false, instanceID = 2923},
-	[1314] = {name = select(1, EJ_GetInstanceInfo(1314)) or "Dreamrift", enabled = false, instanceID = 2939},
-	[1307] = {name = select(1, EJ_GetInstanceInfo(1307)) or "The Voidspire", enabled = false, instanceID = 2912},
-	[1308] = {name = select(1, EJ_GetInstanceInfo(1308)) or "March on Quel'Danas", enabled = false, instanceID = 2913},
 }
 
 -- MARK: Auction Helper

@@ -46,6 +46,7 @@ addon.data.SEASON_MAP = {
 	},
 
 	-- MARK: 12.1
+	-- TODO: Update portalID
 	[249] = {
 		portalID = 134400,
 		name = select(1, EJ_GetInstanceInfo(1041)) or "King's Rest",
@@ -57,7 +58,7 @@ addon.data.SEASON_MAP = {
 		short = L["Temple of Sethraliss_short"],
 	},
 	[399] = {
-	portalID = 134401,
+		portalID = 393256,
 		name = select(1, EJ_GetInstanceInfo(1202)) or "Ruby Life Pools",
 		short = L["Ruby Life Pools_short"],
 	},

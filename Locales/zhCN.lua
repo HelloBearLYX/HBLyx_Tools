@@ -272,7 +272,7 @@ L["Ruby Life Pools_short"] = "红玉"
 L["The Blinding Vale_short"] = "夺目谷"
 L["Voidscar Arena_short"] = "竞技场"
 L["Den of Nalorakk_short"] = "巢穴"
-L["Murder Row_short"] = "谋杀小巷"
+L["Murder Row_short"] = "密谋小径"
 L["Altar of Fangs_short"] = "毒牙祭坛"
 
 -- MARK: Custom Aura Tracker

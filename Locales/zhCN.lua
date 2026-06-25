@@ -265,6 +265,15 @@ L["Skyreach_short"] = "通天峰"
 L["Windrunner Spire_short"] = "风行者之塔"
 L["Magister's Terrace_short"] = "魔导师平台"
 L["Pit of Saron_short"] = "萨隆矿坑"
+-- 12.1 season
+L["King's Rest_short"] = "诸王之眠"
+L["Temple of Sethraliss_short"] = "神庙"
+L["Ruby Life Pools_short"] = "红玉"
+L["The Blinding Vale_short"] = "夺目谷"
+L["Voidscar Arena_short"] = "竞技场"
+L["Den of Nalorakk_short"] = "巢穴"
+L["Murder Row_short"] = "谋杀小巷"
+L["Altar of Fangs_short"] = "毒牙祭坛"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "自定义光环追踪"

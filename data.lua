@@ -44,6 +44,48 @@ addon.data.MAP_ENCOUNTER_EVENTS = {
 		name = L["Pit of Saron"],
 		short = L["Pit of Saron_short"],
 	},
+
+	-- MARK: 12.1
+	[249] = {
+		portalID = 134400,
+		name = select(1, EJ_GetInstanceInfo(1041)) or "King's Rest",
+		short = L["King's Rest_short"],
+	},
+	[250] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1030)) or "Temple of Sethraliss",
+		short = L["Temple of Sethraliss_short"],
+	},
+	[399] = {
+	portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1202)) or "Ruby Life Pools",
+		short = L["Ruby Life Pools_short"],
+	},
+	[584] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1309)) or "The Blinding Vale",
+		short = L["The Blinding Vale_short"],
+	},
+	[585] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1313)) or "Voidscar Arena",
+		short = L["Voidscar Arena_short"],
+	},
+	[586] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1311)) or "Den of Nalorakk",
+		short = L["Den of Nalorakk_short"],
+	},
+	[587] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1304)) or "Murder Row",
+		short = L["Murder Row_short"],
+	},
+	[588] = {
+		portalID = 134401,
+		name = select(1, EJ_GetInstanceInfo(1322)) or "Altar of Fangs",
+		short = L["Altar of Fangs_short"],
+	},
 }
 
 -- MARK: Instance Journal

@@ -264,6 +264,15 @@ L["Skyreach_short"] = "SR"
 L["Windrunner Spire_short"] = "WS"
 L["Magister's Terrace_short"] = "MT"
 L["Pit of Saron_short"] = "PoS"
+-- 12.1 season
+L["King's Rest_short"] = "KR"
+L["Temple of Sethraliss_short"] = "ToS"
+L["Ruby Life Pools_short"] = "RLP"
+L["The Blinding Vale_short"] = "TBV"
+L["Voidscar Arena_short"] = "VA"
+L["Den of Nalorakk_short"] = "DoN"
+L["Murder Row_short"] = "MR"
+L["Altar of Fangs_short"] = "AoF"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "Custom Aura Tracker"

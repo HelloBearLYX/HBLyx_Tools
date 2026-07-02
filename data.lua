@@ -77,7 +77,7 @@ addon.data.SEASON_MAP = {
 		name = select(1, EJ_GetInstanceInfo(1299)) or "Windrunner Spire",
 		short = L["Windrunner Spire_short"],
 	},
-	-- DF
+	-- DF 10.0
     [402] = {
 		enabled = false,
 		instanceID = 2526,
@@ -111,7 +111,7 @@ addon.data.SEASON_MAP = {
 		name = select(1, EJ_GetInstanceInfo(1041)) or "King's Rest",
 		short = L["King's Rest_short"],
 	},
-	-- Legion
+	-- Legion 7.0
 	[239] = {
 		enabled = false,
 		instanceID = 1753,
@@ -120,7 +120,7 @@ addon.data.SEASON_MAP = {
 		name = select(1, EJ_GetInstanceInfo(945)) or "Seat of the Triumvirate",
 		short = L["Seat of the Triumvirate_short"],
 	},
-	-- WoD
+	-- WoD 6.0
 	[161] = {
 		enabled = false,
 		instanceID = 1209,
@@ -129,7 +129,7 @@ addon.data.SEASON_MAP = {
 		name = select(1, EJ_GetInstanceInfo(476)) or "Skyreach",
 		short = L["Skyreach_short"],
 	},
-	-- WoLK
+	-- WoLK 5.0
 	[556] = {
 		enabled = false,
 		instanceID = 658,

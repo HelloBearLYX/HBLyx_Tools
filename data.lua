@@ -3,7 +3,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 addon.data = {}
 
 addon.data.SEASON_MAP = {
-	-- TODO: Update unknown portalIDs (placeholder 134401): 586, 584, 250
+	-- TODO: Update unknown portalIDs (placeholder 134401): 584, 250
 	-- Midnight 12.0
 	[588] = {
 		enabled = true,
@@ -25,7 +25,7 @@ addon.data.SEASON_MAP = {
 		enabled = true,
 		instanceID = 2825,
 		journalInstanceID = 1311,
-		portalID = 134401,
+		portalID = 1286807,
 		name = select(1, EJ_GetInstanceInfo(1311)) or "Den of Nalorakk",
 		short = L["Den of Nalorakk_short"],
 	},
@@ -99,14 +99,14 @@ addon.data.SEASON_MAP = {
 		enabled = true,
 		instanceID = 1877,
 		journalInstanceID = 1030,
-		portalID = 134401,
+		portalID = 1286828,
 		name = select(1, EJ_GetInstanceInfo(1030)) or "Temple of Sethraliss",
 		short = L["Temple of Sethraliss_short"],
 	},
 	[249] = {
 		enabled = true,
 		instanceID = 1762,
-		portalID = 134400,
+		portalID = 1286831,
 		journalInstanceID = 1041,
 		name = select(1, EJ_GetInstanceInfo(1041)) or "King's Rest",
 		short = L["King's Rest_short"],

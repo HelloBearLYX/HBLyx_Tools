@@ -146,7 +146,7 @@ end
 
 ---Update buttons for ChallengeEnhance
 ---@param self ChallengeEnhance self
----@param delay number delay time for updating buttons, default is 0.25s to avoid
+---@param delay number delay time for updating buttons, default is 0.25s
 local function UpdateButtons(self, delay)
     if not delay then delay = 0.25 end
     local now = GetTime()
@@ -158,7 +158,8 @@ local function UpdateButtons(self, delay)
         local button = self.buttons[mapID]
         if button then
             button:ClearAllPoints()
-            button:SetAllPoints(icon)
+            button:SetParent(icon)
+            button:SetAllPoints()
             RefreshMapInfo(self, mapID)
             UpdateTooltip(icon, mapID)
         end

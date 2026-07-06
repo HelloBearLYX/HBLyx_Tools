@@ -66,6 +66,43 @@ local function GetFirstAvailableHearthstone()
     return HEARTHSTONE_DEFAULT_ID
 end
 
+local function SuppressBlizzardFrame(frameName)
+    local container = _G[frameName]
+    if not container then
+        return false
+    end
+
+    if container._hblyxSuppressed then
+        if container:IsShown() then
+            container:Hide()
+        end
+        return true
+    end
+
+    container._hblyxSuppressed = true
+    container:Hide()
+
+    container:HookScript("OnShow", function(frame)
+        frame:Hide()
+    end)
+
+    if type(container.Layout) == "function" then
+        hooksecurefunc(container, "Layout", function(frame)
+            if frame and frame:IsShown() then
+                frame:Hide()
+            end
+        end)
+    end
+
+    return true
+end
+
+local function SuppressBlizzardMicroAndBagBars()
+    local hasMicro = SuppressBlizzardFrame("MicroMenuContainer")
+    local hasBags = SuppressBlizzardFrame("BagsBar")
+    return hasMicro and hasBags
+end
+
 local function UpdateHearthstoneMacro(self, button)
     local hearthStoneID = GetFirstAvailableHearthstone()
     button:SetAttribute("type1", "macro")
@@ -198,7 +235,10 @@ local BUTTONS = {
 ---Initialize (Constructor)
 ---@return MicroMenu MicroMenu a MicroMenu object
 function MicroMenu:Initialize()
-    -- TODO: hide Blizzard original micro menu buttons
+    -- Suppress Blizzard Micro Menu and Bag Bar
+    if not SuppressBlizzardMicroAndBagBars() then
+        C_Timer.After(1, SuppressBlizzardMicroAndBagBars)
+    end
 
     self.frame = CreateFrame("Frame", ADDON_NAME .. self.modName, UIParent)
     self.frame:SetSize((#BUTTONS + 2) * BUTTON_SIZE + (#BUTTONS - 1) * BUTTON_SPACING, BUTTON_SIZE)

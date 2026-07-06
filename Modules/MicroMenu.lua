@@ -277,7 +277,7 @@ function MicroMenu:Initialize()
                 if PlayerHasToy(self.customTeleportID) then
                     local customTeleportCooldown = GetCooldownOutputString(self.customTeleportID)
 
-                    tooltipText = string.format(L["MicroMenuButton"]["Teleport1"] .. L["MicroMenuButton"]["Teleport2"], hearthStoneCooldown, customTeleportCooldown)
+                    tooltipText = string.format(L["MicroMenuButton"]["Teleport1"] .. "\n" .. L["MicroMenuButton"]["Teleport2"], hearthStoneCooldown, customTeleportCooldown)
                 else
                     tooltipText = string.format(L["MicroMenuButton"]["Teleport1"], hearthStoneCooldown)
                 end

@@ -5,7 +5,7 @@ addon.data = {}
 addon.data.SEASON_MAP = {
 	-- Midnight 12.0
 	[588] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2993,
 		journalInstanceID = 1322,
 		portalID = 1286812,
@@ -13,7 +13,7 @@ addon.data.SEASON_MAP = {
 		short = L["Altar of Fangs_short"],
 	},
 	[587] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2813,
 		journalInstanceID = 1304,
 		portalID = 1286809,
@@ -21,7 +21,7 @@ addon.data.SEASON_MAP = {
 		short = L["Murder Row_short"],
 	},
 	[586] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2825,
 		journalInstanceID = 1311,
 		portalID = 1286807,
@@ -29,7 +29,7 @@ addon.data.SEASON_MAP = {
 		short = L["Den of Nalorakk_short"],
 	},
 	[585] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2923,
 		journalInstanceID = 1313,
 		portalID = 1286804,
@@ -37,7 +37,7 @@ addon.data.SEASON_MAP = {
 		short = L["Voidscar Arena_short"],
 	},
 	[584] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2859,
 		journalInstanceID = 1309,
 		portalID = 1286801,
@@ -45,7 +45,7 @@ addon.data.SEASON_MAP = {
 		short = L["The Blinding Vale_short"],
 	},
 	[560] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2874,
 		journalInstanceID = 1315,
 		portalID = 1254559,
@@ -86,7 +86,7 @@ addon.data.SEASON_MAP = {
 		short = L["Algeth'ar Academy_short"],
 	},
 	[399] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2521,
 		journalInstanceID = 1202,
 		portalID = 393256,
@@ -95,7 +95,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- BFA
 	[250] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 1877,
 		journalInstanceID = 1030,
 		portalID = 1286828,
@@ -103,7 +103,7 @@ addon.data.SEASON_MAP = {
 		short = L["Temple of Sethraliss_short"],
 	},
 	[249] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 1762,
 		portalID = 1286831,
 		journalInstanceID = 1041,
@@ -112,7 +112,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- Legion 7.0
 	[239] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 1753,
 		journalInstanceID = 945,
 		portalID = 1254551,

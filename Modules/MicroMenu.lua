@@ -203,6 +203,9 @@ end
 -- MARK: Teleport Tooltip
 local function GetCooldownOutputString(itemID)
     local startTime, duration = C_Item.GetItemCooldown(itemID)
+    if issecretvalue(startTime) or issecretvalue(duration) then
+        return ""
+    end
     local remaining = duration - (GetTime() - startTime)
     if remaining and remaining > 0 then
         local minutes = math.floor(remaining / 60)
@@ -215,7 +218,7 @@ local function GetCooldownOutputString(itemID)
 end
 
 -- MARK: Constants
-local BUTTON_SIZE = 35
+local BUTTON_SIZE = 40
 local BUTTON_SPACING = 0
 local BUTTONS = {
     {name = "Character", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Character.PNG", action = CharacterButtonAction, tooltip = L["MicroMenuButton"]["Character"]},

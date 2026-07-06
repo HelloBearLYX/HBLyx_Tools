@@ -37,8 +37,8 @@ end
 -- MARK: Get Dungeon List
 local function GetDungeonList()
     local list = {}
-    for dungeonID, info in pairs(addon.data.DUNGEONS) do
-        local mapIcon = select(6, EJ_GetInstanceInfo(dungeonID)) or 134400
+	for _, info in pairs(addon.data.SEASON_MAP) do
+		local mapIcon = select(6, EJ_GetInstanceInfo(info.journalInstanceID)) or 134400
         if info.enabled then
             list[info.instanceID] =  "|T" .. mapIcon .. ":0|t " .. info.name
         end

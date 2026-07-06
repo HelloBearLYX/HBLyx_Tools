@@ -36,6 +36,7 @@ local function GetMissingTalents(self)
     local missingTalents = {}
 
     local instanceData = addon.db[self.modName].data[addon.states.instanceInfo.instanceID]
+    -- if the instanceData is nil, it means that the current instance is not in the data table
     if instanceData then
         for spellID, loadingSpecs in pairs(instanceData) do
             local shouldCheck = not loadingSpecs or not next(loadingSpecs) or loadingSpecs[addon.states.playerSpec]

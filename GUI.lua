@@ -96,6 +96,7 @@ local TABS = {
     {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
     {text = L["TalentReminderSettings"], type = "Button", tooltip = L["TalentReminderSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TalentReminder:CreateTabPanel(container) end},
     {text = L["AuctionHelperSettings"], type = "Button", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuctionHelper:CreateTabPanel(container) end},
+    {text = L["MicroMenuSettings"], type = "Button", tooltip = L["MicroMenuSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.MicroMenu:CreateTabPanel(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
     {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
     {text = L["DemonologyPortalsSettings"], type = "Button", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.DemonologyPortals:CreateTabPanel(container) end},

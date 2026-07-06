@@ -265,6 +265,15 @@ L["Skyreach_short"] = "通天峰"
 L["Windrunner Spire_short"] = "风行者之塔"
 L["Magister's Terrace_short"] = "魔导师平台"
 L["Pit of Saron_short"] = "萨隆矿坑"
+-- 12.1 season
+L["King's Rest_short"] = "诸王之眠"
+L["Temple of Sethraliss_short"] = "神庙"
+L["Ruby Life Pools_short"] = "红玉"
+L["The Blinding Vale_short"] = "夺目谷"
+L["Voidscar Arena_short"] = "竞技场"
+L["Den of Nalorakk_short"] = "巢穴"
+L["Murder Row_short"] = "密谋小径"
+L["Altar of Fangs_short"] = "毒牙祭坛"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "自定义光环追踪"
@@ -378,4 +387,21 @@ L["AuctionTag"] = {
 	HasteMastery = "急精",
 	HasteVers = "急全",
 	MasteryVers = "精全",
+}
+
+-- MARK: Micro Menu
+L["MicroMenuSettings"] = "微型菜单"
+L["MicroMenuSettingsDesc"] = "自定义快捷菜单，快速访问角色、背包、天赋、社交等界面"
+L["MicroMenuButton"] = {
+	Character = "角色",
+	Spellbook = "|cff00ff00左键|r:天赋\n|cff00ff00右键|r:法术书",
+	Profession = "专业技能",
+	Bag = "背包",
+	Social = "|cff00ff00左键|r:好友\n|cff00ff00右键|r:公会",
+	Achievements = "成就",
+	Teleport1 = "|cff00ff00左键|r:炉石%s",
+	Teleport2 = "|cff00ff00右键|r:奥术秘社的私人钥匙%s",
+	Housing = "家宅面板",
+	Journal = "冒险者手册",
+	LFG = "|cff00ff00左键|r:寻找队伍\n|cff00ff00右键|r:集合石插件",
 }

@@ -264,6 +264,15 @@ L["Skyreach_short"] = "SR"
 L["Windrunner Spire_short"] = "WS"
 L["Magister's Terrace_short"] = "MT"
 L["Pit of Saron_short"] = "PoS"
+-- 12.1 season
+L["King's Rest_short"] = "KR"
+L["Temple of Sethraliss_short"] = "ToS"
+L["Ruby Life Pools_short"] = "RLP"
+L["The Blinding Vale_short"] = "TBV"
+L["Voidscar Arena_short"] = "VA"
+L["Den of Nalorakk_short"] = "DoN"
+L["Murder Row_short"] = "MR"
+L["Altar of Fangs_short"] = "AoF"
 
 -- MARK: Custom Aura Tracker
 L["CustomAuraTrackerSettings"] = "Custom Aura Tracker"
@@ -378,4 +387,21 @@ L["AuctionTag"] = {
 	HasteMastery = "H/M",
 	HasteVers = "H/V",
 	MasteryVers = "M/V",
+}
+
+-- MARK: Micro Menu
+L["MicroMenuSettings"] = "Micro Menu"
+L["MicroMenuSettingsDesc"] = "Custom quick-access menu for character, bags, talents, social, and more"
+L["MicroMenuButton"] = {
+	Character = "Character",
+	Spellbook = "|cff00ff00Left|r:Talents\n|cff00ff00Right|r:Spellbook",
+	Profession = "Profession",
+	Bag = "Bag",
+	Social = "|cff00ff00Left|r:Friends\n|cff00ff00Right|r:Guild",
+	Achievements = "Achievements",
+	Teleport1 = "|cff00ff00Left|r:Hearthstone%s",
+	Teleport2 = "|cff00ff00Right|r:Personal Key to the Arcantin%s",
+	Housing = "Housing Panel",
+	Journal = "Encounter Journal",
+	LFG = "|cff00ff00Left|r:Looking For Group\n|cff00ff00Right|r:MeetingStone AddOns",
 }

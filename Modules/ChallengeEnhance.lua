@@ -29,7 +29,7 @@ end
 ---@param mapID integer mapID of the dungeon
 ---@return integer|nil portalID of the dungeon, return nil if not found
 local function GetPortalID(mapID)
-    local portalID = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].portalID or nil
+    local portalID = addon.data.SEASON_MAP[mapID] and addon.data.SEASON_MAP[mapID].portalID or nil
     if type(portalID) == "table" then
         for _, id in ipairs(portalID) do
             if C_SpellBook.IsSpellInSpellBook(id) then
@@ -100,7 +100,7 @@ local function RefreshMapInfo(self, mapID)
             button.score:SetText("")
         end
 
-        local name = addon.data.MAP_ENCOUNTER_EVENTS[mapID] and addon.data.MAP_ENCOUNTER_EVENTS[mapID].short or ""
+        local name = addon.data.SEASON_MAP[mapID] and addon.data.SEASON_MAP[mapID].short or ""
         if name and addon.db[self.modName]["NameEnabled"] then
             button.mapName:SetText(name)
         else
@@ -146,7 +146,7 @@ end
 
 ---Update buttons for ChallengeEnhance
 ---@param self ChallengeEnhance self
----@param delay number delay time for updating buttons, default is 0.25s to avoid
+---@param delay number delay time for updating buttons, default is 0.25s
 local function UpdateButtons(self, delay)
     if not delay then delay = 0.25 end
     local now = GetTime()
@@ -158,7 +158,8 @@ local function UpdateButtons(self, delay)
         local button = self.buttons[mapID]
         if button then
             button:ClearAllPoints()
-            button:SetAllPoints(icon)
+            button:SetParent(icon)
+            button:SetAllPoints()
             RefreshMapInfo(self, mapID)
             UpdateTooltip(icon, mapID)
         end

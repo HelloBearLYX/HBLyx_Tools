@@ -5,7 +5,7 @@ addon.data = {}
 addon.data.SEASON_MAP = {
 	-- Midnight 12.0
 	[588] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2993,
 		journalInstanceID = 1322,
 		portalID = 1286812,
@@ -13,7 +13,7 @@ addon.data.SEASON_MAP = {
 		short = L["Altar of Fangs_short"],
 	},
 	[587] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2813,
 		journalInstanceID = 1304,
 		portalID = 1286809,
@@ -21,7 +21,7 @@ addon.data.SEASON_MAP = {
 		short = L["Murder Row_short"],
 	},
 	[586] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2825,
 		journalInstanceID = 1311,
 		portalID = 1286807,
@@ -29,7 +29,7 @@ addon.data.SEASON_MAP = {
 		short = L["Den of Nalorakk_short"],
 	},
 	[585] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2923,
 		journalInstanceID = 1313,
 		portalID = 1286804,
@@ -37,7 +37,7 @@ addon.data.SEASON_MAP = {
 		short = L["Voidscar Arena_short"],
 	},
 	[584] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2859,
 		journalInstanceID = 1309,
 		portalID = 1286801,
@@ -45,7 +45,7 @@ addon.data.SEASON_MAP = {
 		short = L["The Blinding Vale_short"],
 	},
 	[560] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2874,
 		journalInstanceID = 1315,
 		portalID = 1254559,
@@ -53,7 +53,7 @@ addon.data.SEASON_MAP = {
 		short = L["Maisara Caverns_short"],
 	},
 	[559] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2915,
 		journalInstanceID = 1316,
 		portalID = 1254563,
@@ -61,7 +61,7 @@ addon.data.SEASON_MAP = {
 		short = L["Nexus-Point Xenas_short"],
 	},
 	[558] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2811,
 		journalInstanceID = 1300,
 		portalID = 1254572,
@@ -69,7 +69,7 @@ addon.data.SEASON_MAP = {
 		short = L["Magister's Terrace_short"],
 	},
 	[557] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2805,
 		journalInstanceID = 1299,
 		portalID = 1254400,
@@ -78,7 +78,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- DF 10.0
     [402] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 2526,
 		journalInstanceID = 1201,
 		portalID = 393273,
@@ -86,7 +86,7 @@ addon.data.SEASON_MAP = {
 		short = L["Algeth'ar Academy_short"],
 	},
 	[399] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2521,
 		journalInstanceID = 1202,
 		portalID = 393256,
@@ -95,7 +95,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- BFA
 	[250] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 1877,
 		journalInstanceID = 1030,
 		portalID = 1286828,
@@ -103,7 +103,7 @@ addon.data.SEASON_MAP = {
 		short = L["Temple of Sethraliss_short"],
 	},
 	[249] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 1762,
 		portalID = 1286831,
 		journalInstanceID = 1041,
@@ -112,7 +112,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- Legion 7.0
 	[239] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 1753,
 		journalInstanceID = 945,
 		portalID = 1254551,
@@ -121,7 +121,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- WoD 6.0
 	[161] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 1209,
 		journalInstanceID = 476,
 		portalID = {1254557, 159898},
@@ -130,7 +130,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- WoLK 5.0
 	[556] = {
-		enabled = true,
+		enabled = false,
 		instanceID = 658,
 		journalInstanceID = 278,
 		portalID = 1254555,

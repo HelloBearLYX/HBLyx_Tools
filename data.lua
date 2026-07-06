@@ -266,7 +266,7 @@ addon.data.AUCTION_HELPER = {
 					{itemID = 243956, tag = "Damage"},
 					{itemID = 243986, tag = "Crit"},
 					{itemID = 244014, tag = "Haste"},
-					{itemID = 243985, tag = "Mastery"},
+					{itemID = 243958, tag = "Mastery"},
 					{itemID = 244016, tag = "Vers"},
 				},
 			},

@@ -3,7 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 addon.data = {}
 
 addon.data.SEASON_MAP = {
-	-- TODO: Update unknown portalIDs (placeholder 134401): 584, 250
 	-- Midnight 12.0
 	[588] = {
 		enabled = true,
@@ -54,7 +53,7 @@ addon.data.SEASON_MAP = {
 		short = L["Maisara Caverns_short"],
 	},
 	[559] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2915,
 		journalInstanceID = 1316,
 		portalID = 1254563,
@@ -62,7 +61,7 @@ addon.data.SEASON_MAP = {
 		short = L["Nexus-Point Xenas_short"],
 	},
 	[558] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2811,
 		journalInstanceID = 1300,
 		portalID = 1254572,
@@ -70,7 +69,7 @@ addon.data.SEASON_MAP = {
 		short = L["Magister's Terrace_short"],
 	},
 	[557] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2805,
 		journalInstanceID = 1299,
 		portalID = 1254400,
@@ -79,7 +78,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- DF 10.0
     [402] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 2526,
 		journalInstanceID = 1201,
 		portalID = 393273,
@@ -122,7 +121,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- WoD 6.0
 	[161] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 1209,
 		journalInstanceID = 476,
 		portalID = {1254557, 159898},
@@ -131,7 +130,7 @@ addon.data.SEASON_MAP = {
 	},
 	-- WoLK 5.0
 	[556] = {
-		enabled = false,
+		enabled = true,
 		instanceID = 658,
 		journalInstanceID = 278,
 		portalID = 1254555,

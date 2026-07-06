@@ -34,23 +34,6 @@ function Core:Initialize()
 end
 
 -- private methods
--- MARK: private event register
-
----Register event for the EventHandler on the EventHandler.eventFrame
----@param self Core self
----@param event string event to register
----@param unit nil|string|table<string>? if this is a unit event, the unit name or units list
-local function RegisterE(frame, event, unit)
-    if unit then
-        if type(unit) == "table" then
-            frame:RegisterUnitEvent(event, unpack(unit))
-        else
-            frame:RegisterUnitEvent(event, unit)
-        end
-    else
-        frame:RegisterEvent(event)
-    end
-end
 
 -- MARK: Event Handler
 
@@ -96,7 +79,15 @@ function Core:RegisterEvent(event, frame, mod, unit)
 
     table.insert(self.eventMap[event], mod)
 
-    RegisterE(frame, event, unit)
+    if unit then
+        if type(unit) == "table" then
+            frame:RegisterUnitEvent(event, unpack(unit))
+        else
+            frame:RegisterUnitEvent(event, unit)
+        end
+    else
+        frame:RegisterEvent(event)
+    end
 end
 
 -- MARK: Register State
@@ -113,7 +104,15 @@ function Core:RegisterState(event, unit, name, updateFunc)
 
     self.statesUpdate[event][name] = updateFunc
 
-    RegisterE(self.eventFrame, event, unit)
+    if unit then
+        if type(unit) == "table" then
+            self.eventFrame:RegisterUnitEvent(event, unpack(unit))
+        else
+            self.eventFrame:RegisterUnitEvent(event, unit)
+        end
+    else
+        self.eventFrame:RegisterEvent(event)
+    end
 end
 
 -- MARK: Register State Monitor

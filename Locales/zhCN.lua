@@ -392,6 +392,7 @@ L["AuctionTag"] = {
 -- MARK: Micro Menu
 L["MicroMenuSettings"] = "微型菜单"
 L["MicroMenuSettingsDesc"] = "自定义快捷菜单，快速访问角色、背包、天赋、社交等界面"
+L["HearthStoneSelection"] = "炉石选择"
 L["MicroMenuButton"] = {
 	Character = "角色",
 	Spellbook = "|cff00ff00左键|r:天赋\n|cff00ff00右键|r:法术书",

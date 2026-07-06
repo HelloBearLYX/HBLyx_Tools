@@ -392,6 +392,7 @@ L["AuctionTag"] = {
 -- MARK: Micro Menu
 L["MicroMenuSettings"] = "Micro Menu"
 L["MicroMenuSettingsDesc"] = "Custom quick-access menu for character, bags, talents, social, and more"
+L["HearthStoneSelection"] = "Hearthstone Selection"
 L["MicroMenuButton"] = {
 	Character = "Character",
 	Spellbook = "|cff00ff00Left|r:Talents\n|cff00ff00Right|r:Spellbook",

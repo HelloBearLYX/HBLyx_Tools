@@ -8,6 +8,7 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	X = 0,
 	Y = 470,
+	HearthstoneID = "",
 }
 
 -- MARK: Safe update
@@ -57,6 +58,11 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 	end)
 	GUI:CreateSlider(positionGroup, L["Y"], -1000, 1000, 1, addon.db[MOD_KEY].Y, function(value)
 		addon.db[MOD_KEY].Y = value
+		update()
+	end)
+
+	GUI:CreateDropdown(frame, L["HearthStoneSelection"], addon.core:GetModule(MOD_KEY):GetAvailableHearthstoneID(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
+		addon.db[MOD_KEY].HearthstoneID = value
 		update()
 	end)
 

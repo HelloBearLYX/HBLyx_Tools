@@ -104,11 +104,11 @@ local function SuppressBlizzardMicroAndBagBars()
 end
 
 local function UpdateHearthstoneMacro(self, button)
-    local hearthStoneID = GetFirstAvailableHearthstone()
-    button:SetAttribute("type1", "macro")
-    local macroText = string.format("/use item:%d", hearthStoneID)
-    button:SetAttribute("macrotext1", macroText)
+    local hearthStoneID = addon.db[self.modName].HearthstoneID ~= "" and addon.db[self.modName].HearthstoneID or GetFirstAvailableHearthstone()
     self.hearthstoneID = hearthStoneID
+    button:SetAttribute("type1", "macro")
+    local macroText = string.format("/use item:%d", self.hearthstoneID)
+    button:SetAttribute("macrotext1", macroText)
 end
 
 -- MARK: Buttons Action
@@ -301,11 +301,30 @@ function MicroMenu:Initialize()
     return self
 end
 
+-- MARK: GetAvailableHearthstoneID
+function MicroMenu:GetAvailableHearthstoneID()
+    local output = {}
+
+    for _, itemID in ipairs(HEARTHSTONE_AND_TOY_ID_LIST) do
+        local isOwnedItem = C_Item.GetItemCount(itemID, nil, true) > 0
+        local hasToy = PlayerHasToy(itemID)
+        local isUsableToy = (not hasToy) or C_ToyBox.IsToyUsable(itemID)
+
+        if (isOwnedItem or hasToy) and isUsableToy then
+            local itemName = select(1, C_Item.GetItemInfo(itemID))
+            output[itemID] = itemName
+        end
+    end
+
+    return output
+end
+
 -- MARK: UpdateStyle
 
 ---Update style settings and render them in-game for CustomTracker
 function MicroMenu:UpdateStyle()
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"] or 0, addon.db[self.modName]["Y"] or 0)
+    TeleportButtonAction(self, self.buttons["Teleport"])
 end
 
 -- MARK: Test

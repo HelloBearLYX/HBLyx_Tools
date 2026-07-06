@@ -388,3 +388,20 @@ L["AuctionTag"] = {
 	HasteVers = "H/V",
 	MasteryVers = "M/V",
 }
+
+-- MARK: Micro Menu
+L["MicroMenuSettings"] = "Micro Menu"
+L["MicroMenuSettingsDesc"] = "Custom quick-access menu for character, bags, talents, social, and more"
+L["MicroMenuButton"] = {
+	Character = "Character",
+	Spellbook = "|cff00ff00Left|r:Talents\n|cff00ff00Right|r:Spellbook",
+	Profession = "Profession",
+	Bag = "Bag",
+	Social = "|cff00ff00Left|r:Friends\n|cff00ff00Right|r:Guild",
+	Achievements = "Achievements",
+	Teleport1 = "|cff00ff00Left|r:Hearthstone%s",
+	Teleport2 = "|cff00ff00Right|r:Personal Key to the Arcantin%s",
+	Housing = "Housing Panel",
+	Journal = "Encounter Journal",
+	LFG = "|cff00ff00Left|r:Looking For Group\n|cff00ff00Right|r:MeetingStone AddOns",
+}

@@ -256,7 +256,12 @@ function MicroMenu:Initialize()
         btn.texture:SetTexture(button.texture)
 
         -- button click actions
-        button.action(self, btn)
+        if button.name ~= "Teleport" then
+            button.action(self, btn)
+        else
+            -- add a delay to wait for joy box to load, then execute the action
+            C_Timer.After(1, function() button.action(self, btn) end)
+        end
 
         -- button mouseover tooltip
         if button.tooltip then
@@ -324,7 +329,7 @@ end
 ---Update style settings and render them in-game for CustomTracker
 function MicroMenu:UpdateStyle()
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"] or 0, addon.db[self.modName]["Y"] or 0)
-    TeleportButtonAction(self, self.buttons["Teleport"])
+    UpdateHearthstoneMacro(self, self.buttons["Teleport"])
 end
 
 -- MARK: Test

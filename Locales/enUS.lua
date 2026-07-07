@@ -108,6 +108,7 @@ L["Missing"] = "Missing"
 L["MissingText"] = "Missing Text"
 L["Hide"] = "Hide"
 L["Show"] = "Show"
+L["Random"] = "Random"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

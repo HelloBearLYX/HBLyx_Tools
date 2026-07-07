@@ -7,8 +7,8 @@ local MOD_KEY = "MicroMenu"
 addon.configurationList[MOD_KEY] = {
 	Enabled = false,
 	X = 0,
-	Y = 470,
-	HearthstoneID = "",
+	Y = 465,
+	HearthstoneID = 0,
 }
 
 -- MARK: Safe update

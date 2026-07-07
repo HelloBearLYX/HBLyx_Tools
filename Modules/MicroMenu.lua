@@ -6,6 +6,7 @@ local MicroMenu = {
     modName = "MicroMenu",
     frame = nil,
     buttons = {},
+    hearthstoneList = {},
     hearthstoneID = nil,
     customTeleportID = nil,
 }
@@ -52,20 +53,6 @@ local HEARTHSTONE_AND_TOY_ID_LIST = {
     265100, -- Coreway Foundry Hearthstone
 }
 
-local function GetFirstAvailableHearthstone()
-    for _, itemID in ipairs(HEARTHSTONE_AND_TOY_ID_LIST) do
-        local isOwnedItem = C_Item.GetItemCount(itemID, nil, true) > 0
-        local hasToy = PlayerHasToy(itemID)
-        local isUsableToy = (not hasToy) or C_ToyBox.IsToyUsable(itemID)
-
-        if (isOwnedItem or hasToy) and isUsableToy then
-            return itemID
-        end
-    end
-
-    return HEARTHSTONE_DEFAULT_ID
-end
-
 local function SuppressBlizzardFrame(frameName)
     local container = _G[frameName]
     if not container then
@@ -103,12 +90,92 @@ local function SuppressBlizzardMicroAndBagBars()
     return hasMicro and hasBags
 end
 
+local function GetHearthstoneList(self)
+    local output = {}
+
+    for _, itemID in ipairs(HEARTHSTONE_AND_TOY_ID_LIST) do
+        local isOwnedItem = C_Item.GetItemCount(itemID, nil, true) > 0
+        local hasToy = PlayerHasToy(itemID)
+        local isUsableToy = (not hasToy) or C_ToyBox.IsToyUsable(itemID)
+
+        if (isOwnedItem or hasToy) and isUsableToy then
+            output[#output + 1] = itemID
+        end
+    end
+
+    self.hearthstoneList = output
+end
+
+local function GetNextRandomHearthstone(self, currentIndex, times)
+    if not self.hearthstoneList or #self.hearthstoneList == 0 then
+        return nil, nil
+    end
+
+    if #self.hearthstoneList == 1 or (times and times >= 10) then
+        return 1, self.hearthstoneList[1]
+    end
+
+    local randomIndex = math.random(#self.hearthstoneList)
+    local itemID = self.hearthstoneList[randomIndex]
+    local isToyNotUsable = PlayerHasToy(itemID) and not C_ToyBox.IsToyUsable(itemID)
+    if isToyNotUsable or (currentIndex and randomIndex == currentIndex) then
+        return GetNextRandomHearthstone(self, currentIndex, (times or 0) + 1)
+    end
+
+    return randomIndex, itemID
+end
+
+local function GetHearthstoneFromList(self, currentIndex)
+    -- if 0, get a random hearthstone from the list
+    if addon.db[self.modName].HearthstoneID == 0 and #self.hearthstoneList > 0 then
+        local randomIndex, itemID = GetNextRandomHearthstone(self, currentIndex)
+        return itemID or HEARTHSTONE_DEFAULT_ID, randomIndex
+    elseif addon.db[self.modName].HearthstoneID then
+        -- if not 0 and not nil, use the selected hearthstone
+        return addon.db[self.modName].HearthstoneID, nil
+    else
+        -- if nil, use the default hearthstone
+        return HEARTHSTONE_DEFAULT_ID, nil
+    end
+end
+
 local function UpdateHearthstoneMacro(self, button)
-    local hearthStoneID = addon.db[self.modName].HearthstoneID ~= "" and addon.db[self.modName].HearthstoneID or GetFirstAvailableHearthstone()
-    self.hearthstoneID = hearthStoneID
+    if not button then
+        return
+    end
+
+    if not self.hearthstoneList or #self.hearthstoneList == 0 then
+        GetHearthstoneList(self)
+    end
+
+    local macroText
+    local configuredHearthstoneID = addon.db[self.modName].HearthstoneID
+
     button:SetAttribute("type1", "macro")
-    local macroText = string.format("/use item:%d", self.hearthstoneID)
+
+    if configuredHearthstoneID == 0 and #self.hearthstoneList > 0 then
+        local currentIndex = button.randomHearthstoneIndex
+        self.hearthstoneID, button.randomHearthstoneIndex = GetHearthstoneFromList(self, currentIndex)
+        macroText = string.format("/use item:%d\n/run _G.HBLyxTools_UpdateMicroMenuTeleportButton()", self.hearthstoneID)
+    else
+        self.hearthstoneID, button.randomHearthstoneIndex = GetHearthstoneFromList(self, nil)
+        macroText = string.format("/use item:%d", self.hearthstoneID)
+    end
+
     button:SetAttribute("macrotext1", macroText)
+end
+
+_G.HBLyxTools_UpdateMicroMenuTeleportButton = function()
+    if InCombatLockdown and InCombatLockdown() then
+        return
+    end
+
+    local teleportButton = MicroMenu.buttons and MicroMenu.buttons["Teleport"]
+    if not teleportButton then
+        return
+    end
+
+    UpdateHearthstoneMacro(MicroMenu, teleportButton)
 end
 
 -- MARK: Buttons Action
@@ -308,17 +375,14 @@ end
 
 -- MARK: GetAvailableHearthstoneID
 function MicroMenu:GetAvailableHearthstoneID()
+    if not self.hearthstoneList or #self.hearthstoneList == 0 then
+        GetHearthstoneList(self)
+    end
+
     local output = {}
-
-    for _, itemID in ipairs(HEARTHSTONE_AND_TOY_ID_LIST) do
-        local isOwnedItem = C_Item.GetItemCount(itemID, nil, true) > 0
-        local hasToy = PlayerHasToy(itemID)
-        local isUsableToy = (not hasToy) or C_ToyBox.IsToyUsable(itemID)
-
-        if (isOwnedItem or hasToy) and isUsableToy then
-            local itemName = select(1, C_Item.GetItemInfo(itemID))
-            output[itemID] = itemName
-        end
+    output[0] = L["Random"]
+    for _, itemID in ipairs(self.hearthstoneList) do
+        output[itemID] = C_Item.GetItemNameByID(itemID)
     end
 
     return output

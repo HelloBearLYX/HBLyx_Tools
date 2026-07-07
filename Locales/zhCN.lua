@@ -109,6 +109,7 @@ L["Missing"] = "缺失"
 L["MissingText"] = "缺失文本"
 L["Hide"] = "隐藏"
 L["Show"] = "显示"
+L["Random"] = "随机"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

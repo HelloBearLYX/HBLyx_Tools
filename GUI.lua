@@ -91,6 +91,7 @@ local TABS = {
     {text = L["CombatSettings"], type = "Button", tooltip = L["CombatSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatIndicator:CreateTabPanel(container) end},
     {text = L["TimerSettings"], type = "Button", tooltip = L["TimerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatTimer:CreateTabPanel(container) end},
     {text = L["BattleResSettings"], type = "Button", tooltip = L["BattleResSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BattleRes:CreateTabPanel(container) end},
+    {text = L["BloodlustHelperSettings"], type = "Button", tooltip = L["BloodlustHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BloodlustHelper:CreateTabPanel(container) end},
     {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
     {text = L["CustomAuraTrackerSettings"], type = "Button", tooltip = L["CustomAuraTrackerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container) end},
     {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
@@ -435,12 +436,15 @@ end
 ---@param callback fun(key: string) callback function when value changed
 ---@return AceGUIWidget
 function addon.GUI:CreateSoundSelect(parent, label, get, callback)
-    local soundSelect = AceGUI:Create("LSM30_Sound")
+    local soundSelect = AceGUI:Create("SharedDropdown_Sound")
     soundSelect:SetLabel(label)
-    soundSelect:SetList(addon.LSM:HashTable("sound"))
+    addon.states = addon.states or {}
+    addon.states.soundList = addon.LSM:HashTable("sound")
+    soundSelect:SetList(addon.states.soundList, nil, "DDI-Sound")
     soundSelect:SetValue(get)
     soundSelect:SetCallback("OnValueChanged", function(self, _, key)
         self:SetValue(key)
+        PlaySoundFile(addon.LSM:Fetch("sound", key), "Master")
         if callback then
             callback(key)
         end

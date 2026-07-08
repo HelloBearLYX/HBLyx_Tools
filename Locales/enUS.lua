@@ -163,6 +163,9 @@ L["CombatOutText"] = "Leave Combat"
 L["TimerPrintTextIntro"] = "Last combat: "
 -- focus interrupt
 L["FocusDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick.ogg"
+-- bloodlust helper
+L["BloodlustLustDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick.ogg"
+L["BloodlustExhaustionDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\out-combat.ogg"
 -- warlock reminder
 L["PetMissingText"] = "Missing Pet!"
 L["CandyMissingText"] = "Missing Candy!"
@@ -219,6 +222,13 @@ L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the 
 L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"
 L["HideInactive"] = "Hide When Inactive"
+
+-- MARK: Bloodlust Helper
+L["BloodlustHelperSettings"] = "Bloodlust Helper"
+L["BloodlustHelperSettingsDesc"] = "Play customizable sound alerts when you gain Bloodlust/Heroism and Exhaustion-like debuffs"
+L["BloodlustLustSound"] = "Bloodlust/Heroism Sound"
+L["BloodlustExhaustionSound"] = "Exhaustion Sound"
+L["BloodlustMuteDesc"] = "Register aura-applied sound alerts for player buffs/debuffs. You can pick separate sounds for Bloodlust/Heroism and Exhaustion effects."
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"

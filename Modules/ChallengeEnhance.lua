@@ -9,8 +9,12 @@ local ChallengeEnhance = {
     modName = "ChallengeEnhance",
     buttons = {},
     loaded = false,
+    updateHooked = false,
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
+
+local HOOK_UPDATE_DELAY = 0.2
+local EVENT_UPDATE_DELAY = 0.25
 
 -- MARK: Initialize
 
@@ -149,6 +153,7 @@ end
 ---@param delay number delay time for updating buttons, default is 0.25s
 local function UpdateButtons(self, delay)
     if not delay then delay = 0.25 end
+    if not ChallengesFrame or not ChallengesFrame.DungeonIcons then return end
     local now = GetTime()
     if self.loaded == false or self.lastUpdate + delay >= now then return end
     self.lastUpdate = now
@@ -157,11 +162,16 @@ local function UpdateButtons(self, delay)
         local mapID = icon.mapID
         local button = self.buttons[mapID]
         if button then
-            button:ClearAllPoints()
-            button:SetParent(icon)
-            button:SetAllPoints()
+            if button:GetParent() ~= icon then
+                button:ClearAllPoints()
+                button:SetParent(icon)
+                button:SetAllPoints()
+            end
             RefreshMapInfo(self, mapID)
-            UpdateTooltip(icon, mapID)
+            -- Only refresh tooltip content while the icon tooltip is currently shown.
+            if GameTooltip:IsOwned(icon) then
+                UpdateTooltip(icon, mapID)
+            end
         end
     end
 end
@@ -176,7 +186,7 @@ local function CreateButtons(self)
         -- level text on the icon, keep a reference in button.level
         local level = icon.HighestLevel
 
-        if mapID then
+        if mapID and not self.buttons[mapID] then
             local portalID = GetPortalID(mapID)
             local button = CreateFrame("Button", nil, icon, "InsecureActionButtonTemplate")
             button:SetAllPoints()
@@ -222,7 +232,7 @@ end
 function ChallengeEnhance:Create()
     if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
 
-    if ChallengesFrame.Update then
+    if ChallengesFrame.Update and not self.updateHooked then
         local firstExecute = true
         hooksecurefunc(ChallengesFrame, "Update", function()
             -- only execute once when all dungeon icons are set up by Blizzard_ChallengesUI
@@ -230,16 +240,17 @@ function ChallengeEnhance:Create()
             if firstExecute  then
                 -- use a callback function to execute this later after all dungeon icons are sorted
                 C_Timer.After(0.25, function ()
+                    if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return end
                     CreateButtons(self)
                     self:UpdateStyle()
-
-                    -- hooksecurefunc(ChallengesFrame, "Update", function()
-                    --     UpdateButtons(self)
-                    -- end)
+                    UpdateButtons(self, 0)
                 end)
                 firstExecute = false
+            else
+                UpdateButtons(self, HOOK_UPDATE_DELAY)
             end
         end)
+        self.updateHooked = true
     end
 
     return true
@@ -269,6 +280,11 @@ function ChallengeEnhance:RegisterEvents()
                     self.eventFrame:UnregisterEvent("ADDON_LOADED")
                 end
             end
+        elseif event == "CHALLENGE_MODE_COMPLETED" then
+            -- M+ data can lag slightly; refresh after a short delay for consistent values.
+            C_Timer.After(2, function()
+                UpdateButtons(self, 0)
+            end)
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             local unit, _, spellID = ...
             if unit == "player" and self.portals[spellID] then
@@ -277,8 +293,10 @@ function ChallengeEnhance:RegisterEvents()
                     C_ChatInfo.SendChatMessage(L["PortalUsed"] .. spellLink, "PARTY")
                 end
             end
+        elseif event == "CHALLENGE_MODE_MAPS_UPDATE" or event == "CHALLENGE_MODE_LEADERS_UPDATE" then
+            UpdateButtons(self, EVENT_UPDATE_DELAY)
         else
-            UpdateButtons(self, 1) 
+            UpdateButtons(self, 1)
         end
     end)
 end

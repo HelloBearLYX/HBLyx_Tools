@@ -33,6 +33,7 @@ Modules\DemonologyPortals.lua
 Modules\TalentReminder.lua
 Modules\AuctionHelper.lua
 Modules\MicroMenu.lua
+Modules\BloodlustHelper.lua
 
 # handle configuration and options
 GUI.lua
@@ -48,6 +49,7 @@ Configs\DemonologyPortals.lua
 Configs\TalentReminder.lua
 Configs\AuctionHelper.lua
 Configs\MicroMenu.lua
+Configs\BloodlustHelper.lua
 Configs\Profile.lua
 
 # developer use only

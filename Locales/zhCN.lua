@@ -227,8 +227,8 @@ L["HideInactive"] = "未激活时隐藏"
 -- MARK: Bloodlust Helper
 L["BloodlustHelperSettings"] = "嗜血助手"
 L["BloodlustHelperSettingsDesc"] = "当你获得嗜血/英勇和疲劳类减益时播放可自定义的声音提醒"
-L["BloodlustLustSound"] = "嗜血/英勇音效"
-L["BloodlustExhaustionSound"] = "疲劳音效"
+L["BloodlustLustSound"] = "嗜血音效"
+L["BloodlustExhaustionSound"] = "就绪音效"
 L["BloodlustMuteDesc"] = "为玩家获得光环时注册声音提醒。你可以分别设置嗜血/英勇和疲劳效果的提示音。"
 
 --MARK: Warlock

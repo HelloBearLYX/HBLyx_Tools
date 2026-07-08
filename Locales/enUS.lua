@@ -226,8 +226,8 @@ L["HideInactive"] = "Hide When Inactive"
 -- MARK: Bloodlust Helper
 L["BloodlustHelperSettings"] = "Bloodlust Helper"
 L["BloodlustHelperSettingsDesc"] = "Play customizable sound alerts when you gain Bloodlust/Heroism and Exhaustion-like debuffs"
-L["BloodlustLustSound"] = "Bloodlust/Heroism Sound"
-L["BloodlustExhaustionSound"] = "Exhaustion Sound"
+L["BloodlustLustSound"] = "Bloodlust Sound"
+L["BloodlustExhaustionSound"] = "Ready Sound"
 L["BloodlustMuteDesc"] = "Register aura-applied sound alerts for player buffs/debuffs. You can pick separate sounds for Bloodlust/Heroism and Exhaustion effects."
 
 --MARK: Warlock

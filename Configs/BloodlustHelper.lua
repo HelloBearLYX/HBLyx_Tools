@@ -11,8 +11,8 @@ addon.LSM:Register("sound", ADDON_NAME .. "_ExhaustionDefault", L["BloodlustExha
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Mute = true,
-    LustSound = ADDON_NAME .. "_LustDefault",
-    ExhaustionSound = ADDON_NAME .. "_ExhaustionDefault",
+    LustSound = "",
+    ExhaustionSound = "",
     SoundChannel = "Master",
 }
 

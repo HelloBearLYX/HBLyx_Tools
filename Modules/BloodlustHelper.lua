@@ -88,9 +88,7 @@ function BloodlustHelper:Test(on)
     end
 
     if on then
-        -- TODO: Implement test mode for your module
     else
-        -- TODO: Disable test mode for your module
     end
 end
 
@@ -98,9 +96,6 @@ end
 
 ---Register events
 function BloodlustHelper:RegisterEvents()
-    -- TODO: Register events needed by your module here, for example:
-    -- local handle = function() Handler(self) end
-    -- addon.core:RegisterEvent("EVENT_NAME", handle)
 end
 
 -- MARK: Register Module

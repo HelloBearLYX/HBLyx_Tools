@@ -93,7 +93,6 @@ local TABS = {
     {text = L["BattleResSettings"], type = "Button", tooltip = L["BattleResSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BattleRes:CreateTabPanel(container) end},
     {text = L["BloodlustHelperSettings"], type = "Button", tooltip = L["BloodlustHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BloodlustHelper:CreateTabPanel(container) end},
     {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
-    {text = L["CustomAuraTrackerSettings"], type = "Button", tooltip = L["CustomAuraTrackerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CustomAuraTracker:CreateTabPanel(container) end},
     {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
     {text = L["TalentReminderSettings"], type = "Button", tooltip = L["TalentReminderSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TalentReminder:CreateTabPanel(container) end},
     {text = L["AuctionHelperSettings"], type = "Button", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuctionHelper:CreateTabPanel(container) end},
@@ -439,7 +438,9 @@ function addon.GUI:CreateSoundSelect(parent, label, get, callback)
     local soundSelect = AceGUI:Create("SharedDropdown_Sound")
     soundSelect:SetLabel(label)
     addon.states = addon.states or {}
-    addon.states.soundList = addon.LSM:HashTable("sound")
+    if not addon.states.soundList then
+        addon.GUI:InitializeSoundList()
+    end
     soundSelect:SetList(addon.states.soundList, nil, "DDI-Sound")
     soundSelect:SetValue(get)
     soundSelect:SetCallback("OnValueChanged", function(self, _, key)
@@ -690,5 +691,17 @@ function addon.GUI:CreateFrameStrataDropdown(parent, get, callback)
     end)
 end
 
+-- MARK: Initialize Sound List
+
+function addon.GUI:InitializeSoundList()
+    addon.states.soundList = {}
+    for _, key in ipairs(addon.LSM:List("sound")) do
+        addon.states.soundList[key] = key
+    end
+end
+
 -- Initialize Tag Panels
 addon.GUI.TagPanels = {}
+addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "soundList", function()
+    addon.GUI:InitializeSoundList()
+end)

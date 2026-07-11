@@ -26,7 +26,6 @@ Modules\CombatIndicator.lua
 Modules\CombatTimer.lua
 Modules\BattleRes.lua
 Modules\ChallengeEnhance.lua
-Modules\CustomAuraTracker.lua
 Modules\AutoRoll.lua
 Modules\WarlockReminder.lua
 Modules\DemonologyPortals.lua
@@ -42,7 +41,6 @@ Configs\CombatIndicator.lua
 Configs\CombatTimer.lua
 Configs\BattleRes.lua
 Configs\ChallengeEnhance.lua
-Configs\CustomAuraTracker.lua
 Configs\AutoRoll.lua
 Configs\WarlockReminder.lua
 Configs\DemonologyPortals.lua

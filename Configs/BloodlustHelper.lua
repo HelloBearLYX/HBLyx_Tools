@@ -14,6 +14,7 @@ addon.configurationList[MOD_KEY] = {
     LustSound = "",
     ExhaustionSound = "",
     SoundChannel = "Master",
+    EnableAuraContainer = true,
 }
 
 -- MARK: Safe update
@@ -83,6 +84,14 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     soundGroup:AddChild(lustSoundSelect)
     soundGroup:AddChild(exhaustionSoundSelect)
     soundGroup:AddChild(soundChannelDropdown)
+
+    -- MARK: Container
+    local containerGroup = GUI:CreateInlineGroup(frame, "ContainerSettings")
+    GUI:CreateInformationTag(containerGroup, "BloodlustContainerDesc", "LEFT")
+    local enableContainerCheckBox = GUI:CreateToggleCheckBox(containerGroup, "EnableAuraContainer", addon.db.BloodlustHelper.EnableAuraContainer, function(value)
+        addon.db.BloodlustHelper.EnableAuraContainer = value
+        update()
+    end)
 
     return frame
 end

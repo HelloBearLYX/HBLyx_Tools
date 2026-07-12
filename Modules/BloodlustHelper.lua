@@ -121,9 +121,7 @@ local function CreateLustAuraContainer()
     -- 12.1 new aura system aura container
     local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")
     container:SetUnit("player")
-    container:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
     container:SetAuraLayoutAnchorPoint("RIGHT")
-    container:SetAuraLayoutPadding(0, 0, 0, 0)
 
     container:AddAuraGroup("lustGroup", "HELPFUL", {
         maxFrameCount = 1,

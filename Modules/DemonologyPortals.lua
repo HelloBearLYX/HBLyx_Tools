@@ -11,7 +11,7 @@ local DemonologyPortals = {
 local PORTAL_ACTIVE_DURATION = 25
 local DEMONOLOGY_SPEC_ID = 266
 local TYRANT_ID = 265187
-local HANDOFGULDAN_ID = 105174
+local HANDOFGULDAN_ID = {[105174] = true, [434635] = true}
 local PORTAL_TEXTURE = 7636567
 local SPLITTER = "-"
 
@@ -178,7 +178,7 @@ function DemonologyPortals:RegisterEvents()
             local spellID = select(3, ...)
             if spellID == TYRANT_ID then
                 ActivateCount(self)
-            elseif spellID == HANDOFGULDAN_ID then
+            elseif HANDOFGULDAN_ID[spellID] then
                 IncrementCount(self)
             end
         end

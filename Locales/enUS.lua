@@ -229,6 +229,10 @@ L["BloodlustHelperSettingsDesc"] = "Play customizable sound alerts when you gain
 L["BloodlustLustSound"] = "Bloodlust Sound"
 L["BloodlustExhaustionSound"] = "Ready Sound"
 L["BloodlustMuteDesc"] = "Register aura-applied sound alerts for player buffs/debuffs. You can pick separate sounds for Bloodlust/Heroism and Exhaustion effects."
+L["AuraSettings"] = "Aura Settings"
+L["AuraSize"] = "Aura Frame Size"
+L["EnableAura"] = "Enable Aura Container"
+L["BloodlustContainerDesc"] = "Show a movable aura icon container for Bloodlust/Heroism effects."
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"
@@ -286,7 +290,7 @@ L["Murder Row_short"] = "MR"
 L["Altar of Fangs_short"] = "AoF"
 
 -- MARK: Custom Aura Tracker
-L["AuraSettings"] = "Auras Settings"
+L["CustomAuraSettings"] = "Auras Settings"
 L["AuraSettingsDesc"] = "Although the function is limited, but it still can be supportive. For example, you can track your potion and active trinkets\n\n" ..
 "Taking 12.0 potion as an example, you can add \"Light's Potential\" with its spell ID(1236616) + duration(30s) + cooldown(300s) + expire sound(X sound effect), and then you will get a 30s icon to show aura when you use the potion and a sound alert played after the cooldown time(300s).\n\n" ..
 "You can also use it as a simple sound alert after a period of time after you cast a certain spell. For example, after 300s of using \"health potion\" play a sound effect, you can set spell ID=\"spell ID of health potion\" + duration=0 + cooldown=300 + expire sound\n\n" ..

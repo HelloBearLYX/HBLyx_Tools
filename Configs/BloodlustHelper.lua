@@ -15,6 +15,9 @@ addon.configurationList[MOD_KEY] = {
     ExhaustionSound = "",
     SoundChannel = "Master",
     EnableAuraContainer = true,
+    AuraFrameSize = 35,
+    X = 0,
+    Y = 0,
 }
 
 -- MARK: Safe update
@@ -86,12 +89,34 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     soundGroup:AddChild(soundChannelDropdown)
 
     -- MARK: Container
-    local containerGroup = GUI:CreateInlineGroup(frame, "ContainerSettings")
-    GUI:CreateInformationTag(containerGroup, "BloodlustContainerDesc", "LEFT")
-    local enableContainerCheckBox = GUI:CreateToggleCheckBox(containerGroup, "EnableAuraContainer", addon.db.BloodlustHelper.EnableAuraContainer, function(value)
-        addon.db.BloodlustHelper.EnableAuraContainer = value
+    local containerGroup = GUI:CreateInlineGroup(frame, L["AuraSettings"])
+    GUI:CreateInformationTag(containerGroup, L["BloodlustContainerDesc"], "LEFT")
+    local xSlider = GUI:CreateSlider(nil, L["X"], -2000, 2000, 1, addon.db.BloodlustHelper.X, function(value)
+        addon.db.BloodlustHelper.X = value
         update()
     end)
+    local ySlider = GUI:CreateSlider(nil, L["Y"], -1000, 1000, 1, addon.db.BloodlustHelper.Y, function(value)
+        addon.db.BloodlustHelper.Y = value
+        update()
+    end)
+    local auraFrameSizeSlider = GUI:CreateSlider(nil, L["AuraSize"], 10, 200, 1, addon.db.BloodlustHelper.AuraFrameSize, function(value)
+        addon.db.BloodlustHelper.AuraFrameSize = value
+        update()
+    end)
+    local enableContainerCheckBox = GUI:CreateToggleCheckBox(nil, L["EnableAura"], addon.db.BloodlustHelper.EnableAuraContainer, function(value)
+        addon.db.BloodlustHelper.EnableAuraContainer = value
+        update()
+        xSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+        ySlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+        auraFrameSizeSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+    end)
+    xSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+    ySlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+    auraFrameSizeSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
+    containerGroup:AddChild(enableContainerCheckBox)
+    containerGroup:AddChild(xSlider)
+    containerGroup:AddChild(ySlider)
+    containerGroup:AddChild(auraFrameSizeSlider)
 
     return frame
 end

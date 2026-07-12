@@ -15,6 +15,7 @@ local LUST_SPELL_ID = {
     264689, -- Primal Rage
     390386, -- Fury of the Aspects
 }
+local DEFAULT_LUST_TEXTURE = 136012
 local EXHAUSTION_SPELL_ID = {
     57723, -- Exhaustion
     57724, -- Sated
@@ -115,16 +116,14 @@ local function CreateLustAuraContainer()
     end
 
     -- test only
-    -- includeLustSpellIDs[385787] = true -- used for testing
+    -- includeLustSpellIDs[385787] = true -- aura used for testing
 
     -- 12.1 new aura system aura container
     local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")
     container:SetUnit("player")
+    container:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
     container:SetAuraLayoutAnchorPoint("RIGHT")
     container:SetAuraLayoutPadding(0, 0, 0, 0)
-    
-    local horizontalDirection, verticalDirection = container:GetAuraLayoutGrowthDirection()
-    addon:debug("Horizontal: " .. tostring(horizontalDirection) .. ", Vertical: " .. tostring(verticalDirection))
 
     container:AddAuraGroup("lustGroup", "HELPFUL", {
         maxFrameCount = 1,
@@ -138,8 +137,8 @@ local function CreateLustAuraContainer()
             gapX = 0,
             gapY = 0,
             forceNewRow = false,
-            elementWidth = AURA_FRAME_SIZE,
-            elementHeight = AURA_FRAME_SIZE,
+            elementWidth = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
+            elementHeight = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
         },
     })
 
@@ -160,15 +159,9 @@ function BloodlustHelper:UpdateStyle()
     end
     if self.lustAuraContainer then
         self.lustAuraContainer:ClearAllPoints()
-        self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-        self.lustAuraContainer:SetEnabled(addon.db.BloodlustHelper["EnableAuraContainer"])
-
-        if addon.db.BloodlustHelper["EnableAuraContainer"] then
-            self.lustAuraContainer:Show()
-            self.lustAuraContainer:UpdateAllAuras()
-        else
-            self.lustAuraContainer:Hide()
-        end
+        self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
+        self.lustAuraContainer:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
+        self.lustAuraContainer:Show()
     end
 end
 
@@ -182,7 +175,29 @@ function BloodlustHelper:Test(on)
     end
 
     if on then
+        if self.lustAuraContainer then
+            -- must re-apply position and size to the container to make the test mode show
+            self.lustAuraContainer:ClearAllPoints()
+            self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
+            self.lustAuraContainer:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
+            self.lustAuraContainer:Show()
+
+            if not self.lustAuraTest then
+                -- create a pseudo test aura frame
+                self.lustAuraTest = CreateFrame("Frame", nil, UIParent)
+                self.lustAuraTest:SetAllPoints(self.lustAuraContainer)
+                self.lustAuraTest.texture = self.lustAuraTest:CreateTexture(nil, "ARTWORK")
+                self.lustAuraTest.texture:SetAllPoints()
+                self.lustAuraTest.texture:SetTexture(DEFAULT_LUST_TEXTURE)
+                self.lustAuraTest.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+            end
+            self.lustAuraTest:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
+            self.lustAuraTest:Show()
+        end
     else
+        if self.lustAuraTest then
+            self.lustAuraTest:Hide()
+        end
     end
 end
 

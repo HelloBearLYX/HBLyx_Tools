@@ -148,16 +148,7 @@ end
 
 -- MARK: UpdateButtons
 
----Update buttons for ChallengeEnhance
----@param self ChallengeEnhance self
----@param delay number delay time for updating buttons, default is 0.25s
-local function UpdateButtons(self, delay)
-    if not delay then delay = 0.25 end
-    if not ChallengesFrame or not ChallengesFrame.DungeonIcons then return end
-    local now = GetTime()
-    if self.loaded == false or self.lastUpdate + delay >= now then return end
-    self.lastUpdate = now
-
+local function UpdateButtonHelper(self)
     for _, icon in pairs(ChallengesFrame.DungeonIcons) do
         local mapID = icon.mapID
         local button = self.buttons[mapID]
@@ -174,6 +165,31 @@ local function UpdateButtons(self, delay)
             end
         end
     end
+end
+
+---Update buttons for ChallengeEnhance
+---@param self ChallengeEnhance self
+---@param delay number delay time for updating buttons, default is 0.25s
+local function UpdateButtons(self, delay)
+    -- modify the delay to only update the last trigger
+    -- make a timer to update buttons after the specified delay
+    -- if there is a recent update within the delay, schedule an update instead of updating immediately
+    if not delay then delay = 0.25 end
+    if not ChallengesFrame or not ChallengesFrame.DungeonIcons then return end
+    local now = GetTime()
+    if self.loaded == false or self.lastUpdate + delay >= now then
+        -- cancel the previous timer if it exists
+        if self.timer then
+            self.timer:Cancel()
+            self.timer = nil
+        end
+        self.timer = C_Timer.NewTimer(delay, function() UpdateButtonHelper(self) end)
+        self.lastUpdate = now
+        return
+    end
+
+    self.lastUpdate = now
+    UpdateButtonHelper(self)
 end
 
 -- MARK: CreateButtons

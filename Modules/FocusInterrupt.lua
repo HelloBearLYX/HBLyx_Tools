@@ -30,12 +30,12 @@ local INTERRUPT_BY_CLASS = {
     HUNTER = {DEFAULT = 147362, SURVIVAL = 187707},
     MAGE = {DEFAULT = 2139}, -- Counterspell
     MONK = {DEFAULT = 116705}, -- Spear Hand Strike
-    PALADIN = {DEFAULT = 96231}, -- Rebuke
+    PALADIN = {DEFAULT = 96231, PROTECTION_SUB = 31935}, -- Rebuke
     PRIEST = {DEFAULT = 15487}, -- Silence
     ROGUE = {DEFAULT = 1766}, -- Kick
     SHAMAN = {DEFAULT = 57994}, -- Wind Shear
     WARLOCK = {DEFAULT = 19647, DEMONOLOGY = 119914, DEMONOLOGY_SUB = 132409, GRIMOIRE = 1276467},
-    WARRIOR = {DEFAULT = 6552}, -- Pummel
+    WARRIOR = {DEFAULT = 6552, PROTECTION_SUB = 386071}, -- Pummel
 }
 
 -- MARK: Data Migration
@@ -94,6 +94,10 @@ local function GetInterruptSpellID(self)
         output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].BALANCE
     elseif addon.states["playerSpec"] == 255 then -- survival hunter
         output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].SURVIVAL
+    elseif addon.states["playerSpec"] == 66 then -- protection paladin
+        self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].PROTECTION_SUB
+    elseif addon.states["playerSpec"] == 73 then -- protection warrior
+        self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].PROTECTION_SUB
     end
 
     return output
@@ -270,9 +274,10 @@ local function IsInterruptReady(self, isSubInterrupt)
             end
         end
 
-        return C_Spell.GetSpellCooldownDuration(self.subInterrupt):IsZero()
+        -- 12.05 new API can ignore GCD
+        return C_Spell.GetSpellCooldownDuration(self.subInterrupt, true):IsZero()
     else
-        return C_Spell.GetSpellCooldownDuration(self.interruptID):IsZero()
+        return C_Spell.GetSpellCooldownDuration(self.interruptID, true):IsZero()
     end
 end
 

@@ -13,8 +13,8 @@ local ChallengeEnhance = {
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
 
-local HOOK_UPDATE_DELAY = 0.2
-local EVENT_UPDATE_DELAY = 0.25
+local HOOK_UPDATE_DELAY = 0.25
+local EVENT_UPDATE_DELAY = 1
 
 -- MARK: Initialize
 
@@ -174,7 +174,7 @@ local function UpdateButtons(self, delay)
     -- modify the delay to only update the last trigger
     -- make a timer to update buttons after the specified delay
     -- if there is a recent update within the delay, schedule an update instead of updating immediately
-    if not delay then delay = 0.25 end
+    if not delay then delay = 0.5 end
     if not ChallengesFrame or not ChallengesFrame.DungeonIcons then return end
     local now = GetTime()
     if self.loaded == false or self.lastUpdate + delay >= now then
@@ -280,9 +280,9 @@ function ChallengeEnhance:RegisterEvents()
     -- this feature only load on Blizzard_ChallengesUI loaded
     self.eventFrame:RegisterEvent("ADDON_LOADED")
     -- refresh button status when new record or map update
-    self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-    self.eventFrame:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
-    self.eventFrame:RegisterEvent("CHALLENGE_MODE_LEADERS_UPDATE")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
+    -- self.eventFrame:RegisterEvent("CHALLENGE_MODE_LEADERS_UPDATE")
     if addon.db.ChallengeEnhance.PortalPartyMessage then
         addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName, "player")
     end
@@ -312,7 +312,7 @@ function ChallengeEnhance:RegisterEvents()
         elseif event == "CHALLENGE_MODE_MAPS_UPDATE" or event == "CHALLENGE_MODE_LEADERS_UPDATE" then
             UpdateButtons(self, EVENT_UPDATE_DELAY)
         else
-            UpdateButtons(self, 1)
+            UpdateButtons(self, EVENT_UPDATE_DELAY)
         end
     end)
 end

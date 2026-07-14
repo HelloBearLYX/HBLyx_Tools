@@ -19,6 +19,11 @@ addon.configurationList[MOD_KEY] = {
     X = 0,
     Y = 0,
 }
+local gameVersion = select(4, GetBuildInfo())
+local compatibleVersion = gameVersion >= 120100
+if not compatibleVersion then
+    addon.configurationList[MOD_KEY].Enabled = false
+end
 
 -- MARK: Safe update
 local function update()
@@ -32,7 +37,7 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     local frame = GUI:CreateScrollFrame(parent)
     frame:SetLayout("Flow")
 
-    GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BloodlustHelperSettings"] .. "|r", addon.db.BloodlustHelper.Enabled, function(value)
+    local enabledModule = GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BloodlustHelperSettings"] .. "|r", addon.db.BloodlustHelper.Enabled, function(value)
         addon.db.BloodlustHelper.Enabled = value
         if addon.core:HasModuleLoaded(MOD_KEY) then
             if not value then
@@ -45,6 +50,11 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
             end
         end
     end)
+    -- MARK: only compatible version can enabled this module
+    if not compatibleVersion then
+        enabledModule:SetDisabled(true)
+    end
+
     GUI:CreateButton(frame, L["ResetMod"], function ()
         addon.Utilities:SetPopupDialog(
             ADDON_NAME .. "ResetMod",

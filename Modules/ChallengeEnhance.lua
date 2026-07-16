@@ -13,7 +13,7 @@ local ChallengeEnhance = {
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
 
-local HOOK_UPDATE_DELAY = 0.25
+local HOOK_UPDATE_DELAY = 0.5
 local EVENT_UPDATE_DELAY = 1
 
 -- MARK: Initialize
@@ -89,15 +89,15 @@ local function RefreshMapInfo(self, mapID)
     local button = self.buttons[mapID]
     if button then
         local mapBestInfo = C_MythicPlus.GetSeasonBestForMap(mapID)
-        local level = mapBestInfo and mapBestInfo.level or ""
-        if level and addon.db[self.modName]["LevelEnabled"] then
+        local level = mapBestInfo and mapBestInfo.level or 0
+        if level and addon.db[self.modName]["LevelEnabled"] and level > 0 then
             button.level:SetText(tostring(level))
         else
             button.level:SetText("")
         end
 
-        local score = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or ""
-        if score and addon.db[self.modName]["ScoreEnabled"] then
+        local score = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or 0
+        if score and addon.db[self.modName]["ScoreEnabled"] and score > 0 then
             button.score:SetText(tostring(score))
             button.score:SetTextColor(button.level:GetTextColor())
         else

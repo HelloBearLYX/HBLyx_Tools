@@ -150,6 +150,10 @@ end
 
 ---Update style settings and render them in-game for CustomTracker
 function BloodlustHelper:UpdateStyle()
+    if select(4, GetBuildInfo()) < 120100 then
+        return
+    end
+
     ApplyLustSound(self)
 
     if addon.db.BloodlustHelper["EnableAuraContainer"] and not self.lustAuraContainer then

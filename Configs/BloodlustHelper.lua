@@ -9,7 +9,7 @@ addon.LSM:Register("sound", ADDON_NAME .. "_ExhaustionDefault", L["BloodlustExha
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-    Enabled = select(4, GetBuildInfo()) >= 120100,
+    Enabled = true,
     Mute = true,
     LustSound = "",
     ExhaustionSound = "",
@@ -19,11 +19,6 @@ addon.configurationList[MOD_KEY] = {
     X = 0,
     Y = 0,
 }
-local gameVersion = select(4, GetBuildInfo())
-local compatibleVersion = gameVersion >= 120100
-if not compatibleVersion then
-    addon.configurationList[MOD_KEY].Enabled = false
-end
 
 -- MARK: Safe update
 local function update()
@@ -50,10 +45,6 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
             end
         end
     end)
-    -- MARK: only compatible version can enabled this module
-    if not compatibleVersion then
-        enabledModule:SetDisabled(true)
-    end
 
     GUI:CreateButton(frame, L["ResetMod"], function ()
         addon.Utilities:SetPopupDialog(

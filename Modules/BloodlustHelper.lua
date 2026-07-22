@@ -21,6 +21,7 @@ local EXHAUSTION_SPELL_ID = {
     57724, -- Sated
     80354, -- Temporal Displacement
     264689, -- Fatigue
+    385787, -- Test aura for druid
 }
 local AURA_FRAME_SIZE = 35
 
@@ -77,23 +78,40 @@ local function ApplyLustSound(self)
     local channel = addon.db.BloodlustHelper["SoundChannel"] or "Master"
     if lustSound  then
         for _, spellId in ipairs(LUST_SPELL_ID) do
-            local aura = C_UnitAuras.AddAuraAppliedSound({
+            local soundInfo = {
                 spellID = spellId,
                 unitToken = "player",
                 soundFileName = lustSound,
                 outputChannel = channel,
-            })
+            }
+            -- 07/21 API change C_UnitAuras.AddAuraAppliedSound to AddAuraSound with triggers
+            -- local aura = C_UnitAuras.AddAuraAppliedSound({
+            --     spellID = spellId,
+            --     unitToken = "player",
+            --     soundFileName = lustSound,
+            --     outputChannel = channel,
+            -- })
+            local aura = C_UnitAuras.AddAuraSound(0, soundInfo)
+            addon:debug(tostring(aura))
             table.insert(self.resigered, aura)
         end
     end
     if exhaustionSound then
         for _, spellId in ipairs(EXHAUSTION_SPELL_ID) do
-            local aura = C_UnitAuras.AddAuraAppliedSound({
+            local soundInfo = {
                 spellID = spellId,
                 unitToken = "player",
                 soundFileName = exhaustionSound,
                 outputChannel = channel,
-            })
+            }
+            -- 07/21 API change C_UnitAuras.AddAuraAppliedSound to AddAuraSound with triggers
+            -- local aura = C_UnitAuras.AddAuraAppliedSound({
+            --     spellID = spellId,
+            --     unitToken = "player",
+            --     soundFileName = exhaustionSound,
+            --     outputChannel = channel,
+            -- })
+            local aura = C_UnitAuras.AddAuraSound(2, soundInfo)
             table.insert(self.resigered, aura)
         end
     end
@@ -102,7 +120,7 @@ end
 -- MARK: ClearLustSound
 local function ClearLustSound(self)
     for _, aura in ipairs(self.resigered) do
-        C_UnitAuras.RemoveAuraAppliedSound(aura)
+        C_UnitAuras.RemoveAuraSound(aura)
     end
     self.resigered = {}
 end
@@ -116,7 +134,7 @@ local function CreateLustAuraContainer()
     end
 
     -- test only
-    -- includeLustSpellIDs[385787] = true -- aura used for testing
+    includeLustSpellIDs[385787] = true -- aura used for testing with druid
 
     -- 12.1 new aura system aura container
     local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")
@@ -154,6 +172,7 @@ function BloodlustHelper:UpdateStyle()
         return
     end
 
+    ClearLustSound(self)
     ApplyLustSound(self)
 
     if addon.db.BloodlustHelper["EnableAuraContainer"] and not self.lustAuraContainer then

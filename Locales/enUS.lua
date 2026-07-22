@@ -233,6 +233,7 @@ L["AuraSettings"] = "Aura Settings"
 L["AuraSize"] = "Aura Frame Size"
 L["EnableAura"] = "Enable Aura Container"
 L["BloodlustContainerDesc"] = "Show a movable aura icon container for Bloodlust/Heroism effects."
+L["BloodlustHelperNotValidVersion"] = "|cffff0000This module is only available for 12.1 and above, and this module will be automatically disabled with incompatible version."
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"

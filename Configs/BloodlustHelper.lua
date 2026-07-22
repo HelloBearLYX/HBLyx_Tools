@@ -45,6 +45,11 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
             end
         end
     end)
+    local notValidVersion = select(4, GetBuildInfo()) < 120100
+    enabledModule:SetDisabled(notValidVersion)
+    if notValidVersion then
+        GUI:CreateInformationTag(frame, L["BloodlustHelperNotValidVersion"], "LEFT")
+    end
 
     GUI:CreateButton(frame, L["ResetMod"], function ()
         addon.Utilities:SetPopupDialog(

@@ -234,6 +234,7 @@ L["AuraSettings"] = "容器设置"
 L["AuraSize"] = "光环图标大小"
 L["EnableAura"] = "启用光环容器"
 L["BloodlustContainerDesc"] = "显示一个可移动的嗜血/英勇光环图标容器。"
+L["BloodlustHelperNotValidVersion"] = "|cffff0000此模块仅适用于12.1及以上版本, 并且在不兼容的版本下将自动禁用|r"
 
 --MARK: Warlock
 L["WarlockReminders"] = "|cff8788ee术士|r提醒"

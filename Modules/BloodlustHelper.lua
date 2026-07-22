@@ -91,7 +91,6 @@ local function ApplyLustSound(self)
             --     outputChannel = channel,
             -- })
             local aura = C_UnitAuras.AddAuraSound(0, soundInfo)
-            addon:debug(tostring(aura))
             table.insert(self.resigered, aura)
         end
     end

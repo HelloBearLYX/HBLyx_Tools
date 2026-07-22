@@ -21,7 +21,6 @@ local EXHAUSTION_SPELL_ID = {
     57724, -- Sated
     80354, -- Temporal Displacement
     264689, -- Fatigue
-    385787, -- Test aura for druid
 }
 local AURA_FRAME_SIZE = 35
 
@@ -134,7 +133,7 @@ local function CreateLustAuraContainer()
     end
 
     -- test only
-    includeLustSpellIDs[385787] = true -- aura used for testing with druid
+    -- includeLustSpellIDs[385787] = true -- aura used for testing with druid
 
     -- 12.1 new aura system aura container
     local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")

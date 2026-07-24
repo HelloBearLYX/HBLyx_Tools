@@ -14,6 +14,7 @@ local LUST_SPELL_ID = {
     80353, -- Time Warp
     264689, -- Primal Rage
     390386, -- Fury of the Aspects
+    466904, -- Marksman Hunter's
 }
 local DEFAULT_LUST_TEXTURE = 136012
 local EXHAUSTION_SPELL_ID = {

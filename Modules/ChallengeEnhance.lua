@@ -58,7 +58,6 @@ local function UpdateTooltip(parent, mapID)
     end
 
     if addon.states["inCombat"] then
-        GameTooltip:Show()
         return
     end
 

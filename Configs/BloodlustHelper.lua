@@ -16,8 +16,8 @@ addon.configurationList[MOD_KEY] = {
     SoundChannel = "Master",
     EnableAuraContainer = true,
     AuraFrameSize = 35,
-    X = 0,
-    Y = 0,
+    X = -265,
+    Y = -260,
 }
 
 -- MARK: Safe update

@@ -137,7 +137,8 @@ local function CreateLustAuraContainer()
     -- 12.1 new aura system aura container
     local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")
     container:SetUnit("player")
-    container:SetAuraLayoutAnchorPoint("RIGHT")
+    container:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
+    -- container:SetAuraLayoutAnchorPoint("RIGHT")
 
     container:AddAuraGroup("lustGroup", "HELPFUL", {
         maxFrameCount = 1,
@@ -146,18 +147,17 @@ local function CreateLustAuraContainer()
             InitializeAuraButtonFrame(frame)
         end,
         layout = {
-            elementSpacingX = 0,
-            elementSpacingY = 0,
-            gapX = 0,
-            gapY = 0,
-            forceNewRow = false,
+            elementSpacing = 0,
+            lineSpacing = 0,
+            groupSpacing = 0,
+            groupLineSpacing = 0,
+            forceNewLine = false,
             elementWidth = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
             elementHeight = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
         },
     })
 
     container:Show()
-    container:UpdateAllAuras()
 
     return container
 end
@@ -203,8 +203,8 @@ function BloodlustHelper:Test(on)
 
             if not self.lustAuraTest then
                 -- create a pseudo test aura frame
-                self.lustAuraTest = CreateFrame("Frame", nil, UIParent)
-                self.lustAuraTest:SetAllPoints(self.lustAuraContainer)
+                self.lustAuraTest = CreateFrame("Frame", nil, self.lustAuraContainer)
+                self.lustAuraTest:SetAllPoints()
                 self.lustAuraTest.texture = self.lustAuraTest:CreateTexture(nil, "ARTWORK")
                 self.lustAuraTest.texture:SetAllPoints()
                 self.lustAuraTest.texture:SetTexture(DEFAULT_LUST_TEXTURE)

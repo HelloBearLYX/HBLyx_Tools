@@ -157,7 +157,8 @@ function Core:LoadModule(mod)
     local loadedAlready = self:HasModuleLoaded(mod)
 
     if not loadedAlready and self.registeredMods[mod] and addon.db[mod]["Enabled"] then
-        self.modules[mod] = self.registeredMods[mod].initialize()
+        local success, result = pcall(self.registeredMods[mod].initialize)
+        self.modules[mod] = success and result or nil
         if self.modules[mod] and self.modules[mod].RegisterEvents then
             self.modules[mod]:RegisterEvents()
             self.loadedMods = self.loadedMods + 1
@@ -214,7 +215,7 @@ function Core:TestMode(on)
 
     for _, module in pairs(self.modules) do -- for all loaded modules, call the Test function if it exists
         if module.Test then
-            module:Test(self.testMode)
+            pcall(module.Test, module, self.testMode)
         end
     end
 end

@@ -213,6 +213,11 @@ function BloodlustHelper:Test(on)
             end
             self.lustAuraTest:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
             self.lustAuraTest:Show()
+
+            addon.Utilities:MakeFrameDragPosition(self.lustAuraTest, self.modName, "X", "Y", function()
+                self.lustAuraContainer:ClearAllPoints()
+                self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
+            end)
         end
     else
         if self.lustAuraTest then

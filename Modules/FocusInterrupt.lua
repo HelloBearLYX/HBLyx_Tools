@@ -38,30 +38,11 @@ local INTERRUPT_BY_CLASS = {
     WARRIOR = {DEFAULT = 6552, PROTECTION_SUB = 386071}, -- Pummel
 }
 
--- MARK: Data Migration
-
-local function DataMigration(self, version)
-    -- 3.13: remove kick Icon Anchor, as it use it own x and y
-    if not addon.db[self.modName].version or addon.Utilities:CheckVersion(addon.db[self.modName].version, version) then
-        addon.Utilities:print("Found old data, migrate data for FocusInterrupt")
-        local oldDBKeys = {"KickIconAnchor"}
-        for _, key in pairs(oldDBKeys) do
-            if addon.db[self.modName][key] then
-                addon.db[self.modName][key] = nil
-            end
-        end
-
-        addon.db[self.modName].version = addon.version
-    end
-end
-
 -- MARK: Initialize
 
 ---Initialize(Constructor)
 ---@return FocusInterrupt FocusInterrupt a FocusInterrupt object
 function FocusInterrupt:Initialize()
-    DataMigration(self, "3.13")
-
     self.bars.focus = self:CreateBar()
     self.bars.focus.active = false
 

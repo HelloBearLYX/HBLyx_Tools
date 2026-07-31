@@ -267,6 +267,32 @@ local function LFGButtonAction(self, button)
     button:RegisterForClicks("AnyDown")
 end
 
+-- MARK: Group Menu
+local function ReadyCheckAction(self, button)
+    button:SetAttribute("type1", "macro")
+    button:SetAttribute("macrotext1", "/readycheck")
+    button:RegisterForClicks("AnyDown")
+end
+
+local function CountdownTenAction(self, button)
+    button:SetAttribute("type1", "macro")
+    button:SetAttribute("macrotext1", "/countdown 10")
+    button:SetAttribute("type2", "macro")
+    button:SetAttribute("macrotext2", "/countdown 0")
+    button:RegisterForClicks("AnyDown")
+end
+
+local function ConvertRaidAction(self, button)
+    button:SetScript("OnClick", function(self, buttonClicked)
+        if IsInRaid() then
+            C_PartyInfo.ConvertToParty()
+        else
+            C_PartyInfo.ConvertToRaid()
+        end
+    end)
+    button:RegisterForClicks("AnyDown")
+end
+
 -- MARK: Teleport Tooltip
 local function GetCooldownOutputString(itemID)
     local startTime, duration = C_Item.GetItemCooldown(itemID)

@@ -411,6 +411,8 @@ L["AuctionTag"] = {
 -- MARK: Micro Menu
 L["MicroMenuSettings"] = "Micro Menu"
 L["MicroMenuSettingsDesc"] = "Custom quick-access menu for character, bags, talents, social, and more"
+L["GroupMenuSettings"] = "Group Menu"
+L["GroupMenuOnlyInGroup"] = "Show only in group"
 L["HearthStoneSelection"] = "Hearthstone Selection"
 L["MicroMenuButton"] = {
 	Character = "Character",
@@ -424,4 +426,10 @@ L["MicroMenuButton"] = {
 	Housing = "Housing Panel",
 	Journal = "Encounter Journal",
 	LFG = "|cff00ff00Left|r:Looking For Group\n|cff00ff00Right|r:MeetingStone AddOns",
+}
+L["GroupMenuButton"] = {
+	ReadyCheck = "Ready Check",
+	CountdownTen = "|cff00ff00Left|r:Countdown 10\n|cff00ff00Right|r:Cancel Countdown",
+	ConvertRaid = "Convert Party/Raid",
+	ResetInstance = "Reset Instances",
 }

@@ -5,6 +5,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local MicroMenu = {
     modName = "MicroMenu",
     frame = nil,
+    groupMenu = nil,
     buttons = {},
     hearthstoneList = {},
     hearthstoneID = nil,
@@ -293,6 +294,13 @@ local function ConvertRaidAction(self, button)
     button:RegisterForClicks("AnyDown")
 end
 
+local function ResetInstanceAction(self, button)
+    button:SetScript("OnClick", function(self, buttonClicked)
+        ResetInstances()
+    end)
+    button:RegisterForClicks("AnyDown")
+end
+
 -- MARK: Teleport Tooltip
 local function GetCooldownOutputString(itemID)
     local startTime, duration = C_Item.GetItemCooldown(itemID)
@@ -313,6 +321,9 @@ end
 -- MARK: Constants
 local BUTTON_SIZE = 40
 local BUTTON_SPACING = 0
+local GROUP_BUTTON_SIZE = 35
+local GROUP_BUTTON_SPACING = 0
+local GROUP_MENU_DRAG_PADDING_SLOTS = 2
 local BUTTONS = {
     {name = "Character", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Character.PNG", action = CharacterButtonAction, tooltip = L["MicroMenuButton"]["Character"]},
     {name = "Bag", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Bag.PNG", action = BagButtonAction, tooltip = L["MicroMenuButton"]["Bag"]},
@@ -325,6 +336,77 @@ local BUTTONS = {
     {name = "Journal", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Journal.PNG", action = JournalButtonAction, tooltip = L["MicroMenuButton"]["Journal"]},
     {name = "LFG", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\LFG.PNG", action = LFGButtonAction, tooltip = L["MicroMenuButton"]["LFG"]},
 }
+local GROUP_BUTTONS = {
+    {name = "ReadyCheck", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\ReadyCheck.PNG", action = ReadyCheckAction, tooltip = L["GroupMenuButton"]["ReadyCheck"]},
+    {name = "Countdown", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Countdown.PNG", action = CountdownTenAction, tooltip = L["GroupMenuButton"]["CountdownTen"]},
+    {name = "ConvertRaid", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Convert.PNG", action = ConvertRaidAction, tooltip = L["GroupMenuButton"]["ConvertRaid"]},
+    {name = "ResetInstance", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Reset.PNG", action = ResetInstanceAction, tooltip = L["GroupMenuButton"]["ResetInstance"]},
+}
+
+local function ApplyGroupMenuStyle(self)
+    if not self.groupMenu then
+        return
+    end
+
+    self.groupMenu:SetSize((#GROUP_BUTTONS + GROUP_MENU_DRAG_PADDING_SLOTS) * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    self.groupMenu:ClearAllPoints()
+    self.groupMenu:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X_GroupMenu"] or 0, addon.db[self.modName]["Y_GroupMenu"] or 0)
+end
+
+local function ShouldShowGroupMenu(self)
+    if not addon.db[self.modName]["GroupMenuEnabled"] then
+        return false
+    end
+
+    if addon.db[self.modName]["GroupMenuOnlyInGroup"] then
+        return IsInGroup()
+    end
+
+    return true
+end
+
+local function CreateGroupMenu(self)
+    if self.groupMenu then
+        return
+    end
+
+    self.groupMenu = CreateFrame("Frame", nil, UIParent)
+    self.groupMenu:SetSize((#GROUP_BUTTONS + GROUP_MENU_DRAG_PADDING_SLOTS) * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    self.groupMenu:SetFrameStrata("LOW")
+    self.groupMenu.buttons = {}
+    for i, buttonData in ipairs(GROUP_BUTTONS) do
+        local btn = CreateFrame("Button", nil, self.groupMenu, "SecureActionButtonTemplate")
+        btn:SetSize(GROUP_BUTTON_SIZE, GROUP_BUTTON_SIZE)
+        btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i) * (GROUP_BUTTON_SIZE + GROUP_BUTTON_SPACING), 0)
+        btn.texture = btn:CreateTexture(nil, "BACKGROUND")
+        btn.texture:SetAllPoints()
+        btn.texture:SetTexture(buttonData.texture)
+
+        buttonData.action(self, btn)
+
+        if buttonData.tooltip then
+            btn:SetScript("OnEnter", function(self)
+                GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                btn.texture:SetVertexColor(1, 1, 1, 0.25)
+
+                GameTooltip:SetText(buttonData.tooltip or buttonData.name, 1, 1, 1)
+                GameTooltip:Show()
+            end)
+            btn:SetScript("OnLeave", function(self)
+                GameTooltip:Hide()
+            end)
+        end
+        btn:SetScript("OnLeave", function(self)
+            btn.texture:SetVertexColor(1, 1, 1, 1)
+            GameTooltip:Hide()
+        end)
+
+        self.groupMenu.buttons[buttonData.name] = btn
+    end
+
+    ApplyGroupMenuStyle(self)
+    self.groupMenu:Show()
+end
 
 -- MARK: Initialize
 
@@ -396,6 +478,10 @@ function MicroMenu:Initialize()
     end
     self.frame:Show()
 
+    if addon.db[self.modName]["GroupMenuEnabled"] then
+        CreateGroupMenu(self)
+    end
+
     return self
 end
 
@@ -418,8 +504,22 @@ end
 
 ---Update style settings and render them in-game for CustomTracker
 function MicroMenu:UpdateStyle()
+    if InCombatLockdown and InCombatLockdown() then
+        return
+    end
+
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"] or 0, addon.db[self.modName]["Y"] or 0)
     UpdateHearthstoneMacro(self, self.buttons["Teleport"])
+
+    if ShouldShowGroupMenu(self) then
+        if not self.groupMenu then
+            CreateGroupMenu(self)
+        end
+        ApplyGroupMenuStyle(self)
+        self.groupMenu:Show()
+    elseif self.groupMenu then
+        self.groupMenu:Hide()
+    end
 end
 
 -- MARK: Test
@@ -434,8 +534,24 @@ function MicroMenu:Test(on)
     if on then
         addon.Utilities:ShowDragRegion(self.frame, L["MicroMenuSettings"])
         addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+
+        if addon.db[self.modName]["GroupMenuEnabled"] and not self.groupMenu then
+            CreateGroupMenu(self)
+        end
+
+        if addon.db[self.modName]["GroupMenuEnabled"] and self.groupMenu then
+            self.groupMenu:Show()
+            addon.Utilities:ShowDragRegion(self.groupMenu, L["GroupMenuSettings"])
+            addon.Utilities:MakeFrameDragPosition(self.groupMenu, self.modName, "X_GroupMenu", "Y_GroupMenu")
+        end
     else
         addon.Utilities:HideDragRegion(self.frame)
+
+        if self.groupMenu then
+            addon.Utilities:HideDragRegion(self.groupMenu)
+        end
+
+        self:UpdateStyle()
     end
 end
 
@@ -443,6 +559,14 @@ end
 
 ---Register events
 function MicroMenu:RegisterEvents()
+    addon.core:RegisterEvent("GROUP_ROSTER_UPDATE", self.frame, self.modName)
+    addon.core:RegisterEvent("PLAYER_REGEN_ENABLED", self.frame, self.modName)
+
+    self.frame:SetScript("OnEvent", function(_, event)
+        if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_REGEN_ENABLED" then
+            self:UpdateStyle()
+        end
+    end)
 end
 
 -- MARK: Register Module

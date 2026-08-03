@@ -5,10 +5,15 @@ local MOD_KEY = "MicroMenu"
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-	Enabled = false,
+	Enabled = true,
 	X = 0,
 	Y = 465,
 	HearthstoneID = 0,
+
+	GroupMenuEnabled = true,
+	GroupMenuOnlyInGroup = false,
+	X_GroupMenu = -490,
+	Y_GroupMenu = 460,
 }
 
 -- MARK: Safe update
@@ -63,6 +68,26 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 
 	GUI:CreateDropdown(frame, L["HearthStoneSelection"], addon.core:GetModule(MOD_KEY):GetAvailableHearthstoneID(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
 		addon.db[MOD_KEY].HearthstoneID = value
+		update()
+	end)
+
+	local groupMenuGroup = GUI:CreateInlineGroup(frame, L["GroupMenuSettings"])
+	GUI:CreateToggleCheckBox(groupMenuGroup, L["Enable"] .. "|cff0070DD" .. L["GroupMenuSettings"] .. "|r", addon.db[MOD_KEY].GroupMenuEnabled, function(value)
+		addon.db[MOD_KEY].GroupMenuEnabled = value
+		update()
+	end)
+	GUI:CreateToggleCheckBox(groupMenuGroup, L["GroupMenuOnlyInGroup"], addon.db[MOD_KEY].GroupMenuOnlyInGroup, function(value)
+		addon.db[MOD_KEY].GroupMenuOnlyInGroup = value
+		update()
+	end)
+
+	local groupMenuPositionGroup = GUI:CreateInlineGroup(groupMenuGroup, L["PositionSettings"])
+	GUI:CreateSlider(groupMenuPositionGroup, L["X"], -2000, 2000, 1, addon.db[MOD_KEY].X_GroupMenu, function(value)
+		addon.db[MOD_KEY].X_GroupMenu = value
+		update()
+	end)
+	GUI:CreateSlider(groupMenuPositionGroup, L["Y"], -1000, 1000, 1, addon.db[MOD_KEY].Y_GroupMenu, function(value)
+		addon.db[MOD_KEY].Y_GroupMenu = value
 		update()
 	end)
 

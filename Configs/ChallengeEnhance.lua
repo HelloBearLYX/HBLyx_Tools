@@ -106,7 +106,6 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
 
     -- MARK: Score Settings
     local scoreGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceScoreSettings"])
-    GUI:CreateInformationTag(scoreGroup, L["ChallengeEnhanceScoreSettingsDesc"], "LEFT")
     local scoreFontSizeSlider = GUI:CreateSlider(nil, L["FontSize"], 6, 40, 1, addon.db.ChallengeEnhance.ScoreFontSize, function(value)
         addon.db.ChallengeEnhance.ScoreFontSize = value
         update()

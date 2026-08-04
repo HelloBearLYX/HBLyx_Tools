@@ -41,4 +41,6 @@ function GUI.TagPanels.AuctionHelper:CreateTabPanel(parent)
 			end}
 		)
 	end)
+
+	return frame
 end

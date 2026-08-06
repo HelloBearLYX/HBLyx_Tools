@@ -8,6 +8,7 @@ local AuctionHelper = {
     frame = nil,
     panel = nil,
     loaded = false,
+    currentCategoryData = nil,
     currentX = 0,
     currentY = 0,
     currentRowMaxHeight = 0,
@@ -20,8 +21,7 @@ local AuctionHelper = {
 local MENU_BUTTON_WIDTH = 100
 local MENU_BUTTON_HEIGHT = 40
 local TAB_HEIGHT = 20
-local BUTTON_WIDTH = 40
-local BUTTON_HEIGHT = 40
+local DEFAULT_BUTTON_SIZE = 40
 local SUBCATEGORY_GAP = 5
 local UNKNOWN_TEXTURE = 134400
 local COLOR_CYCLE = {
@@ -137,6 +137,34 @@ local function FetchTagLocales(tag)
     return L["AuctionTag"][tag]
 end
 
+local function GetButtonSize(self)
+    local configuredSize = addon.db and addon.db[self.modName] and addon.db[self.modName].ButtonSize
+    local size = tonumber(configuredSize) or DEFAULT_BUTTON_SIZE
+    return math.max(1, size)
+end
+
+local function GetFrameOffsets(self)
+    local moduleDB = addon.db and addon.db[self.modName]
+    local offsetX = tonumber(moduleDB and moduleDB.FrameOffsetX) or 5
+    local offsetY = tonumber(moduleDB and moduleDB.FrameOffsetY) or 0
+    return offsetX, offsetY
+end
+
+local function GetGlobalScale(self)
+    local moduleDB = addon.db and addon.db[self.modName]
+    return tonumber(moduleDB and moduleDB.GlobalScale) or 1
+end
+
+local function ApplyFrameAnchor(self)
+    local offsetX, offsetY = GetFrameOffsets(self)
+    self.frame:ClearAllPoints()
+    self.frame:SetPoint("TOPLEFT", AuctionHouseFrame, "TOPRIGHT", offsetX, offsetY)
+end
+
+local function ApplyScale(self)
+    self.frame:SetScale(GetGlobalScale(self))
+end
+
 -- MARK: CreateCategoryTab
 local function CreateCategoryTab(tab, subCategoryData, color, parent, width)
     tab:SetParent(parent)
@@ -207,7 +235,6 @@ local function CreateButton(self, itemID, tag, parent)
     local button = table.remove(self.spareButtons)
     if not button then
         button = CreateFrame("Button", nil, parent)
-        button:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
         button.texture = button:CreateTexture(nil, "BACKGROUND")
         button.texture:SetAllPoints()
 
@@ -273,6 +300,8 @@ local function CreateButton(self, itemID, tag, parent)
         button:SetParent(parent)
     end
 
+    local buttonSize = GetButtonSize(self)
+    button:SetSize(buttonSize, buttonSize)
     button:ClearAllPoints()
     button.itemID = itemID
     button.name:SetText(FetchTagLocales(tag) or tag or "")
@@ -344,11 +373,12 @@ end
 -- MARK: CreateSubCategory
 local function CreateSubCategory(self, subCategoryData, color)
     local frame = CreateSubCategoryFrame(self)
+    local buttonSize = GetButtonSize(self)
     local itemCount = #subCategoryData.items
-    local maxColumns = math.max(1, math.floor(self.panel:GetWidth() / BUTTON_WIDTH))
+    local maxColumns = math.max(1, math.floor(self.panel:GetWidth() / buttonSize))
     local columns = math.max(1, math.min(itemCount, maxColumns))
     local rows = math.max(1, math.ceil(itemCount / columns))
-    local frameWidth = columns * BUTTON_WIDTH
+    local frameWidth = columns * buttonSize
     local tab = CreateCategoryTab(frame.tab, subCategoryData, color, frame, frameWidth)
 
     for i, item in ipairs(subCategoryData.items) do
@@ -356,10 +386,10 @@ local function CreateSubCategory(self, subCategoryData, color)
         frame.buttons[#frame.buttons + 1] = button
         local column = (i - 1) % columns
         local row = math.floor((i - 1) / columns)
-        button:SetPoint("TOPLEFT", frame, "TOPLEFT", column * BUTTON_WIDTH, -TAB_HEIGHT - row * BUTTON_HEIGHT)
+        button:SetPoint("TOPLEFT", frame, "TOPLEFT", column * buttonSize, -TAB_HEIGHT - row * buttonSize)
     end
 
-    frame:SetSize(frameWidth, tab:GetHeight() + rows * BUTTON_HEIGHT)
+    frame:SetSize(frameWidth, tab:GetHeight() + rows * buttonSize)
     -- compute the position for the the subCategory
     if self.currentX > 0 and self.currentX + frame:GetWidth() > self.panel:GetWidth() then
         self.currentX = 0
@@ -379,6 +409,7 @@ end
 local function RenderPanel(self, categoryData)
     if not self.panel then return end
 
+    self.currentCategoryData = categoryData
     ClearPanel(self)
 
     self.currentX = 0
@@ -403,7 +434,8 @@ local function CreateMainFrame(self)
     local height = AuctionHouseFrame:GetHeight()
     -- create the main backdrop panel
     self.frame:SetSize(410, height) -- set the size of the frame
-    self.frame:SetPoint("TOPLEFT", AuctionHouseFrame, "TOPRIGHT", 5, 0)
+    ApplyScale(self)
+    ApplyFrameAnchor(self)
 
     self.frame.titleFrame = CreateFrame("Frame", nil, self.frame)
     self.frame.titleFrame:SetAllPoints()
@@ -437,6 +469,13 @@ end
 
 ---Update style settings and render them in-game for CustomTracker
 function AuctionHelper:UpdateStyle()
+    if not self.loaded or not self.panel then
+        return
+    end
+
+    ApplyScale(self)
+    ApplyFrameAnchor(self)
+    RenderPanel(self, self.currentCategoryData or data[1])
 end
 
 -- MARK: Test

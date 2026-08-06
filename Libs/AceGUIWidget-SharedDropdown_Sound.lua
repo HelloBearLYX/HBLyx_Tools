@@ -7,6 +7,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 
 -- Lua APIs
 local select, pairs, ipairs, type, tostring = select, pairs, ipairs, type, tostring
+local strlower = string.lower
 local tsort = table.sort
 
 -- WoW APIs
@@ -30,13 +31,135 @@ do
 
 	--[[ Static data ]]--
 
+	local SEARCH_BOX_HEIGHT = 22
 	local _pullout = AceGUI:Create("Dropdown-Pullout")
+	local sharedSearchBox
+	local EnsurePulloutSearchBox
+	local RebuildPulloutItems
+	local suppressSearchTextChange
+
+	local function NormalizeSearchText(text)
+		if text == nil then return "" end
+
+		local normalized = tostring(text)
+		normalized = normalized:gsub("|c%x%x%x%x%x%x%x%x", "")
+		normalized = normalized:gsub("|r", "")
+		normalized = normalized:gsub("|T.-|t", " ")
+		normalized = normalized:gsub("|A.-|a", " ")
+		normalized = normalized:gsub("%s+", " ")
+		if strtrim then normalized = strtrim(normalized) end
+
+		return strlower(normalized)
+	end
+
+	local function EntryMatchesFilter(list, key, needle)
+		if needle == "" then
+			return true
+		end
+
+		local display = (list and list[key]) or key
+		local haystack = NormalizeSearchText(display) .. " " .. NormalizeSearchText(key)
+		return haystack:find(needle, 1, true) ~= nil
+	end
+
+	local function SetPulloutSearchLayoutEnabled(enabled)
+		local scrollFrame = _pullout and _pullout.scrollFrame
+		if not scrollFrame then return end
+
+		scrollFrame:ClearAllPoints()
+		if enabled then
+			scrollFrame:SetPoint("TOPLEFT", _pullout.frame, "TOPLEFT", 6, -12 - SEARCH_BOX_HEIGHT - 2)
+		else
+			scrollFrame:SetPoint("TOPLEFT", _pullout.frame, "TOPLEFT", 6, -12)
+		end
+		scrollFrame:SetPoint("BOTTOMRIGHT", _pullout.frame, "BOTTOMRIGHT", -6, 12)
+	end
+
+	local function RelayoutPulloutItems()
+		if not _pullout or not _pullout.itemFrame then return end
+
+		local itemFrame = _pullout.itemFrame
+		local height = 8
+		for i, item in pairs(_pullout.items or {}) do
+			item:SetPoint("TOP", itemFrame, "TOP", 0, -2 + (i - 1) * -16)
+			item:Show()
+			height = height + 16
+		end
+		itemFrame:SetHeight(height)
+	end
+
+	local function RefreshPulloutHeightForSearch(enabled)
+		if not _pullout or not _pullout.frame or not _pullout.itemFrame then return end
+
+		local baseHeight = (_pullout.itemFrame:GetHeight() or 0) + 34
+		local targetHeight = baseHeight + (enabled and (SEARCH_BOX_HEIGHT + 2) or 0)
+		local maxHeight = _pullout.maxHeight or targetHeight
+		if targetHeight > maxHeight then targetHeight = maxHeight end
+		_pullout.frame:SetHeight(targetHeight)
+	end
+
+	EnsurePulloutSearchBox = function()
+		if sharedSearchBox then return sharedSearchBox end
+
+		local searchBox = CreateFrame("EditBox", nil, _pullout.frame, "InputBoxTemplate")
+		searchBox:SetAutoFocus(false)
+		searchBox:SetHeight(SEARCH_BOX_HEIGHT)
+		searchBox:SetPoint("TOPLEFT", _pullout.frame, "TOPLEFT", 16, -14)
+		searchBox:SetPoint("TOPRIGHT", _pullout.frame, "TOPRIGHT", -18, -14)
+		searchBox:Hide()
+
+		local hint = searchBox:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+		hint:SetPoint("LEFT", searchBox, "LEFT", 6, 0)
+		hint:SetJustifyH("LEFT")
+		hint:SetText("Search")
+		searchBox.hint = hint
+
+		searchBox:SetScript("OnTextChanged", function(this)
+			if this.hint then
+				this.hint:SetShown((this:GetText() or "") == "")
+			end
+			if suppressSearchTextChange then
+				return
+			end
+
+			local owner = _pullout.userdata and _pullout.userdata.obj
+			if owner and RebuildPulloutItems then
+				RebuildPulloutItems(owner, this:GetText())
+				RelayoutPulloutItems()
+				RefreshPulloutHeightForSearch(true)
+				_pullout.scrollStatus.scrollvalue = 0
+				_pullout.scrollStatus.offset = 0
+				_pullout:FixScroll()
+			end
+		end)
+		searchBox:SetScript("OnEscapePressed", function(this)
+			this:ClearFocus()
+			if _pullout and _pullout.userdata and _pullout.userdata.obj and _pullout.userdata.obj.open then
+				_pullout:Close()
+			end
+		end)
+		searchBox:SetScript("OnEnterPressed", function(this)
+			this:ClearFocus()
+		end)
+
+		sharedSearchBox = searchBox
+		return sharedSearchBox
+	end
 	_pullout:SetCallback("OnOpen", function(this)
 		local self = this.userdata.obj
+		if not self then return end
 
 		local value = self.value
 		for i, item in this:IterateItems() do
 			item:SetValue(item.userdata.value == value)
+		end
+
+		local searchBox = EnsurePulloutSearchBox()
+		SetPulloutSearchLayoutEnabled(true)
+		RefreshPulloutHeightForSearch(true)
+		searchBox:Show()
+		if searchBox.hint then
+			searchBox.hint:SetShown((searchBox:GetText() or "") == "")
 		end
 
 		self.open = true
@@ -44,8 +167,21 @@ do
 	end)
 	_pullout:SetCallback("OnClose", function(this)
 		local self = this.userdata.obj
-		self.open = nil
-		self:Fire("OnClosed")
+
+		if sharedSearchBox then
+			suppressSearchTextChange = true
+			sharedSearchBox:SetText("")
+			suppressSearchTextChange = nil
+			sharedSearchBox:ClearFocus()
+			sharedSearchBox:Hide()
+		end
+		SetPulloutSearchLayoutEnabled(false)
+		RefreshPulloutHeightForSearch(false)
+
+		if self then
+			self.open = nil
+			self:Fire("OnClosed")
+		end
 	end)
 
 	--[[ UI event handler ]]--
@@ -79,6 +215,16 @@ do
 			self.open = true
 			_pullout.frame:SetFrameLevel(self.frame:GetFrameLevel() + 1)
 			fixlevels(_pullout.frame, _pullout.frame:GetChildren())
+			EnsurePulloutSearchBox()
+			if sharedSearchBox then
+				suppressSearchTextChange = true
+				sharedSearchBox:SetText("")
+				suppressSearchTextChange = nil
+			end
+			SetPulloutSearchLayoutEnabled(true)
+			if RebuildPulloutItems then RebuildPulloutItems(self, "") end
+			RelayoutPulloutItems()
+			RefreshPulloutHeightForSearch(true)
 			_pullout:SetWidth(self.pulloutWidth or self.frame:GetWidth())
 			_pullout:Open("TOPLEFT", self.frame, "BOTTOMLEFT", 0, self.label:IsShown() and -2 or 0)
 			_pullout.scrollStatus.scrollvalue = 0
@@ -111,6 +257,8 @@ do
 		self:SetLabel()
 		self:SetPulloutWidth(nil)
 		self.list = {}
+		self.order = nil
+		self.itemType = nil
 	end
 
 	-- exported, AceGUI callback
@@ -124,6 +272,8 @@ do
 
 		self.value = nil
 		self.list = nil
+		self.order = nil
+		self.itemType = nil
 		self.open = nil
 
 		self.frame:ClearAllPoints()
@@ -208,28 +358,54 @@ do
 			return tostring(x) < tostring(y)
 		end
 	end
-	-- exported
-	local function SetList(self, list, order, itemType)
-		self.list = list or {}
-		if list and self.list == _pullout.list and #list == #self.list then return end
-		_pullout.list = self.list
-		_pullout:Clear()
-		if not list then return end
 
-		if type(order) ~= "table" then
+	RebuildPulloutItems = function(self, query)
+		_pullout:Clear()
+		if not self or type(self.list) ~= "table" then return end
+
+		local list = self.list
+		local order = self.order
+		local itemType = self.itemType
+		local needle = NormalizeSearchText(query)
+
+		if type(order) == "table" then
+			for _, key in ipairs(order) do
+				if EntryMatchesFilter(list, key, needle) then
+					AddListItem(self, key, key, itemType)
+				end
+			end
+		else
 			for v in pairs(list) do
 				sortlist[#sortlist + 1] = v
 			end
 			tsort(sortlist, sortTbl)
 
 			for i, key in ipairs(sortlist) do
-				AddListItem(self, key, key, itemType)
+				if EntryMatchesFilter(list, key, needle) then
+					AddListItem(self, key, key, itemType)
+				end
 				sortlist[i] = nil
 			end
-		else
-			for i, key in ipairs(order) do
-				AddListItem(self, key, key, itemType)
+		end
+
+		if _pullout.frame and _pullout.frame:IsShown() then
+			RelayoutPulloutItems()
+		end
+	end
+
+	-- exported
+	local function SetList(self, list, order, itemType)
+		self.list = list or {}
+		self.order = type(order) == "table" and order or nil
+		self.itemType = itemType
+
+		if _pullout.userdata and _pullout.userdata.obj == self and RebuildPulloutItems then
+			local query = ""
+			if sharedSearchBox then
+				query = sharedSearchBox:GetText() or ""
 			end
+			RebuildPulloutItems(self, query)
+			_pullout:FixScroll()
 		end
 	end
 

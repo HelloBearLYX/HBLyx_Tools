@@ -422,6 +422,9 @@ local function RenderPanel(self, categoryData)
         end
     end
 
+
+    -- play a sound to indicate the panel has been rendered
+    PlaySound(852)
 end
 
 -- MARK: CreateMainFrame

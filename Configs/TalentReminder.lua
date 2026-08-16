@@ -117,9 +117,7 @@ end
 GUI.TagPanels.TalentReminder = {}
 function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. MOD_LABEL .. "|r", addon.db[MOD_KEY].Enabled, function(value)
 		addon.db[MOD_KEY].Enabled = value
@@ -191,13 +189,14 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
     local addButton
     local removeButton
 
-    inputGroup:AddChild(instanceSelection)
+    frame:AddWidget(instanceSelection)
     GUI:CreateInformationTag(inputGroup, "\n")
-    inputGroup:AddChild(existingSelection)
-    inputGroup:AddChild(spellInput)
+    frame:AddWidget(existingSelection)
+    frame:AddWidget(spellInput)
     GUI:CreateInformationTag(inputGroup, "\n")
-	inputGroup:AddChild(specsSelection:GetWidget())
-	inputGroup:AddChild(clearSpecsButton)
+	frame:AddWidget(specsSelection:GetWidget())
+	GUI:CreateInformationTag(inputGroup, "\n")
+	frame:AddWidget(clearSpecsButton)
 	GUI:CreateInformationTag(inputGroup, "\n")
 
     addButton = GUI:CreateButton(nil, L["Add"], function()
@@ -257,8 +256,8 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
 		end
     end)
 
-	inputGroup:AddChild(addButton)
-	inputGroup:AddChild(removeButton)
+	frame:AddWidget(addButton)
+	frame:AddWidget(removeButton)
 
 	-- MARK: Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])

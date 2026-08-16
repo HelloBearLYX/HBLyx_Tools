@@ -31,9 +31,7 @@ end
 GUI.TagPanels.DemonologyPortals = {}
 function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["DemonologyPortalsSettings"] .. "|r", addon.db.DemonologyPortals.Enabled, function(value)
 		addon.db.DemonologyPortals.Enabled = value

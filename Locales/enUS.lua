@@ -5,7 +5,7 @@ L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: Welcome! Your profile has bee
 L["WelecomeInfo"] = "Welecome! Thank you for using |cff8788ee" .. ADDON_NAME .. "|r!"
 L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or open configuration panel in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
-L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r Configurations Panel"
+L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r v%s Configurations Panel"
 L["CombatLock"] = "|cffff0000In combat|r, cannot open the configuration panel or turn on test mode"
 L["Notifications"] = "Notifications"
 L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" ..
@@ -109,6 +109,8 @@ L["MissingText"] = "Missing Text"
 L["Hide"] = "Hide"
 L["Show"] = "Show"
 L["Random"] = "Random"
+L["MaxCount"] = "Max Count"
+L["ShowBorder"] = "Show Border"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

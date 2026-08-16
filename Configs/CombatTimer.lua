@@ -24,8 +24,7 @@ end
 GUI.TagPanels.CombatTimer = {}
 function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["TimerSettings"] .. "|r", addon.db.CombatTimer.Enabled, function(value)
 		addon.db.CombatTimer.Enabled = value
@@ -39,14 +38,14 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
                 addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
             end
         end
-	end)
+	end):SetRelativeWidth(0.25)
 	GUI:CreateToggleCheckBox(frame, L["TimerCombatShow"], addon.db.CombatTimer.CombatShow, function(value)
 		addon.db.CombatTimer.CombatShow = value
 		addon:ShowDialog(ADDON_NAME.."RLNeeded")
-	end)
+	end):SetRelativeWidth(0.25)
 	GUI:CreateToggleCheckBox(frame, L["TimerPrintEnabled"], addon.db.CombatTimer.PrintEnabled, function(value)
 		addon.db.CombatTimer.PrintEnabled = value
-	end)
+	end):SetRelativeWidth(0.25)
 	GUI:CreateButton(frame, L["ResetMod"], function ()
 		addon.Utilities:SetPopupDialog(
 			ADDON_NAME .. "ResetMod",

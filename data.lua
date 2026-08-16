@@ -44,47 +44,7 @@ addon.data.SEASON_MAP = {
 		name = select(1, EJ_GetInstanceInfo(1309)) or "The Blinding Vale",
 		short = L["The Blinding Vale_short"],
 	},
-	[560] = {
-		enabled = true,
-		instanceID = 2874,
-		journalInstanceID = 1315,
-		portalID = 1254559,
-		name = select(1, EJ_GetInstanceInfo(1315)) or "Maisara Caverns",
-		short = L["Maisara Caverns_short"],
-	},
-	[559] = {
-		enabled = true,
-		instanceID = 2915,
-		journalInstanceID = 1316,
-		portalID = 1254563,
-		name = select(1, EJ_GetInstanceInfo(1316)) or "Nexus-Point Xenas",
-		short = L["Nexus-Point Xenas_short"],
-	},
-	[558] = {
-		enabled = true,
-		instanceID = 2811,
-		journalInstanceID = 1300,
-		portalID = 1254572,
-		name = select(1, EJ_GetInstanceInfo(1300)) or "Magister's Terrace",
-		short = L["Magister's Terrace_short"],
-	},
-	[557] = {
-		enabled = true,
-		instanceID = 2805,
-		journalInstanceID = 1299,
-		portalID = 1254400,
-		name = select(1, EJ_GetInstanceInfo(1299)) or "Windrunner Spire",
-		short = L["Windrunner Spire_short"],
-	},
 	-- DF 10.0
-    [402] = {
-		enabled = true,
-		instanceID = 2526,
-		journalInstanceID = 1201,
-		portalID = 393273,
-		name = select(1, EJ_GetInstanceInfo(1201)) or "Algeth'ar Academy",
-		short = L["Algeth'ar Academy_short"],
-	},
 	[399] = {
 		enabled = true,
 		instanceID = 2521,
@@ -109,33 +69,6 @@ addon.data.SEASON_MAP = {
 		journalInstanceID = 1041,
 		name = select(1, EJ_GetInstanceInfo(1041)) or "King's Rest",
 		short = L["King's Rest_short"],
-	},
-	-- Legion 7.0
-	[239] = {
-		enabled = true,
-		instanceID = 1753,
-		journalInstanceID = 945,
-		portalID = 1254551,
-		name = select(1, EJ_GetInstanceInfo(945)) or "Seat of the Triumvirate",
-		short = L["Seat of the Triumvirate_short"],
-	},
-	-- WoD 6.0
-	[161] = {
-		enabled = true,
-		instanceID = 1209,
-		journalInstanceID = 476,
-		portalID = {1254557, 159898},
-		name = select(1, EJ_GetInstanceInfo(476)) or "Skyreach",
-		short = L["Skyreach_short"],
-	},
-	-- WoLK 5.0
-	[556] = {
-		enabled = true,
-		instanceID = 658,
-		journalInstanceID = 278,
-		portalID = 1254555,
-		name = select(1, EJ_GetInstanceInfo(278)) or "Pit of Saron",
-		short = L["Pit of Saron_short"],
 	},
 }
 

@@ -37,9 +37,7 @@ end
 GUI.TagPanels.ChallengeEnhance = {}
 function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     -- MARK: General
-    local frame = GUI:CreateScrollFrame(parent)
-    frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+    local frame = parent
 
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChallengeEnhanceSettings"] .. "|r", addon.db.ChallengeEnhance.Enabled, function(value)
         addon.db.ChallengeEnhance.Enabled = value
@@ -48,10 +46,6 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     GUI:CreateToggleCheckBox(frame, L["PortalPartyMessage"], addon.db.ChallengeEnhance.PortalPartyMessage, function(value)
         addon.db.ChallengeEnhance.PortalPartyMessage = value
         addon:ShowDialog(ADDON_NAME.."RLNeeded")
-    end)
-    GUI:CreateFontSelect(frame, L["Font"], addon.db.ChallengeEnhance.Font, function(value)
-        addon.db.ChallengeEnhance.Font = value
-        update()
     end)
     GUI:CreateButton(frame, L["ResetMod"], function ()
         addon.Utilities:SetPopupDialog(
@@ -63,6 +57,12 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
                 ReloadUI()
             end}
         )
+    end)
+
+    local fontGroup = GUI:CreateInlineGroup(frame, L["FontSettings"])
+    GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.ChallengeEnhance.Font, function(value)
+        addon.db.ChallengeEnhance.Font = value
+        update()
     end)
 
     -- MARK: Level Settings
@@ -99,10 +99,10 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     levelXSlider:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
     levelYSlider:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
     levelAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.LevelEnabled)
-    levelGroup:AddChild(levelFontSizeSlider)
-    levelGroup:AddChild(levelXSlider)
-    levelGroup:AddChild(levelYSlider)
-    levelGroup:AddChild(levelAnchorDropdown)
+    frame:AddWidget(levelFontSizeSlider)
+    frame:AddWidget(levelXSlider)
+    frame:AddWidget(levelYSlider)
+    frame:AddWidget(levelAnchorDropdown)
 
     -- MARK: Score Settings
     local scoreGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceScoreSettings"])
@@ -138,10 +138,10 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     scoreXSlider:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
     scoreYSlider:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
     scoreAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.ScoreEnabled)
-    scoreGroup:AddChild(scoreFontSizeSlider)
-    scoreGroup:AddChild(scoreXSlider)
-    scoreGroup:AddChild(scoreYSlider)
-    scoreGroup:AddChild(scoreAnchorDropdown)
+    frame:AddWidget(scoreFontSizeSlider)
+    frame:AddWidget(scoreXSlider)
+    frame:AddWidget(scoreYSlider)
+    frame:AddWidget(scoreAnchorDropdown)
 
     -- MARK: Name Settings
     local nameGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceNameSettings"])
@@ -177,10 +177,10 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     nameXSlider:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
     nameYSlider:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
     nameAnchorDropdown:SetDisabled(not addon.db.ChallengeEnhance.NameEnabled)
-    nameGroup:AddChild(nameFontSizeSlider)
-    nameGroup:AddChild(nameXSlider)
-    nameGroup:AddChild(nameYSlider)
-    nameGroup:AddChild(nameAnchorDropdown)
+    frame:AddWidget(nameFontSizeSlider)
+    frame:AddWidget(nameXSlider)
+    frame:AddWidget(nameYSlider)
+    frame:AddWidget(nameAnchorDropdown)
 
     return frame
 end

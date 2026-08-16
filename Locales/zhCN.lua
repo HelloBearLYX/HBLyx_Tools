@@ -6,7 +6,7 @@ L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被
 L["WelecomeInfo"] = "欢迎! 感谢你使用|cff8788ee" .. ADDON_NAME .. "|r!"
 L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r 中打开配置面板来更改设置"
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
-L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r配置面板"
+L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r v%s 配置面板"
 L["CombatLock"] = "|cffff0000战斗中|r, 无法打开配置面板或开启测试模式"
 L["Notifications"] = "通知"
 L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
@@ -110,6 +110,8 @@ L["MissingText"] = "缺失文本"
 L["Hide"] = "隐藏"
 L["Show"] = "显示"
 L["Random"] = "随机"
+L["MaxCount"] = "最大数量"
+L["ShowBorder"] = "显示边框"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

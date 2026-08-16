@@ -1,5 +1,4 @@
 local ADDON_NAME, addon = ...
-local AceGUI = LibStub("AceGUI-3.0")
 local GUI = addon.GUI
 
 ---@class DeveloperTools
@@ -16,57 +15,123 @@ local TABS = {
     {text = "States Info", value = "StatesInfo"},
 }
 
+local FRAME_WIDTH = 900
+local FRAME_HEIGHT = 600
+local PADDING = 16
+local TITLE_HEIGHT = 26
+local TAB_HEIGHT = 22
+local TAB_WIDTH = 160
+
+local BACKDROP = {
+    bgFile = "Interface\\Buttons\\WHITE8x8",
+    edgeFile = "Interface\\Buttons\\WHITE8x8",
+    tile = false, tileSize = 1, edgeSize = 1,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 }
+}
+
 -- private methods
 
 -- MARK: Render
-local function RenderDisplayFrame(self, info)
-    self.isOpened = true
-    self.displayFrame = AceGUI:Create("Frame")
-    self.displayFrame:SetTitle("|cFF8788EEHBLyx Tools|r - Developer Tools")
-    self.displayFrame:SetLayout("Flow")
-    self.displayFrame:SetWidth(900)
-    self.displayFrame:SetHeight(600)
-    self.displayFrame:SetStatusText("|cff8788ee"..  ADDON_NAME .. "|r v" .. addon:GetVersion() .. " " .. "Developer Tools")
-    self.displayFrame:SetCallback("OnClose", function(widget)
-        if widget then
-            widget:Release()
-        end
-
-        self.isOpened = false
-    end)
-
-    local tabs = AceGUI:Create("TabGroup")
-    tabs:SetLayout("Flow")
-    tabs:SetFullWidth(true)
-    tabs:SetFullHeight(true)
-    tabs:SetTabs(TABS)
-    self.displayFrame:AddChild(tabs)
-    tabs:SetCallback("OnGroupSelected", function (container, _, tab)
-        container:ReleaseChildren()
-
+local function RenderTab(self, tab, info)
+    local content = self.content
+    content:SetRenderer(function(container)
         if tab == "CopyInfo" then
-            local panel = GUI:CreateScrollFrame(container)
-            
             local addonInfo = ""
             for _, value in pairs(info) do
                 addonInfo = addonInfo .. value .. "\n------\n\n"
             end
-            GUI:CreateMultiLineEditBox(panel, "Copy the addon info below:", addonInfo)
-            GUI:CreateMultiLineEditBox(panel, "Copy the data below:", info["Data"] or "")
-
-            panel:DoLayout()
+            GUI:CreateMultiLineEditBox(container, "Copy the addon info below:", addonInfo)
+            GUI:CreateMultiLineEditBox(container, "Copy the data below:", info["Data"] or "")
         elseif tab == "ModulesInfo" then
-            local panel = GUI:CreateScrollFrame(container)
-            GUI:CreateInformationTag(panel, info["ModulesInfo"], "LEFT")
-            panel:DoLayout()
+            GUI:CreateInformationTag(container, info["ModulesInfo"], "LEFT")
         elseif tab == "StatesInfo" then
-            local panel = GUI:CreateScrollFrame(container)
-            GUI:CreateInformationTag(panel, info["StatesInfo"], "LEFT")
-            panel:DoLayout()
+            GUI:CreateInformationTag(container, info["StatesInfo"], "LEFT")
         end
+
+        container:DoLayout()
     end)
-    
-    tabs:SelectTab("CopyInfo")
+    content:Rerender()
+end
+
+local function RenderDisplayFrame(self, info)
+    self.isOpened = true
+
+    if self.displayFrame then
+        self.displayFrame:Show()
+        RenderTab(self, "CopyInfo", info)
+        return
+    end
+
+    local frame = CreateFrame("Frame", "HBLyxDeveloperTools", UIParent)
+    frame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
+    frame:SetPoint("CENTER")
+    frame:SetFrameStrata("HIGH")
+    frame:SetMovable(true)
+    frame:EnableMouse(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", frame.StartMoving)
+    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+    frame:SetClampedToScreen(true)
+
+    local background = frame:CreateTexture(nil, "BACKGROUND")
+    background:SetAllPoints(frame)
+    background:SetColorTexture(0, 0, 0, 0.8)
+
+    local border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    border:SetAllPoints(frame)
+    border:SetBackdrop({ edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1 })
+    border:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
+
+    local title = frame:CreateFontString(nil, "OVERLAY")
+    title:SetFont("Fonts\\FRIZQT__.TTF", 18, "OUTLINE")
+    title:SetTextColor(1, 1, 1, 1)
+    title:SetText("|cFF8788EEHBLyx Tools|r - Developer Tools |cff8788ee" .. ADDON_NAME .. "|r v" .. addon:GetVersion())
+    title:SetPoint("TOPLEFT", frame, "TOPLEFT", PADDING, -PADDING)
+
+    local close = CreateFrame("Button", nil, frame, "BackdropTemplate")
+    close:SetBackdrop(BACKDROP)
+    close:SetBackdropColor(0, 0, 0, 0.5)
+    close:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
+    close:SetSize(25, 25)
+    close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+    close:SetScript("OnClick", function()
+        frame:Hide()
+        self.isOpened = false
+    end)
+    addon.UICore:BuildHover(close)
+
+    local closeText = close:CreateFontString(nil, "OVERLAY")
+    closeText:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    closeText:SetTextColor(1, 1, 1, 1)
+    closeText:SetText("X")
+    closeText:SetPoint("CENTER", close, "CENTER", 0, 0)
+
+    local content = addon.UICore:Build("ScrollFrame")
+    content:SetParent(frame)
+    content:SetSize(FRAME_WIDTH - PADDING * 2, FRAME_HEIGHT - PADDING * 3 - TITLE_HEIGHT - TAB_HEIGHT)
+    content:SetPoint("TOPLEFT", frame, "TOPLEFT", PADDING, -(PADDING * 2 + TITLE_HEIGHT + TAB_HEIGHT))
+    content:Show()
+
+    self.displayFrame = frame
+    self.content = content
+
+    local previous
+    for _, tabInfo in ipairs(TABS) do
+        local tabButton = addon.UICore:Build("TextButton")
+        tabButton:SetParent(frame)
+        tabButton:SetSize(TAB_WIDTH, TAB_HEIGHT)
+        tabButton:SetText(tabInfo.text)
+        if previous then
+            tabButton:SetPoint("LEFT", previous.frame, "RIGHT", PADDING * 0.5, 0)
+        else
+            tabButton:SetPoint("TOPLEFT", frame, "TOPLEFT", PADDING, -PADDING - TITLE_HEIGHT)
+        end
+        tabButton:SetOnClick(function() RenderTab(self, tabInfo.value, info) end)
+        tabButton:Show()
+        previous = tabButton
+    end
+
+    RenderTab(self, "CopyInfo", info)
 end
 
 -- MARK: Events Info

@@ -42,9 +42,7 @@ end
 GUI.TagPanels.AutoRoll = {}
 function GUI.TagPanels.AutoRoll:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+	local frame = parent
 
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["AutoRollSettings"] .. "|r", addon.db.AutoRoll.Enabled, function(value)
 		addon.db.AutoRoll.Enabled = value

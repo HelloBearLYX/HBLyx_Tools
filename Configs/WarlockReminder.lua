@@ -40,8 +40,7 @@ end
 GUI.TagPanels.WarlockReminder = {}
 function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
+	local frame = parent
 
 	GUI:CreateInformationTag(frame, L["WarlockWelecome"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["WarlockReminders"] .. "|r", addon.db.WarlockReminders.Enabled, function(value)

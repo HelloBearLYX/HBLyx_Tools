@@ -1,9 +1,9 @@
-## Interface: 120000,120001,120005,120007,120100
+## Interface: 120100
 ## Title: |cff8788eeHBLyx_Tools|r
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
-## Version: 3.18.9
+## Version: 4.0.0
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
@@ -19,6 +19,9 @@ utilities.lua
 configure.lua
 core.lua
 data.lua
+
+# GUI library
+GUI\gui.xml
 
 # modules
 Modules\FocusInterrupt.lua
@@ -52,5 +55,6 @@ Configs\Profile.lua
 
 # developer use only
 Modules\DeveloperTools.lua
+#GUI\TestDemo.lua
 
 main.lua

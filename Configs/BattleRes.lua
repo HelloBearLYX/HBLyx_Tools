@@ -26,9 +26,7 @@ end
 GUI.TagPanels.BattleRes = {}
 function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BattleResSettings"] .. "|r", addon.db.BattleRes.Enabled, function(value)
 		addon.db.BattleRes.Enabled = value

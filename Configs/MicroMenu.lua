@@ -24,9 +24,7 @@ end
 -- GUI
 GUI.TagPanels.MicroMenu = {}
 function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
-	frame:SetFullWidth(true)
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["MicroMenuSettings"] .. "|r", addon.db[MOD_KEY].Enabled, function(value)
 		addon.db[MOD_KEY].Enabled = value

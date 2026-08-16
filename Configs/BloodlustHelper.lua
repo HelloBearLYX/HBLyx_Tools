@@ -29,8 +29,7 @@ end
 GUI.TagPanels.BloodlustHelper = {}
 function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     -- MARK: General
-    local frame = GUI:CreateScrollFrame(parent)
-    frame:SetLayout("Flow")
+    local frame = parent
 
     local enabledModule = GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BloodlustHelperSettings"] .. "|r", addon.db.BloodlustHelper.Enabled, function(value)
         addon.db.BloodlustHelper.Enabled = value
@@ -90,9 +89,9 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     lustSoundSelect:SetDisabled(addon.db.BloodlustHelper.Mute)
     exhaustionSoundSelect:SetDisabled(addon.db.BloodlustHelper.Mute)
     soundChannelDropdown:SetDisabled(addon.db.BloodlustHelper.Mute)
-    soundGroup:AddChild(lustSoundSelect)
-    soundGroup:AddChild(exhaustionSoundSelect)
-    soundGroup:AddChild(soundChannelDropdown)
+    frame:AddWidget(lustSoundSelect)
+    frame:AddWidget(exhaustionSoundSelect)
+    frame:AddWidget(soundChannelDropdown)
 
     -- MARK: Container
     local containerGroup = GUI:CreateInlineGroup(frame, L["AuraSettings"])
@@ -119,10 +118,12 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     xSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
     ySlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
     auraFrameSizeSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-    containerGroup:AddChild(enableContainerCheckBox)
-    containerGroup:AddChild(xSlider)
-    containerGroup:AddChild(ySlider)
-    containerGroup:AddChild(auraFrameSizeSlider)
+    frame:AddWidget(enableContainerCheckBox)
+    GUI:CreateInformationTag(frame, "\n", "LEFT")
+    frame:AddWidget(xSlider)
+    frame:AddWidget(ySlider)
+    GUI:CreateInformationTag(frame, "\n", "LEFT")
+    frame:AddWidget(auraFrameSizeSlider)
 
     return frame
 end

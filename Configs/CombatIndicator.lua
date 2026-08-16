@@ -35,8 +35,7 @@ end
 GUI.TagPanels.CombatIndicator = {}
 function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	-- MARK: General
-	local frame = GUI:CreateScrollFrame(parent)
-	frame:SetLayout("Flow")
+	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["CombatSettings"] .. "|r", addon.db.CombatIndicator.Enabled, function(value)
 		addon.db.CombatIndicator.Enabled = value
@@ -112,15 +111,15 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 
 	-- MARK: Sound
 	local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])
+	local soundChannelSelect = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.CombatIndicator.SoundChannel, function(value)
+        addon.db.CombatIndicator.SoundChannel = value
+    end)
 	local inSoundSelect = GUI:CreateSoundSelect(nil, L["CombatInSoundMedia"], addon.db.CombatIndicator.InCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.InCombatSoundMedia = value
 	end)
 	local outSoundSelect = GUI:CreateSoundSelect(nil, L["CombatOutSoundMedia"], addon.db.CombatIndicator.OutCombatSoundMedia, function(value)
 		addon.db.CombatIndicator.OutCombatSoundMedia = value
 	end)
-	local soundChannelSelect = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.CombatIndicator.SoundChannel, function(value)
-        addon.db.CombatIndicator.SoundChannel = value
-    end)
 	GUI:CreateToggleCheckBox(soundGroup, L["Mute"], addon.db.CombatIndicator.Mute, function(value)
 		addon.db.CombatIndicator.Mute = value
 		inSoundSelect:SetDisabled(value)
@@ -130,9 +129,10 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	inSoundSelect:SetDisabled(addon.db.CombatIndicator.Mute)
 	outSoundSelect:SetDisabled(addon.db.CombatIndicator.Mute)
 	soundChannelSelect:SetDisabled(addon.db.CombatIndicator.Mute)
-	soundGroup:AddChild(inSoundSelect)
-	soundGroup:AddChild(outSoundSelect)
-	soundGroup:AddChild(soundChannelSelect)
+	frame:AddWidget(soundChannelSelect)
+	GUI:CreateInformationTag(soundGroup, "\n", "LEFT")
+	frame:AddWidget(inSoundSelect)
+	frame:AddWidget(outSoundSelect)
 
 	return frame
 end

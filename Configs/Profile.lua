@@ -28,8 +28,7 @@ end
 
 GUI.TagPanels.Profile = {}
 function GUI.TagPanels.Profile:CreateTabPanel(parent)
-    local frame = GUI:CreateScrollFrame(parent)
-    frame:SetLayout("Flow")
+    local frame = parent
 
     -- MARK: General Profile
     local generalProfileGroup = GUI:CreateInlineGroup(frame, L["Profile"])
@@ -57,7 +56,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     end)
     GUI:CreateInformationTag(modProfileGroup, "\n", "LEFT")
 
-    modProfileGroup:AddChild(modBox)
+    frame:AddWidget(modBox)
 
     return frame
 end

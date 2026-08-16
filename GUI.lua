@@ -22,11 +22,13 @@ local PADDING = 16
 local TITLE_HEIGHT = 26
 local TOOLBAR_HEIGHT = 24
 local TOOLBAR_BUTTON_WIDTH = 155
+-- the toolbar window and the close button share this height, so they line up
+local TOOLBAR_FRAME_HEIGHT = TOOLBAR_HEIGHT + 16
 -- the config widgets share one grid: a plain control row, and a labelled one
 local CONTROL_HEIGHT = 20
 local LABELLED_HEIGHT = 38
 local WIDGET_WIDTH = 220
-local CLOSE_BUTTON_SIZE = 25
+local CLOSE_BUTTON_SIZE = TOOLBAR_FRAME_HEIGHT
 
 local HEADER_COLOR = "|cFFFFFFFF"
 local SECTION_COLOR = "|cFFFFFFFF"
@@ -202,21 +204,6 @@ local function CreateMainFrame()
     title:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -PADDING, -PADDING)
     frame.title = title
 
-    local close = CreateFrame("Button", nil, frame, "BackdropTemplate")
-    close:SetBackdrop(BACKDROP)
-    close:SetBackdropColor(0, 0, 0, 0.5)
-    close:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
-    close:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
-    close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
-    close:SetScript("OnClick", function() addon.GUI:CloseGUI() end)
-    addon.UICore:BuildHover(close)
-
-    local closeText = close:CreateFontString(nil, "OVERLAY")
-    closeText:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-    closeText:SetTextColor(1, 1, 1, 1)
-    closeText:SetText("X")
-    closeText:SetPoint("CENTER", close, "CENTER", 0, 0)
-
     return frame
 end
 
@@ -229,7 +216,7 @@ local function RenderToolbar(toolbar)
     toolbar:AddWidget(testButton)
 
     local minimapToggle = addon.UICore:Build("ToggleBox")
-    minimapToggle:SetSize(toolbar:GetWidth() - TOOLBAR_BUTTON_WIDTH - PADDING, TOOLBAR_HEIGHT)
+    minimapToggle:SetSize(toolbar:GetWidth() - TOOLBAR_BUTTON_WIDTH - CLOSE_BUTTON_SIZE - PADDING, TOOLBAR_HEIGHT)
     minimapToggle:SetText(L["HideMinimapIcon"])
     minimapToggle:SetValue(addon.db.MinimapIcon.hide)
     minimapToggle:SetOnClick(function(_, value)
@@ -251,12 +238,28 @@ local function BuildGUI(self)
     -- the toolbar sits above the main frame, like the tab window sits next to it
     local toolbar = addon.UICore:Build("Window")
     toolbar:SetParent(frame)
-    toolbar:SetSize(PANEL_WIDTH, TOOLBAR_HEIGHT + PADDING)
+    toolbar:SetSize(PANEL_WIDTH, TOOLBAR_FRAME_HEIGHT)
     toolbar:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 0, 0)
     toolbar:SetRenderer(RenderToolbar)
     toolbar:Rerender()
     toolbar:Show()
     self.toolbar = toolbar
+
+    local close = CreateFrame("Button", nil, toolbar.frame, "BackdropTemplate")
+    close:SetBackdrop(BACKDROP)
+    close:SetBackdropColor(0, 0, 0, 0.5)
+    close:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
+    close:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
+    close:SetPoint("TOPRIGHT", toolbar.frame, "TOPRIGHT", 0, 0)
+    close:SetScript("OnClick", function() addon.GUI:CloseGUI() end)
+    addon.UICore:BuildHover(close)
+
+    local closeText = close:CreateFontString(nil, "OVERLAY")
+    closeText:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    closeText:SetTextColor(1, 1, 1, 1)
+    closeText:SetText("X")
+    closeText:SetPoint("CENTER", close, "CENTER", 0, 0)
+    self.closeButton = close
 
     local content = addon.UICore:Build("ScrollFrame")
     content:SetParent(frame)
@@ -267,7 +270,7 @@ local function BuildGUI(self)
 
     local sidebar = addon.UICore:Build("Window")
     sidebar:SetParent(frame)
-    sidebar:SetSize(SIDEBAR_WIDTH, PANEL_HEIGHT + TOOLBAR_HEIGHT + PADDING)
+    sidebar:SetSize(SIDEBAR_WIDTH, PANEL_HEIGHT + TOOLBAR_FRAME_HEIGHT)
     sidebar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", 0, 0)
     sidebar:SetRenderer(RenderTabs)
     sidebar:Rerender()

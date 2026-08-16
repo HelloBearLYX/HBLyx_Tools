@@ -2,7 +2,8 @@ local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 ---@class HB_GUI
----@field frame Frame? the main frame of the configuration UI
+---@field frame Frame? the movable root frame which holds every part of the configuration UI
+---@field panel Frame? the main panel which holds the title and the content
 ---@field content table? the scroll frame which holds the panel of the selected tab
 ---@field sidebar table? the window which holds the tab buttons
 ---@field selectedTab table? the entry of TABS which is currently shown
@@ -180,18 +181,35 @@ end
 
 -- MARK: Initialize GUI
 
-local function CreateMainFrame()
-    local frame = CreateFrame("Frame", "HBLyxToolsConfigFrame", UIParent)
-    frame:SetSize(PANEL_WIDTH, PANEL_HEIGHT)
-    frame:SetPoint("CENTER")
-    frame:SetFrameStrata("HIGH")
-    frame:SetMovable(true)
+---The root frame carries the drag, every other frame is anchored inside of it
+local function CreateRootFrame()
+    local root = CreateFrame("Frame", "HBLyxToolsConfigFrame", UIParent)
+    root:SetSize(SIDEBAR_WIDTH + PANEL_WIDTH, TOOLBAR_FRAME_HEIGHT + PANEL_HEIGHT)
+    root:SetPoint("CENTER")
+    root:SetFrameStrata("HIGH")
+    root:SetMovable(true)
+    root:EnableMouse(true)
+    root:RegisterForDrag("LeftButton")
+    root:SetScript("OnDragStart", root.StartMoving)
+    root:SetScript("OnDragStop", root.StopMovingOrSizing)
+    root:SetClampedToScreen(true)
+    root:Hide()
+
+    return root
+end
+
+---A mouse enabled child swallows the drag, so it has to move the root itself
+local function AddDragHandle(frame, root)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", frame.StartMoving)
-    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
-    frame:SetClampedToScreen(true)
-    frame:Hide()
+    frame:SetScript("OnDragStart", function() root:StartMoving() end)
+    frame:SetScript("OnDragStop", function() root:StopMovingOrSizing() end)
+end
+
+local function CreatePanelFrame(root)
+    local frame = CreateFrame("Frame", nil, root)
+    frame:SetSize(PANEL_WIDTH, PANEL_HEIGHT)
+    frame:SetPoint("BOTTOMRIGHT", root, "BOTTOMRIGHT", 0, 0)
 
     StyleFrame(frame, 0.8)
 
@@ -216,7 +234,7 @@ local function RenderToolbar(toolbar)
     toolbar:AddWidget(testButton)
 
     local minimapToggle = addon.UICore:Build("ToggleBox")
-    minimapToggle:SetSize(toolbar:GetWidth() - TOOLBAR_BUTTON_WIDTH - CLOSE_BUTTON_SIZE - PADDING, TOOLBAR_HEIGHT)
+    minimapToggle:SetSize(TOOLBAR_BUTTON_WIDTH, TOOLBAR_HEIGHT)
     minimapToggle:SetText(L["HideMinimapIcon"])
     minimapToggle:SetValue(addon.db.MinimapIcon.hide)
     minimapToggle:SetOnClick(function(_, value)
@@ -232,17 +250,21 @@ end
 
 ---Build the main frame, the sidebar and the content area once
 local function BuildGUI(self)
-    local frame = CreateMainFrame()
-    self.frame = frame
+    local root = CreateRootFrame()
+    self.frame = root
+
+    local frame = CreatePanelFrame(root)
+    self.panel = frame
 
     -- the toolbar sits above the main frame, like the tab window sits next to it
     local toolbar = addon.UICore:Build("Window")
-    toolbar:SetParent(frame)
+    toolbar:SetParent(root)
     toolbar:SetSize(PANEL_WIDTH, TOOLBAR_FRAME_HEIGHT)
-    toolbar:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 0, 0)
+    toolbar:SetPoint("TOPRIGHT", root, "TOPRIGHT", 0, 0)
     toolbar:SetRenderer(RenderToolbar)
     toolbar:Rerender()
     toolbar:Show()
+    AddDragHandle(toolbar.frame, root)
     self.toolbar = toolbar
 
     local close = CreateFrame("Button", nil, toolbar.frame, "BackdropTemplate")
@@ -269,12 +291,13 @@ local function BuildGUI(self)
     self.content = content
 
     local sidebar = addon.UICore:Build("Window")
-    sidebar:SetParent(frame)
+    sidebar:SetParent(root)
     sidebar:SetSize(SIDEBAR_WIDTH, PANEL_HEIGHT + TOOLBAR_FRAME_HEIGHT)
-    sidebar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", 0, 0)
+    sidebar:SetPoint("TOPLEFT", root, "TOPLEFT", 0, 0)
     sidebar:SetRenderer(RenderTabs)
     sidebar:Rerender()
     sidebar:Show()
+    AddDragHandle(sidebar.frame, root)
     self.sidebar = sidebar
 end
 

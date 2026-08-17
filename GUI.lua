@@ -136,14 +136,11 @@ local TABS = {
 
 ---Fill the sidebar with the tab buttons and the section titles
 local function RenderTabs(sidebar)
-    addon.UICore:ResetColorCycle()
-
     for _, tabInfo in ipairs(TABS) do
         if tabInfo.type == "Button" then
             local tabButton = addon.UICore:Build("TextButton")
             tabButton:SetSize(sidebar:GetWidth(), 22)
             tabButton:SetText(tabInfo.text)
-            tabButton:SetColor(unpack(addon.UICore:GetNextColorCycle()))
             tabButton:SetOnClick(function() addon.GUI:SelectTab(tabInfo) end)
             if tabInfo.tooltip then
                 addon.UICore:SetTooltip(tabButton, tabInfo.tooltip)

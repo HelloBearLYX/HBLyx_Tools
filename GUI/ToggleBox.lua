@@ -2,13 +2,15 @@ local addon = select(2, ...)
 
 ---@class ToggleBox
 ---@field type string widget type
----@field frame Button the main frame of the toggle box
+---@field frame Frame the container frame, sized like every other widget
+---@field button Button the clickable row, vertically centered inside the container
 ---@field box Frame the square check box on the left
 ---@field toggleOverlay Texture the fill shown while the value is true
 ---@field text FontString the text of the toggle box
 local ToggleBox = {
     type = "ToggleBox",
     frame = nil,
+    button = nil,
     box = nil,
     toggleOverlay = nil,
     text = nil,
@@ -20,7 +22,8 @@ local BUTTON_SIZE = 16
 local PADDING = 4
 local OVERLAY_MARGIN = 4
 local DEFAULT_WIDTH = 200
-local DEFAULT_HEIGHT = 20
+local DEFAULT_HEIGHT = 38
+local ROW_HEIGHT = 20
 
 -- MARK: Script handlers
 local function Button_OnClick(frame, ...)
@@ -47,9 +50,9 @@ local function Control_OnLeave(frame)
     end
 end
 
-local function GetTextSize(width, height)
+local function GetTextSize(width)
     -- the check box is a fixed square on the left, the text takes the rest of the row
-    return width - BUTTON_SIZE - PADDING, height
+    return width - BUTTON_SIZE - PADDING, ROW_HEIGHT
 end
 
 function ToggleBox:SetParent(parent)
@@ -77,7 +80,8 @@ function ToggleBox:SetSize(width, height)
     height = height or DEFAULT_HEIGHT
 
     self.frame:SetSize(width, height)
-    self.text:SetSize(GetTextSize(width, height))
+    self.button:SetSize(width, ROW_HEIGHT)
+    self.text:SetSize(GetTextSize(width))
 end
 
 function ToggleBox:GetWidth()
@@ -110,11 +114,11 @@ function ToggleBox:SetDisabled(disabled)
     self.disabled = disabled and true or false
 
     if self.disabled then
-        self.frame:Disable()
+        self.button:Disable()
         self.text:SetTextColor(0.5, 0.5, 0.5, 1)
         self.toggleOverlay:SetVertexColor(0.5, 0.5, 0.5, 1)
     else
-        self.frame:Enable()
+        self.button:Enable()
         self.text:SetTextColor(1, 1, 1, 1)
         self.toggleOverlay:SetVertexColor(1, 1, 1, 1)
     end
@@ -157,21 +161,26 @@ end
 function ToggleBox:Create(parent, width, height, buttonText, value)
     local widget = setmetatable({}, { __index = ToggleBox })
 
-    local frame = CreateFrame("Button", nil, parent)
+    local frame = CreateFrame("Frame", nil, parent, "BackdropTemplate")
     frame:Hide()
     frame.obj = widget
-
-    -- behavior
-    frame:EnableMouse(true)
-    frame:SetScript("OnClick", Button_OnClick)
-    frame:SetScript("OnEnter", Control_OnEnter)
-    frame:SetScript("OnLeave", Control_OnLeave)
-    -- size and position
     frame:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
     frame:SetPoint("TOPLEFT", parent or UIParent, "TOPLEFT", 0, 0)
 
+    local button = CreateFrame("Button", nil, frame)
+    button.obj = widget
+
+    -- behavior
+    button:EnableMouse(true)
+    button:SetScript("OnClick", Button_OnClick)
+    button:SetScript("OnEnter", Control_OnEnter)
+    button:SetScript("OnLeave", Control_OnLeave)
+    -- size and position
+    button:SetSize(width or DEFAULT_WIDTH, ROW_HEIGHT)
+    button:SetPoint("LEFT", frame, "LEFT", 0, 0)
+
     -- the check box itself is a fixed square, centered on the row
-    local box = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    local box = CreateFrame("Frame", nil, button, "BackdropTemplate")
     box:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
         edgeFile = "Interface\\Buttons\\WHITE8x8",
@@ -181,15 +190,15 @@ function ToggleBox:Create(parent, width, height, buttonText, value)
     box:SetBackdropColor(0, 0, 0, 0.5)
     box:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
     box:SetSize(BUTTON_SIZE, BUTTON_SIZE)
-    box:SetPoint("LEFT", frame, "LEFT", 0, 0)
+    box:SetPoint("LEFT", button, "LEFT", 0, 0)
 
-    local text = frame:CreateFontString(nil, "OVERLAY")
+    local text = button:CreateFontString(nil, "OVERLAY")
     text:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     text:SetTextColor(1, 1, 1, 1)
     text:SetText(buttonText or "")
     text:SetPoint("LEFT", box, "RIGHT", PADDING, 0)
     text:SetJustifyH("LEFT")
-    text:SetSize(GetTextSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT))
+    text:SetSize(GetTextSize(width or DEFAULT_WIDTH))
 
     local toggleOverlay = box:CreateTexture(nil, "OVERLAY")
     toggleOverlay:SetSize(BUTTON_SIZE - OVERLAY_MARGIN, BUTTON_SIZE - OVERLAY_MARGIN)
@@ -197,6 +206,7 @@ function ToggleBox:Create(parent, width, height, buttonText, value)
     toggleOverlay:SetColorTexture(1, 1, 1, 1) -- white overlay
 
     widget.frame = frame
+    widget.button = button
     widget.box = box
     widget.text = text
     widget.toggleOverlay = toggleOverlay

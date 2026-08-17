@@ -2,17 +2,20 @@ local addon = select(2, ...)
 
 ---@class TextButton
 ---@field type string widget type
----@field frame Button the main frame of the text button
+---@field frame Frame the container frame, sized like every other widget
+---@field button Button|BackdropTemplate the clickable row, vertically centered inside the container
 ---@field text FontString the text of the button
 local TextButton = {
     type = "TextButton",
     frame = nil,
+    button = nil,
     text = nil,
 }
 
 -- MARK: Default values
 local DEFAULT_WIDTH = 200
-local DEFAULT_HEIGHT = 20
+local DEFAULT_HEIGHT = 38
+local ROW_HEIGHT = 20
 
 -- MARK: Script handlers
 local function  Button_OnClick(frame, ...)
@@ -50,17 +53,17 @@ function TextButton:SetFontSize(size)
 end
 
 function TextButton:SetColor(r, g, b, a)
-    self.frame:SetBackdropColor(r or 0, g or 0, b or 0, a or 0.5)
+    self.button:SetBackdropColor(r or 0, g or 0, b or 0, a or 0.5)
 end
 
 function TextButton:SetDisabled(disabled)
     self.disabled = disabled and true or false
 
     if self.disabled then
-        self.frame:Disable()
+        self.button:Disable()
         self.text:SetTextColor(0.5, 0.5, 0.5, 1)
     else
-        self.frame:Enable()
+        self.button:Enable()
         self.text:SetTextColor(1, 1, 1, 1)
     end
 end
@@ -74,8 +77,12 @@ function TextButton:SetPoint(anchorFrom, relativeTo, anchorTo, x, y)
 end
 
 function TextButton:SetSize(width, height)
-    self.frame:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
-    self.text:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
+    width = width or DEFAULT_WIDTH
+    height = height or DEFAULT_HEIGHT
+
+    self.frame:SetSize(width, height)
+    self.button:SetSize(width, ROW_HEIGHT)
+    self.text:SetSize(width, ROW_HEIGHT)
 end
 
 function TextButton:GetWidth()
@@ -128,37 +135,43 @@ end
 function TextButton:Create(parent, width, height, buttonText)
     local widget = setmetatable({}, { __index = TextButton })
 
-    local frame = CreateFrame("Button", nil, parent, "BackdropTemplate")
+    local frame = CreateFrame("Frame", nil, parent)
     frame:Hide()
     frame.obj = widget
+    frame:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
+    frame:SetPoint("TOPLEFT", parent or UIParent, "TOPLEFT", 0, 0)
+
+    local button = CreateFrame("Button", nil, frame, "BackdropTemplate")
+    button.obj = widget
 
     -- background and border
-    frame:SetBackdrop({
+    button:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
         edgeFile = "Interface\\Buttons\\WHITE8x8",
         tile = false, tileSize = 1, edgeSize = 1,
         insets = { left = 1, right = 1, top = 1, bottom = 1 }
     })
-    frame:SetBackdropColor(0, 0, 0, 0.5)
-    frame:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
+    button:SetBackdropColor(0, 0, 0, 0.5)
+    button:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
     -- behavior
-    frame:EnableMouse(true)
-    frame:SetScript("OnClick", Button_OnClick)
-    frame:SetScript("OnEnter", Control_OnEnter)
-    frame:SetScript("OnLeave", Control_OnLeave)
+    button:EnableMouse(true)
+    button:SetScript("OnClick", Button_OnClick)
+    button:SetScript("OnEnter", Control_OnEnter)
+    button:SetScript("OnLeave", Control_OnLeave)
     -- size and position
-    frame:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
-    frame:SetPoint("TOPLEFT", parent or UIParent, "TOPLEFT", 0, 0)
+    button:SetSize(width or DEFAULT_WIDTH, ROW_HEIGHT)
+    button:SetPoint("CENTER", frame, "CENTER", 0, 0)
 
-    local text = frame:CreateFontString(nil, "OVERLAY")
+    local text = button:CreateFontString(nil, "OVERLAY")
     text:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
     text:SetTextColor(1, 1, 1, 1)
     text:SetText(buttonText or "")
-    text:SetPoint("CENTER", frame, "CENTER", 0, 0)
+    text:SetPoint("CENTER", button, "CENTER", 0, 0)
     text:SetJustifyH("CENTER")
-    text:SetSize(width or DEFAULT_WIDTH, height or DEFAULT_HEIGHT)
+    text:SetSize(width or DEFAULT_WIDTH, ROW_HEIGHT)
 
     widget.frame = frame
+    widget.button = button
     widget.text = text
     widget.type = TextButton.type
 

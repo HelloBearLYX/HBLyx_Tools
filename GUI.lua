@@ -26,6 +26,7 @@ local TOOLBAR_BUTTON_WIDTH = 155
 -- the toolbar window and the close button share this height, so they line up
 local TOOLBAR_FRAME_HEIGHT = TOOLBAR_HEIGHT + 16
 -- the config widgets share one grid: a plain control row, and a labelled one
+local WIDGET_HEIGHT = 38
 local CONTROL_HEIGHT = 20
 local LABELLED_HEIGHT = 38
 local WIDGET_WIDTH = 220
@@ -418,7 +419,7 @@ end
 ---@return table widget
 function addon.GUI:CreateToggleCheckBox(parent, label, get, callback)
     local toggle = addon.UICore:Build("ToggleBox")
-    toggle:SetSize(WIDGET_WIDTH, CONTROL_HEIGHT)
+    toggle:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
     toggle:SetText(label or "")
     toggle:SetValue(get)
     toggle:SetOnClick(function(_, value)
@@ -434,7 +435,7 @@ end
 ---@return table widget
 function addon.GUI:CreateButton(parent, label, callback)
     local button = addon.UICore:Build("TextButton")
-    button:SetSize(WIDGET_WIDTH, CONTROL_HEIGHT)
+    button:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
     button:SetText(label or "")
     button:SetOnClick(function()
         if callback then callback() end

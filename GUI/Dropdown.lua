@@ -33,6 +33,8 @@ local BACKDROP = {
     tile = false, tileSize = 1, edgeSize = 1,
     insets = { left = 1, right = 1, top = 1, bottom = 1 }
 }
+-- get the arrow texture from the addon assets folder, so that it works even if the default arrow texture is missing
+local ARROW_FILE = "Interface\\AddOns\\HBLyx_Tools\\GUI\\Assets\\Dropdown_Arrow.png"
 
 local SELECTED_COLOR = { 1, 0.82, 0, 1 }
 local NORMAL_COLOR = { 1, 1, 1, 1 }
@@ -401,7 +403,8 @@ function Dropdown:Create(parent, width, height, labelText, list, order, value)
     addon.UICore:BuildHover(button)
 
     local arrow = button:CreateTexture(nil, "OVERLAY")
-    arrow:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+    -- instead of using the default arrow texture, we use a backdrop with a V text on it
+    arrow:SetTexture(ARROW_FILE) -- "Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up"
     arrow:SetSize(ARROW_SIZE, ARROW_SIZE)
     arrow:SetPoint("RIGHT", button, "RIGHT", -PADDING, 0)
 

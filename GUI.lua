@@ -21,19 +21,20 @@ local PANEL_HEIGHT = 600
 local SIDEBAR_WIDTH = 155
 local PADDING = 16
 local TITLE_HEIGHT = 26
-local TOOLBAR_HEIGHT = 24
+local TOOLBAR_HEIGHT = 20
 local TOOLBAR_BUTTON_WIDTH = 155
 -- the toolbar window and the close button share this height, so they line up
-local TOOLBAR_FRAME_HEIGHT = TOOLBAR_HEIGHT + 16
+local TOOLBAR_FRAME_HEIGHT = TOOLBAR_HEIGHT + 10
 -- the config widgets share one grid: a plain control row, and a labelled one
 local WIDGET_HEIGHT = 38
-local CONTROL_HEIGHT = 20
 local LABELLED_HEIGHT = 38
 local WIDGET_WIDTH = 220
 local CLOSE_BUTTON_SIZE = TOOLBAR_FRAME_HEIGHT
 
 local HEADER_COLOR = "|cFFFFFFFF"
 local SECTION_COLOR = "|cFFFFFFFF"
+
+local CLOSE_BUTTON_TEXTURE = "Interface\\AddOns\\HBLyx_Tools\\GUI\\Assets\\Close_Button.png"
 
 local BACKDROP = {
     bgFile = "Interface\\Buttons\\WHITE8x8",
@@ -266,19 +267,22 @@ local function BuildGUI(self)
     self.toolbar = toolbar
 
     local close = CreateFrame("Button", nil, toolbar.frame, "BackdropTemplate")
-    close:SetBackdrop(BACKDROP)
+    close:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false, tileSize = 1, edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 }
+    })
     close:SetBackdropColor(0, 0, 0, 0.5)
     close:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
     close:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
     close:SetPoint("TOPRIGHT", toolbar.frame, "TOPRIGHT", 0, 0)
+    close:SetNormalTexture(CLOSE_BUTTON_TEXTURE)
+    close:SetPushedTexture(CLOSE_BUTTON_TEXTURE)
+    close:SetHighlightTexture(CLOSE_BUTTON_TEXTURE)
+    close:GetHighlightTexture():SetAlpha(0.75)
     close:SetScript("OnClick", function() addon.GUI:CloseGUI() end)
     addon.UICore:BuildHover(close)
-
-    local closeText = close:CreateFontString(nil, "OVERLAY")
-    closeText:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-    closeText:SetTextColor(1, 1, 1, 1)
-    closeText:SetText("X")
-    closeText:SetPoint("CENTER", close, "CENTER", 0, 0)
     self.closeButton = close
 
     local content = addon.UICore:Build("ScrollFrame")

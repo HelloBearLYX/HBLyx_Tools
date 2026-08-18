@@ -37,21 +37,21 @@ local optionsList = {
 		},
 		inline = true,
 	},
-	DeveloperTools = {
-		type = "group",
-		name = "Developer Tools",
-		order = 2,
-		args = {
-			PrintInfo = {
-				type = "execute",
-				name = "Print Addon Info",
-				func = function()
-					addon.DeveloperTools:DisplayAddonInfo()
-				end,
-			},
-		},
-		inline = true,
-	},
+	-- DeveloperTools = {
+	-- 	type = "group",
+	-- 	name = "Developer Tools",
+	-- 	order = 2,
+	-- 	args = {
+	-- 		PrintInfo = {
+	-- 			type = "execute",
+	-- 			name = "Print Addon Info",
+	-- 			func = function()
+	-- 				addon.DeveloperTools:DisplayAddonInfo()
+	-- 			end,
+	-- 		},
+	-- 	},
+	-- 	inline = true,
+	-- },
 }
 
 addon.optionsList = optionsList

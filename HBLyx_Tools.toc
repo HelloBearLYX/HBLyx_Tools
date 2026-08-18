@@ -54,7 +54,7 @@ Configs\BloodlustHelper.lua
 Configs\Profile.lua
 
 # developer use only
-Modules\DeveloperTools.lua
+# Modules\DeveloperTools.lua
 #GUI\TestDemo.lua
 
 main.lua

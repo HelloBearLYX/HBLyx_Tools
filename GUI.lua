@@ -688,17 +688,5 @@ function addon.GUI:CreateSpecSelectDropdown(parent, label)
     return component
 end
 
--- MARK: Initialize Sound List
-
-function addon.GUI:InitializeSoundList()
-    addon.states.soundList = {}
-    for _, key in ipairs(addon.LSM:List("sound")) do
-        addon.states.soundList[key] = key
-    end
-end
-
 -- Initialize Tag Panels
 addon.GUI.TagPanels = {}
-addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "soundList", function()
-    addon.GUI:InitializeSoundList()
-end)

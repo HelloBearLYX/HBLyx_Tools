@@ -5,7 +5,8 @@ local Dropdown = addon.UICore:GetWidgetClass("Dropdown")
 -- MARK: Default values
 local PREVIEW_FONT_SIZE = 12
 local PREVIEW_INSET = 2
-local PREVIEW_COLOR = { 0.33, 0.55, 0.82, 1 }
+local PREVIEW_COLOR = { 1, 1, 1, 1 }
+local PREVIEW_PADDING = 16
 
 ---Build the list of a LibSharedMedia type as a key to key map
 local function GetMediaList(mediaType)
@@ -66,7 +67,8 @@ local TextureDropdown = setmetatable({ type = "TextureDropdown" }, { __index = D
 local function CreatePreview(frame)
     local preview = frame:CreateTexture(nil, "BACKGROUND")
     preview:SetPoint("TOPLEFT", frame, "TOPLEFT", PREVIEW_INSET, -PREVIEW_INSET)
-    preview:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -PREVIEW_INSET, PREVIEW_INSET)
+    -- limit the preview width to keep size for the dropdown arrow
+    preview:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -PREVIEW_INSET - PREVIEW_PADDING, PREVIEW_INSET)
     preview:SetVertexColor(unpack(PREVIEW_COLOR))
     return preview
 end

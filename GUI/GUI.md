@@ -24,9 +24,7 @@ It replaces AceGUI-3.0 for the addon's own panels while keeping a similar mental
 | `MediaDropdown.lua` | LibSharedMedia dropdowns: font, status bar texture and sound |
 | `TextRegion.lua` | Full width, auto height wrapped text |
 | `LineSeperator.lua` | Full width horizontal line which separates groups |
-| `TestDemo.lua` | Developer only demo panel, `/hbgui` |
 
-`TestDemo.lua` is listed separately in the `.toc` under the developer section, everything else is loaded through `gui.xml`.
 
 ## Core concepts
 
@@ -320,7 +318,3 @@ Store callbacks on the widget (`self.onClick`, `self.onValueChanged`, ...) inste
 | Spacing | 8px between widgets and rows, 6px container inset |
 
 `UICore:GetNextColorCycle()` and `UICore:ResetColorCycle()` provide a fixed, readable color cycle for content that needs to be visually grouped.
-
-## Demo
-
-`/hbgui` toggles the demo panel from `TestDemo.lua`, which builds one of every widget through the pool, a scroll frame with enough content to scroll, and a one column window whose buttons re-render the scroll frame.

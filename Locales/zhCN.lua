@@ -435,3 +435,47 @@ L["GroupMenuButton"] = {
 	ConvertRaid = "转换队伍/团队",
 	ResetInstance = "重置副本",
 }
+
+-- MARK: Aura Helper
+L["AuraHelperSettings"] = "光环助手"
+L["AuraHelperSettingsDesc"] = "创建可自定义的光环容器以跟踪玩家的增益/减益效果"
+L["AuraFilter"] = {
+	Helpful = "有益",
+	Harmful = "有害",
+	Player = "玩家",
+	NonPlayer = "非玩家",
+	Raid = "团队",
+	Defensive = "防御",
+	External = "外部防御",
+	CrowdControl = "控制",
+	Dispellable = "可驱散",
+	Power_Infusion = "外部团队",
+	Role = "角色",
+	Priority = "优先级",
+	Stealable = "可偷取",
+	Boss = "首领",
+}
+L["AuraSoundTrigger"] = {
+	Add = "光环施加",
+	Apply = "光环叠层",
+	Remove = "光环移除",
+}
+L["AuraContainerDesc"] = "每个光环容器都是一组独立的光环图标\n\n选择一个已有的容器进行编辑, 或者输入名称(仅限字母, 数字和下划线)来添加一个新的容器"
+L["AuraContainerSettings"] = "容器设置"
+L["SelectAuraContainer"] = "选择容器"
+L["AuraContainerName"] = "容器名称"
+L["InvalidAuraContainerName"] = "无效的容器名称, 名称不能为空, 且只能包含字母, 数字和下划线"
+L["AuraFilters"] = "过滤器"
+L["AuraType"] = "增益 / 减益"
+L["AuraTypeRequired"] = "请先选择容器追踪增益还是减益效果, 其他选项取决于它"
+L["AuraFilterDesc"] = "选择容器要追踪的光环, 过滤条件会叠加生效, 因此没有选择任何过滤器的容器不会显示任何光环"
+L["IconSpacing"] = "图标间距"
+L["AuraSoundSettings"] = "光环声音设置"
+L["AuraSoundDesc"] = "为光环的施加/叠层/移除事件注册音效提醒。你可以为每个触发器选择不同的音效。此功能正在开发和测试中，将在不久后发布。"
+L["SelectAuraSound"] = "选择光环"
+L["AuraSoundMedia"] = "光环音效"
+L["SoundTriggers"] = "音效触发"
+L["AuraSpellID"] = "光环法术ID"
+L["InvalidAuraSpellID"] = "无效的光环法术ID"
+L["AuraSoundTriggerRequired"] = "请选择音效触发器, 这是必填项"
+L["AuraSoundMediaRequired"] = "请选择音效, 这是必填项"

@@ -159,6 +159,10 @@ function Core:LoadModule(mod)
     if not loadedAlready and self.registeredMods[mod] and addon.db[mod]["Enabled"] then
         local success, result = pcall(self.registeredMods[mod].initialize)
         self.modules[mod] = success and result or nil
+        if not success then -- otherwise the module silently stays unloaded
+            addon.Utilities:print(string.format("|cffff0000%s failed to load|r: %s", mod, tostring(result)))
+            return false
+        end
         if self.modules[mod] and self.modules[mod].RegisterEvents then
             self.modules[mod]:RegisterEvents()
             self.loadedMods = self.loadedMods + 1

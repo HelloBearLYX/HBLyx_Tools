@@ -229,7 +229,7 @@ local function CreateButtons(self)
             end)
 
             if portalID then
-                self.portals[portalID] = button.mapName
+                self.portals[portalID] = addon.data.SEASON_MAP[mapID].name or ""
             end
 
             self.buttons[mapID] = button
@@ -305,7 +305,7 @@ function ChallengeEnhance:RegisterEvents()
             if unit == "player" and self.portals[spellID] then
                 local spellLink = C_Spell.GetSpellLink(spellID)
                 if IsInGroup() then
-                    C_ChatInfo.SendChatMessage(L["PortalUsed"] .. spellLink, "PARTY")
+                    C_ChatInfo.SendChatMessage(L["PortalUsed"] .. self.portals[spellID] .. "-" .. spellLink, "PARTY")
                 end
             end
         elseif event == "CHALLENGE_MODE_MAPS_UPDATE" or event == "CHALLENGE_MODE_LEADERS_UPDATE" then

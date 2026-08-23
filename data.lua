@@ -285,6 +285,7 @@ addon.data.AUCTION_HELPER = {
 					{itemID = 245873},
 					{itemID = 245875},
 					{itemID = 245877},
+					-- {itemsID = 273059},
 				},
 			},
 		},

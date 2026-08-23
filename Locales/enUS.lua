@@ -435,3 +435,47 @@ L["GroupMenuButton"] = {
 	ConvertRaid = "Convert Party/Raid",
 	ResetInstance = "Reset Instances",
 }
+
+-- MARK: Aura Helper
+L["AuraHelperSettings"] = "Aura Helper"
+L["AuraHelperSettingsDesc"] = "Create cutomizable aura containers to track buffs/debuffs on player"
+L["AuraFilter"] = {
+	Helpful = "Helpful",
+	Harmful = "Harmful",
+	Player = "Player",
+	NonPlayer = "Non-Player",
+	Raid = "Raid",
+	Defensive = "Defensive",
+	External = "External Defensive",
+	CrowdControl = "Crowd Control",
+	Dispellable = "Dispellable",
+	Power_Infusion = "Exteral_Team",
+	Role = "Role",
+	Priority = "Priority",
+	Stealable = "Stealable",
+	Boss = "Boss",
+}
+L["AuraSoundTrigger"] = {
+	Add = "Aura Applied",
+	Apply = "Aura Stacked",
+	Remove = "Aura Removed",
+}
+L["AuraContainerDesc"] = "Each aura container is an independent group of aura icons.\n\nSelect an existing container to edit it, or type a name(letters, digits and underscore only) and add a new one."
+L["AuraContainerSettings"] = "Container Settings"
+L["SelectAuraContainer"] = "Select Container"
+L["AuraContainerName"] = "Container Name"
+L["InvalidAuraContainerName"] = "Invalid container name, only letters, digits and underscore are allowed, and it cannot be empty."
+L["AuraFilters"] = "Filters"
+L["AuraType"] = "Buff / Debuff"
+L["AuraTypeRequired"] = "Select whether the container tracks buffs or debuffs first, the other options depend on it."
+L["AuraFilterDesc"] = "Select which auras the container tracks. Filters are combined, so a container with no filter shows nothing."
+L["IconSpacing"] = "Icon Spacing"
+L["AuraSoundSettings"] = "Aura Sound Settings"
+L["AuraSoundDesc"] = "Register sound alerts for aura applied/stacked/removed events. You can select different sounds for each trigger. This part is under development and testing, and will release it soon."
+L["SelectAuraSound"] = "Select Aura"
+L["AuraSoundMedia"] = "Aura Sound"
+L["SoundTriggers"] = "Sound Triggers"
+L["AuraSpellID"] = "Aura Spell ID"
+L["InvalidAuraSpellID"] = "Invalid aura spell ID"
+L["AuraSoundTriggerRequired"] = "Select a sound trigger, it is required."
+L["AuraSoundMediaRequired"] = "Select a sound, it is required."

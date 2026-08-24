@@ -25,7 +25,7 @@ local DEFAULT_CONTAINER = {
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows
-local GROW_ORDER = {"LEFT", "RIGHT", "UP", "DOWN"}
+local GROW_ORDER = {"LEFT", "RIGHT"}
 
 local SOUND_TRIGGERS = {
 	[0] = L["AuraSoundTrigger"]["Add"],
@@ -327,7 +327,11 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		typeSelection:SetValue(typeSelected)
 		RefreshFilterList()
 		if filtersSelection then
-			filtersSelection:SetSelectedKeys(BuildFilterSelectionMap(options.Filters or {}))
+			if containerSelected then
+				filtersSelection:SetSelectedKeys(BuildFilterSelectionMap(options.Filters or {}))
+			else
+				filtersSelection:SetSelectedKeys({})
+			end
 		end
 		growSelection:SetValue(options.GrowDirection or "RIGHT")
 		maxCountSlider:SetValue(options.MaxCount or 5)

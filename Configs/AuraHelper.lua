@@ -21,7 +21,7 @@ local DEFAULT_CONTAINER = {
 	GrowDirection = "RIGHT",
 	X = 0,
 	Y = 0,
-	Filters = {"Player", "Raid", "Defensive"},
+	Filters = {},
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows

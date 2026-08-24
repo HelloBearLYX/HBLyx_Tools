@@ -295,21 +295,6 @@ function ChallengeEnhance:RegisterEvents()
                     self.eventFrame:UnregisterEvent("ADDON_LOADED")
                 end
             end
-        elseif event == "CHALLENGE_MODE_COMPLETED" then
-            -- M+ data can lag slightly; refresh after a short delay for consistent values.
-            C_Timer.After(2, function()
-                UpdateButtons(self, 0)
-            end)
-        elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-            local unit, _, spellID = ...
-            if unit == "player" and self.portals[spellID] then
-                local spellLink = C_Spell.GetSpellLink(spellID)
-                if IsInGroup() then
-                    C_ChatInfo.SendChatMessage(L["PortalUsed"] .. self.portals[spellID] .. "-" .. spellLink, "PARTY")
-                end
-            end
-        elseif event == "CHALLENGE_MODE_MAPS_UPDATE" or event == "CHALLENGE_MODE_LEADERS_UPDATE" then
-            UpdateButtons(self, EVENT_UPDATE_DELAY)
         else
             UpdateButtons(self, EVENT_UPDATE_DELAY)
         end

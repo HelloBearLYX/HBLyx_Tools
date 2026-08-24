@@ -105,10 +105,26 @@ local function EnsureAuraDB()
 end
 
 local function FetchTypeList()
+	local module = addon.core:GetModule(MOD_KEY)
+	if module and module.GetTypeList then
+		local list, order = module:GetTypeList()
+		if type(list) == "table" and type(order) == "table" then
+			return list, order
+		end
+	end
+
 	return TYPE_LIST, TYPE_ORDER
 end
 
 local function FetchFilterList(auraType)
+	local module = addon.core:GetModule(MOD_KEY)
+	if module and module.GetFilterList then
+		local list, order = module:GetFilterList(auraType)
+		if type(list) == "table" and type(order) == "table" then
+			return list, order
+		end
+	end
+
 	local category = TYPE_CATEGORY[auraType or ""]
 	local list = {}
 	local order = {}

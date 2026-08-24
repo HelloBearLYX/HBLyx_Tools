@@ -35,8 +35,8 @@ local SOUND_TRIGGERS = {
 local SOUND_TRIGGER_ORDER = {0, 1, 2}
 
 local TYPE_LIST = {
-	Helpful = L["AuraFilter"]["Helpful"] or "Helpful",
-	Harmful = L["AuraFilter"]["Harmful"] or "Harmful",
+	Helpful = (L["AuraFilter"] and L["AuraFilter"]["Helpful"]) or "Helpful",
+	Harmful = (L["AuraFilter"] and L["AuraFilter"]["Harmful"]) or "Harmful",
 }
 local TYPE_ORDER = {"Helpful", "Harmful"}
 local TYPE_CATEGORY = {
@@ -55,6 +55,9 @@ local FILTER_META = {
 	Priority = "Both",
 	Stealable = "Both",
 	Boss = "Both",
+}
+local FILTER_LOCALE_KEY = {
+	PI = "Power_Infusion",
 }
 
 local function CloneTable(t)
@@ -130,11 +133,13 @@ local function FetchFilterList(auraType)
 	local order = {}
 	for filterName, filterCategory in pairs(FILTER_META) do
 		if (not category) or filterCategory == "Both" or filterCategory == category then
-			list[filterName] = (L["AuraFilter"] and L["AuraFilter"][filterName]) or filterName
+			local localeKey = FILTER_LOCALE_KEY[filterName] or filterName
+			list[filterName] = (L["AuraFilter"] and L["AuraFilter"][localeKey]) or filterName
 			table.insert(order, filterName)
 		end
 	end
 	table.sort(order)
+
 	return list, order
 end
 
@@ -293,6 +298,14 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	local xSlider
 	local ySlider
 
+	local function BuildFilterSelectionMap(filters)
+		local selected = {}
+		for _, name in pairs(filters or {}) do
+			selected[name] = true
+		end
+		return selected
+	end
+
 	local function RefreshFilterList()
 		if not typeSelected then
 			if filtersSelection and filtersSelection.GetWidget then
@@ -313,6 +326,9 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		typeSelected = options.Type or "Helpful"
 		typeSelection:SetValue(typeSelected)
 		RefreshFilterList()
+		if filtersSelection then
+			filtersSelection:SetSelectedKeys(BuildFilterSelectionMap(options.Filters or {}))
+		end
 		growSelection:SetValue(options.GrowDirection or "RIGHT")
 		maxCountSlider:SetValue(options.MaxCount or 5)
 		iconSizeSlider:SetValue(options.IconSize or 35)
@@ -351,6 +367,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		end
 		addon.db[MOD_KEY].data[containerSelected].Filters = filters
 		RefreshFilterList()
+		if filtersSelection then filtersSelection:SetSelectedKeys(BuildFilterSelectionMap(filters)) end
 		ApplyUpdate("UpdateFilter", containerSelected)
 	end)
 

@@ -69,18 +69,20 @@ end
 ---Handler for BattleRes
 ---@param self BattleRes self
 local function Handler(self)
-    local chargeInfo = C_Spell.GetSpellCharges(BATTLE_RES_ID)
-    if chargeInfo then -- once the chargeInfo is available, it is active
-        self.frame.charge:SetText(chargeInfo.currentCharges)
-        self.frame.cooldown:SetCooldown(chargeInfo.cooldownStartTime, chargeInfo.cooldownDuration)
-        if chargeInfo.currentCharges < 1 then
+    local durationInfo = C_Spell.GetSpellCharges(BATTLE_RES_ID)
+    if durationInfo then -- once the chargeInfo is available, it is active
+        self.frame.charge:SetText(durationInfo.currentCharges)
+        self.frame.cooldown:SetCooldown(durationInfo.cooldownStartTime, durationInfo.cooldownDuration)
+        if durationInfo.currentCharges < 1 then
             self.frame.icon:SetDesaturated(true)
         else
             self.frame.icon:SetDesaturated(false)
         end
+        self.active = true
     else
         self.frame.charge:SetText("")
         self.frame.cooldown:SetCooldown(0, 0)
+        self.active = false
     end
 
     ApplyVisibility(self)

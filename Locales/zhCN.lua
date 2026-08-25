@@ -268,7 +268,7 @@ L["ChallengeEnhanceSettingsDesc"] = "在大秘境(PVE)面板上显示分数、�
 L["ChallengeEnhanceLevelSettings"] = "最高层数设置"
 L["ChallengeEnhanceScoreSettings"] = " 分数设置"
 L["ChallengeEnhanceNameSettings"] = "名称设置"
-L["PortalUsed"] = ADDON_NAME .. ": 传送到 "
+L["PortalUsed"] = ADDON_NAME .. ": 传送到 %s"
 L["PortalPartyMessage"] = "传送门通告"
 -- current season
 L["Algeth'ar Academy"] = "艾杰斯亚学院"

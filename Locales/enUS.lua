@@ -267,7 +267,7 @@ L["ChallengeEnhanceSettingsDesc"] = "Display score and dungeon name and clickabl
 L["ChallengeEnhanceLevelSettings"] = "Highest Level Settings"
 L["ChallengeEnhanceScoreSettings"] = " Score Settings"
 L["ChallengeEnhanceNameSettings"] = "Name Settings"
-L["PortalUsed"] = ADDON_NAME .. ": portal to "
+L["PortalUsed"] = ADDON_NAME .. ": portal to %s"
 L["PortalPartyMessage"] = "Portal Notification"
 --current season
 L["Algeth'ar Academy"] = "Algeth'ar Academy"

@@ -4,10 +4,14 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@class BloodlustHelper
 local BloodlustHelper = {
     modName = "BloodlustHelper",
-    resigered = {},
+    registered = {},
+    container = nil,
+    frame = nil,
+    db = nil,
 }
 
 -- MARK: Constants
+local LUST_TEXTURE = 136012
 local LUST_SPELL_ID = {
     2825, -- Bloodlust
     32182, -- Heroism
@@ -25,12 +29,25 @@ local EXHAUSTION_SPELL_ID = {
 }
 local AURA_FRAME_SIZE = 35
 
--- MARK: Initialize
+local function CreateBasicFrame(self)
+    -- create a basic frame with backdrop and border, used as the background for the aura button frame
+    local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+    frame:SetBackdrop({
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 },
+    })
+    frame:SetBackdropBorderColor(0, 0, 0, 1)
+    frame:SetSize(self.db["AuraFrameSize"] or AURA_FRAME_SIZE, self.db["AuraFrameSize"] or AURA_FRAME_SIZE)
+    frame:SetPoint("CENTER", UIParent, "CENTER", self.db["X"] or 0, self.db["Y"] or 0)
 
----Initialize (Constructor)
----@return BloodlustHelper BloodlustHelper a BloodlustHelper object
-function BloodlustHelper:Initialize()
-    return self
+    frame.background = frame:CreateTexture(nil, "BACKGROUND")
+    frame.background:SetAllPoints()
+    frame.background:SetTexture(LUST_TEXTURE) -- default texture for lust
+    frame.background:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    frame.background:SetDesaturated(true) -- the background is always desaturated, since the buff container is above it
+
+    return frame
 end
 
 local function InitializeAuraButtonFrame(frame)
@@ -76,7 +93,7 @@ local function ApplyLustSound(self)
     local lustSound = addon.LSM:Fetch("sound", addon.db.BloodlustHelper["LustSound"])
     local exhaustionSound = addon.LSM:Fetch("sound", addon.db.BloodlustHelper["ExhaustionSound"])
     local channel = addon.db.BloodlustHelper["SoundChannel"] or "Master"
-    if lustSound  then
+    if lustSound then
         for _, spellId in ipairs(LUST_SPELL_ID) do
             local soundInfo = {
                 spellID = spellId,
@@ -84,15 +101,8 @@ local function ApplyLustSound(self)
                 soundFileName = lustSound,
                 outputChannel = channel,
             }
-            -- 07/21 API change C_UnitAuras.AddAuraAppliedSound to AddAuraSound with triggers
-            -- local aura = C_UnitAuras.AddAuraAppliedSound({
-            --     spellID = spellId,
-            --     unitToken = "player",
-            --     soundFileName = lustSound,
-            --     outputChannel = channel,
-            -- })
             local aura = C_UnitAuras.AddAuraSound(0, soundInfo)
-            table.insert(self.resigered, aura)
+            table.insert(self.registered, aura)
         end
     end
     if exhaustionSound then
@@ -103,43 +113,32 @@ local function ApplyLustSound(self)
                 soundFileName = exhaustionSound,
                 outputChannel = channel,
             }
-            -- 07/21 API change C_UnitAuras.AddAuraAppliedSound to AddAuraSound with triggers
-            -- local aura = C_UnitAuras.AddAuraAppliedSound({
-            --     spellID = spellId,
-            --     unitToken = "player",
-            --     soundFileName = exhaustionSound,
-            --     outputChannel = channel,
-            -- })
             local aura = C_UnitAuras.AddAuraSound(2, soundInfo)
-            table.insert(self.resigered, aura)
+            table.insert(self.registered, aura)
         end
     end
 end
 
 -- MARK: ClearLustSound
 local function ClearLustSound(self)
-    for _, aura in ipairs(self.resigered) do
+    for _, aura in ipairs(self.registered) do
         C_UnitAuras.RemoveAuraSound(aura)
     end
-    self.resigered = {}
+    self.registered = {}
 end
 
 -- MARK: LustAuraContainer
-local function CreateLustAuraContainer()
+local function CreateLustAuraContainer(self, parent)
     -- includeSpellIDs is expected as a map: [spellID] = true
     local includeLustSpellIDs = {}
     for _, spellId in ipairs(LUST_SPELL_ID) do
         includeLustSpellIDs[spellId] = true
     end
 
-    -- test only
-    -- includeLustSpellIDs[385787] = true -- aura used for testing with druid
-
     -- 12.1 new aura system aura container
-    local container = CreateFrame("AuraContainer", nil, UIParent, "CustomAuraContainerTemplate")
+    local container = CreateFrame("AuraContainer", nil, parent, "CustomAuraContainerTemplate")
     container:SetUnit("player")
-    container:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
-    -- container:SetAuraLayoutAnchorPoint("RIGHT")
+    container:SetAllPoints(parent)
 
     container:AddAuraGroup("lustGroup", "HELPFUL", {
         maxFrameCount = 1,
@@ -153,14 +152,39 @@ local function CreateLustAuraContainer()
             groupSpacing = 0,
             groupLineSpacing = 0,
             forceNewLine = false,
-            elementWidth = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
-            elementHeight = addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE,
+            elementWidth = self.db["AuraFrameSize"] or AURA_FRAME_SIZE,
+            elementHeight = self.db["AuraFrameSize"] or AURA_FRAME_SIZE,
         },
     })
 
     container:Show()
 
     return container
+end
+
+-- MARK: Visibility
+local function MakeInvisible(self, invisible)
+    if invisible then
+        self.frame:SetBackdropBorderColor(0, 0, 0, 0) -- make the border invisible when hiding inactive
+        self.frame.background:SetAlpha(0) -- make the background invisible when hiding inactive
+    else
+        self.frame:SetBackdropBorderColor(0, 0, 0, 1) -- restore the border visibility
+        self.frame.background:SetAlpha(1) -- restore the background visibility
+    end
+end
+
+-- MARK: Initialize
+
+---Initialize (Constructor)
+---@return BloodlustHelper BloodlustHelper a BloodlustHelper object
+function BloodlustHelper:Initialize()
+    self.db = addon.db[self.modName]
+    self.frame = CreateBasicFrame(self)
+    self.container = CreateLustAuraContainer(self, self.frame)
+    self.frame:Show()
+    self:UpdateVisibility()
+
+    return self
 end
 
 -- MARK: UpdateStyle
@@ -174,14 +198,25 @@ function BloodlustHelper:UpdateStyle()
     ClearLustSound(self)
     ApplyLustSound(self)
 
-    if addon.db.BloodlustHelper["EnableAuraContainer"] and not self.lustAuraContainer then
-        self.lustAuraContainer = CreateLustAuraContainer()
-    end
-    if self.lustAuraContainer then
-        self.lustAuraContainer:ClearAllPoints()
-        self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
-        self.lustAuraContainer:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
-        self.lustAuraContainer:Show()
+    self.frame:SetSize(self.db["AuraFrameSize"] or AURA_FRAME_SIZE, self.db["AuraFrameSize"] or AURA_FRAME_SIZE)
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", self.db["X"] or 0, self.db["Y"] or 0)
+
+    self.container:SetAuraGroupLayout("lustGroup", {
+        elementSpacing = 0,
+        lineSpacing = 0,
+        groupSpacing = 0,
+        groupLineSpacing = 0,
+        forceNewLine = false,
+        elementWidth = self.db["AuraFrameSize"] or AURA_FRAME_SIZE,
+        elementHeight = self.db["AuraFrameSize"] or AURA_FRAME_SIZE,
+    })
+end
+
+function BloodlustHelper:UpdateVisibility()
+    if self.db["HideInactive"] then
+        MakeInvisible(self, true)
+    else
+        MakeInvisible(self, false)
     end
 end
 
@@ -195,41 +230,12 @@ function BloodlustHelper:Test(on)
     end
 
     if on then
-        if self.lustAuraContainer then
-            -- must re-apply position and size to the container to make the test mode show
-            self.lustAuraContainer:ClearAllPoints()
-            self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
-            self.lustAuraContainer:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
-            self.lustAuraContainer:Show()
-
-            if not self.lustAuraTest then
-                -- create a pseudo test aura frame
-                self.lustAuraTest = CreateFrame("Frame", nil, self.lustAuraContainer)
-                self.lustAuraTest:SetAllPoints()
-                self.lustAuraTest.texture = self.lustAuraTest:CreateTexture(nil, "ARTWORK")
-                self.lustAuraTest.texture:SetAllPoints()
-                self.lustAuraTest.texture:SetTexture(DEFAULT_LUST_TEXTURE)
-                self.lustAuraTest.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-            end
-            self.lustAuraTest:SetSize(addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE, addon.db.BloodlustHelper.AuraFrameSize or AURA_FRAME_SIZE)
-            self.lustAuraTest:Show()
-
-            addon.Utilities:MakeFrameDragPosition(self.lustAuraTest, self.modName, "X", "Y", function()
-                self.lustAuraContainer:ClearAllPoints()
-                self.lustAuraContainer:SetPoint("CENTER", UIParent, "CENTER", addon.db.BloodlustHelper["X"] or 0, addon.db.BloodlustHelper["Y"] or 0)
-            end)
-        end
+        -- make the frame visible for test mode
+        MakeInvisible(self, false)
+        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
     else
-        if self.lustAuraTest then
-            self.lustAuraTest:Hide()
-        end
+        self:UpdateVisibility()
     end
-end
-
--- MARK: RegisterEvents
-
----Register events
-function BloodlustHelper:RegisterEvents()
 end
 
 -- MARK: Register Module

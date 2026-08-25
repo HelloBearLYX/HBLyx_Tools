@@ -7,6 +7,7 @@ local BattleRes = {
     modName = "BattleRes",
     frame = nil,
     active = false,
+    db = nil,
 }
 
 --MARK: Constants
@@ -29,7 +30,7 @@ local function ApplyVisibility(self)
     end
 end
 
-local function CreateBRFrame()
+local function CreateBRFrame(self)
     local frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent, "BackdropTemplate")
     frame:SetBackdrop({
         edgeFile = "Interface\\Buttons\\WHITE8x8",
@@ -53,9 +54,12 @@ local function CreateBRFrame()
     local charge = frame:CreateFontString(nil, "OVERLAY")
     charge:SetPoint("CENTER", frame, "BOTTOM", 0, 0)
     charge:SetTextColor(1, 1, 1, 1)
+    charge:SetFont(
+        addon.LSM:Fetch("font", self.db["Font"]) or "Fonts\\FRIZQT__.TTF",
+        self.db["ChargeFontSize"],
+        "OUTLINE"
+    )
     frame.charge = charge
-
-    ApplyVisibility(BattleRes)
 
     return frame
 end
@@ -64,7 +68,6 @@ end
 
 ---Handler for BattleRes
 ---@param self BattleRes self
----@param active boolean if turn the BattleRes on or off
 local function Handler(self)
     local chargeInfo = C_Spell.GetSpellCharges(BATTLE_RES_ID)
     if chargeInfo then -- once the chargeInfo is available, it is active
@@ -89,7 +92,9 @@ end
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
     self.active = false
-    self.frame = CreateBRFrame()
+    self.db = addon.db[self.modName]
+    self.frame = CreateBRFrame(self)
+    ApplyVisibility(self)
 
     return self
 end
@@ -99,18 +104,18 @@ end
 
 ---Update style settings and render it in-game for BattleRes
 function BattleRes:UpdateStyle()
-    self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
-    self.frame:SetSize(addon.db[self.modName]["IconSize"], addon.db[self.modName]["IconSize"])
+    self.frame:SetFrameStrata(self.db["FrameStrata"] or "BACKGROUND")
+    self.frame:SetSize(self.db["IconSize"], self.db["IconSize"])
 
-    self.frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
+    self.frame.icon:SetTexCoord(self.db["IconZoom"], 1 - self.db["IconZoom"], self.db["IconZoom"], 1 - self.db["IconZoom"])
 
-    self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
+    self.frame:SetPoint("CENTER", UIParent, "CENTER", self.db["X"], self.db["Y"])
 
-    self.frame.cooldown:SetScale(addon.db[self.modName]["TimeFontScale"])
+    self.frame.cooldown:SetScale(self.db["TimeFontScale"])
 
     self.frame.charge:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
-        addon.db[self.modName]["ChargeFontSize"],
+        addon.LSM:Fetch("font", self.db["Font"]) or "Fonts\\FRIZQT__.TTF",
+        self.db["ChargeFontSize"],
         "OUTLINE"
     )
 end

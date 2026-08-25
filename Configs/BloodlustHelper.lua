@@ -14,8 +14,8 @@ addon.configurationList[MOD_KEY] = {
     LustSound = "",
     ExhaustionSound = "",
     SoundChannel = "Master",
-    EnableAuraContainer = true,
     AuraFrameSize = 35,
+    HideInactive = true,
     X = -265,
     Y = -260,
 }
@@ -94,36 +94,26 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
     frame:AddWidget(soundChannelDropdown)
 
     -- MARK: Container
-    local containerGroup = GUI:CreateInlineGroup(frame, L["AuraSettings"])
-    GUI:CreateInformationTag(containerGroup, L["BloodlustContainerDesc"], "LEFT")
-    local xSlider = GUI:CreateSlider(nil, L["X"], -2000, 2000, 1, addon.db.BloodlustHelper.X, function(value)
+    local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+    GUI:CreateToggleCheckBox(styleGroup, L["HideInactive"], addon.db.BloodlustHelper.HideInactive, function(value)
+        addon.db.BloodlustHelper.HideInactive = value
+        local module = addon.core:GetModule(MOD_KEY)
+        if module then
+            module:UpdateVisibility()
+        end
+    end)
+    GUI:CreateSlider(styleGroup, L["X"], -2000, 2000, 1, addon.db.BloodlustHelper.X, function(value)
         addon.db.BloodlustHelper.X = value
         update()
     end)
-    local ySlider = GUI:CreateSlider(nil, L["Y"], -1000, 1000, 1, addon.db.BloodlustHelper.Y, function(value)
+    GUI:CreateSlider(styleGroup, L["Y"], -1000, 1000, 1, addon.db.BloodlustHelper.Y, function(value)
         addon.db.BloodlustHelper.Y = value
         update()
     end)
-    local auraFrameSizeSlider = GUI:CreateSlider(nil, L["AuraSize"], 10, 200, 1, addon.db.BloodlustHelper.AuraFrameSize, function(value)
+    GUI:CreateSlider(styleGroup, L["IconSize"], 10, 200, 1, addon.db.BloodlustHelper.AuraFrameSize, function(value)
         addon.db.BloodlustHelper.AuraFrameSize = value
         update()
     end)
-    local enableContainerCheckBox = GUI:CreateToggleCheckBox(nil, L["EnableAura"], addon.db.BloodlustHelper.EnableAuraContainer, function(value)
-        addon.db.BloodlustHelper.EnableAuraContainer = value
-        update()
-        xSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-        ySlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-        auraFrameSizeSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-    end)
-    xSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-    ySlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-    auraFrameSizeSlider:SetDisabled(not addon.db.BloodlustHelper.EnableAuraContainer)
-    frame:AddWidget(enableContainerCheckBox)
-    GUI:CreateInformationTag(frame, "\n", "LEFT")
-    frame:AddWidget(xSlider)
-    frame:AddWidget(ySlider)
-    GUI:CreateInformationTag(frame, "\n", "LEFT")
-    frame:AddWidget(auraFrameSizeSlider)
 
     return frame
 end

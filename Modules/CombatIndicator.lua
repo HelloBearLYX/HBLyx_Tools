@@ -7,23 +7,21 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field modName string module name for registering in core
 local CombatIndicator = {
     modName = "CombatIndicator",
-    frame = CreateFrame("Frame", ADDON_NAME .. "_CombatIndicator", UIParent),
+    frame = nil,
 }
 
---MARK: Initialize
----Initialzie(Constructor)
----@return CombatIndicator CombatIndicator a CombatIndicator object
-function CombatIndicator:Initialize()
-    self.frame:SetSize(300, 40)
-    self.frame:Hide()
-
-    self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
-    self.frame.text:SetAllPoints()
-
-    return self
-end
-
 --private methods
+
+local function CreateCIFrame()
+    local frame = CreateFrame("Frame", ADDON_NAME .. "_CombatIndicator", UIParent)
+    frame:SetSize(300, 40)
+    frame:Hide()
+
+    frame.text = frame:CreateFontString(nil, "OVERLAY")
+    frame.text:SetAllPoints()
+
+    return frame
+end
 
 ---Set the text and color of CombatIndicator
 ---@param self CombatIndicator self
@@ -65,6 +63,16 @@ local function Handler(self)
 end
 
 --public methods
+
+--MARK: Initialize
+---Initialzie(Constructor)
+---@return CombatIndicator CombatIndicator a CombatIndicator object
+function CombatIndicator:Initialize()
+    self.frame = CreateCIFrame()
+
+    return self
+end
+
 --MARK: UpdateStyle
 
 ---Update style settings and render it in-game for CombatIndicator

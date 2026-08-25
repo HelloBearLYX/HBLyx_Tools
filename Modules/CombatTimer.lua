@@ -8,37 +8,27 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field modName string module name for registering in core
 local CombatTimer = {
     modName = "CombatTimer",
-    frame = CreateFrame("Frame", ADDON_NAME .. "_CombatTimer", UIParent),
+    frame = nil,
     updateTimer = nil,
     startTime = nil,
 }
 
--- MARK: Initialize
+-- private methods
 
----Intialize(Constructor)
----@return CombatTimer CombatTimer a CombatTimer object
-function CombatTimer:Initialize()
-    self.frame.text = self.frame:CreateFontString(nil, "OVERLAY")
-    self.frame.text:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
+local function CreateCTFrame(self)
+    local frame = CreateFrame("Frame", ADDON_NAME .. "_CombatTimer", UIParent)
+    frame.text = frame:CreateFontString(nil, "OVERLAY")
+    frame.text:SetAllPoints()
 
-    if addon.db[self.modName]["CombatShow"] then
-       self.frame:Hide()
-    else
-       self.frame:Show()
-    end
-
-    self.frame.text:SetFont(
-        "Fonts\\FRIZQT__.TTF",
-        20,
+    frame.text:SetFont(
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
+    frame.text:SetText(string.format("%02d:%02d", 0, 0))
 
-    self.frame.text:SetText(string.format("%02d:%02d", 0, 0))
-
-    return self
+    return frame
 end
-
--- private methods
 
 ---Set Combat Timer display
 ---@param self CombatTimer self
@@ -82,6 +72,22 @@ local function Handler(self)
             self.frame:Hide()
         end
     end
+end
+
+-- MARK: Initialize
+
+---Intialize(Constructor)
+---@return CombatTimer CombatTimer a CombatTimer object
+function CombatTimer:Initialize()
+    self.frame = CreateCTFrame(self)
+
+    if addon.db[self.modName]["CombatShow"] then
+       self.frame:Hide()
+    else
+       self.frame:Show()
+    end
+
+    return self
 end
 
 -- public methods

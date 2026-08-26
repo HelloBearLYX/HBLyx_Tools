@@ -152,28 +152,15 @@ local function InitializeAuraButton(frame, options)
     stack:SetTextColor(1, 1, 1, 1)
     frame:SetApplicationCount(stack)
 
-    -- if not frame.border then
-    --     local border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    --     border:SetAllPoints()
-    --     border:SetBackdrop({
-    --         edgeFile = "Interface\\Buttons\\WHITE8x8",
-    --         edgeSize = 1,
-    --         insets = { left = 1, right = 1, top = 1, bottom = 1 },
-    --     })
-    --     border:SetBackdropBorderColor(0, 0, 0, 1)
-    --     frame.border = border
-    -- end
-
-    -- dispel icon
+    -- border
     local border = frame:CreateTexture(nil, "OVERLAY")
-    -- border:SetTexture("Interface\\Buttons\\WHITE8x8")
     border:SetTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\iconBorder.png")
     border:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1)
-    -- border:SetAllPoints()
     frame:SetAuraBorder(border, {
         showIcon = true,
         showWhenHarmful = true,
+        showWhenHelpful = true,
         showWithoutDispelType = true,
         style = 3,
         customDispelColorMap = {

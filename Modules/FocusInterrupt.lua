@@ -18,6 +18,7 @@ local FocusInterrupt = {
     bars = {},
     kickIcon = nil,
     subKickIcon = nil,
+    warlockEventFrame = nil,
 }
 
 -- MARK: Constants
@@ -38,6 +39,10 @@ local INTERRUPT_BY_CLASS = {
     WARLOCK = {DEFAULT = 19647, DEMONOLOGY = 119914, DEMONOLOGY_SUB = 132409, GRIMOIRE = 1276467},
     WARRIOR = {DEFAULT = 6552, PROTECTION_SUB = 386071}, -- Pummel
 }
+local WARLOCK_PET_SUMMON = {
+    [30146] = INTERRUPT_BY_CLASS["WARLOCK"]["DEMONOLOGY"], -- Felguard
+    [691] = INTERRUPT_BY_CLASS["WARLOCK"]["DEFAULT"], -- Felhunter
+}
 
 -- MARK: Initialize
 
@@ -57,6 +62,22 @@ end
 
 -- private methods
 
+-- MARK: Get Demo Warlock ID
+local function InitializeDemoWarlockInterruptIDSwitch(self)
+    -- 12.1 since some Demo Warlock use the regular warlock interrupt
+    -- need to switch the interrupt id according to the pet uses
+    -- use "UNIT_SPELLCAST_SUCCEEDED" of "player" to determine which interruptID is
+    -- however, another event frame is needed for this, as the focus/target frame is always registered with "focus" or "target"
+    self.warlockEventFrame = CreateFrame("Frame", nil, self.frame)
+    self.warlockEventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
+    self.warlockEventFrame:SetScript("OnEvent", function(_, _, ...)
+        local unit, _, spellID = ...
+        if unit == "player" and WARLOCK_PET_SUMMON[spellID] then
+            self.interruptID = WARLOCK_PET_SUMMON[spellID]
+        end
+    end)
+end
+
 -- MARK: Get Interrupt ID
 
 ---Get interruptID depending on class and spec of the player
@@ -71,7 +92,9 @@ local function GetInterruptSpellID(self)
     if addon.states["playerSpec"] == 266 then -- demonology warlock
         -- 12.05 the GRIMOIRE and subInterrupt was removed from demo warlock, temperarily keep the code but diasable this function
         -- self.subInterrupt = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY_SUB
-        output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY
+
+        output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].DEMONOLOGY -- first defaultly set Demonology's interruptID
+        InitializeDemoWarlockInterruptIDSwitch(self) -- then initialize the event frame to switch interruptID according to the pet summoned
     elseif addon.states["playerSpec"] == 102 then -- balance druid
         output = INTERRUPT_BY_CLASS[addon.states["playerClass"]].BALANCE
     elseif addon.states["playerSpec"] == 255 then -- survival hunter

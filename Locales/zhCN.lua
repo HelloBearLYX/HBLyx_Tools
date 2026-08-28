@@ -42,6 +42,7 @@ L["SoundChannel"] = {
 
 -- MARK: Config
 L["Modules"] = "模组"
+L["BasicSettings"] = "基础设置"
 L["ClassSpecificModules"] = "职业模组"
 L["Others"] = "其他"
 L["ConfigPanel"] = "打开配置面板"

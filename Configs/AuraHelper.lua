@@ -282,7 +282,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	end)
 
 	-- Container settings
-	local containerGroup = GUI:CreateInlineGroup(frame, L["General"])
+	local containerGroup = GUI:CreateInlineGroup(frame, L["AuraContainerSettings"])
 	GUI:CreateInformationTag(containerGroup, L["AuraContainerDesc"], "LEFT")
 
 	local containerSelected = nil
@@ -416,7 +416,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	end)
 
 	-- Selected container settings
-	local optionsGroup = GUI:CreateInlineGroup(frame, L["AuraContainerSettings"])
+	local optionsGroup = GUI:CreateInlineGroup(frame, L["BasicSettings"])
 	GUI:CreateInformationTag(optionsGroup, L["AuraFilterDesc"], "LEFT")
 
 	local filterList, filterOrder = FetchFilterList()

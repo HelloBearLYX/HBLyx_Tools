@@ -41,6 +41,7 @@ L["SoundChannel"] = {
 
 -- MARK: Config
 L["Modules"] = "Modules"
+L["BasicSettings"] = "Basic Settings"
 L["ClassSpecificModules"] = "Class Modules"
 L["Others"] = "Others"
 L["ConfigPanel"] = "Open Configurations Panel"

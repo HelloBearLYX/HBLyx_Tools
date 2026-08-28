@@ -373,6 +373,25 @@ local function ToggleTestRegion(self, on)
     end
 end
 
+-- MARK: Load DB
+local function LoadDBAura(self)
+    for key, options in pairs(self.db.data) do
+        if not self.containers[key] then
+            self.containers[key] = CreateAuraContainer(key, options)
+        end
+    end
+end
+
+local function LoadDBSound(self)
+    for spellId, soundOptions in pairs(self.db.dataSound) do
+        if type(soundOptions) == "table" then
+            for trigger, soundFileLSM in pairs(soundOptions) do
+                RegisterAuraSound(self, spellId, trigger, soundFileLSM)
+            end
+        end
+    end
+end
+
 -- MARK: Initialize
 
 ---Initialize (Constructor)
@@ -381,24 +400,21 @@ function AuraHelper:Initialize()
     self.db = addon.db[self.modName]
     -- create containers for each key in the db
     self.containers = {}
-    for key, options in pairs(self.db.data) do
-        self.containers[key] = CreateAuraContainer(key, options)
-    end
+    LoadDBAura(self)
     self.testOverlay = {}
 
-    -- register the aura sounds for each spellId in the db
     self.soundRegistered = {}
-    for spellId, soundOptions in pairs(self.db.dataSound) do
-        if type(soundOptions) == "table" then
-            for trigger, soundFileLSM in pairs(soundOptions) do
-                RegisterAuraSound(self, spellId, trigger, soundFileLSM)
-            end
-        elseif soundOptions and soundOptions.trigger and soundOptions.soundFileLSM then
-            RegisterAuraSound(self, spellId, soundOptions.trigger, soundOptions.soundFileLSM)
-        end
-    end
+    -- LoadDBSound(self)
 
     return self
+end
+
+-- MARK: Update Style
+function AuraHelper:UpdateStyle()
+    -- UpdateStyle runs when player enter the world
+    -- since LSM is not fully loaded by other addons
+    -- we need to register sound after the player enter the world
+    LoadDBSound(self)
 end
 
 -- MARK: Add/Remove Aura Container

@@ -91,6 +91,7 @@ addon.data.AUCTION_HELPER = {
 				items = {
 					{itemID = 259085, tag = "Rune"},
 					{itemID = 245879, tag = "Vantus"},
+					{itemID = 272194, tag = "Vantus"},
 				},
 			},
 			{

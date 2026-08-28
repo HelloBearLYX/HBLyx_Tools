@@ -250,11 +250,12 @@ local function IsInterruptReady(self, isSubInterrupt)
             return false
         end
 
-        if addon.states["playerSpec"] == 266 then -- demonology warlock
-            if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then
-                return C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"])
-            end
-        end
+        -- 12.0 Demo warlock dual-interrupt was removed, so this part is disabled for now
+        -- if addon.states["playerSpec"] == 266 then -- demonology warlock
+        --     if not C_SpellBook.IsSpellInSpellBook(self.subInterrupt) then
+        --         return C_SpellBook.IsSpellInSpellBook(INTERRUPT_BY_CLASS["WARLOCK"]["GRIMOIRE"])
+        --     end
+        -- end
 
         -- 12.05 new API can ignore GCD
         return C_Spell.GetSpellCooldownDuration(self.subInterrupt, true):IsZero()
@@ -494,7 +495,6 @@ local function Handler(self, unit)
 
     -- handle kick spark
     HandleKickSpark(self, unit, isChannel, duration)
-    
 
     -- still use "OnUpdate", as there are many things we need to keep real-time update
     -- attempted to restrict the refresh rate(update interval), but a smooth function is highly demanded for it -> temperarily gave it up

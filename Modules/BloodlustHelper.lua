@@ -19,6 +19,7 @@ local LUST_SPELL_ID = {
     264689, -- Primal Rage
     390386, -- Fury of the Aspects
     466904, -- Marksman Hunter's
+    1243972, -- Drums
 }
 local DEFAULT_LUST_TEXTURE = 136012
 local EXHAUSTION_SPELL_ID = {

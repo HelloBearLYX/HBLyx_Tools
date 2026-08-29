@@ -209,6 +209,7 @@ addon.data.AUCTION_HELPER = {
 				subCategory = "Weapon",
 				items = {
 					{itemID = 244028, tag = "Primary"},
+					{itemID = 273071, tag = "Secondary"},
 					{itemID = 243970, tag = "Crit"},
 					{itemID = 243972, tag = "Haste"},
 					{itemID = 244030, tag = "Mastery"},

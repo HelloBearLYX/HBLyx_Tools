@@ -17,19 +17,6 @@ local BATTLE_RES_TEXTURE = 136080
 
 -- private methods
 
-local function ApplyVisibility(self)
-    -- if active, always show the frame, otherwise, show or hide the frame based on the HideInactive settings
-    if self.active then
-        self.frame:Show()
-    else
-        if addon.db[self.modName]["HideInactive"] then
-            self.frame:Hide()
-        else
-            self.frame:Show()
-        end
-    end
-end
-
 local function CreateBRFrame(self)
     local frame = CreateFrame("Frame", ADDON_NAME .. "_BattleRes", UIParent, "BackdropTemplate")
     frame:SetBackdrop({
@@ -66,24 +53,40 @@ end
 
 -- MARK: Handler
 
+local function Reset(self)
+    self.frame.charge:SetText("")
+    self.frame.cooldown:SetCooldownDuration(0)
+    self.active = false
+end
+
+local function ApplyVisibility(self)
+    -- if active, always show the frame, otherwise, show or hide the frame based on the HideInactive settings
+    if self.active then
+        self.frame:Show()
+    else
+        if addon.db[self.modName]["HideInactive"] then
+            self.frame:Hide()
+        else
+            self.frame:Show()
+        end
+    end
+end
+
 ---Handler for BattleRes
 ---@param self BattleRes self
 local function Handler(self)
-    -- local chargeInfo = C_Spell.GetSpellCharges(BATTLE_RES_ID)
-    local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
-    local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)
-    if chargeCount then -- once the chargeInfo is available, it is active
-        self.frame.charge:SetText(chargeCount)
+    if self.active then
+        local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
+        if chargeCount then
+            self.frame.charge:SetText(chargeCount)
+        end
 
+        local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)
         if durationObj then
             self.frame.cooldown:SetCooldownDuration(durationObj:GetRemainingDuration())
         end
-
-        self.active = true
     else
-        self.frame.charge:SetText("")
-        self.frame.cooldown:SetCooldownDuration(0)
-        self.active = false
+        Reset(self)
     end
 
     ApplyVisibility(self)
@@ -97,7 +100,6 @@ function BattleRes:Initialize()
     self.active = false
     self.db = addon.db[self.modName]
     self.frame = CreateBRFrame(self)
-    ApplyVisibility(self)
 
     return self
 end
@@ -121,6 +123,8 @@ function BattleRes:UpdateStyle()
         self.db["ChargeFontSize"],
         "OUTLINE"
     )
+
+    ApplyVisibility(self)
 end
 
 -- MARK: Test
@@ -151,9 +155,20 @@ end
 
 ---Register events needed
 function BattleRes:RegisterEvents()
-    local function OnEvent()
+    local function OnEvent(event, ...)
         if addon.core.testMode then
             return
+        end
+
+        if event == "ENCOUNTER_START" or event == "CHALLENGE_MODE_START" then
+            self.active = true
+        elseif  event == "CHALLENGE_MODE_COMPLETED" then
+            self.active = false
+        elseif event == "ENCOUNTER_END" then
+            -- keep the module active if it is M+ dungeon, otherwise, set it to inactive
+            if addon.states["instanceInfo"].difficultyID ~= 8 then
+                self.active = false
+            end
         end
 
         Handler(self)
@@ -165,7 +180,9 @@ function BattleRes:RegisterEvents()
     addon.core:RegisterEvent("CHALLENGE_MODE_START", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
 
-    self.frame:SetScript("OnEvent", OnEvent)
+    self.frame:SetScript("OnEvent", function (_, event, ...)
+        OnEvent(event, ...)
+    end)
 end
 
 -- MARK: Register Module

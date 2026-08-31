@@ -77,14 +77,10 @@ end
 local function Handler(self)
     if self.active then
         local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
-        if chargeCount then
-            self.frame.charge:SetText(chargeCount)
-        end
+        self.frame.charge:SetText(chargeCount or "")
 
         local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)
-        if durationObj then
-            self.frame.cooldown:SetCooldownDuration(durationObj:GetRemainingDuration())
-        end
+        self.frame.cooldown:SetCooldownDuration(durationObj:GetRemainingDuration() or 0)
     else
         Reset(self)
     end
@@ -166,7 +162,7 @@ function BattleRes:RegisterEvents()
             self.active = false
         elseif event == "ENCOUNTER_END" then
             -- keep the module active if it is M+ dungeon, otherwise, set it to inactive
-            if addon.states["instanceInfo"].difficultyID ~= 8 then
+            if addon.states["instanceInfo"].difficultyID ~= 8 and addon.states["instanceInfo"].difficultyID ~= 23 then
                 self.active = false
             end
         end
@@ -179,6 +175,7 @@ function BattleRes:RegisterEvents()
     addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_START", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
+    addon.core:RegisterEvent("ZONE_CHANGED_NEW_AREA", self.frame, self.modName)
 
     self.frame:SetScript("OnEvent", function (_, event, ...)
         OnEvent(event, ...)

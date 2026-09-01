@@ -56,6 +56,7 @@ L["PetTypeSettings"] = "启用宠物类型检查"
 L["FadeTime"] = "淡入/淡出时间"
 L["FadeOutTime"] = "淡出时间"
 L["IconSize"] = "图标大小"
+L["Color"] = "颜色"
 L["BackgroundAlpha"] = "背景透明度"
 L["Texture"] = "材质"
 L["Width"] = "宽度"
@@ -157,19 +158,12 @@ L["GroupRole"] = {
 
 -- MARK: Default values
 -- combat indicator
-L["CombatInSoundDefault"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\in-combat_chinese.ogg"
-L["CombatOutSoundDefault"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\out-combat_chinese.ogg"
 L["CInText"] = "进入战斗文字"
 L["COutText"] = "脱离战斗文字"
 L["CombatInText"] = "进入战斗"
 L["CombatOutText"] = "脱离战斗"
 -- combat timer
 L["TimerPrintTextIntro"] = "本次战斗: "
--- focus interrupt
-L["FocusDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick_chinese.ogg"
--- bloodlust helper
-L["BloodlustLustDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick_chinese.ogg"
-L["BloodlustExhaustionDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\out-combat_chinese.ogg"
 -- warlock reminders
 L["PetMissingText"] = "没宝宝!"
 L["CandyMissingText"] = "没糖了!"
@@ -465,3 +459,15 @@ L["AuraSpellID"] = "光环法术ID"
 L["InvalidAuraSpellID"] = "无效的光环法术ID"
 L["AuraSoundTriggerRequired"] = "请选择音效触发器, 这是必填项"
 L["AuraSoundMediaRequired"] = "请选择音效, 这是必填项"
+
+-- MARK: Countdown
+L["CountdownSettings"] = "倒计时"
+L["CountdownSettingsDesc"] = "可自定义的暴雪倒计时替代方案，带有可自定义的音效提醒"
+L["CountdownSound"] = "倒计时音效"
+L["CountdownTextWarning"] = " 发起了一个倒计时: "
+
+-- MARK: Text Warning Skins
+L["TextWarningSkinsSettings"] = "文本警告美化"
+L["TextWarningSkinsSettingsDesc"] = "可自定义的暴雪首领文本警告替代方案"
+L["PrivateWarningSettings"] = "私有警告"
+L["PrivateWarningSettingsDesc"] = "暴雪的私有警告高度关联点名技能，除了锚点外由暴雪控制"

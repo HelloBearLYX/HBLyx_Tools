@@ -3,10 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "CombatIndicator"
 
--- Register sound media
-addon.LSM:Register("sound", ADDON_NAME.. "_EnterCombat", L["CombatInSoundDefault"])
-addon.LSM:Register("sound", ADDON_NAME.. "_LeaveCombat", L["CombatOutSoundDefault"])
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
 	Enabled = true,
@@ -20,8 +16,8 @@ addon.configurationList[MOD_KEY] = {
 	InCombatText = L["CombatInText"],
 	OutCombatText = L["CombatOutText"],
 	Mute = true,
-	InCombatSoundMedia = ADDON_NAME.. "_EnterCombat",
-	OutCombatSoundMedia = ADDON_NAME.. "_LeaveCombat",
+	InCombatSoundMedia = "None",
+	OutCombatSoundMedia = "None",
 	SoundChannel = "Master",
 	FrameStrata = "BACKGROUND",
 }

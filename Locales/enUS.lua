@@ -55,6 +55,7 @@ L["PetTypeSettings"] = "Enable Pet Type Check"
 L["FadeTime"] = "Fade Time"
 L["FadeOutTime"] = "Fade Out Time"
 L["IconSize"] = "Icon Size"
+L["Color"] = "Color"
 L["BackgroundAlpha"] = "Background Alpha"
 L["Texture"] = "Texture"
 L["Width"] = "Width"
@@ -156,19 +157,12 @@ L["GroupRole"] = {
 
 -- MARK: Default values
 -- combat indicator
-L["CombatInSoundDefault"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\in-combat.ogg"
-L["CombatOutSoundDefault"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\out-combat.ogg"
 L["CInText"] = "Enter Combat Text"
 L["COutText"] = "Leave Combat Text"
 L["CombatInText"] = "Enter Combat"
 L["CombatOutText"] = "Leave Combat"
 -- combat timer
 L["TimerPrintTextIntro"] = "Last combat: "
--- focus interrupt
-L["FocusDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick.ogg"
--- bloodlust helper
-L["BloodlustLustDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\kick.ogg"
-L["BloodlustExhaustionDefaultSound"] = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\out-combat.ogg"
 -- warlock reminder
 L["PetMissingText"] = "Missing Pet!"
 L["CandyMissingText"] = "Missing Candy!"
@@ -465,3 +459,16 @@ L["AuraSpellID"] = "Aura Spell ID"
 L["InvalidAuraSpellID"] = "Invalid aura spell ID"
 L["AuraSoundTriggerRequired"] = "Select a sound trigger, it is required."
 L["AuraSoundMediaRequired"] = "Select a sound, it is required."
+
+-- MARK: Countdown
+L["CountdownSettings"] = "Countdown"
+L["CountdownSettingsDesc"] = "Customizable replacement for Blizzard's countdown timer, with customizable sound alerts."
+L["CountdownSound"] = "Countdown Sound"
+L["CountdownSoundSettings"] = "Countdown Sound Settings"
+L["CountdownTextWarning"] = " started a countdown: "
+
+-- MARK: Text Warning Skins
+L["TextWarningSkinsSettings"] = "Text Warning"
+L["TextWarningSkinsSettingsDesc"] = "Customizable replacement for Blizzard's boss text warnings."
+L["PrivateWarningSettings"] = "Private Warning"
+L["PrivateWarningSettingsDesc"] = "Blizzard's private warnings which is highly associated with target spells, it is controlled by Blizzard except the anchor"

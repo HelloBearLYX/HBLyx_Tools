@@ -161,7 +161,7 @@ local function FetchSoundList()
 	local order = {}
 	for spellId in pairs(addon.db[MOD_KEY].dataSound) do
 		local key = tostring(spellId)
-		list[key] = key
+		list[key] = addon.Utilities:GetSpellIconString(tonumber(spellId) or spellId)
 		table.insert(order, key)
 	end
 	table.sort(order, function(a, b)
@@ -587,7 +587,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 
 		soundSelected = spellId
 		soundSelectionDropdown:SetList(FetchSoundList())
-		soundSelectionDropdown:SetValue(spellId)
+		soundSelectionDropdown:SetValue(tostring(spellId))
 		RefreshSoundSelectionDisplay()
 		addon.Utilities:print(string.format("%s-%s-" .. L["AddSuccess"], spellId, GetSoundTriggerLabel(triggerKey)))
 	end)

@@ -127,6 +127,8 @@ local TABS = {
     {text = L["AuctionHelperSettings"], type = "Button", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuctionHelper:CreateTabPanel(container) end},
     {text = L["MicroMenuSettings"], type = "Button", tooltip = L["MicroMenuSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.MicroMenu:CreateTabPanel(container) end},
     {text = L["AuraHelperSettings"], type = "Button", tooltip = L["AuraHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuraHelper:CreateTabPanel(container) end},
+    {text = L["CountdownSettings"], type = "Button", tooltip = L["CountdownSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.Countdown:CreateTabPanel(container) end},
+    {text = L["TextWarningSkinsSettings"], type = "Button", tooltip = L["TextWarningSkinsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TextWarningSkins:CreateTabPanel(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
     {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
     {text = L["DemonologyPortalsSettings"], type = "Button", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.DemonologyPortals:CreateTabPanel(container) end},
@@ -292,7 +294,7 @@ local function BuildGUI(self)
     content:Show()
     self.content = content
 
-    local sidebar = addon.UICore:Build("Window")
+    local sidebar = addon.UICore:Build("ScrollFrame")
     sidebar:SetParent(root)
     sidebar:SetSize(SIDEBAR_WIDTH, PANEL_HEIGHT + TOOLBAR_FRAME_HEIGHT)
     sidebar:SetPoint("TOPLEFT", root, "TOPLEFT", 0, 0)

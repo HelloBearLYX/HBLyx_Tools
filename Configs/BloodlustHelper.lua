@@ -3,16 +3,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local GUI = addon.GUI
 local MOD_KEY = "BloodlustHelper"
 
--- Register sound media
-addon.LSM:Register("sound", ADDON_NAME .. "_LustDefault", L["BloodlustLustDefaultSound"])
-addon.LSM:Register("sound", ADDON_NAME .. "_ExhaustionDefault", L["BloodlustExhaustionDefaultSound"])
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Mute = true,
-    LustSound = "",
-    ExhaustionSound = "",
+    LustSound = "None",
+    ExhaustionSound = "None",
     SoundChannel = "Master",
     AuraFrameSize = 35,
     HideInactive = true,

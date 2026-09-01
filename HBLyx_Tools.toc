@@ -3,7 +3,7 @@
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0, AceConfig-3.0
-## Version: 4.0.15
+## Version: 4.1.0
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
@@ -37,6 +37,8 @@ Modules\AuctionHelper.lua
 Modules\MicroMenu.lua
 Modules\BloodlustHelper.lua
 Modules\AuraHelper.lua
+Modules\Countdown.lua
+Modules\TextWarningSkins.lua
 
 # handle configuration and options
 GUI.lua
@@ -53,6 +55,8 @@ Configs\AuctionHelper.lua
 Configs\MicroMenu.lua
 Configs\BloodlustHelper.lua
 Configs\AuraHelper.lua
+Configs\Countdown.lua
+Configs\TextWarningSkins.lua
 Configs\Profile.lua
 
 # developer use only

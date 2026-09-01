@@ -466,9 +466,23 @@ L["CountdownSettingsDesc"] = "Customizable replacement for Blizzard's countdown 
 L["CountdownSound"] = "Countdown Sound"
 L["CountdownSoundSettings"] = "Countdown Sound Settings"
 L["CountdownTextWarning"] = " started a countdown: "
+L["VictorySound"] = "Victory Sound"
 
 -- MARK: Text Warning Skins
 L["TextWarningSkinsSettings"] = "Text Warning"
 L["TextWarningSkinsSettingsDesc"] = "Customizable replacement for Blizzard's boss text warnings."
 L["PrivateWarningSettings"] = "Private Warning"
 L["PrivateWarningSettingsDesc"] = "Blizzard's private warnings which is highly associated with target spells, it is controlled by Blizzard except the anchor"
+
+-- MARK: Gossip Helper
+L["GossipHelperSettings"] = "Gossip Helper"
+L["GossipHelperSettingsDesc"] = "Automatically select the registered gossip options."
+L["GossipSeasonEnable"] = "Auto Select Current Season Gossips"
+L["GossipSeasonDesc"] = "Automatically handles the gossip options of the current season's Mythic+ dungeons."
+L["GossipShowID"] = "Show Gossip ID On Gossip Options"
+L["GossipShowIDDesc"] = "Appends the gossip ID to each gossip option text, so you can find the ID to register below."
+L["GossipListSettings"] = "Gossip List"
+L["GossipListDesc"] = "Gossip options registered here are selected automatically.\nEnable the gossip ID display above, then type the ID shown on the gossip option to add it."
+L["SelectGossipID"] = "Select Gossip"
+L["GossipID"] = "Gossip ID"
+L["InvalidGossipID"] = "Invalid gossip ID"

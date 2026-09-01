@@ -34,6 +34,14 @@ function Countdown:Initialize()
     return self
 end
 
+-- MARK: Victory Sound
+local function PlayVictorySound()
+    local sound = addon.LSM:Fetch("sound", addon.db.Countdown.VictorySound)
+    if sound then
+        PlaySoundFile(sound, addon.db.Countdown.SoundChannel or "Master")
+    end
+end
+
 -- MARK: Countdown Sound
 
 --- Play countdown sound based on the remaining duration
@@ -212,6 +220,12 @@ function Countdown:RegisterEvents()
             self:countdown(0)
         elseif event == "CHALLENGE_MODE_RESET" then
             self:countdown(M_PLUS_START_TIMER) -- start a 9-second countdown when a Mythic+ dungeon starts
+        end
+    end)
+
+    addon.core:RegisterStateMonitor("encounterInfo", self.modName, function()
+        if addon.states["encounterInfo"].success == 1 then
+            PlayVictorySound()
         end
     end)
 end

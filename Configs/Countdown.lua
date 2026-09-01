@@ -16,6 +16,7 @@ addon.configurationList[MOD_KEY] = {
     ThreeSound = "None",
     TwoSound = "None",
     OneSound = "None",
+	VictorySound = "None",
     SoundChannel = "Master",
 	StartSound = "[HBLyx] Notification",
 }
@@ -94,6 +95,9 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
 	GUI:CreateSoundSelect(soundGroup, L["ActiveSound"], addon.db.Countdown.StartSound, function(value)
         addon.db.Countdown.StartSound = value
     end)
+	GUI:CreateSoundSelect(soundGroup, L["VictorySound"], addon.db.Countdown.VictorySound, function(value)
+		addon.db.Countdown.VictorySound = value
+	end)
     GUI:CreateInformationTag(soundGroup, "\n")
     GUI:CreateSoundSelect(soundGroup, "5", addon.db.Countdown.FiveSound, function(value)
         addon.db.Countdown.FiveSound = value

@@ -465,9 +465,23 @@ L["CountdownSettings"] = "倒计时"
 L["CountdownSettingsDesc"] = "可自定义的暴雪倒计时替代方案，带有可自定义的音效提醒"
 L["CountdownSound"] = "倒计时音效"
 L["CountdownTextWarning"] = " 发起了一个倒计时: "
+L["VictorySound"] = "胜利音效"
 
 -- MARK: Text Warning Skins
 L["TextWarningSkinsSettings"] = "文本警告美化"
 L["TextWarningSkinsSettingsDesc"] = "可自定义的暴雪首领文本警告替代方案"
 L["PrivateWarningSettings"] = "私有警告"
 L["PrivateWarningSettingsDesc"] = "暴雪的私有警告高度关联点名技能，除了锚点外由暴雪控制"
+
+-- MARK: Gossip Helper
+L["GossipHelperSettings"] = "对话助手"
+L["GossipHelperSettingsDesc"] = "自动选择已注册的对话选项"
+L["GossipSeasonEnable"] = "自动选择当前赛季对话"
+L["GossipSeasonDesc"] = "自动处理当前赛季大秘境内的对话选项"
+L["GossipShowID"] = "在对话选项上显示对话ID"
+L["GossipShowIDDesc"] = "在每个对话选项文本后面附加对话ID, 便于获取需要在下方注册的ID"
+L["GossipListSettings"] = "对话列表"
+L["GossipListDesc"] = "此处注册的对话选项会被自动选择\n请先开启上方的对话ID显示, 然后输入对话选项上显示的ID来添加"
+L["SelectGossipID"] = "选择对话"
+L["GossipID"] = "对话ID"
+L["InvalidGossipID"] = "无效的对话ID"

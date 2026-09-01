@@ -129,6 +129,7 @@ local TABS = {
     {text = L["AuraHelperSettings"], type = "Button", tooltip = L["AuraHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuraHelper:CreateTabPanel(container) end},
     {text = L["CountdownSettings"], type = "Button", tooltip = L["CountdownSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.Countdown:CreateTabPanel(container) end},
     {text = L["TextWarningSkinsSettings"], type = "Button", tooltip = L["TextWarningSkinsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TextWarningSkins:CreateTabPanel(container) end},
+    {text = L["GossipHelperSettings"], type = "Button", tooltip = L["GossipHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.GossipHelper:CreateTabPanel(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
     {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
     {text = L["DemonologyPortalsSettings"], type = "Button", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.DemonologyPortals:CreateTabPanel(container) end},

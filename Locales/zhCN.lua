@@ -437,6 +437,9 @@ L["AuraFilter"] = {
 	Priority = "优先级",
 	Stealable = "可偷取",
 	Boss = "首领",
+	Bloodlust = "嗜血",
+	Trinkets = "饰品",
+	Potions = "药水",
 }
 L["AuraSoundTrigger"] = {
 	Add = "光环施加",

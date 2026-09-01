@@ -437,6 +437,9 @@ L["AuraFilter"] = {
 	Priority = "Priority",
 	Stealable = "Stealable",
 	Boss = "Boss",
+	Bloodlust = "Bloodlust",
+	Trinkets = "Trinkets",
+	Potions = "Potions",
 }
 L["AuraSoundTrigger"] = {
 	Add = "Aura Applied",

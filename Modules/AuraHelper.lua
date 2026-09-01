@@ -74,6 +74,7 @@ local FILTERS = {
         [10060] = true, -- Power Infusion
         [1044] = true, -- Bless of Freedom
         [116841] = true, -- Tiger's Lust
+        [406732] = true, -- Spatial Paradox
         -- external defensive
         [33206] = true, -- Pain Suppression
         [47788] = true, -- Guardian Spirit
@@ -91,7 +92,26 @@ local FILTERS = {
         [97463] = true, -- Rallying Cry
         [145629] = true, -- Anti-Magic Zone
         [209426] = true, -- Darkness
+        [374227] = true, -- Zephyr
     }}, category = "Buff", name = L["AuraFilter"]["Power_Infusion"]},
+    LUST = {value = {includeSpellIDs = {
+        [2825] = true, -- Bloodlust
+        [32182] = true, -- Heroism
+        [80353] = true, -- Time Warp
+        [264689] = true, -- Primal Rage
+        [390386] = true, -- Fury of the Aspects
+        [466904] = true, -- Marksman Hunter's
+        [1243972] = true, -- Drums
+    }}, category = "Buff", name = L["AuraFilter"]["Bloodlust"]},
+    -- TRINKET = {value = {includeSpellIDs = {
+    -- }}, category = "Buff", name = L["AuraFilter"]["Trinkets"]},
+    POTION = {value = {includeSpellIDs = {
+        [1236616] = true, -- Light's Potential
+        [1236994] = true, -- Potion of Recklessness
+        [1236998] = true, -- Draught of Rampant Abandon
+        [1295147] = true, -- Liquid Luster
+        [1236551] = true, -- Void-Shrouded Tincture
+    }}, category = "Buff", name = L["AuraFilter"]["Potions"]},
     Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
     Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
     Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
@@ -179,6 +199,8 @@ end
 local function GenerateFiltersFromOptions(options)
     local tokenFilters = {}
     local candidateFilters = {}
+    local includeSpellIDs = {}
+    local excludeSpellIDs = {}
 
     local auraType = TYPES[options.Type or ""] or TYPES.Helpful -- the type token always comes first
     table.insert(tokenFilters, auraType.value)
@@ -186,14 +208,33 @@ local function GenerateFiltersFromOptions(options)
     for _, name in pairs(options.Filters or {}) do
         if FILTERS[name] then -- if the filter is valid
             local filterContent = FILTERS[name].value
-            if type(filterContent) == "string" then
+            if type(filterContent) == "string" then -- token filter
                 table.insert(tokenFilters, filterContent)
             else -- candidate filters is a concatenated table
-                for key, value in pairs(filterContent) do
-                    candidateFilters[key] = value
+                -- includeSpells and excludeSpells are both tables, we need to merge them into candidateFilters
+                if filterContent.includeSpellIDs then
+                    for spellID, _ in pairs(filterContent.includeSpellIDs) do
+                        includeSpellIDs[spellID] = true
+                    end
+                elseif filterContent.excludeSpellIDs then
+                    for spellID, _ in pairs(filterContent.excludeSpellIDs) do
+                        excludeSpellIDs[spellID] = true
+                    end
+                else
+                    for key, value in pairs(filterContent) do
+                        candidateFilters[key] = value
+                    end
                 end
             end
         end
+    end
+
+    -- merge the includeSpellIDs and excludeSpellIDs into candidateFilters if there are any
+    if next(includeSpellIDs) then
+        candidateFilters.includeSpellIDs = includeSpellIDs
+    end
+    if next(excludeSpellIDs) then
+        candidateFilters.excludeSpellIDs = excludeSpellIDs
     end
 
     -- make tokenFilters

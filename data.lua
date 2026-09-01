@@ -122,6 +122,7 @@ addon.data.AUCTION_HELPER = {
 					{itemID = 241308, tag = "Primary"},
 					{itemID = 241288, tag = "Secondary"},
 					{itemID = 241292, tag = "Primary"},
+					{itemID = 271887, tag = "Vers"},
 					{itemID = 241304, tag = "Health"},
 					{itemID = 271884, tag = "Health"},
 					{itemID = 241302, tag = "Invisible"},

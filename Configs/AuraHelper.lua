@@ -21,7 +21,16 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 		X = 145,
 		Y = -40,
 		Filters = {"NonPlayer"},
+		ApplyDispellColor = true,
 	},
+	dispellColors = {
+		None = "000000",
+		Magic = "5979FF",
+		Curse = "A200A3",
+		Disease = "AB6219",
+		Poison = "00B449",
+		Bleed = "BF2626",
+	}
 }
 
 local DEFAULT_CONTAINER = {
@@ -33,6 +42,7 @@ local DEFAULT_CONTAINER = {
 	X = 0,
 	Y = 0,
 	Filters = {},
+	ApplyDispellColor = true,
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows
@@ -71,6 +81,7 @@ local FILTER_LOCALE_KEY = {
 	PI = "Power_Infusion",
 }
 local COTANK_KEY = "CoTank" -- reserved container name used by the Co-Tank feature
+local DISPELL_COLOR_ORDER = {"None", "Magic", "Curse", "Disease", "Poison", "Bleed"}
 
 local function CloneTable(t)
 	local result = {}
@@ -318,6 +329,19 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		end
 	end)
 
+	-- BasicSettings
+	local basicGroup = GUI:CreateInlineGroup(frame, L["BasicSettings"])
+	GUI:CreateInformationTag(basicGroup, L["DispellColorDesc"], "LEFT")
+	for _, colorKey in ipairs(DISPELL_COLOR_ORDER) do
+		GUI:CreateColorPicker(basicGroup, L["DispellType"][colorKey], false, addon.db[MOD_KEY].dispellColors[colorKey], function(value)
+			addon.db[MOD_KEY].dispellColors[colorKey] = value
+			local module = addon.core:GetModule(MOD_KEY)
+			if module then
+				module:UpdateDispellColor(colorKey, value)
+			end
+		end):SetSize(130)
+	end
+
 	-- Container settings
 	local containerGroup = GUI:CreateInlineGroup(frame, L["AuraContainerSettings"])
 	GUI:CreateInformationTag(containerGroup, L["AuraContainerDesc"], "LEFT")
@@ -328,6 +352,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	local nameInput
 	local typeSelection
 	local filtersSelection
+	local applyDispellColorToggle
 	local growSelection
 	local maxCountSlider
 	local iconSizeSlider
@@ -370,6 +395,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 				filtersSelection:SetSelectedKeys({})
 			end
 		end
+		applyDispellColorToggle:SetValue(options.ApplyDispellColor ~= false)
 		growSelection:SetValue(options.GrowDirection or "RIGHT")
 		maxCountSlider:SetValue(options.MaxCount or 5)
 		iconSizeSlider:SetValue(options.IconSize or 35)
@@ -494,6 +520,16 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 
 		options.GrowDirection = value
 		ApplyUpdate("UpdateGrowDirection", containerSelected)
+	end)
+
+	applyDispellColorToggle = GUI:CreateToggleCheckBox(optionsGroup, L["ApplyDispellColor"], true, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.ApplyDispellColor = value
+		addon:ShowDialog(ADDON_NAME .. "RLNeeded") -- border color is only read at frame creation, needs reload
 	end)
 
 	local iconGroup = GUI:CreateInlineGroup(optionsGroup, L["IconSettings"])

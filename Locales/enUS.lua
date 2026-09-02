@@ -419,6 +419,16 @@ L["GroupMenuButton"] = {
 -- MARK: Aura Helper
 L["AuraHelperSettings"] = "Aura Helper"
 L["AuraHelperSettingsDesc"] = "Create cutomizable aura containers to track buffs/debuffs on player"
+L["DispellColorDesc"] = "Set the border color used for each dispel type on aura icons.\nOnce you changed any color, please reload to apply the changes"
+L["ApplyDispellColor"] = "Apply Dispel Colors"
+L["DispellType"] = {
+	None = "No Dispel Type",
+	Magic = "Magic",
+	Curse = "Curse",
+	Disease = "Disease",
+	Poison = "Poison",
+	Bleed = "Bleed",
+}
 L["AuraFilter"] = {
 	Helpful = "Helpful",
 	Harmful = "Harmful",

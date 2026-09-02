@@ -419,6 +419,16 @@ L["GroupMenuButton"] = {
 -- MARK: Aura Helper
 L["AuraHelperSettings"] = "光环助手"
 L["AuraHelperSettingsDesc"] = "创建可自定义的光环容器以跟踪玩家的增益/减益效果"
+L["DispellColorDesc"] = "设置光环图标上各驱散类型使用的边框颜色\n一旦你更改了任何颜色,请重新加载(Reload)以应用更改"
+L["ApplyDispellColor"] = "应用驱散颜色"
+L["DispellType"] = {
+	None = "无驱散类型",
+	Magic = "魔法",
+	Curse = "诅咒",
+	Disease = "疾病",
+	Poison = "中毒",
+	Bleed = "流血",
+}
 L["AuraFilter"] = {
 	Helpful = "有益",
 	Harmful = "有害",

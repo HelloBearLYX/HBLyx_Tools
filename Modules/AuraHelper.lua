@@ -11,6 +11,7 @@ local AuraHelper = {
     cotankContainer = nil,
     eventFrame = nil,
     coTankToken = nil,
+    dispellColors = {},
 }
 
 -- MARK: container options
@@ -27,27 +28,8 @@ container_options = {
     X = 0,
     Y = 0,
     Filters = {"Player", "Raid", "Defensive", "External"},
+    ApplyDispellColor = true, -- whether to apply the dispel color to the border of the aura icons
 }]]
-
--- HBLyx Preset
--- local External_Preset = {
---     IconSize = 35,
---     MaxCount = 5,
---     IconSpacing = 0,
---     GrowDirection = "LEFT",
---     X = 0,
---     Y = 0,
---     Filters = {"Helpful", "External", "PI"}
--- }
--- local Debuff_Preset = {
---     IconSize = 35,
---     MaxCount = 5,
---     IconSpacing = 0,
---     GrowDirection = "LEFT",
---     X = 145,
---     Y = -85,
---     Filters = {"Harmful", "NonPlayer"}
--- }
 
 -- MARK: Constants
 local DIRECTION = {
@@ -56,7 +38,7 @@ local DIRECTION = {
     UP = AnchorUtil.FlowDirection.Up,
     DOWN = AnchorUtil.FlowDirection.Down,
 }
-
+local DEFAULT_BORDER_COLOR = CreateColor(0, 0, 0, 1)
 -- the type decides whether the container tracks buffs or debuffs, it is required and is not a filter
 local TYPES = {
     Helpful = {value = "HELPFUL", category = "Buff", name = L["AuraFilter"]["Helpful"]},
@@ -78,6 +60,7 @@ local FILTERS = {
         [1044] = true, -- Bless of Freedom
         [116841] = true, -- Tiger's Lust
         [406732] = true, -- Spatial Paradox
+        [29166] = true, -- Innervate
         -- external defensive
         [33206] = true, -- Pain Suppression
         [47788] = true, -- Guardian Spirit
@@ -154,7 +137,7 @@ function AuraHelper:GetFilterList(auraType)
 end
 
 -- MARK: Create Container
-local function InitializeAuraButton(frame, options)
+local function InitializeAuraButton(self, frame, options)
     frame:SetSize(options.IconSize, options.IconSize)
 
     local icon = frame:CreateTexture(nil, "BACKGROUND")
@@ -187,12 +170,12 @@ local function InitializeAuraButton(frame, options)
         showWithoutDispelType = true,
         style = 3,
         customDispelColorMap = {
-            None = CreateColor(0, 0, 0, 1),
-            Magic = CreateColor(0.349, 0.475, 1.0),
-            Curse = CreateColor(0.635, 0.0, 0.639),
-            Disease = CreateColor(0.671, 0.384, 0.098),
-            Poison = CreateColor(0.0, 0.706, 0.286),
-            Bleed = CreateColor(0.749, 0.149, 0.149),
+            None = (options.ApplyDispellColor and self.dispellColors.None) or DEFAULT_BORDER_COLOR,
+            Magic = (options.ApplyDispellColor and self.dispellColors.Magic) or DEFAULT_BORDER_COLOR,
+            Curse = (options.ApplyDispellColor and self.dispellColors.Curse) or DEFAULT_BORDER_COLOR,
+            Disease = (options.ApplyDispellColor and self.dispellColors.Disease) or DEFAULT_BORDER_COLOR,
+            Poison = (options.ApplyDispellColor and self.dispellColors.Poison) or DEFAULT_BORDER_COLOR,
+            Bleed = (options.ApplyDispellColor and self.dispellColors.Bleed) or DEFAULT_BORDER_COLOR,
         },
     })
 end
@@ -246,7 +229,7 @@ local function GenerateFiltersFromOptions(options)
     return tokenFiltersString, candidateFilters
 end
 
-local function CreateAuraContainer(name, options)
+local function CreateAuraContainer(self, name, options)
     local width = options.IconSize * options.MaxCount
     local height = options.IconSize
 
@@ -261,7 +244,7 @@ local function CreateAuraContainer(name, options)
     container:AddAuraGroup(name, filterString, {
         maxFrameCount = options.MaxCount,
         initializeFrame = function(frame)
-            InitializeAuraButton(frame, options)
+            InitializeAuraButton(self, frame, options)
         end,
         layout = {
             elementSpacing = options.IconSpacing or 0,
@@ -362,7 +345,7 @@ local function CreateCoTankContainer(self, options)
     container:AddAuraGroup(name, filterString, {
         maxFrameCount = options.MaxCount,
         initializeFrame = function(frame)
-            InitializeAuraButton(frame, options)
+            InitializeAuraButton(self, frame, options)
         end,
         layout = {
             elementSpacing = options.IconSpacing or 0,
@@ -551,7 +534,7 @@ end
 local function LoadDBAura(self)
     for key, options in pairs(self.db.data) do
         if not self.containers[key] then
-            self.containers[key] = CreateAuraContainer(key, options)
+            self.containers[key] = CreateAuraContainer(self, key, options)
         end
     end
 end
@@ -566,12 +549,21 @@ local function LoadDBSound(self)
     end
 end
 
+-- MARK: Load Dispell Colors
+local function LoadDispellColors(self)
+    for dispellType, colorHex in pairs(self.db.dispellColors) do
+        local r, g, b = addon.Utilities:HexToRGB(colorHex)
+        self.dispellColors[dispellType] = CreateColor(r, g, b, 1)
+    end
+end
+
 -- MARK: Initialize
 
 ---Initialize (Constructor)
 ---@return AuraHelper TemplateModule a TemplateModule object
 function AuraHelper:Initialize()
     self.db = addon.db[self.modName]
+    LoadDispellColors(self)
     -- create containers for each key in the db
     self.containers = {}
     LoadDBAura(self)
@@ -604,7 +596,7 @@ function AuraHelper:AddContainer(key)
         return
     end
 
-    self.containers[key] = CreateAuraContainer(key, options)
+    self.containers[key] = CreateAuraContainer(self, key, options)
 end
 
 ---Hide and drop the container of a removed key
@@ -741,6 +733,12 @@ function AuraHelper:UpdateLayout(key)
         local height = options.IconSize
         overlay:SetSize(width, height)
     end
+end
+
+function AuraHelper:UpdateDispellColor(colorKey, colorHex)
+    -- just convert and set the color in the module, the initializeFrame will access the color from the module when creating the border
+    local r, g, b = addon.Utilities:HexToRGB(colorHex)
+    self.dispellColors[colorKey] = CreateColor(r, g, b, 1)
 end
 
 -- MARK: Update Sound

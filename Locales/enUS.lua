@@ -41,8 +41,11 @@ L["SoundChannel"] = {
 
 -- MARK: Config
 L["Modules"] = "Modules"
-L["BasicSettings"] = "Basic Settings"
+L["CombatModules"] = "Combat Modules"
+L["UtilityModules"] = "Utility Modules"
+L["SkinModules"] = "Skin Modules"
 L["ClassSpecificModules"] = "Class Modules"
+L["BasicSettings"] = "Basic Settings"
 L["Others"] = "Others"
 L["ConfigPanel"] = "Open Configurations Panel"
 L["Test"] = "Test/Unlock(Drag to Move)"
@@ -459,6 +462,10 @@ L["AuraSpellID"] = "Aura Spell ID"
 L["InvalidAuraSpellID"] = "Invalid aura spell ID"
 L["AuraSoundTriggerRequired"] = "Select a sound trigger, it is required."
 L["AuraSoundMediaRequired"] = "Select a sound, it is required."
+L["EnableCoTank"] = "Enable Co-Tank Container"
+L["CoTankLabel"] = "Co-Tank"
+L["CoTankDesc"] = "Tracks auras on the co-tank in your raid. This container only appears and works once a co-tank is found in your group, so it may stay hidden outside of raids or when you are the only tank.\nThe recommended filters for this container is \"Harmful\" + \"Non-Player\"\nThe name \"CoTank\" is reserved for this feature"
+L["ReservedAuraContainerName"] = "\"CoTank\" is reserved by the addon, please choose another name."
 
 -- MARK: Countdown
 L["CountdownSettings"] = "Countdown"

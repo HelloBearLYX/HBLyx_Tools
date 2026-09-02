@@ -8,6 +8,9 @@ local AuraHelper = {
     containers = {},
     testOverlay = {},
     soundRegistered = {},
+    cotankContainer = nil,
+    eventFrame = nil,
+    coTankToken = nil,
 }
 
 -- MARK: container options
@@ -276,6 +279,111 @@ local function CreateAuraContainer(name, options)
     return container
 end
 
+-- MARK: Search Co-Tank
+
+---Get an array of all raid member unit tokens
+---@return table|nil output an array of raid unit tokens, or nil if not in raid
+local function GetRaidIterator()
+    if IsInRaid() then -- only search co-tank in raid
+        local numMembers = GetNumGroupMembers()
+        local output = {}
+        if numMembers > 0 then
+            for i = 1, numMembers do
+                table.insert(output, "raid" .. tostring(i))
+            end
+        end
+
+        return #output > 0 and output or nil
+    else
+        return nil
+    end
+end
+
+---Search for a co-tank in the current raid group
+---@return string|nil unit the unit token of the co-tank, or nil if not found
+local function SearchCoTank()
+    local raidIterator = GetRaidIterator()
+    if raidIterator then
+        for _, unit in ipairs(raidIterator) do
+            if not UnitIsUnit(unit, "player") and UnitGroupRolesAssigned(unit) == "TANK" then
+                return unit
+            end
+        end
+    end
+
+    return nil
+end
+
+local function SetCotankContainerUnit(self, unitToken)
+    if self.cotankContainer and unitToken then
+        self.cotankContainer:SetUnit(unitToken)
+    end
+end
+
+local function SetCoTankEvent(self)
+    if not self.eventFrame then
+        self.eventFrame = CreateFrame("Frame", nil, UIParent)
+    end
+
+    addon.core:RegisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
+    self.eventFrame:SetScript("OnEvent", function(_, event)
+        if event == "GROUP_ROSTER_UPDATE" then
+            if not self.cotankContainer then return end
+
+            self.coTankToken = SearchCoTank()
+            if self.coTankToken then -- found a co-tank
+                SetCotankContainerUnit(self, self.coTankToken)
+                self.cotankContainer:Show()
+            end
+        end
+    end)
+end
+
+-- MARK: Create Co-Tank
+
+--- Create a Co-Tank container for the given options, which is a container not in db
+--- Specifically, since co-tank container may need to set unitToken later in the game with team chances
+--- Create a container withou "nil" UnitToken, and set it later with container:SetUnit(unitToken)
+--- The container's name is always "CoTank"
+---@param options table the options for the container, same as the db data
+local function CreateCoTankContainer(self, options)
+    local name = "CoTank"
+    local width = options.IconSize * options.MaxCount
+    local height = options.IconSize
+
+    local container = CreateFrame("AuraContainer", ADDON_NAME .. "_" .. name, UIParent, "CustomAuraContainerTemplate")
+    container:SetFlowLayoutGrowthDirection(DIRECTION[options.GrowDirection or "RIGHT"], DIRECTION.UP)
+    local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
+    container:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
+    container:SetSize(width, height)
+    -- unitToken is not set initially, will be set later with container:SetUnit(unitToken)
+
+    local filterString, candidateFilters = GenerateFiltersFromOptions(options)
+    container:AddAuraGroup(name, filterString, {
+        maxFrameCount = options.MaxCount,
+        initializeFrame = function(frame)
+            InitializeAuraButton(frame, options)
+        end,
+        layout = {
+            elementSpacing = options.IconSpacing or 0,
+            lineSpacing = 0,
+            groupSpacing = 0,
+            groupLineSpacing = 0,
+            forceNewLine = false,
+            elementWidth = options.IconSize,
+            elementHeight = options.IconSize,
+        },
+        candidateFilters = candidateFilters,
+    })
+
+    container:Hide() -- hide, show once a co-tank is found
+    self.cotankContainer = container
+    self.containers[name] = container
+
+    -- also initialzie the eventFrame, since co-tank container is the only frame which need to register to events
+    SetCoTankEvent(self)
+end
+
 -- MARK: Aura Sound Handlers
 
 local function RegisterAuraSound(self, spellId, trigger, soundFileLSM)
@@ -318,6 +426,17 @@ end
 
 -- MARK: Test Mode Handler
 
+---Resolve the options table for a container key, "CoTank" uses its own db field
+---@param self AuraHelper
+---@param key string
+---@return table|nil options
+local function GetContainerOptions(self, key)
+    if key == "CoTank" then
+        return self.db.coTankOptions
+    end
+    return self.db.data[key]
+end
+
 --- Build a test overlay for the given container
 ---@param self AuraHelper
 ---@param key string the key of the container in the db
@@ -326,7 +445,7 @@ local function BuildTestOverlay(self, key)
     -- instead of create the test overlay according to the container
     -- just use the DB data to create the test overlay
     -- so that the test overlay can be shown even if the container is not created yet
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
 
     if options then
         local overlay = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
@@ -364,8 +483,8 @@ local function BuildTestOverlay(self, key)
         ---Keep the container on the overlay, the container does not follow it on its own
         local function saveAndApplyPosition(overlayFrame)
             local x, y = updatePosition(overlayFrame)
-            module.db.data[key].X = x
-            module.db.data[key].Y = y
+            options.X = x
+            options.Y = y
             module:UpdatePosition(key)
         end
 
@@ -412,6 +531,20 @@ local function ToggleTestRegion(self, on)
             end
         end
     end
+
+    if self.db.EnabledCoTank then
+        if not self.testOverlay["CoTank"] then
+            self.testOverlay["CoTank"] = BuildTestOverlay(self, "CoTank")
+        end
+
+        if on then
+            if self.testOverlay["CoTank"] then
+                self.testOverlay["CoTank"]:Show()
+            end
+        elseif self.testOverlay["CoTank"] then
+            self.testOverlay["CoTank"]:Hide()
+        end
+    end
 end
 
 -- MARK: Load DB
@@ -445,7 +578,10 @@ function AuraHelper:Initialize()
     self.testOverlay = {}
 
     self.soundRegistered = {}
-    -- LoadDBSound(self)
+
+    if self.db.EnabledCoTank then
+        CreateCoTankContainer(self, self.db.coTankOptions)
+    end
 
     return self
 end
@@ -485,10 +621,40 @@ function AuraHelper:RemoveContainer(key)
     end
 end
 
+-- MARK: Enable/Disable Co-Tank
+
+---Create and show the Co-Tank container, called when the user enables it from the config panel
+function AuraHelper:EnableCoTank()
+    if self.containers["CoTank"] then
+        return
+    end
+
+    CreateCoTankContainer(self, self.db.coTankOptions)
+end
+
+---Hide and drop the Co-Tank container, called when the user disables it from the config panel
+function AuraHelper:DisableCoTank()
+    if self.eventFrame then
+        self.eventFrame:UnregisterEvent("GROUP_ROSTER_UPDATE")
+    end
+
+    if self.cotankContainer then
+        self.cotankContainer:Hide()
+        self.cotankContainer = nil
+    end
+    self.containers["CoTank"] = nil
+    self.coTankToken = nil
+
+    if self.testOverlay["CoTank"] then
+        self.testOverlay["CoTank"]:Hide()
+        self.testOverlay["CoTank"] = nil
+    end
+end
+
 -- MARK: Update Conatiner
 
 function AuraHelper:UpdateFilter(key)
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
     local filterString, candidateFilters = GenerateFiltersFromOptions(options)
     local container = self.containers[key]
     if container then
@@ -498,7 +664,7 @@ function AuraHelper:UpdateFilter(key)
 end
 
 function AuraHelper:UpdateGrowDirection(key)
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
     local container = self.containers[key]
     if container then
         local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
@@ -517,7 +683,7 @@ function AuraHelper:UpdateGrowDirection(key)
 end
 
 function AuraHelper:UpdateMaxCount(key)
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
     local container = self.containers[key]
     if container then
         container:SetAuraGroupMaxFrameCount(key, options.MaxCount)
@@ -537,7 +703,7 @@ function AuraHelper:UpdateMaxCount(key)
 end
 
 function AuraHelper:UpdatePosition(key)
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
     local container = self.containers[key]
     if container then
         local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
@@ -554,7 +720,7 @@ function AuraHelper:UpdatePosition(key)
 end
 
 function AuraHelper:UpdateLayout(key)
-    local options = self.db.data[key]
+    local options = GetContainerOptions(self, key)
     local container = self.containers[key]
     if container then
         container:SetAuraGroupLayout(key, {

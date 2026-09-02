@@ -58,11 +58,8 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
 		)
 	end)
 
-	-- MARK: Style
-	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
-
 	-- MARK: Position
-	local positionGroup = GUI:CreateInlineGroup(styleGroup, L["PositionSettings"])
+	local positionGroup = GUI:CreateInlineGroup(frame, L["PositionSettings"])
 	GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, addon.db.Countdown.X, function(value)
 		addon.db.Countdown.X = value
 		update()
@@ -73,7 +70,7 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
 	end)
 
 	-- MARK: Font
-	local fontGroup = GUI:CreateInlineGroup(styleGroup, L["FontSettings"])
+	local fontGroup = GUI:CreateInlineGroup(frame, L["FontSettings"])
 	GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.Countdown.Font, function(value)
 		addon.db.Countdown.Font = value
 		update()

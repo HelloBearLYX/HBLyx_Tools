@@ -11,6 +11,17 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 	Enabled = true,
 	data = {},
 	dataSound = {}, -- {spellID = {trigger = soundLSM}}
+	EnabledCoTank = true,
+	coTankOptions = {
+		Type = "Harmful",
+		IconSize = 40,
+		MaxCount = 5,
+		IconSpacing = 0,
+		GrowDirection = "RIGHT",
+		X = 145,
+		Y = -40,
+		Filters = {"NonPlayer"},
+	},
 }
 
 local DEFAULT_CONTAINER = {
@@ -59,6 +70,7 @@ local FILTER_META = {
 local FILTER_LOCALE_KEY = {
 	PI = "Power_Infusion",
 }
+local COTANK_KEY = "CoTank" -- reserved container name used by the Co-Tank feature
 
 local function CloneTable(t)
 	local result = {}
@@ -107,6 +119,16 @@ local function EnsureAuraDB()
 	end
 end
 
+---Resolve the saved options table for a container key, "CoTank" is stored separately
+---@param key string
+---@return table|nil options
+local function GetContainerOptionsTable(key)
+	if key == COTANK_KEY then
+		return addon.db[MOD_KEY].coTankOptions
+	end
+	return addon.db[MOD_KEY].data[key]
+end
+
 local function FetchTypeList()
 	local module = addon.core:GetModule(MOD_KEY)
 	if module and module.GetTypeList then
@@ -151,6 +173,8 @@ local function FetchContainerList()
 		list[key] = key
 		table.insert(order, key)
 	end
+	list[COTANK_KEY] = L["CoTankLabel"] or COTANK_KEY
+	table.insert(order, COTANK_KEY)
 	table.sort(order)
 	return list, order
 end
@@ -179,7 +203,7 @@ end
 
 local function AddContainer(key, auraType)
 	EnsureAuraDB()
-	if key == nil or key == "" or addon.db[MOD_KEY].data[key] then
+	if key == nil or key == "" or key == COTANK_KEY or addon.db[MOD_KEY].data[key] then
 		return false
 	end
 
@@ -281,6 +305,19 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		)
 	end)
 
+	GUI:CreateInformationTag(frame, L["CoTankDesc"], "LEFT")
+	GUI:CreateToggleCheckBox(frame, L["EnableCoTank"], addon.db[MOD_KEY].EnabledCoTank, function(value)
+		addon.db[MOD_KEY].EnabledCoTank = value
+		local module = addon.core:GetModule(MOD_KEY)
+		if module then
+			if value then
+				module:EnableCoTank()
+			else
+				module:DisableCoTank()
+			end
+		end
+	end)
+
 	-- Container settings
 	local containerGroup = GUI:CreateInlineGroup(frame, L["AuraContainerSettings"])
 	GUI:CreateInformationTag(containerGroup, L["AuraContainerDesc"], "LEFT")
@@ -321,7 +358,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	end
 
 	local function RefreshOptions()
-		local options = containerSelected and addon.db[MOD_KEY].data[containerSelected] or DEFAULT_CONTAINER
+		local options = containerSelected and GetContainerOptionsTable(containerSelected) or DEFAULT_CONTAINER
 
 		typeSelected = options.Type or "Helpful"
 		typeSelection:SetValue(typeSelected)
@@ -356,20 +393,21 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 			return
 		end
 
-		if not addon.db[MOD_KEY].data[containerSelected] then
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then
 			return
 		end
 
-		addon.db[MOD_KEY].data[containerSelected].Type = value
+		options.Type = value
 
 		local allowed = FetchFilterList(value)
 		local filters = {}
-		for _, name in pairs(addon.db[MOD_KEY].data[containerSelected].Filters or {}) do
+		for _, name in pairs(options.Filters or {}) do
 			if allowed[name] then
 				table.insert(filters, name)
 			end
 		end
-		addon.db[MOD_KEY].data[containerSelected].Filters = filters
+		options.Filters = filters
 		RefreshFilterList()
 		if filtersSelection then filtersSelection:SetSelectedKeys(BuildFilterSelectionMap(filters)) end
 		ApplyUpdate("UpdateFilter", containerSelected)
@@ -380,6 +418,11 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		local key = strtrim(nameInput:GetText() or "")
 		if key == "" or key:find("[^%w_]") then
 			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraContainerName"], true)
+			return
+		end
+
+		if key == COTANK_KEY then
+			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
 			return
 		end
 
@@ -402,6 +445,11 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 
 	GUI:CreateButton(containerGroup, L["Remove"], function()
 		local key = containerSelected
+		if key == COTANK_KEY then
+			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
+			return
+		end
+
 		if not RemoveContainer(key) then
 			addon.Utilities:print(L["RemoveFailed"])
 			return
@@ -424,6 +472,9 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	filtersSelection:GetWidget():SetOnValueChanged(function()
 		if not containerSelected then return end
 
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
 		local filters = {}
 		for name, isSelected in pairs(filtersSelection:GetSelectedKeys() or {}) do
 			if isSelected then
@@ -431,14 +482,17 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 			end
 		end
 
-		addon.db[MOD_KEY].data[containerSelected].Filters = filters
+		options.Filters = filters
 		ApplyUpdate("UpdateFilter", containerSelected)
 	end)
 
 	growSelection = GUI:CreateDropdown(optionsGroup, L["Grow"], GROW_DIRECTIONS, GROW_ORDER, "RIGHT", function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].GrowDirection = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.GrowDirection = value
 		ApplyUpdate("UpdateGrowDirection", containerSelected)
 	end)
 
@@ -446,19 +500,28 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	maxCountSlider = GUI:CreateSlider(iconGroup, L["MaxCount"], 1, 20, 1, 5, function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].MaxCount = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.MaxCount = value
 		ApplyUpdate("UpdateMaxCount", containerSelected)
 	end)
 	iconSizeSlider = GUI:CreateSlider(iconGroup, L["IconSize"], 10, 120, 1, 35, function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].IconSize = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.IconSize = value
 		ApplyUpdate("UpdateLayout", containerSelected)
 	end)
 	iconSpacingSlider = GUI:CreateSlider(iconGroup, L["IconSpacing"], -10, 30, 1, 0, function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].IconSpacing = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.IconSpacing = value
 		ApplyUpdate("UpdateLayout", containerSelected)
 	end)
 
@@ -466,13 +529,19 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 	xSlider = GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, 0, function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].X = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.X = value
 		ApplyUpdate("UpdatePosition", containerSelected)
 	end)
 	ySlider = GUI:CreateSlider(positionGroup, L["Y"], -1000, 1000, 1, 0, function(value)
 		if not containerSelected then return end
 
-		addon.db[MOD_KEY].data[containerSelected].Y = value
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.Y = value
 		ApplyUpdate("UpdatePosition", containerSelected)
 	end)
 

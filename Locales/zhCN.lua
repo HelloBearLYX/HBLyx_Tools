@@ -41,9 +41,12 @@ L["SoundChannel"] = {
 }
 
 -- MARK: Config
-L["Modules"] = "模组"
+L["Modules"] = "模块"
+L["CombatModules"] = "战斗模块"
+L["UtilityModules"] = "实用模块"
+L["SkinModules"] = "美化模块"
+L["ClassSpecificModules"] = "职业模块"
 L["BasicSettings"] = "基础设置"
-L["ClassSpecificModules"] = "职业模组"
 L["Others"] = "其他"
 L["ConfigPanel"] = "打开配置面板"
 L["Test"] = "测试/解锁(拖动移动)"
@@ -459,6 +462,10 @@ L["AuraSpellID"] = "光环法术ID"
 L["InvalidAuraSpellID"] = "无效的光环法术ID"
 L["AuraSoundTriggerRequired"] = "请选择音效触发器, 这是必填项"
 L["AuraSoundMediaRequired"] = "请选择音效, 这是必填项"
+L["EnableCoTank"] = "启用副坦光环容器"
+L["CoTankLabel"] = "副坦克"
+L["CoTankDesc"] = "追踪团队中副坦的光环。只有在团队中找到副坦时, 这个容器才会显示并生效, 因此在非团队或你是唯一坦克时它会保持隐藏\n推荐为此容器使用的过滤器为 \"有害\" + \"非玩家\"\n\"CoTank\" 这个名称已被此功能保留"
+L["ReservedAuraContainerName"] = "\"CoTank\" 名称已被插件占用, 请选择其他名称"
 
 -- MARK: Countdown
 L["CountdownSettings"] = "倒计时"

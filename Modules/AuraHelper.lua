@@ -48,7 +48,6 @@ local TYPES = {
 local FILTERS = {
     -- token filters, the values are string
     Player = {value = "PLAYER", category = "Both", name = L["AuraFilter"]["Player"]},
-    NonPlayer = {value = "!PLAYER", category = "Both", name = L["AuraFilter"]["NonPlayer"]},
     Raid = {value = "RAID", category = "Both", name = L["AuraFilter"]["Raid"]},
     Defensive = {value = "BIG_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["Defensive"]},
     -- External = {value = "EXTERNAL_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["External"]},
@@ -57,10 +56,15 @@ local FILTERS = {
     -- candidate filters, the values are table
     PI = {value = {includeSpellIDs = {
         [10060] = true, -- Power Infusion
-        [1044] = true, -- Bless of Freedom
-        [116841] = true, -- Tiger's Lust
         [406732] = true, -- Spatial Paradox
         [29166] = true, -- Innervate
+        -- movement
+        [192082] = true, -- Wind Rush Totem
+        [106898] = true, -- Stampeding Roar
+        [77761] = true, -- Stampeding Roar(Bear)
+        [77764] = true, -- Stampeding Roar(Cat)
+        [1044] = true, -- Bless of Freedom
+        [116841] = true, -- Tiger's Lust
         -- external defensive
         [33206] = true, -- Pain Suppression
         [47788] = true, -- Guardian Spirit
@@ -98,6 +102,7 @@ local FILTERS = {
         [1295147] = true, -- Liquid Luster
         [1236551] = true, -- Void-Shrouded Tincture
     }}, category = "Buff", name = L["AuraFilter"]["Potions"]},
+    NonPlayer = {value = {isFromPlayerOrPlayerPet = false}, category = "Both", name = L["AuraFilter"]["NonPlayer"]},
     Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
     Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
     Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
@@ -311,7 +316,7 @@ local function SetCoTankEvent(self)
     addon.core:RegisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
     self.eventFrame:SetScript("OnEvent", function(_, event)
         if event == "GROUP_ROSTER_UPDATE" then
-            if not self.cotankContainer then return end
+            if not self.cotankContainer or UnitGroupRolesAssigned("player") ~= "TANK" then return end
 
             self.coTankToken = SearchCoTank()
             if self.coTankToken then -- found a co-tank

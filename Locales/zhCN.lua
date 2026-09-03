@@ -474,7 +474,7 @@ L["AuraSoundTriggerRequired"] = "请选择音效触发器, 这是必填项"
 L["AuraSoundMediaRequired"] = "请选择音效, 这是必填项"
 L["EnableCoTank"] = "启用副坦光环容器"
 L["CoTankLabel"] = "副坦克"
-L["CoTankDesc"] = "追踪团队中副坦的光环。只有在团队中找到副坦时, 这个容器才会显示并生效, 因此在非团队或你是唯一坦克时它会保持隐藏\n推荐为此容器使用的过滤器为 \"有害\" + \"非玩家\"\n\"CoTank\" 这个名称已被此功能保留"
+L["CoTankDesc"] = "追踪团队中副坦的光环。只有在团队中找到副坦时(且玩家为坦克), 这个容器才会显示并生效, 因此在非团队或你是唯一坦克时它会保持隐藏\n推荐为此容器使用的过滤器为 \"有害\" + \"非玩家\"\n\"CoTank\" 这个名称已被此功能保留"
 L["ReservedAuraContainerName"] = "\"CoTank\" 名称已被插件占用, 请选择其他名称"
 
 -- MARK: Countdown

@@ -80,7 +80,7 @@ local function Handler(self)
         self.frame.charge:SetText(chargeCount or "")
 
         local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)
-        self.frame.cooldown:SetCooldownDuration(durationObj:GetRemainingDuration() or 0)
+        self.frame.cooldown:SetCooldownDuration((durationObj and durationObj:GetRemainingDuration()) or 0)
     else
         Reset(self)
     end
@@ -175,7 +175,14 @@ function BattleRes:RegisterEvents()
     addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_START", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
-    addon.core:RegisterEvent("ZONE_CHANGED_NEW_AREA", self.frame, self.modName)
+    addon.core:RegisterStateMonitor("instanceInfo", self.modName, function()
+        -- when the player is not in an instance, just set the module to inactive
+        if addon.states["instanceInfo"].difficultyID == 0 then
+            self.active = false
+        end
+
+        Handler(self)
+    end)
 
     self.frame:SetScript("OnEvent", function (_, event, ...)
         OnEvent(event, ...)

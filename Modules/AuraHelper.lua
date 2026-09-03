@@ -320,8 +320,12 @@ local function SetCoTankEvent(self)
 
             self.coTankToken = SearchCoTank()
             if self.coTankToken then -- found a co-tank
-                SetCotankContainerUnit(self, self.coTankToken)
+                self.cotankContainer:SetEnabled(true)
+                self.cotankContainer:SetUnit(self.coTankToken)
                 self.cotankContainer:Show()
+            else
+                self.cotankContainer:Hide()
+                self.cotankContainer:SetEnabled(false)
             end
         end
     end)
@@ -365,6 +369,7 @@ local function CreateCoTankContainer(self, options)
     })
 
     container:Hide() -- hide, show once a co-tank is found
+    container:SetEnabled(false) -- disable, enable once a co-tank is found
     self.cotankContainer = container
     self.containers[name] = container
 

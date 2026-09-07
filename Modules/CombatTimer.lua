@@ -21,7 +21,7 @@ local function CreateCTFrame(self)
     frame.text:SetAllPoints()
 
     frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
@@ -100,7 +100,7 @@ function CombatTimer:UpdateStyle()
     self.frame:SetSize(3 * addon.db[self.modName]["FontSize"], addon.db[self.modName]["FontSize"])
 
     self.frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )

@@ -141,7 +141,7 @@ function DemonologyPortals:UpdateStyle()
     self.frame.cooldown:SetScale(addon.db[self.modName]["TimeFontScale"])
     self.frame.icon:SetTexCoord(addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"], addon.db[self.modName]["IconZoom"], 1 - addon.db[self.modName]["IconZoom"])
     self.frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["CountFont"] or "Fonts\\FRIZQT__.TTF"),
+        addon.LSM:Fetch("font", addon.db[self.modName]["CountFont"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["CountFontSize"],
         "OUTLINE"
     )

@@ -80,7 +80,7 @@ function CombatIndicator:UpdateStyle()
     self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )

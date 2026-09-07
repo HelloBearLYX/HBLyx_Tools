@@ -159,7 +159,7 @@ local function InitializeAuraButton(self, frame, options)
 
     local stack = frame:CreateFontString(nil, "OVERLAY")
     stack:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-    stack:SetFont("Fonts\\FRIZQT__.TTF", options.StackTextSize or 12, "OUTLINE")
+    stack:SetFont(addon.DEFAULTS.font, options.StackTextSize or 12, "OUTLINE")
     stack:SetTextColor(1, 1, 1, 1)
     frame:SetApplicationCount(stack)
 
@@ -455,7 +455,7 @@ local function BuildTestOverlay(self, key)
 
         local text = overlay:CreateFontString(nil, "OVERLAY")
         text:SetPoint("CENTER", overlay, "CENTER", 0, 0)
-        text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+        text:SetFont(addon.DEFAULTS.font, 10, "OUTLINE")
         text:SetText(L["AuraHelperSettings"] .. "-" .. key)
         overlay.text = text
 

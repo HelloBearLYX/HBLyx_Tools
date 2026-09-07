@@ -87,7 +87,7 @@ local function UpdateWarningStyle(self, frame)
     frame.text:SetWidth(addon.db[self.modName]["Width"])
     frame.text:SetHeight(addon.db[self.modName]["Height"])
     frame.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
@@ -201,7 +201,7 @@ local function TestPrivateWarning(self, onTest)
         testWarning.text = testWarning:CreateFontString(nil, "OVERLAY")
         testWarning.text:SetAllPoints()
         testWarning.text:SetFont(
-            "Fonts\\FRIZQT__.TTF",
+            addon.DEFAULTS.font,
             12,
             "OUTLINE"
         )

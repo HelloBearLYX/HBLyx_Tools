@@ -234,7 +234,7 @@ function addon.Utilities:ShowDragRegion(frame, name)
 	frame.dragRegion:SetAllPoints()
 	frame.dragRegion:SetColorTexture(0, 0, 1, 0.5)
 	frame.dragRegion.text = frame:CreateFontString(nil, "OVERLAY")
-	frame.dragRegion.text:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	frame.dragRegion.text:SetFont(addon.DEFAULTS.font, 10, "OUTLINE")
 	frame.dragRegion.text:SetPoint("CENTER", frame.dragRegion, "TOP", 0, 0)
 	frame.dragRegion.text:SetText(name or "")
 end

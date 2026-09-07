@@ -64,7 +64,7 @@ local function CreateHideButton(self)
     button.text:SetPoint("CENTER", button, "CENTER", 0, 0)
     button.text:SetText(L["Hide"])
     button.text:SetTextColor(1, 1, 1, 1)
-    button.text:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    button.text:SetFont(addon.DEFAULTS.font, 12, "OUTLINE")
 
     button:SetScript("OnClick", function()
         button.toggled = not button.toggled
@@ -123,7 +123,7 @@ local function CreateMenuButton(self, name, index, color, onClick)
     button.text:SetPoint("CENTER", button, "CENTER", 0, 0)
     button.text:SetText(name)
     button.text:SetTextColor(1, 1, 1, 1)
-    button.text:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    button.text:SetFont(addon.DEFAULTS.font, 12, "OUTLINE")
 
     return button
 end
@@ -179,7 +179,7 @@ local function CreateCategoryTab(tab, subCategoryData, color, parent, width)
     end
     tab.text:SetText(FetchCategoryLocales(subCategoryData.subCategory) or subCategoryData.subCategory or "")
     tab.text:SetTextColor(1, 1, 1, 1)
-    tab.text:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    tab.text:SetFont(addon.DEFAULTS.font, 12, "OUTLINE")
     tab:Show()
 
     return tab
@@ -244,12 +244,12 @@ local function CreateButton(self, itemID, tag, parent)
         button.name = button.textFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         button.name:SetPoint("BOTTOM", button, "BOTTOM", 0, 0)
         button.name:SetTextColor(1, 1, 1, 1)
-        button.name:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+        button.name:SetFont(addon.DEFAULTS.font, 10, "OUTLINE")
 
         button.quantity = button.textFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         button.quantity:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
         button.quantity:SetTextColor(1, 1, 1, 1)
-        button.quantity:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+        button.quantity:SetFont(addon.DEFAULTS.font, 10, "OUTLINE")
 
         button.border = CreateFrame("Frame", nil, button, "BackdropTemplate")
         button.border:SetAllPoints()
@@ -446,7 +446,7 @@ local function CreateMainFrame(self)
     self.frame.title:SetPoint("BOTTOM", self.frame, "TOP", 0, 0)
     self.frame.title:SetText(L["AuctionHelperTitle"])
     self.frame.title:SetTextColor(1, 1, 1, 1)
-    self.frame.title:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+    self.frame.title:SetFont(addon.DEFAULTS.font, 16, "OUTLINE")
 
     self.frame.background = self.frame:CreateTexture(nil, "BACKGROUND")
     self.frame.background:SetAllPoints()

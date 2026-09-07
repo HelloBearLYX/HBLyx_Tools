@@ -299,7 +299,7 @@ function WarlockReminder:UpdateStyle()
 
     self.pet.text:SetPoint("CENTER", self.pet, "BOTTOM", 0, 0)
     self.pet.text:SetFont(addon.LSM:Fetch(
-        "font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        "font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
@@ -307,7 +307,7 @@ function WarlockReminder:UpdateStyle()
 
     self.candy.text:SetPoint("CENTER", self.candy, "BOTTOM", 0, 0)
     self.candy.text:SetFont(addon.LSM:Fetch(
-        "font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        "font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )

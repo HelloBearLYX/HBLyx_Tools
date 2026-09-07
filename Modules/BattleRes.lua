@@ -42,7 +42,7 @@ local function CreateBRFrame(self)
     charge:SetPoint("CENTER", frame, "BOTTOM", 0, 0)
     charge:SetTextColor(1, 1, 1, 1)
     charge:SetFont(
-        addon.LSM:Fetch("font", self.db["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", self.db["Font"]) or addon.DEFAULTS.font,
         self.db["ChargeFontSize"],
         "OUTLINE"
     )
@@ -121,7 +121,7 @@ function BattleRes:UpdateStyle()
     self.frame.cooldown:SetScale(self.db["TimeFontScale"])
 
     self.frame.charge:SetFont(
-        addon.LSM:Fetch("font", self.db["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", self.db["Font"]) or addon.DEFAULTS.font,
         self.db["ChargeFontSize"],
         "OUTLINE"
     )

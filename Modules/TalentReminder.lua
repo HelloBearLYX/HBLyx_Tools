@@ -187,7 +187,7 @@ function TalentReminder:UpdateStyle()
     self.head:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName].X, addon.db[self.modName].Y)
     self.head:SetFrameStrata(addon.db[self.modName].FrameStrata)
     self.head.text:SetFont(
-        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+        addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )

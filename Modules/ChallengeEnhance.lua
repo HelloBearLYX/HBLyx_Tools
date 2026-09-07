@@ -118,7 +118,7 @@ end
 function ChallengeEnhance:UpdateStyle()
     for mapID, button in pairs(self.buttons) do
         button.level:SetFont(
-            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
             addon.db[self.modName]["LevelFontSize"],
             "OUTLINE"
         )
@@ -126,7 +126,7 @@ function ChallengeEnhance:UpdateStyle()
         button.level:SetPoint("CENTER", button, addon.db[self.modName]["LevelAnchor"], addon.db[self.modName]["LevelX"], addon.db[self.modName]["LevelY"])
 
         button.score:SetFont(
-            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
             addon.db[self.modName]["ScoreFontSize"],
             "OUTLINE"
         )
@@ -134,7 +134,7 @@ function ChallengeEnhance:UpdateStyle()
         button.score:SetPoint("CENTER", button, addon.db[self.modName]["ScoreAnchor"], addon.db[self.modName]["ScoreX"], addon.db[self.modName]["ScoreY"])
 
         button.mapName:SetFont(
-            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or "Fonts\\FRIZQT__.TTF",
+            addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
             addon.db[self.modName]["NameFontSize"],
             "OUTLINE"
         )

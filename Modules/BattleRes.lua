@@ -79,10 +79,12 @@ local function Handler(self)
         local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
         self.frame.charge:SetText(chargeCount or "")
 
-        if chargeCount and chargeCount > 0 then
-            self.frame.icon:SetDesaturated(false)
-        else
-            self.frame.icon:SetDesaturated(true)
+        self.frame.icon:SetDesaturated(false)
+        if not issecretvalue(chargeCount) then
+            local chargeNumber = tonumber(chargeCount)
+            if chargeNumber and chargeNumber < 1 then
+                self.frame.icon:SetDesaturated(true)
+            end
         end
 
         local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)

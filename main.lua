@@ -88,8 +88,8 @@ end
 
 ---Register in-game Slash Command
 local function SetUpSlashCommand()
-	SLASH_HBLYX1 = "/hblyx"
-	SlashCmdList["HBLYX"] = function(message)
+	SLASH_HBT1 = "/hbt"
+	SlashCmdList["HBT"] = function(message)
 		local command, rest = strsplit(" ", message, 2)
 		if command == "" then
 			if addon.GUI and addon.GUI.isOpened then

@@ -15,7 +15,7 @@
 - **Custom Aura Tracker**: Track aura that are triggered by "player" and display and play sound alert with customizable options
 - **Warlock Reminders**: Icon+Text reminder for pet and healthstones for warlocks.
 
-## To customize the addon, please use: /hblyx or ESC->Options->Addons->HBLyx\_Tools
+## To customize the addon, please use: /hbt
 - Under the Test mode, you can drag to adjust position of all elements shown (recommendation: after adjustment, please turn off the test mode and reload)
 
 # 魔兽世界的工具合集插件 by HBLyx
@@ -31,5 +31,5 @@
 - **术士提醒**: 为术士提供宠物和治疗石提醒
 
 
-## 若需要自定义,请使用: /hblyx 或 ESC->选项->插件->HBLyx\_Tools
+## 若需要自定义,请使用: /hbt
 - 在测试模式下，您可以拖动调整所有显示元素的位位置(建议：调整完成后，请关闭测试模式并重新加载) 

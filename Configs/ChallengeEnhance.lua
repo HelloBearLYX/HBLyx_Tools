@@ -8,6 +8,7 @@ addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Font = "",
     PortalPartyMessage = true,
+    TeamKeystone = true,
     -- level settings
     LevelEnabled = true,
     LevelFontSize = 20,
@@ -45,6 +46,10 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
     end)
     GUI:CreateToggleCheckBox(frame, L["PortalPartyMessage"], addon.db.ChallengeEnhance.PortalPartyMessage, function(value)
         addon.db.ChallengeEnhance.PortalPartyMessage = value
+        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+    end)
+    GUI:CreateToggleCheckBox(frame, L["Enable"] .. L["TeamKeystone"], addon.db.ChallengeEnhance.TeamKeystone, function(value)
+        addon.db.ChallengeEnhance.TeamKeystone = value
         addon:ShowDialog(ADDON_NAME.."RLNeeded")
     end)
     GUI:CreateButton(frame, L["ResetMod"], function ()

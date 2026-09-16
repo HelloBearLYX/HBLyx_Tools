@@ -1,20 +1,44 @@
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
+local LibKS = LibStub("LibKeystone")
 
 ---@class ChallengeEnhance
 ---@field buttons table ChallengeEnhance buttons
 ---@field eventFrame frame Handle Blizzard PVEFrame loaded
 ---@field modName string module name for registering in core
+---@field keystoneFrame frame frame showing teammates' keystone info
+---@field keystoneHeader frame header row showing the column titles
+---@field keystoneBody frame container frame holding the keystone columns
+---@field keystoneColumns table playerName/keyLevel/dungeonName fontstrings, one line per teammate
+---@field keystoneData table party member name -> {keyLevel, keyChallengeMapID} cache
 local ChallengeEnhance = {
     modName = "ChallengeEnhance",
     buttons = {},
     loaded = false,
     updateHooked = false,
+    keystoneShowHooked = false,
+    keystoneFrame = nil,
+    keystoneHeader = nil,
+    keystoneBody = nil,
+    keystoneColumns = nil,
+    keystoneData = {},
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
 
 local HOOK_UPDATE_DELAY = 0.5
 local EVENT_UPDATE_DELAY = 1
+
+local KEYSTONE_COL_PLAYER_W = 100
+local KEYSTONE_COL_LEVEL_W = 50
+local KEYSTONE_COL_DUNGEON_W = 100
+local KEYSTONE_ROW_HEIGHT = 16
+
+local NAME_TO_SHORT = {}
+for _, mapInfo in pairs(addon.data.SEASON_MAP) do
+    if mapInfo.short then
+        NAME_TO_SHORT[mapInfo.name] = mapInfo.short
+    end
+end
 
 -- MARK: Initialize
 
@@ -241,6 +265,184 @@ local function CreateButtons(self)
     self.lastUpdate = GetTime()
 end
 
+-- MARK: Keystone Frame
+
+---Strip the realm suffix off a full player name
+---@param fullName string full player name, possibly with "-Realm" suffix
+---@return string name name without the realm suffix
+local function StripRealm(fullName)
+    if not fullName then return "?" end
+    return Ambiguate(fullName, "short") or fullName:match("^([^%-]+)") or fullName
+end
+
+---Build a short name -> classFile lookup for everyone currently in the group
+---@return table classMap short name -> classFile
+local function BuildClassColorMap()
+    local map = {}
+    if IsInGroup() then
+        local prefix = IsInRaid() and "raid" or "party"
+        local count = GetNumGroupMembers()
+        for i = 1, (IsInRaid() and count or count - 1) do
+            local unit = prefix .. i
+            local name = UnitName(unit)
+            local _, classFile = UnitClass(unit)
+            if name and classFile then
+                map[name] = classFile
+            end
+        end
+    end
+
+    local myName = UnitName("player")
+    local _, myClassFile = UnitClass("player")
+    if myName and myClassFile then
+        map[myName] = myClassFile
+    end
+
+    return map
+end
+
+---Get the display color for a keystone level, higher levels are colored more distinctly
+---@param keyLevel integer keystone level
+---@return ColorMixin color color for the level
+local function GetKeyLevelColor(keyLevel)
+    if keyLevel >= 12 then return CreateColor(1, 0.5, 0, 1)
+    elseif keyLevel >= 10 then return CreateColor(0.63, 0.2, 0.93, 1)
+    elseif keyLevel >= 7 then return CreateColor(0, 0.44, 0.87, 1)
+    elseif keyLevel >= 4 then return CreateColor(0.12, 1, 0, 1)
+    else return CreateColor(1, 1, 1, 1) end
+end
+
+---Wrap text in a color escape sequence using only a color's r/g/b fields
+---(avoids relying on ColorMixin methods, which some color tables like RAID_CLASS_COLORS may lack)
+---@param text string text to color
+---@param color table|nil table with r,g,b fields, or nil to leave text uncolored
+---@return string text color-wrapped text
+local function WrapTextColor(text, color)
+    if not color then return text end
+    return string.format("|cff%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, text)
+end
+
+---Rebuild the keystoneFrame columns from the cached self.keystoneData
+---@param self ChallengeEnhance self
+local function UpdateKeystoneText(self)
+    local classMap = BuildClassColorMap()
+    local names = {}
+    for name in pairs(self.keystoneData) do
+        table.insert(names, name)
+    end
+    table.sort(names)
+
+    local playerLines, levelLines, dungeonLines = {}, {}, {}
+    for _, name in ipairs(names) do
+        local info = self.keystoneData[name]
+
+        local nameColor = RAID_CLASS_COLORS[classMap[StripRealm(name)]]
+        table.insert(playerLines, WrapTextColor(name, nameColor))
+
+        if info.keyLevel <= 0 then
+            table.insert(levelLines, "")
+            table.insert(dungeonLines, L["NotLearned"])
+        else
+            table.insert(levelLines, WrapTextColor(tostring(info.keyLevel), GetKeyLevelColor(info.keyLevel)))
+            local mapName = C_ChallengeMode.GetMapUIInfo(info.keyChallengeMapID)
+            table.insert(dungeonLines, mapName and (NAME_TO_SHORT[mapName] or mapName) or "")
+        end
+    end
+
+    self.keystoneColumns.playerName:SetText(table.concat(playerLines, "\n"))
+    self.keystoneColumns.keyLevel:SetText(table.concat(levelLines, "\n"))
+    self.keystoneColumns.dungeonName:SetText(table.concat(dungeonLines, "\n"))
+end
+
+---Create the keystoneFrame anchored to the right of ChallengesFrame
+---@param self ChallengeEnhance self
+local function CreateKeystoneFrame(self)
+    local frame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceKeystoneFrame", ChallengesFrame, "BackdropTemplate")
+    -- local totalHeight = math.floor(ChallengesFrame:GetHeight() / 2)
+    local totalHeight = 6 * KEYSTONE_ROW_HEIGHT + 5
+    frame:SetSize(KEYSTONE_COL_PLAYER_W + KEYSTONE_COL_LEVEL_W + KEYSTONE_COL_DUNGEON_W + 10, totalHeight)
+    frame:SetPoint("BOTTOMLEFT", ChallengesFrame, "BOTTOMRIGHT", 5, 0)
+    frame:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 }
+    })
+    frame:SetBackdropColor(0, 0, 0, 0.5)
+    frame:SetBackdropBorderColor(0, 0, 0, 1)
+
+    local playerHeader = frame:CreateFontString(nil, "OVERLAY")
+    playerHeader:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+    playerHeader:SetSize(KEYSTONE_COL_PLAYER_W, KEYSTONE_ROW_HEIGHT)
+    playerHeader:SetJustifyH("LEFT")
+    playerHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    playerHeader:SetText(L["KeystonePlayerName"])
+
+    local levelHeader = frame:CreateFontString(nil, "OVERLAY")
+    levelHeader:SetPoint("TOPLEFT", playerHeader, "TOPRIGHT", 0, 0)
+    levelHeader:SetSize(KEYSTONE_COL_LEVEL_W, KEYSTONE_ROW_HEIGHT)
+    levelHeader:SetJustifyH("LEFT")
+    levelHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    levelHeader:SetText(L["KeystoneKeyLevel"])
+
+    local dungeonHeader = frame:CreateFontString(nil, "OVERLAY")
+    dungeonHeader:SetPoint("TOPLEFT", levelHeader, "TOPRIGHT", 0, 0)
+    dungeonHeader:SetSize(KEYSTONE_COL_DUNGEON_W, KEYSTONE_ROW_HEIGHT)
+    dungeonHeader:SetJustifyH("LEFT")
+    dungeonHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    dungeonHeader:SetText(L["KeystoneDungeonName"])
+
+    local playerColumn = frame:CreateFontString(nil, "OVERLAY")
+    playerColumn:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, - KEYSTONE_ROW_HEIGHT)
+    playerColumn:SetSize(KEYSTONE_COL_PLAYER_W, totalHeight - KEYSTONE_ROW_HEIGHT)
+    playerColumn:SetJustifyH("LEFT")
+    playerColumn:SetJustifyV("TOP")
+    playerColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+
+    local levelColumn = frame:CreateFontString(nil, "OVERLAY")
+    levelColumn:SetPoint("TOPLEFT", frame, "TOPLEFT", KEYSTONE_COL_PLAYER_W, - KEYSTONE_ROW_HEIGHT)
+    levelColumn:SetSize(KEYSTONE_COL_LEVEL_W, totalHeight - KEYSTONE_ROW_HEIGHT)
+    levelColumn:SetJustifyH("LEFT")
+    levelColumn:SetJustifyV("TOP")
+    levelColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+
+    local dungeonColumn = frame:CreateFontString(nil, "OVERLAY")
+    dungeonColumn:SetPoint("TOPLEFT", frame, "TOPLEFT", KEYSTONE_COL_PLAYER_W + KEYSTONE_COL_LEVEL_W, - KEYSTONE_ROW_HEIGHT)
+    dungeonColumn:SetSize(KEYSTONE_COL_DUNGEON_W, totalHeight - KEYSTONE_ROW_HEIGHT)
+    dungeonColumn:SetJustifyH("LEFT")
+    dungeonColumn:SetJustifyV("TOP")
+    dungeonColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+
+    self.keystoneFrame = frame
+    self.keystoneColumns = { playerName = playerColumn, keyLevel = levelColumn, dungeonName = dungeonColumn }
+end
+
+---Read the player's own keystone directly and cache it into self.keystoneData
+---@param self ChallengeEnhance self
+local function RecordOwnKeystone(self)
+    local myName = UnitName("player")
+    if not myName then return end
+
+    self.keystoneData[myName] = {
+        keyLevel = C_MythicPlus.GetOwnedKeystoneLevel() or 0,
+        keyChallengeMapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID() or 0,
+    }
+end
+
+---Clear cached teammates' keystones and request fresh ones from the party
+---@param self ChallengeEnhance self
+local function RefreshKeystoneFrame(self)
+    if not self.keystoneFrame then return end
+
+    wipe(self.keystoneData)
+    RecordOwnKeystone(self)
+    -- surface any error instead of letting it silently abort the rebuild
+    local ok, err = pcall(UpdateKeystoneText, self)
+    if not ok then geterrorhandler()(err) end
+    LibKS.Request("PARTY")
+end
+
 ---Create buttons for dungeons in the PVEFrame
 ---This must be executed after Blizzard_ChallengesUI loaded the PVEFrame and its icons
 ---@return boolean success if the buttons are created
@@ -259,6 +461,18 @@ function ChallengeEnhance:Create()
                     CreateButtons(self)
                     self:UpdateStyle()
                     UpdateButtons(self, 0)
+
+                    if addon.db[self.modName]["TeamKeystone"] and not self.keystoneFrame then
+                        CreateKeystoneFrame(self)
+                        LibKS.Register(self, function(keyLevel, keyChallengeMapID, playerRating, name, channel)
+                            if channel ~= "PARTY" then return end
+                            self.keystoneData[name] = { keyLevel = keyLevel, keyChallengeMapID = keyChallengeMapID }
+                            -- LibKeystone invokes this via securecallfunction, which silently swallows errors, so surface them ourselves
+                            local ok, err = pcall(UpdateKeystoneText, self)
+                            if not ok then geterrorhandler()(err) end
+                        end)
+                        RefreshKeystoneFrame(self)
+                    end
                 end)
                 firstExecute = false
             else
@@ -266,6 +480,13 @@ function ChallengeEnhance:Create()
             end
         end)
         self.updateHooked = true
+    end
+
+    if addon.db[self.modName]["TeamKeystone"] and not self.keystoneShowHooked then
+        hooksecurefunc(ChallengesFrame, "Show", function()
+            RefreshKeystoneFrame(self)
+        end)
+        self.keystoneShowHooked = true
     end
 
     return true

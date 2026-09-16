@@ -31,12 +31,13 @@ local EVENT_UPDATE_DELAY = 1
 local KEYSTONE_COL_PLAYER_W = 100
 local KEYSTONE_COL_LEVEL_W = 50
 local KEYSTONE_COL_DUNGEON_W = 100
-local KEYSTONE_ROW_HEIGHT = 16
+local KEYSTONE_ROW_HEIGHT = 20
+local KEYSTONE_FONT_SIZE = 20
 
-local NAME_TO_SHORT = {}
-for _, mapInfo in pairs(addon.data.SEASON_MAP) do
+local NAME_TO_INFO = {}
+for mapID, mapInfo in pairs(addon.data.SEASON_MAP) do
     if mapInfo.short then
-        NAME_TO_SHORT[mapInfo.name] = mapInfo.short
+        NAME_TO_INFO[mapInfo.name] = mapID
     end
 end
 
@@ -344,8 +345,18 @@ local function UpdateKeystoneText(self)
             table.insert(dungeonLines, L["NotLearned"])
         else
             table.insert(levelLines, WrapTextColor(tostring(info.keyLevel), GetKeyLevelColor(info.keyLevel)))
+
             local mapName = C_ChallengeMode.GetMapUIInfo(info.keyChallengeMapID)
-            table.insert(dungeonLines, mapName and (NAME_TO_SHORT[mapName] or mapName) or "")
+            local mapID = mapName and NAME_TO_INFO[mapName]
+            local seasonInfo = mapID and addon.data.SEASON_MAP[mapID]
+            if seasonInfo then
+                local portalID = GetPortalID(mapID)
+                local icon = portalID and C_Spell.GetSpellTexture(portalID)
+                local iconText = icon and ("|T" .. icon .. ":0|t ") or ""
+                table.insert(dungeonLines, iconText .. seasonInfo.short)
+            else
+                table.insert(dungeonLines, mapName or "")
+            end
         end
     end
 
@@ -376,21 +387,21 @@ local function CreateKeystoneFrame(self)
     playerHeader:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     playerHeader:SetSize(KEYSTONE_COL_PLAYER_W, KEYSTONE_ROW_HEIGHT)
     playerHeader:SetJustifyH("LEFT")
-    playerHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    playerHeader:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
     playerHeader:SetText(L["KeystonePlayerName"])
 
     local levelHeader = frame:CreateFontString(nil, "OVERLAY")
     levelHeader:SetPoint("TOPLEFT", playerHeader, "TOPRIGHT", 0, 0)
     levelHeader:SetSize(KEYSTONE_COL_LEVEL_W, KEYSTONE_ROW_HEIGHT)
     levelHeader:SetJustifyH("LEFT")
-    levelHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    levelHeader:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
     levelHeader:SetText(L["KeystoneKeyLevel"])
 
     local dungeonHeader = frame:CreateFontString(nil, "OVERLAY")
     dungeonHeader:SetPoint("TOPLEFT", levelHeader, "TOPRIGHT", 0, 0)
     dungeonHeader:SetSize(KEYSTONE_COL_DUNGEON_W, KEYSTONE_ROW_HEIGHT)
     dungeonHeader:SetJustifyH("LEFT")
-    dungeonHeader:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    dungeonHeader:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
     dungeonHeader:SetText(L["KeystoneDungeonName"])
 
     local playerColumn = frame:CreateFontString(nil, "OVERLAY")
@@ -398,21 +409,21 @@ local function CreateKeystoneFrame(self)
     playerColumn:SetSize(KEYSTONE_COL_PLAYER_W, totalHeight - KEYSTONE_ROW_HEIGHT)
     playerColumn:SetJustifyH("LEFT")
     playerColumn:SetJustifyV("TOP")
-    playerColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    playerColumn:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
 
     local levelColumn = frame:CreateFontString(nil, "OVERLAY")
     levelColumn:SetPoint("TOPLEFT", frame, "TOPLEFT", KEYSTONE_COL_PLAYER_W, - KEYSTONE_ROW_HEIGHT)
     levelColumn:SetSize(KEYSTONE_COL_LEVEL_W, totalHeight - KEYSTONE_ROW_HEIGHT)
     levelColumn:SetJustifyH("LEFT")
     levelColumn:SetJustifyV("TOP")
-    levelColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    levelColumn:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
 
     local dungeonColumn = frame:CreateFontString(nil, "OVERLAY")
     dungeonColumn:SetPoint("TOPLEFT", frame, "TOPLEFT", KEYSTONE_COL_PLAYER_W + KEYSTONE_COL_LEVEL_W, - KEYSTONE_ROW_HEIGHT)
     dungeonColumn:SetSize(KEYSTONE_COL_DUNGEON_W, totalHeight - KEYSTONE_ROW_HEIGHT)
     dungeonColumn:SetJustifyH("LEFT")
     dungeonColumn:SetJustifyV("TOP")
-    dungeonColumn:SetFont(addon.DEFAULTS.font, 14, "OUTLINE")
+    dungeonColumn:SetFont(addon.DEFAULTS.font, KEYSTONE_FONT_SIZE, "OUTLINE")
 
     self.keystoneFrame = frame
     self.keystoneColumns = { playerName = playerColumn, keyLevel = levelColumn, dungeonName = dungeonColumn }

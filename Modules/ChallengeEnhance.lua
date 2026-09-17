@@ -342,7 +342,7 @@ local function UpdateKeystoneText(self)
 
         if info.keyLevel <= 0 then
             table.insert(levelLines, "")
-            table.insert(dungeonLines, L["NotLearned"])
+            table.insert(dungeonLines, L["NotAcquired"])
         else
             table.insert(levelLines, WrapTextColor(tostring(info.keyLevel), GetKeyLevelColor(info.keyLevel)))
 

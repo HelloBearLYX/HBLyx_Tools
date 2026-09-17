@@ -338,7 +338,7 @@ local function UpdateKeystoneText(self)
         local info = self.keystoneData[name]
 
         local nameColor = RAID_CLASS_COLORS[classMap[StripRealm(name)]]
-        table.insert(playerLines, WrapTextColor(name, nameColor))
+        table.insert(playerLines, WrapTextColor(StripRealm(name), nameColor))
 
         if info.keyLevel <= 0 then
             table.insert(levelLines, "")
@@ -352,7 +352,7 @@ local function UpdateKeystoneText(self)
             if seasonInfo then
                 local portalID = GetPortalID(mapID)
                 local icon = portalID and C_Spell.GetSpellTexture(portalID)
-                local iconText = icon and ("|T" .. icon .. ":0|t ") or ""
+                local iconText = icon and ("|T" .. icon .. ":0|t") or ""
                 table.insert(dungeonLines, iconText .. seasonInfo.short)
             else
                 table.insert(dungeonLines, mapName or "")

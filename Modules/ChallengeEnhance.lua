@@ -32,8 +32,8 @@ local KEYSTONE_COL_PLAYER_W = 100
 local KEYSTONE_COL_LEVEL_W = 50
 local KEYSTONE_COL_DUNGEON_W = 100
 local KEYSTONE_ROW_HEIGHT = 20
-local KEYSTONE_FONT_SIZE = 20
-
+local KEYSTONE_FONT_SIZE = 16
+ 
 local NAME_TO_INFO = {}
 for mapID, mapInfo in pairs(addon.data.SEASON_MAP) do
     if mapInfo.short then

@@ -21,6 +21,13 @@ local function update()
 	return addon.core:GetSafeUpdate(MOD_KEY)()
 end
 
+local function GetHearthstoneList()
+	if addon.core:GetModule(MOD_KEY) then
+		return addon.core:GetModule(MOD_KEY):GetAvailableHearthstoneID()
+	end
+	return {}
+end
+
 -- GUI
 GUI.TagPanels.MicroMenu = {}
 function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
@@ -64,7 +71,7 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 		update()
 	end)
 
-	GUI:CreateDropdown(frame, L["HearthStoneSelection"], addon.core:GetModule(MOD_KEY):GetAvailableHearthstoneID(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
+	GUI:CreateDropdown(frame, L["HearthStoneSelection"], GetHearthstoneList(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
 		addon.db[MOD_KEY].HearthstoneID = value
 		update()
 	end)

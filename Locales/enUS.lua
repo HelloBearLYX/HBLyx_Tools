@@ -1,19 +1,21 @@
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
-L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: Welcome! Your profile has been reset, and you can set up in: ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
+L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: Welcome! Your profile has been initialized, and you can set up with: /hbt"
 L["WelecomeInfo"] = "Welecome! Thank you for using |cff8788ee" .. ADDON_NAME .. "|r!"
-L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hblyx|r\" or open configuration panel in ESC-Options-AddOns-|cff8788ee" .. ADDON_NAME .. "|r"
+L["WelecomeSetting"] = "You can change settings with \"|cff8788ee/hbt|r\""
 L["WarlockWelecome"] = "Hello, |cff8788eeWarlock|r. Ready to serve you!"
-L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r v%s Configurations Panel"
+L["GUITitle"] = "%s" .. ADDON_NAME .. "|r v%s Configurations Panel"
 L["CombatLock"] = "|cffff0000In combat|r, cannot open the configuration panel or turn on test mode"
 L["Notifications"] = "Notifications"
-L["NotificationContent"] = "The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" ..
-"You can find on |cff8788eeHBLyx|r's page:" .. "\n" ..
-"|cff8788eeHBLyx_Tools|r: a collection of modules including Combat Indicator, Combat Timer, Focus Interrupt and more modules" .. "\n" ..
-"|cff8788eeMidnightFocusInterrupt|r: Focus Interrupt module standalone version" .. "\n" ..
-"|cff8788eeHBLyx_Encounter_Sound|r: Encounter Sound module standalone version" .. "\n" ..
-"|cff8788eeSharedMedia_HBLyx|r: an AI-generated Chinese sound pack(LibSharedMedia)"
+L["NotificationContent"] =
+	"The GUI of Configurations panel is totally re-built from scratch and independent from AceGUI\n" ..
+	"Hope you enjoy the new UI experience!\n\n" ..
+	"The tabs shows modules contained in this addon, you can configure each module separately." .. "\n\n" ..
+	"You can find on |cff8788eeHBLyx|r's page:" .. "\n" ..
+	"|cff8788eeHBLyx_Tools|r: a collection of modules including Combat Indicator, Combat Timer, Focus Interrupt and more modules" .. "\n" ..
+	"|cff8788eeMidnightFocusInterrupt|r: Focus Interrupt module standalone version" .. "\n" ..
+	"|cff8788eeSharedMedia_HBLyx|r: an AI-generated Chinese sound pack(LibSharedMedia)"
 
 -- MARK： Downloads/Update
 L["Downloads/Update"] = "Downloads/Update"
@@ -220,7 +222,7 @@ L["TargetBarSettings"] = "Target Cast Bar Settings"
 L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the focus cast bar|r. Most settings are shared, only the style settings below are independent."
 -- Spark Settings
 L["SparkSettings"] = "Spark Settings"
-L["SparkEnabled"] = "Enable Spark"
+L["SparkEnabled"] = "Cast Spark"
 L["KickSparkEnabled"] = "Kick Spark"
 L["SparkColor"] = "Spark Color"
 L["SparkWidth"] = "Spark Width"

@@ -2,19 +2,21 @@ local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN")
 if not L then return end
 
-L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被重置, 你可以在: ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r里更改设置"
+L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被初始化, 你可以使用 \"|cff8788ee/hbt|r\" 命令来更改设置"
 L["WelecomeInfo"] = "欢迎! 感谢你使用|cff8788ee" .. ADDON_NAME .. "|r!"
-L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hblyx|r\" 命令或在 ESC-选项-插件-|cff8788ee" .. ADDON_NAME .. "|r 中打开配置面板来更改设置"
+L["WelecomeSetting"] = "你可以使用 \"|cff8788ee/hbt|r\" 命令打开配置面板来更改设置"
 L["WarlockWelecome"] = "你好,|cff8788ee术士|r大人,本恶魔随时为你服务!"
-L["GUITitle"] = "|cff8788ee" .. ADDON_NAME .. "|r v%s 配置面板"
+L["GUITitle"] = "%s" .. ADDON_NAME .. "|r v%s 配置面板"
 L["CombatLock"] = "|cffff0000战斗中|r, 无法打开配置面板或开启测试模式"
 L["Notifications"] = "通知"
-L["NotificationContent"] = "选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
-"你可以在|cff8788eeHBLyx|r的页面里找到:" .. "\n" ..
-"|cff8788eeHBLyx_Tools|r: 一个包含战斗指示器, 战斗计时器, 焦点打断以及更多模块的集合" .. "\n" ..
-"|cff8788eeMidnightFocusInterrupt|r: 焦点打断模块的独立版本" .. "\n" ..
-"|cff8788eeHBLyx_Encounter_Sound|r: BOSS战音效模块的独立版本" .. "\n" ..
-"|cff8788eeSharedMedia_HBLyx|r: 一个AI生成的中文语音素材包(LibSharedMedia)"
+L["NotificationContent"] =
+	"配置面板的GUI已经从零开始完全重建, 并且独立于AceGUI\n" ..
+	"希望你喜欢新的UI体验!\n\n" ..
+	"选项界面中的标签页显示了本插件包含的模块, 你可以分别配置每个模块" .. "\n\n" ..
+	"你可以在|cff8788eeHBLyx|r的页面里找到:" .. "\n" ..
+	"|cff8788eeHBLyx_Tools|r: 一个包含战斗指示器, 战斗计时器, 焦点打断以及更多模块的集合" .. "\n" ..
+	"|cff8788eeMidnightFocusInterrupt|r: 焦点打断模块的独立版本" .. "\n" ..
+	"|cff8788eeSharedMedia_HBLyx|r: 一个AI生成的中文语音素材包(LibSharedMedia)"
 
 -- MARK： Downloads/Update
 L["Downloads/Update"] = "下载/更新"
@@ -221,7 +223,7 @@ L["TargetBarSettings"] = "目标施法条设置"
 L["TargetBarSettingsDesc"] = "|cffffff00启用一个与焦点施法条相同的目标施法条|r。大部分设置是共享的, 只有下面的样式设置是独立的。"
 -- Spark Settings
 L["SparkSettings"] = "火花设置"
-L["SparkEnabled"] = "启用火花"
+L["SparkEnabled"] = "施法火花"
 L["KickSparkEnabled"] = "打断火花"
 L["SparkColor"] = "火花颜色"
 L["SparkWidth"] = "火花宽度"
@@ -490,8 +492,8 @@ L["CountdownTextWarning"] = " 发起了一个倒计时: "
 L["VictorySound"] = "胜利音效"
 
 -- MARK: Text Warning Skins
-L["TextWarningSkinsSettings"] = "文本警告美化"
-L["TextWarningSkinsSettingsDesc"] = "可自定义的暴雪首领文本警告替代方案"
+L["TextWarningSkinsSettings"] = "文本警告"
+L["TextWarningSkinsSettingsDesc"] = "可自定义的暴雪首领文本警告"
 L["PrivateWarningSettings"] = "私有警告"
 L["PrivateWarningSettingsDesc"] = "暴雪的私有警告高度关联点名技能，除了锚点外由暴雪控制"
 

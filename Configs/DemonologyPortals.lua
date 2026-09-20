@@ -46,17 +46,7 @@ function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
             end
         end
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["DemonologyPortalsSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-		    	addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["DemonologyPortalsSettings"])
 
 	-- behavior settings
 	local behaviorGroup = GUI:CreateInlineGroup(frame, L["General"])
@@ -117,7 +107,7 @@ function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
 		addon.db.DemonologyPortals.CountFontSize = value
 		update()
 	end)
-	GUI:CreateInformationTag(countFontGroup, "\n")
+	GUI:CreateLinebreaker(countFontGroup)
 	local anchors = {TOP = "TOP", BOTTOM = "BOTTOM", LEFT = "LEFT", RIGHT = "RIGHT"}
 	GUI:CreateDropdown(countFontGroup, L["Anchor"], anchors, nil, addon.db.DemonologyPortals.CountAnchor, function(value)
 		addon.db.DemonologyPortals.CountAnchor = value

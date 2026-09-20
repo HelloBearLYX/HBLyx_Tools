@@ -133,17 +133,7 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
 		end
 	end)
 
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. MOD_LABEL .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, MOD_LABEL)
 
     -- MARK: Data Settings
     local inputGroup = GUI:CreateInlineGroup(frame, L["General"])
@@ -190,14 +180,14 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
     local removeButton
 
     frame:AddWidget(instanceSelection)
-    GUI:CreateInformationTag(inputGroup, "\n")
+    GUI:CreateLinebreaker(inputGroup)
     frame:AddWidget(existingSelection)
     frame:AddWidget(spellInput)
-    GUI:CreateInformationTag(inputGroup, "\n")
+    GUI:CreateLinebreaker(inputGroup)
 	frame:AddWidget(specsSelection:GetWidget())
-	GUI:CreateInformationTag(inputGroup, "\n")
+	GUI:CreateLinebreaker(inputGroup)
 	frame:AddWidget(clearSpecsButton)
-	GUI:CreateInformationTag(inputGroup, "\n")
+	GUI:CreateLinebreaker(inputGroup)
 
     addButton = GUI:CreateButton(nil, L["Add"], function()
 		local spellID = tonumber(spellInput:GetText())

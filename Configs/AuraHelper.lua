@@ -304,17 +304,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		end
 	end)
 
-	GUI:CreateButton(frame, L["ResetMod"], function()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. MOD_LABEL .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, MOD_LABEL)
 
 	GUI:CreateInformationTag(frame, L["CoTankDesc"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["EnableCoTank"], addon.db[MOD_KEY].EnabledCoTank, function(value)
@@ -339,7 +329,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 			if module then
 				module:UpdateDispellColor(colorKey, value)
 			end
-		end):SetSize(130)
+		end):SetRelativeWidth(0.165) -- 1 / 6 where 6 is the number of dispell color types and take floor value
 	end
 
 	-- Container settings
@@ -439,7 +429,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		ApplyUpdate("UpdateFilter", containerSelected)
 	end)
 
-	GUI:CreateInformationTag(containerGroup, "\n", "LEFT")
+	GUI:CreateLinebreaker(containerGroup)
 	GUI:CreateButton(containerGroup, L["Add"], function()
 		local key = strtrim(nameInput:GetText() or "")
 		if key == "" or key:find("[^%w_]") then
@@ -652,7 +642,7 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 		soundLSMSelected = value
 	end)
 
-	GUI:CreateInformationTag(soundGroup, "\n", "LEFT")
+	GUI:CreateLinebreaker(soundGroup)
 	GUI:CreateButton(soundGroup, L["Add"], function()
 		local key = strtrim(soundEditBox:GetText() or "")
 		local spellId = tonumber(key)

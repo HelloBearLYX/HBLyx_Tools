@@ -16,7 +16,7 @@ addon.GUI = {
 }
 
 -- MARK: Default values
-local PANEL_WIDTH = 1000
+local PANEL_WIDTH = 855
 local PANEL_HEIGHT = 600
 local SIDEBAR_WIDTH = 155
 local TOOLBAR_HEIGHT = 20
@@ -24,9 +24,9 @@ local TOOLBAR_BUTTON_WIDTH = 155
 -- the toolbar window and the close button share this height, so they line up
 local TOOLBAR_FRAME_HEIGHT = TOOLBAR_HEIGHT + 10
 -- the config widgets share one grid: a plain control row, and a labelled one
-local WIDGET_HEIGHT = 38
-local LABELLED_HEIGHT = 38
-local WIDGET_WIDTH = 220
+-- local WIDGET_HEIGHT = 38
+-- local LABELLED_HEIGHT = 38
+-- local WIDGET_WIDTH = 220
 local CLOSE_BUTTON_SIZE = TOOLBAR_FRAME_HEIGHT
 local HIGHLIGHT_TEXT_COLOR = "|c" .. addon.Utilities:RGBToHex(unpack(addon.UICore:GetHighlightColor()))
 local CLOSE_BUTTON_TEXTURE = "Interface\\AddOns\\HBLyx_Tools\\GUI\\Assets\\Close_Button.png"
@@ -335,6 +335,29 @@ function addon.GUI:CreateInlineGroup(parent, title)
 end
 
 ---@param parent table the container
+function addon.GUI:CreateLinebreaker(parent)
+    if parent then parent:NewRow() end
+end
+
+---@param parent table the container
+---@param mod string the module key, passed to ResetModule and the reload prompt
+---@param modLocale string the localized module title shown in the confirmation dialog
+---@return table widget
+function addon.GUI:CreateResetModButton(parent, mod, modLocale)
+    return self:CreateButton(parent, L["ResetMod"], function()
+        addon.Utilities:SetPopupDialog(
+            ADDON_NAME .. "ResetMod",
+            "|cffC41E3A" .. modLocale .. "|r: " .. L["ComfirmResetMod"],
+            true,
+            {button1 = YES, button2 = NO, OnButton1 = function()
+                addon.Utilities:ResetModule(mod)
+                ReloadUI()
+            end}
+        )
+    end)
+end
+
+---@param parent table the container
 ---@return table? widget
 function addon.GUI:CreateSeperator(parent)
     if not parent then return end
@@ -395,7 +418,7 @@ end
 ---@return table widget
 function addon.GUI:CreateToggleCheckBox(parent, label, get, callback)
     local toggle = addon.UICore:Build("ToggleBox")
-    toggle:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
+    -- toggle:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
     toggle:SetText(label or "")
     toggle:SetValue(get)
     toggle:SetOnClick(function(_, value)
@@ -411,7 +434,7 @@ end
 ---@return table widget
 function addon.GUI:CreateButton(parent, label, callback)
     local button = addon.UICore:Build("TextButton")
-    button:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
+    -- button:SetSize(WIDGET_WIDTH, WIDGET_HEIGHT)
     button:SetText(label or "")
     button:SetOnClick(function()
         if callback then callback() end
@@ -430,7 +453,7 @@ end
 ---@return table widget
 function addon.GUI:CreateSlider(parent, label, min, max, step, get, callback)
     local slider = addon.UICore:Build("Slider")
-    slider:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT + 2)
+    -- slider:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT + 2)
     slider:SetLabel(label or "")
     slider:SetMinMaxValues(min, max, step)
     slider:SetValue(get)
@@ -448,7 +471,7 @@ end
 ---@return table widget
 function addon.GUI:CreateEditBox(parent, label, get, callback)
     local editBox = addon.UICore:Build("EditBox")
-    editBox:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- editBox:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     editBox:SetLabel(label or "")
     editBox:SetText(get or "")
     editBox:SetOnEnterPressed(function(_, text)
@@ -488,7 +511,7 @@ end
 ---@return table widget
 function addon.GUI:CreateDropdown(parent, label, list, order, get, callback)
     local dropdown = addon.UICore:Build("Dropdown")
-    dropdown:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- dropdown:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     dropdown:SetLabel(label or "")
     dropdown:SetList(list or {}, order)
     dropdown:SetValue(get)
@@ -507,7 +530,7 @@ end
 ---@return table widget
 function addon.GUI:CreateColorPicker(parent, label, hasAlpha, get, callback)
     local colorPicker = addon.UICore:Build("ColorPicker")
-    colorPicker:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- colorPicker:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     colorPicker:SetLabel(label or "")
     colorPicker:SetHasAlpha(hasAlpha)
     colorPicker:SetHexColor(get)
@@ -525,7 +548,7 @@ end
 ---@return table widget
 function addon.GUI:CreateFontSelect(parent, label, get, callback)
     local fontSelect = addon.UICore:Build("FontDropdown")
-    fontSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- fontSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     fontSelect:SetLabel(label or "")
     fontSelect:SetValue(get)
     fontSelect:SetOnValueChanged(function(_, key)
@@ -542,7 +565,7 @@ end
 ---@return table widget
 function addon.GUI:CreateTextureSelect(parent, label, get, callback)
     local textureSelect = addon.UICore:Build("TextureDropdown")
-    textureSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- textureSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     textureSelect:SetLabel(label or "")
     textureSelect:SetValue(get)
     textureSelect:SetOnValueChanged(function(_, key)
@@ -559,7 +582,7 @@ end
 ---@return table widget
 function addon.GUI:CreateSoundSelect(parent, label, get, callback)
     local soundSelect = addon.UICore:Build("SoundDropdown")
-    soundSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- soundSelect:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     soundSelect:SetLabel(label or "")
     soundSelect:SetValue(get)
     soundSelect:SetOnValueChanged(function(_, key)
@@ -595,7 +618,7 @@ function addon.GUI:CreateMultiDropdown(parent, label, list, order, get)
     local component = {}
 
     local dropdown = addon.UICore:Build("MultiDropdown")
-    dropdown:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
+    -- dropdown:SetSize(WIDGET_WIDTH, LABELLED_HEIGHT)
     dropdown:SetLabel(label or "")
     dropdown:SetList(list or {}, order)
     dropdown:SetValue(get)

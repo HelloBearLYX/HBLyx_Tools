@@ -40,7 +40,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     -- MARK: Module Profile
     local modProfileGroup = GUI:CreateInlineGroup(frame, L["ModuleProfile"])
     GUI:CreateInformationTag(modProfileGroup, L["ModuleProfileDesc"], "LEFT")
-    GUI:CreateInformationTag(modProfileGroup, "\n")
+    GUI:CreateLinebreaker(modProfileGroup)
     local modBox = GUI:CreateMultiLineEditBox(nil, L["Export/Import"], "", function (value)
         local mod = value:match("!HBLyx_Tools_(%w+)_")
         if not mod or mod == "" then
@@ -54,7 +54,7 @@ function GUI.TagPanels.Profile:CreateTabPanel(parent)
     GUI:CreateDropdown(modProfileGroup, L["SelectModule"], GetModuleNameList(), nil, "", function(key)
         modBox:SetText(addon:ExportModuleProfile(key))
     end)
-    GUI:CreateInformationTag(modProfileGroup, "\n", "LEFT")
+    GUI:CreateLinebreaker(modProfileGroup)
 
     frame:AddWidget(modBox)
 

@@ -46,17 +46,7 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
             end
         end
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-        addon.Utilities:SetPopupDialog(
-            ADDON_NAME .. "ResetMod",
-            "|cffC41E3A" .. L["CombatSettings"] .. "|r: " .. L["ComfirmResetMod"],
-            true,
-            {button1 = YES, button2 = NO, OnButton1 = function ()
-                addon.Utilities:ResetModule(MOD_KEY)
-                ReloadUI()
-            end}
-        )
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["CombatSettings"])
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
@@ -87,7 +77,7 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	GUI:CreateColorPicker(textGroup, L["CombatOutColor"], true, addon.db.CombatIndicator.OutCombatColor, function(value)
 		addon.db.CombatIndicator.OutCombatColor = value
 	end)
-	GUI:CreateInformationTag(textGroup, "\n", "LEFT")
+	GUI:CreateLinebreaker(textGroup)
 	GUI:CreateEditBox(textGroup, L["CInText"], addon.db.CombatIndicator.InCombatText, function(value)
 		addon.db.CombatIndicator.InCombatText = value
 	end)
@@ -126,7 +116,7 @@ function GUI.TagPanels.CombatIndicator:CreateTabPanel(parent)
 	outSoundSelect:SetDisabled(addon.db.CombatIndicator.Mute)
 	soundChannelSelect:SetDisabled(addon.db.CombatIndicator.Mute)
 	frame:AddWidget(soundChannelSelect)
-	GUI:CreateInformationTag(soundGroup, "\n", "LEFT")
+	GUI:CreateLinebreaker(soundGroup)
 	frame:AddWidget(inSoundSelect)
 	frame:AddWidget(outSoundSelect)
 

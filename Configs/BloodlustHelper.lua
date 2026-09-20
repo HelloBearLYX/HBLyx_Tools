@@ -46,17 +46,7 @@ function GUI.TagPanels.BloodlustHelper:CreateTabPanel(parent)
         GUI:CreateInformationTag(frame, L["BloodlustHelperNotValidVersion"], "LEFT")
     end
 
-    GUI:CreateButton(frame, L["ResetMod"], function ()
-        addon.Utilities:SetPopupDialog(
-            ADDON_NAME .. "ResetMod",
-            "|cffC41E3A" .. L["BloodlustHelperSettings"] .. "|r: " .. L["ComfirmResetMod"],
-            true,
-            {button1 = YES, button2 = NO, OnButton1 = function ()
-                addon.Utilities:ResetModule(MOD_KEY)
-                ReloadUI()
-            end}
-        )
-    end)
+    GUI:CreateResetModButton(frame, MOD_KEY, L["BloodlustHelperSettings"])
 
     -- MARK: Sound
     local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])

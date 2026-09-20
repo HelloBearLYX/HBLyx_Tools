@@ -46,17 +46,7 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
 			end
 		end
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["CountdownSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{ button1 = YES, button2 = NO, OnButton1 = function()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end }
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["CountdownSettings"])
 
 	-- MARK: Position
 	local positionGroup = GUI:CreateInlineGroup(frame, L["PositionSettings"])
@@ -95,7 +85,7 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
 	GUI:CreateSoundSelect(soundGroup, L["VictorySound"], addon.db.Countdown.VictorySound, function(value)
 		addon.db.Countdown.VictorySound = value
 	end)
-    GUI:CreateInformationTag(soundGroup, "\n")
+    GUI:CreateLinebreaker(soundGroup)
     GUI:CreateSoundSelect(soundGroup, "5", addon.db.Countdown.FiveSound, function(value)
         addon.db.Countdown.FiveSound = value
     end):SetRelativeWidth(0.19)

@@ -38,17 +38,7 @@ function GUI.TagPanels.AuctionHelper:CreateTabPanel(parent)
         end
 	end)
 
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["AuctionHelperSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-		    	addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["AuctionHelperSettings"])
 
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
 	GUI:CreateSlider(styleGroup, L["Scale"], 0.1, 5.0, 0.01, addon.db.AuctionHelper.GlobalScale or 1, function(value)

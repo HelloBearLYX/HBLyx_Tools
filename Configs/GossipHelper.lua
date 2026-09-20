@@ -62,17 +62,7 @@ function GUI.TagPanels.GossipHelper:CreateTabPanel(parent)
         end
     end)
 
-    GUI:CreateButton(frame, L["ResetMod"], function()
-        addon.Utilities:SetPopupDialog(
-            ADDON_NAME .. "ResetMod",
-            "|cffC41E3A" .. L["GossipHelperSettings"] .. "|r: " .. L["ComfirmResetMod"],
-            true,
-            {button1 = YES, button2 = NO, OnButton1 = function()
-                addon.Utilities:ResetModule(MOD_KEY)
-                ReloadUI()
-            end}
-        )
-    end)
+    GUI:CreateResetModButton(frame, MOD_KEY, L["GossipHelperSettings"])
 
     -- MARK: Basic settings
     local basicGroup = GUI:CreateInlineGroup(frame, L["BasicSettings"])
@@ -100,7 +90,7 @@ function GUI.TagPanels.GossipHelper:CreateTabPanel(parent)
     end)
     gossipEditBox = GUI:CreateEditBox(gossipGroup, L["GossipID"], "", nil)
 
-    GUI:CreateInformationTag(gossipGroup, "\n", "LEFT")
+    GUI:CreateLinebreaker(gossipGroup)
     GUI:CreateButton(gossipGroup, L["Add"], function()
         local gossipID = tonumber(strtrim(gossipEditBox:GetText() or ""))
         if not gossipID or gossipID <= 0 then

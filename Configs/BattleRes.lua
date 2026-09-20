@@ -44,17 +44,7 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 	GUI:CreateToggleCheckBox(frame, L["HideInactive"], addon.db.BattleRes.HideInactive, function(value)
 		addon.db.BattleRes.HideInactive = value
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["BattleResSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-		    	addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["BattleResSettings"])
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])

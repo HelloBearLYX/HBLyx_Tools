@@ -48,20 +48,9 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 		end
 	end)
 
-	GUI:CreateButton(frame, L["ResetMod"], function()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["MicroMenuSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["MicroMenuSettings"])
 
-	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
-	local positionGroup = GUI:CreateInlineGroup(styleGroup, L["PositionSettings"])
+	local positionGroup = GUI:CreateInlineGroup(frame, L["PositionSettings"])
 	GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, addon.db[MOD_KEY].X, function(value)
 		addon.db[MOD_KEY].X = value
 		update()
@@ -77,7 +66,7 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 	end)
 
 	local groupMenuGroup = GUI:CreateInlineGroup(frame, L["GroupMenuSettings"])
-	GUI:CreateToggleCheckBox(groupMenuGroup, L["Enable"] .. "|cff0070DD" .. L["GroupMenuSettings"] .. "|r", addon.db[MOD_KEY].GroupMenuEnabled, function(value)
+	GUI:CreateToggleCheckBox(groupMenuGroup, L["Enable"] .. L["GroupMenuSettings"], addon.db[MOD_KEY].GroupMenuEnabled, function(value)
 		addon.db[MOD_KEY].GroupMenuEnabled = value
 		update()
 	end)

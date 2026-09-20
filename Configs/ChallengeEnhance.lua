@@ -52,17 +52,7 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
         addon.db.ChallengeEnhance.TeamKeystone = value
         addon:ShowDialog(ADDON_NAME.."RLNeeded")
     end)
-    GUI:CreateButton(frame, L["ResetMod"], function ()
-        addon.Utilities:SetPopupDialog(
-            ADDON_NAME .. "ResetMod",
-            "|cffC41E3A" .. L["ChallengeEnhanceSettings"] .. "|r: " .. L["ComfirmResetMod"],
-            true,
-            {button1 = YES, button2 = NO, OnButton1 = function ()
-                addon.Utilities:ResetModule(MOD_KEY)
-                ReloadUI()
-            end}
-        )
-    end)
+    GUI:CreateResetModButton(frame, MOD_KEY, L["ChallengeEnhanceSettings"])
 
     local fontGroup = GUI:CreateInlineGroup(frame, L["FontSettings"])
     GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.ChallengeEnhance.Font, function(value)

@@ -66,17 +66,7 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 		addon.db.WarlockReminders.FrameStrata = value
 		update()
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["WarlockReminders"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["WarlockReminders"])
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])

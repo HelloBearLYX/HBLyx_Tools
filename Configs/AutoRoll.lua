@@ -57,17 +57,7 @@ function GUI.TagPanels.AutoRoll:CreateTabPanel(parent)
             end
         end
 	end)
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["AutoRollSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-		    	addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["AutoRollSettings"])
 
     local gearFirstChoices = {NEED = L["RollType"]["NEED"], GREED = L["RollType"]["GREED"], TRANSMOG = L["RollType"]["TRANSMOG"], PASS = L["RollType"]["PASS"]}
     local gearFirstOrder = {"NEED", "TRANSMOG", "GREED", "PASS"}

@@ -46,17 +46,7 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 	GUI:CreateToggleCheckBox(frame, L["TimerPrintEnabled"], addon.db.CombatTimer.PrintEnabled, function(value)
 		addon.db.CombatTimer.PrintEnabled = value
 	end):SetRelativeWidth(0.25)
-	GUI:CreateButton(frame, L["ResetMod"], function ()
-		addon.Utilities:SetPopupDialog(
-			ADDON_NAME .. "ResetMod",
-			"|cffC41E3A" .. L["TimerSettings"] .. "|r: " .. L["ComfirmResetMod"],
-			true,
-			{button1 = YES, button2 = NO, OnButton1 = function ()
-				addon.Utilities:ResetModule(MOD_KEY)
-				ReloadUI()
-			end}
-		)
-	end)
+	GUI:CreateResetModButton(frame, MOD_KEY, L["TimerSettings"])
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])

@@ -488,7 +488,7 @@ end
 ---@return table widget
 function addon.GUI:CreateMultiLineEditBox(parent, label, get, callback)
     local editBox = addon.UICore:Build("MultiLineEditBox")
-    editBox:SetSize(400, 140)
+    -- editBox:SetSize(400, 140)
     editBox:SetLabel(label or "")
     editBox:SetText(get or "")
     editBox:SetFullWidth(true)

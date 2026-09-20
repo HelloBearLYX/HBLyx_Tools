@@ -88,19 +88,19 @@ function GUI.TagPanels.Countdown:CreateTabPanel(parent)
     GUI:CreateLinebreaker(soundGroup)
     GUI:CreateSoundSelect(soundGroup, "5", addon.db.Countdown.FiveSound, function(value)
         addon.db.Countdown.FiveSound = value
-    end):SetRelativeWidth(0.19)
+    end):SetRelativeWidth(0.2)
     GUI:CreateSoundSelect(soundGroup, "4", addon.db.Countdown.FourSound, function(value)
         addon.db.Countdown.FourSound = value
-    end):SetRelativeWidth(0.19)
+    end):SetRelativeWidth(0.2)
     GUI:CreateSoundSelect(soundGroup, "3", addon.db.Countdown.ThreeSound, function(value)
         addon.db.Countdown.ThreeSound = value
-    end):SetRelativeWidth(0.19)
+    end):SetRelativeWidth(0.2)
     GUI:CreateSoundSelect(soundGroup, "2", addon.db.Countdown.TwoSound, function(value)
         addon.db.Countdown.TwoSound = value
-    end):SetRelativeWidth(0.19)
+    end):SetRelativeWidth(0.2)
     GUI:CreateSoundSelect(soundGroup, "1", addon.db.Countdown.OneSound, function(value)
         addon.db.Countdown.OneSound = value
-    end):SetRelativeWidth(0.19)
+    end):SetRelativeWidth(0.2)
 
 	return frame
 end

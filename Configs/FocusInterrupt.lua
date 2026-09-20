@@ -116,11 +116,11 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     -- MARK: Core - Interrupted
     local interruptedGroup = GUI:CreateInlineGroup(frame, L["InterruptedSettings"])
     GUI:CreateInformationTag(interruptedGroup, L["InterruptedSettingsDesc"], "LEFT")
-    GUI:CreateSlider(interruptedGroup, L["InterruptedFadeTime"], 0, 2, 0.25, addon.db.FocusInterrupt.InterruptedFadeTime, function(value)
-        addon.db.FocusInterrupt.InterruptedFadeTime = value
-    end)
     GUI:CreateToggleCheckBox(interruptedGroup, L["ShowInterrupter"], addon.db.FocusInterrupt.ShowInterrupter, function(value)
         addon.db.FocusInterrupt.ShowInterrupter = value
+    end)
+    GUI:CreateSlider(interruptedGroup, L["InterruptedFadeTime"], 0, 2, 0.25, addon.db.FocusInterrupt.InterruptedFadeTime, function(value)
+        addon.db.FocusInterrupt.InterruptedFadeTime = value
     end)
     local kickSparkGroup = GUI:CreateInlineGroup(frame, L["SparkSettings"])
     GUI:CreateToggleCheckBox(kickSparkGroup, L["SparkEnabled"], addon.db.FocusInterrupt.Spark, function(value)

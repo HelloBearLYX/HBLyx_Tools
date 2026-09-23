@@ -12,7 +12,7 @@ local CHANNEL_DEFAULTS = {
 	{channel = "raid", color = "ffFF7F00", short = "R"},
 	{channel = "raidwarning", color = "ffFF4040", short = "RW"},
 	{channel = "guild", color = "ff40FF40", short = "G"},
-	{channel = "custom", color = "ff8080FF", short = "C"},
+	{channel = "custom", color = "ffD800FF", short = "C"},
 	{channel = "roll", isIcon = true},
 }
 

@@ -1,7 +1,7 @@
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
----@class AuraHelper
+---@class ChatChannels
 local AuraHelper = {
     modName = "AuraHelper",
     db = nil,
@@ -420,7 +420,7 @@ end
 -- MARK: Test Mode Handler
 
 ---Resolve the options table for a container key, "CoTank" uses its own db field
----@param self AuraHelper
+---@param self ChatChannels
 ---@param key string
 ---@return table|nil options
 local function GetContainerOptions(self, key)
@@ -431,7 +431,7 @@ local function GetContainerOptions(self, key)
 end
 
 --- Build a test overlay for the given container
----@param self AuraHelper
+---@param self ChatChannels
 ---@param key string the key of the container in the db
 ---@return Frame|nil the test overlay frame, or nil if the container does not exist
 local function BuildTestOverlay(self, key)
@@ -570,7 +570,7 @@ end
 -- MARK: Initialize
 
 ---Initialize (Constructor)
----@return AuraHelper TemplateModule a TemplateModule object
+---@return ChatChannels TemplateModule a TemplateModule object
 function AuraHelper:Initialize()
     self.db = addon.db[self.modName]
     LoadDispellColors(self)

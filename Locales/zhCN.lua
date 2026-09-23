@@ -500,6 +500,27 @@ L["PrivateWarningSettingsDesc"] = "暴雪的私有警告高度关联点名技能
 -- MARK: Gossip Helper
 L["GossipHelperSettings"] = "对话助手"
 L["GossipHelperSettingsDesc"] = "自动选择已注册的对话选项"
+
+-- MARK: Channel Helper
+L["ChannelHelperSettings"] = "频道助手"
+L["ChannelHelperSettingsDesc"] = "一个可以快速切换聊天频道的按钮栏。"
+L["ChannelHelperChannels"] = {
+	["say"] = "说",
+	["yell"] = "大喊",
+	["party"] = "队伍",
+	["raid"] = "团队",
+	["raidwarning"] = "团队警告",
+	["guild"] = "公会",
+	["custom"] = "自定义",
+	["roll"] = "Roll点"
+}
+L["ChannelHelperSpacing"] = "按钮间距"
+L["ChannelHelperVertical"] = "竖向排列"
+L["ChannelHelperCustomSettings"] = "自定义频道"
+L["ChannelHelperCustomSettingsDesc"] = "切换到自定义频道时使用的命令，例如\"5\"或\"/5\"。"
+L["ChannelHelperCustomCommand"] = "自定义频道命令"
+L["ChannelHelperChannelsSettings"] = "频道设置"
+L["ChannelHelperText"] = "文字"
 L["GossipSeasonEnable"] = "自动选择当前赛季对话"
 L["GossipSeasonDesc"] = "自动处理当前赛季大秘境内的对话选项"
 L["GossipShowID"] = "在对话选项上显示对话ID"

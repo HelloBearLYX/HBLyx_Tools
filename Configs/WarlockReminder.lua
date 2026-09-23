@@ -62,14 +62,14 @@ function GUI.TagPanels.WarlockReminder:CreateTabPanel(parent)
 			addon.core:GetModule(MOD_KEY):Handler()
 		end
 	end)
-	GUI:CreateFrameStrataDropdown(frame, addon.db.WarlockReminders.FrameStrata, function(value)
-		addon.db.WarlockReminders.FrameStrata = value
-		update()
-	end)
 	GUI:CreateResetModButton(frame, MOD_KEY, L["WarlockReminders"])
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.WarlockReminders.FrameStrata, function(value)
+		addon.db.WarlockReminders.FrameStrata = value
+		update()
+	end)
 	-- MARK: Icon
 	local iconGroup = GUI:CreateInlineGroup(styleGroup, L["IconSettings"])
 	GUI:CreateSlider(iconGroup, L["IconSize"], 10, 200, 1, addon.db.WarlockReminders.IconSize, function(value)

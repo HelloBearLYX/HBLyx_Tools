@@ -85,6 +85,7 @@ local TABS = {
     {text = L["UtilityModules"], type = "Text"},
     {text = L["AuctionHelperSettings"], type = "Button", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuctionHelper:CreateTabPanel(container) end},
     {text = L["GossipHelperSettings"], type = "Button", tooltip = L["GossipHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.GossipHelper:CreateTabPanel(container) end},
+    {text = L["ChannelHelperSettings"], type = "Button", tooltip = L["ChannelHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChannelHelper:CreateTabPanel(container) end},
     {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
     {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
     {text = L["TalentReminderSettings"], type = "Button", tooltip = L["TalentReminderSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TalentReminder:CreateTabPanel(container) end},

@@ -40,6 +40,7 @@ Modules\AuraHelper.lua
 Modules\Countdown.lua
 Modules\TextWarningSkins.lua
 Modules\GossipHelper.lua
+Modules\ChannelHelper.lua
 
 # handle configuration and options
 GUI.lua
@@ -59,6 +60,7 @@ Configs\AuraHelper.lua
 Configs\Countdown.lua
 Configs\TextWarningSkins.lua
 Configs\GossipHelper.lua
+Configs\ChannelHelper.lua
 Configs\Profile.lua
 
 # developer use only

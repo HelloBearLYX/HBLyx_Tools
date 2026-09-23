@@ -510,3 +510,24 @@ L["GossipListDesc"] = "Gossip options registered here are selected automatically
 L["SelectGossipID"] = "Select Gossip"
 L["GossipID"] = "Gossip ID"
 L["InvalidGossipID"] = "Invalid gossip ID"
+
+-- MARK: Channel Helper
+L["ChannelHelperSettings"] = "Channel Helper"
+L["ChannelHelperSettingsDesc"] = "A bar which helps to quickly switch between chat channels."
+L["ChannelHelperChannels"] = {
+	["say"] = "Say",
+	["yell"] = "Yell",
+	["party"] = "Party",
+	["raid"] = "Raid",
+	["raidwarning"] = "Raid Warning",
+	["guild"] = "Guild",
+	["custom"] = "Custom",
+	["roll"] = "Roll"
+}
+L["ChannelHelperSpacing"] = "Button Spacing"
+L["ChannelHelperVertical"] = "Vertical Layout"
+L["ChannelHelperCustomSettings"] = "Custom Channel"
+L["ChannelHelperCustomSettingsDesc"] = "The command to switch to for the custom channel, e.g. \"5\" or \"/5\"."
+L["ChannelHelperCustomCommand"] = "Custom Channel Command"
+L["ChannelHelperChannelsSettings"] = "Channels"
+L["ChannelHelperText"] = "Text"

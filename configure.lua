@@ -16,7 +16,7 @@ elseif addon.Locale == "zhTW" then
     -- Traditional Chinese
 	addon.DEFAULTS.font = "Fonts\\blei.ttf"
 elseif addon.Locale == "koKR" then
-    -- English
+    -- Korean
 	addon.DEFAULTS.font = "Fonts\\2002.ttf"
 end
 

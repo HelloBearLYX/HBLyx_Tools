@@ -25,6 +25,17 @@ local CURRENT_SEASON_GOSSIP = {
 	-- Altar of Fangs
     [141729] = true,
     [141730] = true,
+    -- CN Server Mount
+	[139945] = true,
+	[139946] = true,
+	[139947] = true,
+	[139948] = true,
+	[139949] = true,
+	[139950] = true,
+	[139951] = true,
+	[139952] = true,
+	[139953] = true,
+	[139954] = true,
 }
 
 

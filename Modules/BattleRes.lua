@@ -56,7 +56,6 @@ end
 local function Reset(self)
     self.frame.charge:SetText("")
     self.frame.cooldown:SetCooldownDuration(0)
-    self.active = false
 end
 
 local function ApplyVisibility(self)
@@ -164,8 +163,15 @@ function BattleRes:RegisterEvents()
             return
         end
 
-        if event == "ENCOUNTER_START" or event == "CHALLENGE_MODE_START" then
+        if event == "ENCOUNTER_START" then
             self.active = true
+        elseif event == "CHALLENGE_MODE_RESET" then
+            -- the challenge mode reset is triggered when M+ start
+            -- but there is a 9 second count down before the battle res been loaded
+            -- so delay the handler to ensure the battle res is properly loaded
+            self.active = true
+            C_Timer.After(10, function() Handler(self) end)
+            return
         elseif  event == "CHALLENGE_MODE_COMPLETED" then
             self.active = false
         elseif event == "ENCOUNTER_END" then
@@ -181,7 +187,7 @@ function BattleRes:RegisterEvents()
     addon.core:RegisterEvent("ENCOUNTER_START", self.frame, self.modName)
     addon.core:RegisterEvent("ENCOUNTER_END", self.frame, self.modName)
     addon.core:RegisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)
-    addon.core:RegisterEvent("CHALLENGE_MODE_START", self.frame, self.modName)
+    addon.core:RegisterEvent("CHALLENGE_MODE_RESET", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
     addon.core:RegisterStateMonitor("instanceInfo", self.modName, function()
         -- when the player is not in an instance, just set the module to inactive

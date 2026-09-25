@@ -7,6 +7,8 @@ local MOD_KEY = "FocusInterrupt"
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Mute = true,
+    EnabledMarkNotification = true,
+    KickMark = 5,
     SoundMedia = "None",
     SoundChannel = "Master",
     CooldownHide = false,
@@ -94,6 +96,21 @@ function GUI.TagPanels.FocusInterrupt:CreateTabPanel(parent)
     GUI:CreateToggleCheckBox(interruptGroup, L["FocusInterruptibleFilter"], addon.db.FocusInterrupt.NotInterruptibleHide, function(value)
         addon.db.FocusInterrupt.NotInterruptibleHide = value
     end)
+    GUI:CreateLinebreaker(interruptGroup)
+    local kickMarkDropdown = GUI:CreateDropdown(nil, L["KickMark"], addon.Utilities.RaidMarkers, nil, addon.db.FocusInterrupt.KickMark, function(value)
+        addon.db.FocusInterrupt.KickMark = value
+        local mod = addon.core:GetModule(MOD_KEY)
+        if mod then
+            mod:UpdateFocusMacro()
+        end
+    end)
+    GUI:CreateInformationTag(interruptGroup, L["EnabledMarkNotificationDesc"], "LEFT")
+    GUI:CreateToggleCheckBox(interruptGroup, L["EnabledMarkNotification"], addon.db.FocusInterrupt.EnabledMarkNotification, function(value)
+        addon.db.FocusInterrupt.EnabledMarkNotification = value
+        kickMarkDropdown:SetDisabled(not value)
+    end)
+    kickMarkDropdown:SetDisabled(not addon.db.FocusInterrupt.EnabledMarkNotification)
+    interruptGroup:AddWidget(kickMarkDropdown)
     -- MARK: Core - Color
     local colorGroup = GUI:CreateInlineGroup(interruptGroup, L["ColorSettings"])
     GUI:CreateInformationTag(colorGroup, L["FocusColorPriorityDesc"], "LEFT")

@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 120100,120105
 ## Title: |cff8788eeHBLyx_Tools|r
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx

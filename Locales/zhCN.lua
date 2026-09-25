@@ -41,7 +41,6 @@ L["SoundChannel"] = {
 	Ambience = "环境音",
 	Dialog = "对话",
 }
-
 -- MARK: Config
 L["Modules"] = "模块"
 L["CombatModules"] = "战斗模块"
@@ -205,6 +204,10 @@ L["InteruptSettings"] = "打断设置"
 L["FocusInterruptCooldownFilter"] = "打断技能未就绪时隐藏"
 L["FocusInterruptNotReadyColor"] = "打断未就绪颜色"
 L["FocusInterruptibleFilter"] = "不可打断时隐藏"
+L["EnabledMarkNotification"] = "通告打断标记"
+L["EnabledMarkNotificationDesc"] = "当就位检查开始时, 向队伍通知负责打断的团队标记\n本模块还会生成一个宏, 可自动将焦点设置为鼠标悬停/目标, 并使用所设置的打断标记\n该宏名为'HBT_SetFocus'在通用宏中"
+L["KickMark"] = "打断标记"
+L["KickMarkMessage"] = "我的焦点标记为: %s"
 L["FocusMuteDesc"] = "基于暴雪的限制(02/06/2026), 打断音效任然会任意施法时播放\n建议不使用音效(本模块包含多种视觉上的焦点施法过滤)"
 L["InterruptedFadeTime"] = "被打断淡出时间"
 L["ShowInterrupter"] = "显示打断者"

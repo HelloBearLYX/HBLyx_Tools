@@ -58,24 +58,11 @@ local function Reset(self)
     self.frame.cooldown:SetCooldownDuration(0)
 end
 
-local function ApplyVisibility(self)
-    -- if active, always show the frame, otherwise, show or hide the frame based on the HideInactive settings
-    if self.active then
-        self.frame:Show()
-    else
-        if addon.db[self.modName]["HideInactive"] then
-            self.frame:Hide()
-        else
-            self.frame:Show()
-        end
-    end
-end
-
 ---Handler for BattleRes
 ---@param self BattleRes self
 local function Handler(self)
-    if self.active then
-        local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
+    local chargeCount = C_Spell.GetSpellDisplayCount(BATTLE_RES_ID)
+    if chargeCount and chargeCount ~= "" then
         self.frame.charge:SetText(chargeCount or "")
 
         self.frame.icon:SetDesaturated(false)
@@ -88,11 +75,16 @@ local function Handler(self)
 
         local durationObj = C_Spell.GetSpellChargeDuration(BATTLE_RES_ID)
         self.frame.cooldown:SetCooldownDuration((durationObj and durationObj:GetRemainingDuration()) or 0)
+
+        self.frame:Show()
     else
         Reset(self)
+        if addon.db[self.modName]["HideInactive"] then
+            self.frame:Hide()
+        else
+            self.frame:Show()
+        end
     end
-
-    ApplyVisibility(self)
 end
 
 --MARK: Initialize
@@ -127,7 +119,7 @@ function BattleRes:UpdateStyle()
         "OUTLINE"
     )
 
-    ApplyVisibility(self)
+    Handler(self)
 end
 
 -- MARK: Test
@@ -151,7 +143,7 @@ function BattleRes:Test(Test)
         self.active = false
     end
 
-    ApplyVisibility(self)
+    Handler(self)
 end
 
 --MARK: Register Event
@@ -163,25 +155,11 @@ function BattleRes:RegisterEvents()
             return
         end
 
-        if event == "ENCOUNTER_START" then
-            self.active = true
-        elseif event == "CHALLENGE_MODE_RESET" then
-            -- the challenge mode reset is triggered when M+ start
-            -- but there is a 9 second count down before the battle res been loaded
-            -- so delay the handler to ensure the battle res is properly loaded
-            self.active = true
+        if event == "CHALLENGE_MODE_RESET" then
             C_Timer.After(10, function() Handler(self) end)
-            return
-        elseif  event == "CHALLENGE_MODE_COMPLETED" then
-            self.active = false
-        elseif event == "ENCOUNTER_END" then
-            -- keep the module active if it is M+ dungeon, otherwise, set it to inactive
-            if addon.states["instanceInfo"].difficultyID ~= 8 and addon.states["instanceInfo"].difficultyID ~= 23 then
-                self.active = false
-            end
+        else
+            Handler(self)
         end
-
-        Handler(self)
     end
 
     addon.core:RegisterEvent("ENCOUNTER_START", self.frame, self.modName)
@@ -190,11 +168,6 @@ function BattleRes:RegisterEvents()
     addon.core:RegisterEvent("CHALLENGE_MODE_RESET", self.frame, self.modName)
     addon.core:RegisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
     addon.core:RegisterStateMonitor("instanceInfo", self.modName, function()
-        -- when the player is not in an instance, just set the module to inactive
-        if addon.states["instanceInfo"].difficultyID == 0 then
-            self.active = false
-        end
-
         Handler(self)
     end)
 

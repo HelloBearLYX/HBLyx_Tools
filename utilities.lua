@@ -36,6 +36,12 @@ addon.Utilities.SoundChannels = {
 	Dialog = L["SoundChannel"]["Dialog"],
 }
 
+---@enum raidMarker raid target marker index to icon markup, index matches the "{rt%d}" chat icon shorthand
+addon.Utilities.RaidMarkers = {}
+for i = 1, 8 do
+	addon.Utilities.RaidMarkers[i] = string.format("|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_%d:0|t", i)
+end
+
 ---@enum frameStrata frame strata
 addon.Utilities.FrameStrata = {
 	BACKGROUND = "BACKGROUND",

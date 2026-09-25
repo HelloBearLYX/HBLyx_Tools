@@ -200,7 +200,7 @@ L["FocusCastBarHidden"] = "Hide Focus Cast Bar"
 L["FocusColorPriorityDesc"] = "NotInterruptibleColor > InterruptibleColor > InterruptNotReadyColor"
 L["ShowTotalTime"] = "Show Total Time"
 -- Focus Interrupt Settings
-L["InteruptSettings"] = "Focus Interupt Settings"
+L["InteruptSettings"] = "Focus Interupt"
 L["FocusInterruptCooldownFilter"] = "Hide if Kick NOT Ready"
 L["FocusInterruptNotReadyColor"] = "Kick Not Ready Color"
 L["FocusInterruptibleFilter"] = "Hide if Non-Interruptible"
@@ -222,7 +222,7 @@ L["SpellProportion"] = "Spell Proportion"
 L["TargetProportion"] = "Target Proportion"
 L["TimeProportion"] = "Time Proportion"
 -- Target Interrupt Settings
-L["TargetBarSettings"] = "Target Cast Bar Settings"
+L["TargetBarSettings"] = "Target Cast Bar"
 L["TargetBarSettingsDesc"] = "|cffffff00Enable a target cast bar as same as the focus cast bar|r. Most settings are shared, only the style settings below are independent."
 -- Spark Settings
 L["SparkSettings"] = "Spark Settings"

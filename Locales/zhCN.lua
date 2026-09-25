@@ -200,7 +200,7 @@ L["FocusCastBarHidden"] = "隐藏施法条"
 L["FocusColorPriorityDesc"] = "不可打断颜色 > 可打断颜色 > 打断未就绪颜色"
 L["ShowTotalTime"] = "显示总时间"
 -- Focus Interrupt Settings
-L["InteruptSettings"] = "打断设置"
+L["InteruptSettings"] = "焦点打断"
 L["FocusInterruptCooldownFilter"] = "打断技能未就绪时隐藏"
 L["FocusInterruptNotReadyColor"] = "打断未就绪颜色"
 L["FocusInterruptibleFilter"] = "不可打断时隐藏"
@@ -222,7 +222,7 @@ L["SpellProportion"] = "法术比例"
 L["TargetProportion"] = "目标比例"
 L["TimeProportion"] = "时间比例"
 -- Target Interrupt Settings
-L["TargetBarSettings"] = "目标施法条设置"
+L["TargetBarSettings"] = "目标施法条"
 L["TargetBarSettingsDesc"] = "|cffffff00启用一个与焦点施法条相同的目标施法条|r。大部分设置是共享的, 只有下面的样式设置是独立的。"
 -- Spark Settings
 L["SparkSettings"] = "火花设置"

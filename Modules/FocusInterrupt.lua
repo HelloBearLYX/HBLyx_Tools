@@ -782,8 +782,10 @@ function FocusInterrupt:Test(on)
             TestBar(unit)
         end
 
-        self.kickIcon:Show() -- always preview the drag handle in test mode, regardless of ShowKickIcons
-        addon.Utilities:ShowEditFrame(self.kickIcon, addon.db[self.modName], "KickIconX", "KickIconY", nil, nil, L["InterruptIconsSettings"])
+        if addon.db[self.modName]["ShowKickIcons"] then
+            self.kickIcon:Show() -- always preview the drag handle in test mode, regardless of ShowKickIcons
+            addon.Utilities:ShowEditFrame(self.kickIcon, addon.db[self.modName], "KickIconX", "KickIconY", nil, nil, L["InterruptIconsSettings"])
+        end
     else
         for unit, _ in pairs(self.bars) do
             self.bars[unit].active = false
@@ -791,9 +793,13 @@ function FocusInterrupt:Test(on)
             addon.Utilities:HideEditFrame(self.bars[unit])
         end
 
-        addon.Utilities:HideEditFrame(self.kickIcon)
-        if not self.kickIcon.active then -- revert to its real state if the icons are actually disabled
-            self.kickIcon:Hide()
+        if addon.db[self.modName]["ShowKickIcons"] then
+            addon.Utilities:HideEditFrame(self.kickIcon)
+        end
+        if addon.db[self.modName]["ShowKickIcons"] then
+            if not self.kickIcon.active then -- revert to its real state if the icons are actually disabled
+                self.kickIcon:Hide()
+            end
         end
     end
 end

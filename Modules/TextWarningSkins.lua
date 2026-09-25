@@ -262,11 +262,9 @@ function TextWarningSkins:Test(on)
 
         TestPrivateWarning(self, true)
 
-        addon.Utilities:ShowDragRegion(self.head, L["TextWarningSkinsSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.head, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, nil, L["TextWarningSkinsSettings"])
 
-        addon.Utilities:ShowDragRegion(self.privateWarningFrame, L["PrivateWarningSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.privateWarningFrame, self.modName, "PrivateWarningX", "PrivateWarningY")
+        addon.Utilities:ShowEditFrame(self.privateWarningFrame, addon.db[self.modName], "PrivateWarningX", "PrivateWarningY", nil, nil, L["PrivateWarningSettings"])
     else
         if self.testWarningFrame then
             UnloadWarning(self, self.testWarningFrame)
@@ -275,8 +273,8 @@ function TextWarningSkins:Test(on)
 
         TestPrivateWarning(self, false)
 
-        addon.Utilities:HideDragRegion(self.head)
-        addon.Utilities:HideDragRegion(self.privateWarningFrame)
+        addon.Utilities:HideEditFrame(self.head)
+        addon.Utilities:HideEditFrame(self.privateWarningFrame)
     end
 end
 

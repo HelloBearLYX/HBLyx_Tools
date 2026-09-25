@@ -233,8 +233,9 @@ function BloodlustHelper:Test(on)
     if on then
         -- make the frame visible for test mode
         MakeInvisible(self, false)
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["BloodlustHelperSettings"])
     else
+        addon.Utilities:HideEditFrame(self.frame)
         self:UpdateVisibility()
     end
 end

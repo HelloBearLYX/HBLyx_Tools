@@ -157,10 +157,11 @@ function DemonologyPortals:Test(on)
     if on then
         self.frame:Show()
         SimulateCount(self, true)
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["DemonologyPortalsSettings"])
     else
         SimulateCount(self, false)
         SpecActivate(self)
+        addon.Utilities:HideEditFrame(self.frame)
     end
 end
 

@@ -172,8 +172,6 @@ function ChannelHelper:UpdateStyle()
     local spacing = db["ButtonSpacing"]
     local vertical = db["Vertical"] == true
     -- extra empty margin on both sides so the drag region doesn't overlap the buttons(like MicroMenu)
-    local dragPadding = height
-
     self.frame:SetFrameStrata(db["FrameStrata"] or "MEDIUM")
 
     local previous
@@ -197,7 +195,7 @@ function ChannelHelper:UpdateStyle()
                     button:SetPoint("TOP", previous, "BOTTOM", 0, -spacing)
                     totalPrimary = totalPrimary + spacing + height
                 else
-                    button:SetPoint("TOP", self.frame, "TOP", 0, -dragPadding)
+                    button:SetPoint("TOP", self.frame, "TOP", 0, 0)
                     totalPrimary = height
                 end
                 maxCross = math.max(maxCross, width)
@@ -206,7 +204,7 @@ function ChannelHelper:UpdateStyle()
                     button:SetPoint("LEFT", previous, "RIGHT", spacing, 0)
                     totalPrimary = totalPrimary + spacing + width
                 else
-                    button:SetPoint("LEFT", self.frame, "LEFT", dragPadding, 0)
+                    button:SetPoint("LEFT", self.frame, "LEFT", 0, 0)
                     totalPrimary = width
                 end
                 maxCross = math.max(maxCross, height)
@@ -220,9 +218,9 @@ function ChannelHelper:UpdateStyle()
     end
 
     if vertical then
-        self.frame:SetSize(math.max(maxCross, 1), math.max(totalPrimary, 1) + dragPadding * 2)
+        self.frame:SetSize(math.max(maxCross, 1), math.max(totalPrimary, 1))
     else
-        self.frame:SetSize(math.max(totalPrimary, 1) + dragPadding * 2, math.max(maxCross, 1))
+        self.frame:SetSize(math.max(totalPrimary, 1), math.max(maxCross, 1))
     end
     self.frame:ClearAllPoints()
     self.frame:SetPoint("CENTER", UIParent, "CENTER", db["X"], db["Y"])
@@ -238,10 +236,9 @@ function ChannelHelper:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowDragRegion(self.frame, L["ChannelHelperSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["ChannelHelperSettings"])
     else
-        addon.Utilities:HideDragRegion(self.frame)
+        addon.Utilities:HideEditFrame(self.frame)
     end
 end
 

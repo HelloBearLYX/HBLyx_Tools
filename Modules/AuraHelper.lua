@@ -449,9 +449,13 @@ local function BuildTestOverlay(self, key)
         local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
         overlay:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
         overlay:SetBackdrop({
-            bgFile = "Interface\\Buttons\\WHITE8x8",
-        })
-        overlay:SetBackdropColor(0, 0, 1, 0.5)
+			bgFile = "Interface\\Buttons\\WHITE8x8",
+			edgeFile = "Interface\\Buttons\\WHITE8x8",
+			tile = false, tileSize = 1, edgeSize = 1,
+			insets = { left = 0, right = 0, top = 0, bottom = 0 }
+		})
+		overlay:SetBackdropColor(1, 1, 1, 0.5)
+		overlay:SetBackdropBorderColor(1, 1, 1, 1)
 
         local text = overlay:CreateFontString(nil, "OVERLAY")
         text:SetPoint("CENTER", overlay, "CENTER", 0, 0)

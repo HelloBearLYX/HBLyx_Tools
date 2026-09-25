@@ -323,7 +323,6 @@ local BUTTON_SIZE = 40
 local BUTTON_SPACING = 0
 local GROUP_BUTTON_SIZE = 35
 local GROUP_BUTTON_SPACING = 0
-local GROUP_MENU_DRAG_PADDING_SLOTS = 2
 local BUTTONS = {
     {name = "Character", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Character.PNG", action = CharacterButtonAction, tooltip = L["MicroMenuButton"]["Character"]},
     {name = "Bag", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Bag.PNG", action = BagButtonAction, tooltip = L["MicroMenuButton"]["Bag"]},
@@ -348,7 +347,7 @@ local function ApplyGroupMenuStyle(self)
         return
     end
 
-    self.groupMenu:SetSize((#GROUP_BUTTONS + GROUP_MENU_DRAG_PADDING_SLOTS) * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    self.groupMenu:SetSize(#GROUP_BUTTONS * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
     self.groupMenu:ClearAllPoints()
     self.groupMenu:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X_GroupMenu"] or 0, addon.db[self.modName]["Y_GroupMenu"] or 0)
 end
@@ -371,13 +370,13 @@ local function CreateGroupMenu(self)
     end
 
     self.groupMenu = CreateFrame("Frame", nil, UIParent)
-    self.groupMenu:SetSize((#GROUP_BUTTONS + GROUP_MENU_DRAG_PADDING_SLOTS) * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    self.groupMenu:SetSize(#GROUP_BUTTONS * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
     self.groupMenu:SetFrameStrata("LOW")
     self.groupMenu.buttons = {}
     for i, buttonData in ipairs(GROUP_BUTTONS) do
         local btn = CreateFrame("Button", nil, self.groupMenu, "SecureActionButtonTemplate")
         btn:SetSize(GROUP_BUTTON_SIZE, GROUP_BUTTON_SIZE)
-        btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i) * (GROUP_BUTTON_SIZE + GROUP_BUTTON_SPACING), 0)
+        btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * (GROUP_BUTTON_SIZE + GROUP_BUTTON_SPACING), 0)
         btn.texture = btn:CreateTexture(nil, "BACKGROUND")
         btn.texture:SetAllPoints()
         btn.texture:SetTexture(buttonData.texture)
@@ -419,13 +418,13 @@ function MicroMenu:Initialize()
     end
 
     self.frame = CreateFrame("Frame", ADDON_NAME .. self.modName, UIParent)
-    self.frame:SetSize((#BUTTONS + 2) * BUTTON_SIZE + (#BUTTONS - 1) * BUTTON_SPACING, BUTTON_SIZE)
+    self.frame:SetSize(#BUTTONS * BUTTON_SIZE + (#BUTTONS - 1) * BUTTON_SPACING, BUTTON_SIZE)
     self.frame:SetFrameStrata("LOW")
     self.buttons = {}
     for i, button in ipairs(BUTTONS) do
         local btn = CreateFrame("Button", nil, self.frame, "SecureActionButtonTemplate")
         btn:SetSize(BUTTON_SIZE, BUTTON_SIZE)
-        btn:SetPoint("LEFT", self.frame, "LEFT", (i) * (BUTTON_SIZE + BUTTON_SPACING), 0)
+        btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * (BUTTON_SIZE + BUTTON_SPACING), 0)
         btn.texture = btn:CreateTexture(nil, "BACKGROUND")
         btn.texture:SetAllPoints()
         btn.texture:SetTexture(button.texture)
@@ -532,8 +531,7 @@ function MicroMenu:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowDragRegion(self.frame, L["MicroMenuSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["MicroMenuSettings"])
 
         if addon.db[self.modName]["GroupMenuEnabled"] and not self.groupMenu then
             CreateGroupMenu(self)
@@ -541,14 +539,13 @@ function MicroMenu:Test(on)
 
         if addon.db[self.modName]["GroupMenuEnabled"] and self.groupMenu then
             self.groupMenu:Show()
-            addon.Utilities:ShowDragRegion(self.groupMenu, L["GroupMenuSettings"])
-            addon.Utilities:MakeFrameDragPosition(self.groupMenu, self.modName, "X_GroupMenu", "Y_GroupMenu")
+            addon.Utilities:ShowEditFrame(self.groupMenu, addon.db[self.modName], "X_GroupMenu", "Y_GroupMenu", nil, nil, L["GroupMenuSettings"])
         end
     else
-        addon.Utilities:HideDragRegion(self.frame)
+        addon.Utilities:HideEditFrame(self.frame)
 
         if self.groupMenu then
-            addon.Utilities:HideDragRegion(self.groupMenu)
+            addon.Utilities:HideEditFrame(self.groupMenu)
         end
 
         self:UpdateStyle()

@@ -195,11 +195,10 @@ function Countdown:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowDragRegion(self.frame, L["CountdownSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["CountdownSettings"])
         self:countdown(10, "TEST") -- start a 10-second countdown for testing
     else
-        addon.Utilities:HideDragRegion(self.frame)
+        addon.Utilities:HideEditFrame(self.frame)
         self:countdown(0) -- stop the countdown
     end
 end

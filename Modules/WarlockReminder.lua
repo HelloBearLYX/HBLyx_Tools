@@ -322,11 +322,13 @@ end
 function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
 		self.pet:Show()
-        addon.Utilities:MakeFrameDragPosition(self.pet, self.modName, "PetX", "PetY")
+        addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, nil, L["PetSettings"])
 
         self.candy:Show()
-        addon.Utilities:MakeFrameDragPosition(self.candy, self.modName, "CandyX", "CandyY")
+        addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, nil, L["CandySetting"])
     else
+        addon.Utilities:HideEditFrame(self.pet)
+        addon.Utilities:HideEditFrame(self.candy)
         self:Handler()
     end
 end

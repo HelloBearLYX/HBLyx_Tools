@@ -5,7 +5,7 @@ local MOD_KEY = "TextWarningSkins"
 
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = {
-	Enabled = false,
+	Enabled = true,
     Width = 500,
     Height = 40,
     X = 0,

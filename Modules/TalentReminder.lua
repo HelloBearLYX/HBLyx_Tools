@@ -211,11 +211,10 @@ function TalentReminder:Test(on)
 
     if on then
         self.head:Show()
-        addon.Utilities:ShowDragRegion(self.head, L["TalentReminderSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.head, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, nil, L["TalentReminderSettings"])
     else
         OnUpdate(self)
-        addon.Utilities:HideDragRegion(self.head)
+        addon.Utilities:HideEditFrame(self.head)
     end
 end 
 

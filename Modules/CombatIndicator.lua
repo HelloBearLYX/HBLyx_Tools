@@ -108,10 +108,9 @@ function CombatIndicator:Test(on)
 
         self.frame:Show()
 
-        addon.Utilities:ShowDragRegion(self.frame, L["CombatSettings"])
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["CombatSettings"])
     else
-        addon.Utilities:HideDragRegion(self.frame)
+        addon.Utilities:HideEditFrame(self.frame)
 
         if self.timer then
             self.timer:Cancel()

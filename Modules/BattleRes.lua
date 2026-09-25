@@ -1,4 +1,5 @@
 local ADDON_NAME, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 ---@class BattleRes
 ---@field frame frame BattleRes frame
@@ -6,7 +7,6 @@ local ADDON_NAME, addon = ...
 local BattleRes = {
     modName = "BattleRes",
     frame = nil,
-    active = false,
     db = nil,
 }
 
@@ -55,7 +55,7 @@ end
 
 local function Reset(self)
     self.frame.charge:SetText("")
-    self.frame.cooldown:SetCooldownDuration(0)
+    self.frame.cooldown:Clear()
 end
 
 ---Handler for BattleRes
@@ -92,7 +92,6 @@ end
 ---Initialize(Constructor)
 ---@return BattleRes BattleRes a BattleRes object
 function BattleRes:Initialize()
-    self.active = false
     self.db = addon.db[self.modName]
     self.frame = CreateBRFrame(self)
 
@@ -130,20 +129,14 @@ function BattleRes:Test(Test)
     if Test then
         -- make a demo for testMode
         self.frame.charge:SetText("5")
-        self.frame.cooldown:SetCooldown(GetTime(), 90)
-        self.frame.icon:SetDesaturated(false)
-        self.active = true
-
-        addon.Utilities:MakeFrameDragPosition(self.frame, self.modName, "X", "Y")
+        self.frame.cooldown:SetCooldownDuration(90)
+        self.frame:Show()
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["BattleResSettings"])
     else
-        -- reset all data
-        self.frame.charge:SetText("")
-        self.frame.cooldown:SetCooldown(0, 0)
-        self.frame.icon:SetDesaturated(false)
-        self.active = false
+        Reset(self)
+        addon.Utilities:HideEditFrame(self.frame)
+        Handler(self)
     end
-
-    Handler(self)
 end
 
 --MARK: Register Event

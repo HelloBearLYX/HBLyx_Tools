@@ -74,7 +74,6 @@ local function CreateGeneralPanel(container)
 end
 
 -- MARK: TABS
-addon:debug("Test Module Name: " .. tostring(addon.core:GetModuleName("FocusInterrupt")))
 local TABS = {
     {text = L["General"], type = "Button", module = "General", panelFunction = function(container) return CreateGeneralPanel(container) end},
     {text = L["CombatModules"], type = "Text"},

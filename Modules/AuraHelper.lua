@@ -496,6 +496,8 @@ local function BuildTestOverlay(self, key)
             if button == "LeftButton" and overlayFrame.isDragging then
                 overlayFrame.isDragging = nil
                 saveAndApplyPosition(overlayFrame)
+            elseif button == "RightButton" then
+                addon.GUI:OpenModuleGUI("AuraHelper")
             end
         end)
 
@@ -845,4 +847,4 @@ function AuraHelper:Test(on)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(AuraHelper.modName, function() return AuraHelper:Initialize() end)
+addon.core:RegisterModule(AuraHelper.modName, L["AuraHelperSettings"], function() return AuraHelper:Initialize() end)

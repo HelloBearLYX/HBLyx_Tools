@@ -143,4 +143,4 @@ function AutoRoll:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(AutoRoll.modName, function() return AutoRoll:Initialize() end)
+addon.core:RegisterModule(AutoRoll.modName, L["AutoRollSettings"], function() return AutoRoll:Initialize() end)

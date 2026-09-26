@@ -44,8 +44,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.ChannelHelper = {}
-function GUI.TagPanels.ChannelHelper:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChannelHelperSettings"] .. "|r", addon.db[MOD_KEY].Enabled, function(value)
@@ -140,3 +139,5 @@ function GUI.TagPanels.ChannelHelper:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

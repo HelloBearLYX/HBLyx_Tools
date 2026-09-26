@@ -43,8 +43,7 @@ local function FetchGossipList()
 end
 
 -- GUI
-GUI.TagPanels.GossipHelper = {}
-function GUI.TagPanels.GossipHelper:CreateTabPanel(parent)
+local function RenderPanel(parent)
     EnsureGossipDB()
     local frame = parent
 
@@ -127,3 +126,5 @@ function GUI.TagPanels.GossipHelper:CreateTabPanel(parent)
 
     return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

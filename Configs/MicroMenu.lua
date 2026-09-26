@@ -29,8 +29,7 @@ local function GetHearthstoneList()
 end
 
 -- GUI
-GUI.TagPanels.MicroMenu = {}
-function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	local frame = parent
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["MicroMenuSettings"] .. "|r", addon.db[MOD_KEY].Enabled, function(value)
@@ -87,3 +86,5 @@ function GUI.TagPanels.MicroMenu:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

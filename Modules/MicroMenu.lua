@@ -531,7 +531,7 @@ function MicroMenu:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["MicroMenuSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["MicroMenuSettings"], self.modName)
 
         if addon.db[self.modName]["GroupMenuEnabled"] and not self.groupMenu then
             CreateGroupMenu(self)
@@ -539,7 +539,7 @@ function MicroMenu:Test(on)
 
         if addon.db[self.modName]["GroupMenuEnabled"] and self.groupMenu then
             self.groupMenu:Show()
-            addon.Utilities:ShowEditFrame(self.groupMenu, addon.db[self.modName], "X_GroupMenu", "Y_GroupMenu", nil, nil, L["GroupMenuSettings"])
+            addon.Utilities:ShowEditFrame(self.groupMenu, addon.db[self.modName], "X_GroupMenu", "Y_GroupMenu", nil, L["GroupMenuSettings"], self.modName)
         end
     else
         addon.Utilities:HideEditFrame(self.frame)
@@ -567,4 +567,4 @@ function MicroMenu:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(MicroMenu.modName, function() return MicroMenu:Initialize() end)
+addon.core:RegisterModule(MicroMenu.modName, L["MicroMenuSettings"], function() return MicroMenu:Initialize() end)

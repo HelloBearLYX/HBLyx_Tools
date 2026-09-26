@@ -23,8 +23,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.BattleRes = {}
-function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -91,3 +90,5 @@ function GUI.TagPanels.BattleRes:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

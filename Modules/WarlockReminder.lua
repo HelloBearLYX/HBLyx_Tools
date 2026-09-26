@@ -322,10 +322,10 @@ end
 function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
 		self.pet:Show()
-        addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, nil, L["PetSettings"])
+        addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, L["PetSettings"], self.modName)
 
         self.candy:Show()
-        addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, nil, L["CandySetting"])
+        addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, L["CandySetting"], self.modName)
     else
         addon.Utilities:HideEditFrame(self.pet)
         addon.Utilities:HideEditFrame(self.candy)
@@ -376,4 +376,4 @@ function WarlockReminder:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(WarlockReminder.modName, function() return WarlockReminder:Initialize() end)
+addon.core:RegisterModule(WarlockReminder.modName, L["WarlockReminders"], function() return WarlockReminder:Initialize() end)

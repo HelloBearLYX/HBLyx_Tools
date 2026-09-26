@@ -157,7 +157,7 @@ function DemonologyPortals:Test(on)
     if on then
         self.frame:Show()
         SimulateCount(self, true)
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["DemonologyPortalsSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["DemonologyPortalsSettings"], self.modName)
     else
         SimulateCount(self, false)
         SpecActivate(self)
@@ -187,4 +187,4 @@ function DemonologyPortals:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(DemonologyPortals.modName, function() return DemonologyPortals:Initialize() end)
+addon.core:RegisterModule(DemonologyPortals.modName, L["DemonologyPortalsSettings"], function() return DemonologyPortals:Initialize() end)

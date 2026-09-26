@@ -539,4 +539,4 @@ function ChallengeEnhance:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(ChallengeEnhance.modName, function() return ChallengeEnhance:Initialize() end)
+addon.core:RegisterModule(ChallengeEnhance.modName, L["ChallengeEnhanceSettings"], function() return ChallengeEnhance:Initialize() end)

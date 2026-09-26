@@ -35,8 +35,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.ChallengeEnhance = {}
-function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
+local function RenderPanel(parent)
     -- MARK: General
     local frame = parent
 
@@ -179,3 +178,5 @@ function GUI.TagPanels.ChallengeEnhance:CreateTabPanel(parent)
 
     return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

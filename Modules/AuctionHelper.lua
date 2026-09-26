@@ -507,4 +507,4 @@ function AuctionHelper:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(AuctionHelper.modName, function() return AuctionHelper:Initialize() end)
+addon.core:RegisterModule(AuctionHelper.modName, L["AuctionHelperSettings"], function() return AuctionHelper:Initialize() end)

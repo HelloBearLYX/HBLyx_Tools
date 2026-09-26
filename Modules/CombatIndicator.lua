@@ -108,7 +108,7 @@ function CombatIndicator:Test(on)
 
         self.frame:Show()
 
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["CombatSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CombatSettings"], self.modName)
     else
         addon.Utilities:HideEditFrame(self.frame)
 
@@ -130,4 +130,4 @@ function CombatIndicator:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(CombatIndicator.modName, function() return CombatIndicator:Initialize() end)
+addon.core:RegisterModule(CombatIndicator.modName, L["CombatSettings"], function() return CombatIndicator:Initialize() end)

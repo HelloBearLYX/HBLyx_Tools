@@ -24,8 +24,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.TextWarningSkins = {}
-function GUI.TagPanels.TextWarningSkins:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = GUI:CreateScrollFrame(parent)
 
@@ -96,3 +95,5 @@ function GUI.TagPanels.TextWarningSkins:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

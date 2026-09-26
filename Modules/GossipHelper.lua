@@ -109,4 +109,4 @@ function GossipHelper:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(GossipHelper.modName, function() return GossipHelper:Initialize() end)
+addon.core:RegisterModule(GossipHelper.modName, L["GossipHelperSettings"], function() return GossipHelper:Initialize() end)

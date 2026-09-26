@@ -257,7 +257,7 @@ function VerticalTabGroup:SetTabs(tabList, defaultIndex)
         if info.type == "Button" then
             tab.row = CreateTabButtonRow(self, container, y, info, i)
             firstSelectable = firstSelectable or i
-        else
+        else -- text only rows
             tab.row = CreateSectionRow(container, y, info)
         end
 

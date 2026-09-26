@@ -236,7 +236,7 @@ function ChannelHelper:Test(on)
     end
 
     if on then
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["ChannelHelperSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["ChannelHelperSettings"], self.modName)
     else
         addon.Utilities:HideEditFrame(self.frame)
     end
@@ -250,4 +250,4 @@ function ChannelHelper:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(ChannelHelper.modName, function() return ChannelHelper:Initialize() end)
+addon.core:RegisterModule(ChannelHelper.modName, L["ChannelHelperSettings"], function() return ChannelHelper:Initialize() end)

@@ -113,7 +113,7 @@ end
 function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["TimerSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["TimerSettings"], self.modName)
     else
         addon.Utilities:HideEditFrame(self.frame)
 
@@ -132,4 +132,4 @@ function CombatTimer:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(CombatTimer.modName, function() return CombatTimer:Initialize() end)
+addon.core:RegisterModule(CombatTimer.modName, L["TimerSettings"], function() return CombatTimer:Initialize() end)

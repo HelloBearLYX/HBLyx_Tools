@@ -262,9 +262,9 @@ function TextWarningSkins:Test(on)
 
         TestPrivateWarning(self, true)
 
-        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, nil, L["TextWarningSkinsSettings"])
+        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TextWarningSkinsSettings"], self.modName)
 
-        addon.Utilities:ShowEditFrame(self.privateWarningFrame, addon.db[self.modName], "PrivateWarningX", "PrivateWarningY", nil, nil, L["PrivateWarningSettings"])
+        addon.Utilities:ShowEditFrame(self.privateWarningFrame, addon.db[self.modName], "PrivateWarningX", "PrivateWarningY", nil, L["PrivateWarningSettings"], self.modName)
     else
         if self.testWarningFrame then
             UnloadWarning(self, self.testWarningFrame)
@@ -308,4 +308,4 @@ function TextWarningSkins:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(TextWarningSkins.modName, function() return TextWarningSkins:Initialize() end)
+addon.core:RegisterModule(TextWarningSkins.modName, L["TextWarningSkinsSettings"], function() return TextWarningSkins:Initialize() end)

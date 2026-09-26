@@ -7,6 +7,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field isOpened boolean is the GUI opened
 addon.GUI = {
     frame = nil,
+    tabPanels = {},
     tabGroup = nil,
     isOpened = false,
 }
@@ -73,48 +74,51 @@ local function CreateGeneralPanel(container)
 end
 
 -- MARK: TABS
+addon:debug("Test Module Name: " .. tostring(addon.core:GetModuleName("FocusInterrupt")))
 local TABS = {
-    {text = L["General"], type = "Button", panelFunction = function(container) return CreateGeneralPanel(container) end},
+    {text = L["General"], type = "Button", module = "General", panelFunction = function(container) return CreateGeneralPanel(container) end},
     {text = L["CombatModules"], type = "Text"},
-    {text = L["FocusInterruptSettings"], type = "Button", tooltip = L["FocusInterruptSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.FocusInterrupt:CreateTabPanel(container) end},
-    {text = L["CombatSettings"], type = "Button", tooltip = L["CombatSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatIndicator:CreateTabPanel(container) end},
-    {text = L["TimerSettings"], type = "Button", tooltip = L["TimerSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.CombatTimer:CreateTabPanel(container) end},
-    {text = L["BattleResSettings"], type = "Button", tooltip = L["BattleResSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BattleRes:CreateTabPanel(container) end},
-    {text = L["BloodlustHelperSettings"], type = "Button", tooltip = L["BloodlustHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.BloodlustHelper:CreateTabPanel(container) end},
-    {text = L["AuraHelperSettings"], type = "Button", tooltip = L["AuraHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuraHelper:CreateTabPanel(container) end},
+    {text = addon.core:GetModuleName("FocusInterrupt"), type = "Button", module = "FocusInterrupt", tooltip = L["FocusInterruptSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.FocusInterrupt(container) end},
+    {text = addon.core:GetModuleName("CombatIndicator"), type = "Button", module = "CombatIndicator", tooltip = L["CombatSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.CombatIndicator(container) end},
+    {text = addon.core:GetModuleName("CombatTimer"), type = "Button", module = "CombatTimer", tooltip = L["TimerSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.CombatTimer(container) end},
+    {text = addon.core:GetModuleName("BattleRes"), type = "Button", module = "BattleRes", tooltip = L["BattleResSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.BattleRes(container) end},
+    {text = addon.core:GetModuleName("BloodlustHelper"), type = "Button", module = "BloodlustHelper", tooltip = L["BloodlustHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.BloodlustHelper(container) end},
+    {text = addon.core:GetModuleName("AuraHelper"), type = "Button", module = "AuraHelper", tooltip = L["AuraHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.AuraHelper(container) end},
     {text = L["UtilityModules"], type = "Text"},
-    {text = L["AuctionHelperSettings"], type = "Button", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AuctionHelper:CreateTabPanel(container) end},
-    {text = L["GossipHelperSettings"], type = "Button", tooltip = L["GossipHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.GossipHelper:CreateTabPanel(container) end},
-    {text = L["ChannelHelperSettings"], type = "Button", tooltip = L["ChannelHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChannelHelper:CreateTabPanel(container) end},
-    {text = L["ChallengeEnhanceSettings"], type = "Button", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.ChallengeEnhance:CreateTabPanel(container) end},
-    {text = L["AutoRollSettings"], type = "Button", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.AutoRoll:CreateTabPanel(container) end},
-    {text = L["TalentReminderSettings"], type = "Button", tooltip = L["TalentReminderSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TalentReminder:CreateTabPanel(container) end},
+    {text = addon.core:GetModuleName("AuctionHelper"), type = "Button", module = "AuctionHelper", tooltip = L["AuctionHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.AuctionHelper(container) end},
+    {text = addon.core:GetModuleName("GossipHelper"), type = "Button", module = "GossipHelper", tooltip = L["GossipHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.GossipHelper(container) end},
+    {text = addon.core:GetModuleName("ChannelHelper"), type = "Button", module = "ChannelHelper", tooltip = L["ChannelHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.ChannelHelper(container) end},
+    {text = addon.core:GetModuleName("ChallengeEnhance"), type = "Button", module = "ChallengeEnhance", tooltip = L["ChallengeEnhanceSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.ChallengeEnhance(container) end},
+    {text = addon.core:GetModuleName("AutoRoll"), type = "Button", module = "AutoRoll", tooltip = L["AutoRollSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.AutoRoll(container) end},
+    {text = addon.core:GetModuleName("TalentReminder"), type = "Button", module = "TalentReminder", tooltip = L["TalentReminderSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.TalentReminder(container) end},
     {text = L["SkinModules"], type = "Text"},
-    {text = L["MicroMenuSettings"], type = "Button", tooltip = L["MicroMenuSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.MicroMenu:CreateTabPanel(container) end},
-    {text = L["CountdownSettings"], type = "Button", tooltip = L["CountdownSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.Countdown:CreateTabPanel(container) end},
-    {text = L["TextWarningSkinsSettings"], type = "Button", tooltip = L["TextWarningSkinsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.TextWarningSkins:CreateTabPanel(container) end},
+    {text = addon.core:GetModuleName("MicroMenu"), type = "Button", module = "MicroMenu", tooltip = L["MicroMenuSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.MicroMenu(container) end},
+    {text = addon.core:GetModuleName("Countdown"), type = "Button", module = "Countdown", tooltip = L["CountdownSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.Countdown(container) end},
+    {text = addon.core:GetModuleName("TextWarningSkins"), type = "Button", module = "TextWarningSkins", tooltip = L["TextWarningSkinsSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.TextWarningSkins(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
-    {text = L["WarlockReminders"], type = "Button", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.TagPanels.WarlockReminder:CreateTabPanel(container) end},
-    {text = L["DemonologyPortalsSettings"], type = "Button", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.TagPanels.DemonologyPortals:CreateTabPanel(container) end},
+    {text = addon.core:GetModuleName("WarlockReminders"), type = "Button", module = "WarlockReminders", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.tabPanels.WarlockReminders(container) end},
+    {text = addon.core:GetModuleName("DemonologyPortals"), type = "Button", module = "DemonologyPortals", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.DemonologyPortals(container) end},
     {text = L["Others"], type = "Text"},
-    {text = L["Profile"], type = "Button", panelFunction = function(container) return addon.GUI.TagPanels.Profile:CreateTabPanel(container) end},
+    {text = L["Profile"], type = "Button", module = "Profile", panelFunction = function(container) return addon.GUI.tabPanels.Profile(container) end},
 }
 
--- MARK: Tabs
-
----Find the index of a TABS entry, used to select it in the tab group
-local function GetTabIndex(tabInfo)
-    for i, info in ipairs(TABS) do
-        if info == tabInfo then return i end
+-- auto assign index to each tabInfo for quick lookup
+local MOD_INDEX = {}
+for i, tabInfo in ipairs(TABS) do
+    if tabInfo.module then
+        MOD_INDEX[tabInfo.module] = i
     end
 end
 
----Show the panel of a tab in the content area
----@param tabInfo table an entry of TABS
-function addon.GUI:SelectTab(tabInfo)
-    if not tabInfo.panelFunction then return end
+-- MARK: Tabs
 
-    self.tabGroup:SelectTab(GetTabIndex(tabInfo))
+---Show the panel of a tab in the content area
+---@param module string the module key of the tab to select
+function addon.GUI:SelectTab(module)
+    local index = MOD_INDEX[module]
+    if index then
+        self.tabGroup:SelectTab(index)
+    end
 end
 
 -- MARK: Initialize GUI
@@ -248,6 +252,15 @@ function addon.GUI:OpenGUI()
     addon.GUI:Render()
 end
 
+---Open GUI with a specific module tab selected
+---@param module string the module key of the tab to select
+function addon.GUI:OpenModuleGUI(module)
+    addon.GUI:Render()
+    if module then
+        addon.GUI:SelectTab(module)
+    end
+end
+
 ---Close GUI
 function addon.GUI:CloseGUI()
     if not self.frame then return end
@@ -255,6 +268,14 @@ function addon.GUI:CloseGUI()
     self.isOpened = false
     self.frame:Hide()
     addon.core:TestMode(false) -- turn off test mode when closing GUI
+end
+
+-- MARK: GUI Register Module
+function addon.GUI:RegisterModule(modKey, renderFunction)
+    if not self.tabPanels then
+        self.tabPanels = {}
+    end
+    self.tabPanels[modKey] = renderFunction
 end
 
 -- MARK: Widget factories
@@ -629,6 +650,3 @@ function addon.GUI:CreateSpecSelectDropdown(parent, label)
 
     return component
 end
-
--- Initialize Tag Panels
-addon.GUI.TagPanels = {}

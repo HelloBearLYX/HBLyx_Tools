@@ -21,8 +21,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.CombatTimer = {}
-function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -78,3 +77,5 @@ function GUI.TagPanels.CombatTimer:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

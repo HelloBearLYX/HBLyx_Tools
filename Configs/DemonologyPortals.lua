@@ -28,8 +28,7 @@ local function update()
 end
 
 -- GUI
-GUI.TagPanels.DemonologyPortals = {}
-function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -125,3 +124,5 @@ function GUI.TagPanels.DemonologyPortals:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

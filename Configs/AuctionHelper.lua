@@ -19,8 +19,7 @@ addon.configurationList[MOD_KEY] = {
 }
 
 -- GUI
-GUI.TagPanels.AuctionHelper = {}
-function GUI.TagPanels.AuctionHelper:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -62,3 +61,6 @@ function GUI.TagPanels.AuctionHelper:CreateTabPanel(parent)
 
 	return frame
 end
+
+-- Register the panel with the GUI system
+GUI:RegisterModule(MOD_KEY, RenderPanel)

@@ -233,7 +233,7 @@ function BloodlustHelper:Test(on)
     if on then
         -- make the frame visible for test mode
         MakeInvisible(self, false)
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, nil, L["BloodlustHelperSettings"])
+        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["BloodlustHelperSettings"], self.modName)
     else
         addon.Utilities:HideEditFrame(self.frame)
         self:UpdateVisibility()
@@ -241,4 +241,4 @@ function BloodlustHelper:Test(on)
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(BloodlustHelper.modName, function() return BloodlustHelper:Initialize() end)
+addon.core:RegisterModule(BloodlustHelper.modName, L["BloodlustHelperSettings"], function() return BloodlustHelper:Initialize() end)

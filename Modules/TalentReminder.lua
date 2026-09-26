@@ -211,7 +211,7 @@ function TalentReminder:Test(on)
 
     if on then
         self.head:Show()
-        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, nil, L["TalentReminderSettings"])
+        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TalentReminderSettings"], self.modName)
     else
         OnUpdate(self)
         addon.Utilities:HideEditFrame(self.head)
@@ -234,4 +234,4 @@ function TalentReminder:RegisterEvents()
 end
 
 -- MARK: Register Module
-addon.core:RegisterModule(TalentReminder.modName, function() return TalentReminder:Initialize() end)
+addon.core:RegisterModule(TalentReminder.modName, L["TalentReminderSettings"], function() return TalentReminder:Initialize() end)

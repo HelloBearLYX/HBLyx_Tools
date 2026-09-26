@@ -114,8 +114,7 @@ local function RemoveEntry(instanceID, spellID)
 end
 
 -- GUI
-GUI.TagPanels.TalentReminder = {}
-function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -287,3 +286,5 @@ function GUI.TagPanels.TalentReminder:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

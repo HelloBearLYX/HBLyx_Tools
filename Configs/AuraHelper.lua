@@ -4,8 +4,6 @@ local GUI = addon.GUI
 local MOD_KEY = "AuraHelper"
 local MOD_LABEL = L["AuraHelperSettings"] or "Aura Helper"
 
-GUI.TagPanels.AuraHelper = {}
-
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 	Enabled = true,
@@ -286,7 +284,7 @@ local function ResolveSoundSpellKey(dataSound, spellId)
 	return spellNum or spellStr
 end
 
-function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	EnsureAuraDB()
 	local frame = parent
 
@@ -724,3 +722,5 @@ function GUI.TagPanels.AuraHelper:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

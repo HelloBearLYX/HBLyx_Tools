@@ -39,8 +39,7 @@ local function CreateItemOptions(parentGroup, itemKey, itemLabel, firstChoices, 
 end
 
 -- GUI
-GUI.TagPanels.AutoRoll = {}
-function GUI.TagPanels.AutoRoll:CreateTabPanel(parent)
+local function RenderPanel(parent)
 	-- MARK: General
 	local frame = parent
 
@@ -75,3 +74,5 @@ function GUI.TagPanels.AutoRoll:CreateTabPanel(parent)
 
 	return frame
 end
+
+GUI:RegisterModule(MOD_KEY, RenderPanel)

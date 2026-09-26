@@ -133,9 +133,10 @@ end
 
 ---Register module to the manager(not initialized so far)
 ---@param mod string module key
+---@param name string localized display name of the module
 ---@param initializeFunc function function used to initialize module
-function Core:RegisterModule(mod, initializeFunc)
-    self.registeredMods[mod] = {initialize = initializeFunc}
+function Core:RegisterModule(mod, name, initializeFunc)
+    self.registeredMods[mod] = {name = name, initialize = initializeFunc}
     self.totalMods = self.totalMods + 1
 end
 
@@ -188,6 +189,17 @@ end
 function Core:GetModule(mod)
     if self:HasModuleLoaded(mod) then
         return self.modules[mod]
+    else
+        return nil
+    end
+end
+
+---Get the display name of a module
+---@param mod string module key
+---@return string|nil name the display name of the module or nil if not loaded
+function Core:GetModuleName(mod)
+    if self.registeredMods[mod] then
+        return self.registeredMods[mod].name
     else
         return nil
     end

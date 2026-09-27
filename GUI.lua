@@ -54,7 +54,6 @@ local function CreateGeneralPanel(container)
     for _, info in ipairs(LINKS) do
         CreateLink(container, info)
     end
-    container:NewRow()
 
     addon.GUI:CreateInlineGroup(container, L["Notifications"])
     addon.GUI:CreateInformationTag(container, L["NotificationContent"], "LEFT")
@@ -62,13 +61,23 @@ local function CreateGeneralPanel(container)
     addon.GUI:CreateInlineGroup(container, L["ChangeLog"])
     addon.GUI:CreateInformationTag(container, L["ChangeLogContent"], "LEFT")
     addon.GUI:CreateEditBox(container, "", L["ChangeLogLink"], function() end)
-    container:NewRow()
 
     addon.GUI:CreateInlineGroup(container, L["Contact"])
     for _, info in ipairs(CONTACTS) do
         CreateLink(container, info)
     end
-    container:NewRow()
+
+    addon.GUI:CreateInlineGroup(container, L["ModulesOverview"])
+    local loadedModContent = "|cff8788ee" .. L["LoadedModules"] .. "|r"
+    local loadedModules, loadedModulesCount = addon.core:GetLoadedModulesList()
+    loadedModContent = loadedModContent .. "(" .. loadedModulesCount .. "): "
+    loadedModContent = loadedModContent .. table.concat(loadedModules, ", ")
+    addon.GUI:CreateInformationTag(container, loadedModContent, "LEFT")
+    local unloadedModContent = "|cff8788ee" .. L["UnloadedModules"] .. "|r"
+    local unloadedModules, unloadedModulesCount = addon.core:GetUnloadedModulesList()
+    unloadedModContent = unloadedModContent .. "(" .. unloadedModulesCount .. "): "
+    unloadedModContent = unloadedModContent .. table.concat(unloadedModules, ", ")
+    addon.GUI:CreateInformationTag(container, unloadedModContent, "LEFT")
 
     return container
 end
@@ -213,6 +222,26 @@ local function BuildGUI(self)
     addon.UICore:BuildHover(close)
     self.closeButton = close
 
+    -- placeholder texture, to be replaced later
+    local developerButton = CreateFrame("Button", nil, toolbar.frame, "BackdropTemplate")
+    developerButton:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false, tileSize = 1, edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 }
+    })
+    addon.UICore:SetBackdropColor(developerButton)
+    addon.UICore:SetBorderColor(developerButton)
+    developerButton:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
+    developerButton:SetPoint("TOPRIGHT", close, "TOPLEFT", 0, 0)
+    developerButton:SetNormalTexture("Interface\\AddOns\\".. ADDON_NAME .. "\\Media\\Developer_Button.png")
+    developerButton:SetPushedTexture("Interface\\AddOns\\".. ADDON_NAME .. "\\Media\\Developer_Button.png")
+    developerButton:SetHighlightTexture("Interface\\AddOns\\".. ADDON_NAME .. "\\Media\\Developer_Button.png")
+    developerButton:GetHighlightTexture():SetAlpha(0.75)
+    developerButton:SetScript("OnClick", function() addon.Developer:DisplayAddonInfo() end)
+    addon.UICore:BuildHover(developerButton)
+    self.developerButton = developerButton
+
     -- the sidebar spans the full height, the content area sits below the toolbar
     local tabGroup = addon.UICore:Build("VerticalTabGroup")
     tabGroup:SetParent(root)
@@ -266,7 +295,7 @@ function addon.GUI:CloseGUI()
 
     self.isOpened = false
     self.frame:Hide()
-    addon.core:TestMode(false) -- turn off test mode when closing GUI
+    -- addon.core:TestMode(false) -- turn off test mode when closing GUI
 end
 
 -- MARK: GUI Register Module

@@ -42,6 +42,7 @@ local function RenderPanel(parent)
 	end)
 	GUI:CreateToggleCheckBox(frame, L["HideInactive"], addon.db.BattleRes.HideInactive, function(value)
 		addon.db.BattleRes.HideInactive = value
+		update()
 	end)
 	GUI:CreateResetModButton(frame, MOD_KEY, L["BattleResSettings"])
 

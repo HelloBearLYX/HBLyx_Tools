@@ -90,14 +90,13 @@ local function RenderPanel(parent)
 	end)
 
 	-- MARK: Font
-	local fontGroup = GUI:CreateInlineGroup(styleGroup, L["FontSettings"])
-	local timeFontGroup = GUI:CreateInlineGroup(fontGroup, L["Time"])
+	local timeFontGroup = GUI:CreateInlineGroup(frame, L["Time"])
 	GUI:CreateSlider(timeFontGroup, L["TimeFontScale"], 0.1, 5, 0.01, addon.db.DemonologyPortals.TimeFontScale, function(value)
 		addon.db.DemonologyPortals.TimeFontScale = value
 		update()
 	end)
 
-	local countFontGroup = GUI:CreateInlineGroup(fontGroup, L["Count"])
+	local countFontGroup = GUI:CreateInlineGroup(frame, L["Count"])
 	GUI:CreateFontSelect(countFontGroup, L["Font"], addon.db.DemonologyPortals.CountFont, function(value)
 		addon.db.DemonologyPortals.CountFont = value
 		update()

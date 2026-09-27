@@ -98,7 +98,7 @@ local function SetUpSlashCommand()
 				addon.GUI:OpenGUI()
 			end
 		elseif command == "dev" or command == "developer" then
-			addon.DeveloperTools:DisplayAddonInfo()
+			addon.Developer:DisplayAddonInfo()
 		end
 	end
 end

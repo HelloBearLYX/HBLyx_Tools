@@ -64,7 +64,6 @@ Configs\ChannelHelper.lua
 Configs\Profile.lua
 
 # developer use only
-# Modules\DeveloperTools.lua
-#GUI\TestDemo.lua
+developer.lua
 
 main.lua

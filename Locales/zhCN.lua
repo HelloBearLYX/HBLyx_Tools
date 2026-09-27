@@ -18,6 +18,11 @@ L["NotificationContent"] =
 	"|cff8788eeMidnightFocusInterrupt|r: 焦点打断模块的独立版本" .. "\n" ..
 	"|cff8788eeSharedMedia_HBLyx|r: 一个AI生成的中文语音素材包(LibSharedMedia)"
 
+-- MARK: Modules Overview
+L["ModulesOverview"] = "模块概览"
+L["LoadedModules"] = "已加载的模块"
+L["UnloadedModules"] = "未加载的模块"
+
 -- MARK： Downloads/Update
 L["Downloads/Update"] = "下载/更新"
 L["Release_Info"] = "官方发布版本|cffff0000仅在以下地址提供, 其他所有版本均非作者发布|r"
@@ -232,7 +237,7 @@ L["SparkColor"] = "火花颜色"
 L["SparkWidth"] = "火花宽度"
 
 -- MARK: BattleRes
-L["BattleResSettings"] = "战复计时器"
+L["BattleResSettings"] = "战复助手"
 L["BattleResSettingsDesc"] = "显示战复的冷却和充能"
 L["HideInactive"] = "未激活时隐藏"
 

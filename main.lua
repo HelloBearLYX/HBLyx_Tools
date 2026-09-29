@@ -99,6 +99,8 @@ local function SetUpSlashCommand()
 			end
 		elseif command == "dev" or command == "developer" then
 			addon.Developer:DisplayAddonInfo()
+		elseif command == "test" or command == "unlock" then
+			addon.core:TestMode()
 		end
 	end
 end

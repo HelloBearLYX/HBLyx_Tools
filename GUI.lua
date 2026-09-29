@@ -296,7 +296,7 @@ function addon.GUI:CloseGUI()
 
     self.isOpened = false
     self.frame:Hide()
-    -- addon.core:TestMode(false) -- turn off test mode when closing GUI
+    addon.core:TestMode(false) -- turn off test mode when closing GUI
 end
 
 -- MARK: GUI Register Module

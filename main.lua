@@ -118,9 +118,12 @@ local function InitializeStates()
 	addon.states = {}
 
 	-- player class
-	addon.states["playerClass"] = select(2, UnitClass("player")) -- "ADDON_LOADED"
-	
-	-- if the player is in combat
+	addon.states["playerClass"] = select(2, UnitClass("player"))
+	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerClass", function()
+		addon.states["playerClass"] = select(2, UnitClass("player"))
+	end)
+
+	-- inCombat
 	addon.states["inCombat"] = InCombatLockdown()
 	addon.core:RegisterState("PLAYER_REGEN_DISABLED", nil, "inCombat", function()
 		addon.states["inCombat"] = true
@@ -130,8 +133,6 @@ local function InitializeStates()
 			addon.Utilities:print(L["CombatLock"])
 		end
 	end)
-
-	-- combat info
 	addon.core:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", function()
 		addon.states["inCombat"] = false
 	end)

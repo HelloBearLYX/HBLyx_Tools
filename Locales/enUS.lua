@@ -333,6 +333,13 @@ L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
 L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"
 L["PortalExpiredMessage"] = "The portal count: %s"
 
+-- MARK: Misdirection Helper
+L["AutoMacroHelperSettings"] = "Auto Macro Helper"
+L["AutoMacroHelperSettingsDesc"] = "Automatically create and update a macro for your class(misdirection, power infusion, and innervate), and automatically set the target"
+L["MDHelperTarget"] = "Target"
+L["MDHelperTargetDesc"] = "The macro name is \"HBT_AutoMacroHelper\" in general macros\n\nEnter \"TANK\", \"HEALER\" or \"DAMAGER\" to auto-search a group member with that role, or a specific \"Name-Realm\"(not validated)"
+L["MDHelperGenerateMacro"] = "Generate/Update Macro"
+
 -- MARK: Talent Reminder
 L["TalentReminderSettings"] = "Talent Reminder"
 L["TalentReminderSettingsDesc"] = "Display talent reminders when you enter a Mythic Dungeon"

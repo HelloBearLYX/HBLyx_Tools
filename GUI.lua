@@ -104,6 +104,7 @@ local TABS = {
     {text = addon.core:GetModuleName("Countdown"), type = "Button", module = "Countdown", tooltip = L["CountdownSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.Countdown(container) end},
     {text = addon.core:GetModuleName("TextWarningSkins"), type = "Button", module = "TextWarningSkins", tooltip = L["TextWarningSkinsSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.TextWarningSkins(container) end},
     {text = L["ClassSpecificModules"], type = "Text"},
+    {text = addon.core:GetModuleName("AutoMacroHelper"), type = "Button", module = "AutoMacroHelper", tooltip = L["AutoMacroHelperSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.AutoMacroHelper(container) end},
     {text = addon.core:GetModuleName("WarlockReminders"), type = "Button", module = "WarlockReminders", tooltip = L["WarlockRemindersIntro"], panelFunction = function(container) return addon.GUI.tabPanels.WarlockReminders(container) end},
     {text = addon.core:GetModuleName("DemonologyPortals"), type = "Button", module = "DemonologyPortals", tooltip = L["DemonologyPortalsSettingsDesc"], panelFunction = function(container) return addon.GUI.tabPanels.DemonologyPortals(container) end},
     {text = L["Others"], type = "Text"},

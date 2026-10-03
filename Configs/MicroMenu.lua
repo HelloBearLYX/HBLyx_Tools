@@ -9,11 +9,15 @@ addon.configurationList[MOD_KEY] = {
 	X = 0,
 	Y = 465,
 	HearthstoneID = 0,
+	IconSize = 30,
+	IconSpacing = 5,
 
 	GroupMenuEnabled = true,
 	GroupMenuOnlyInGroup = false,
 	X_GroupMenu = -490,
 	Y_GroupMenu = 460,
+	GroupMenuIconSize = 30,
+	GroupMenuIconSpacing = 5,
 }
 
 -- MARK: Safe update
@@ -47,9 +51,15 @@ local function RenderPanel(parent)
 		end
 	end)
 
+	GUI:CreateDropdown(frame, L["HearthStoneSelection"], GetHearthstoneList(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
+		addon.db[MOD_KEY].HearthstoneID = value
+		update()
+	end)
+
 	GUI:CreateResetModButton(frame, MOD_KEY, L["MicroMenuSettings"])
 
 	local positionGroup = GUI:CreateInlineGroup(frame, L["PositionSettings"])
+
 	GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, addon.db[MOD_KEY].X, function(value)
 		addon.db[MOD_KEY].X = value
 		update()
@@ -59,8 +69,13 @@ local function RenderPanel(parent)
 		update()
 	end)
 
-	GUI:CreateDropdown(frame, L["HearthStoneSelection"], GetHearthstoneList(), nil, addon.db[MOD_KEY].HearthstoneID, function(value)
-		addon.db[MOD_KEY].HearthstoneID = value
+	GUI:CreateSlider(positionGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].IconSpacing, function(value)
+		addon.db[MOD_KEY].IconSpacing = value
+		update()
+	end)
+
+	GUI:CreateSlider(positionGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].IconSize, function(value)
+		addon.db[MOD_KEY].IconSize = value
 		update()
 	end)
 
@@ -81,6 +96,16 @@ local function RenderPanel(parent)
 	end)
 	GUI:CreateSlider(groupMenuPositionGroup, L["Y"], -1000, 1000, 1, addon.db[MOD_KEY].Y_GroupMenu, function(value)
 		addon.db[MOD_KEY].Y_GroupMenu = value
+		update()
+	end)
+
+	GUI:CreateSlider(groupMenuGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].GroupMenuIconSpacing, function(value)
+		addon.db[MOD_KEY].GroupMenuIconSpacing = value
+		update()
+	end)
+
+	GUI:CreateSlider(groupMenuGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].GroupMenuIconSize, function(value)
+		addon.db[MOD_KEY].GroupMenuIconSize = value
 		update()
 	end)
 

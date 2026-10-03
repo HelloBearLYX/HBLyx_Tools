@@ -15,6 +15,7 @@ local MicroMenu = {
 -- MARK: Hearthstone Data
 local HEARTHSTONE_DEFAULT_ID = 6948
 local CUSTOM_TELEPORT_DEFAULT_ID = 253629
+local HIGHTLIGHT_COLOR = addon.UICore:GetHighlightColor()
 local HEARTHSTONE_AND_TOY_ID_LIST = {
     6948,   -- Hearthstone
     54452,  -- Ethereal Portal
@@ -283,17 +284,6 @@ local function CountdownTenAction(self, button)
     button:RegisterForClicks("AnyDown")
 end
 
-local function ConvertRaidAction(self, button)
-    button:SetScript("OnClick", function(self, buttonClicked)
-        if IsInRaid() then
-            C_PartyInfo.ConvertToParty()
-        else
-            C_PartyInfo.ConvertToRaid()
-        end
-    end)
-    button:RegisterForClicks("AnyDown")
-end
-
 local function ResetInstanceAction(self, button)
     button:SetScript("OnClick", function(self, buttonClicked)
         ResetInstances()
@@ -319,10 +309,8 @@ local function GetCooldownOutputString(itemID)
 end
 
 -- MARK: Constants
-local BUTTON_SIZE = 40
-local BUTTON_SPACING = 0
-local GROUP_BUTTON_SIZE = 35
-local GROUP_BUTTON_SPACING = 0
+local DEFAULT_BUTTON_SIZE = 40
+local DEFAULT_GROUP_BUTTON_SIZE = 35
 local BUTTONS = {
     {name = "Character", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Character.PNG", action = CharacterButtonAction, tooltip = L["MicroMenuButton"]["Character"]},
     {name = "Bag", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Bag.PNG", action = BagButtonAction, tooltip = L["MicroMenuButton"]["Bag"]},
@@ -338,18 +326,47 @@ local BUTTONS = {
 local GROUP_BUTTONS = {
     {name = "ReadyCheck", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\ReadyCheck.PNG", action = ReadyCheckAction, tooltip = L["GroupMenuButton"]["ReadyCheck"]},
     {name = "Countdown", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Countdown.PNG", action = CountdownTenAction, tooltip = L["GroupMenuButton"]["CountdownTen"]},
-    {name = "ConvertRaid", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Convert.PNG", action = ConvertRaidAction, tooltip = L["GroupMenuButton"]["ConvertRaid"]},
     {name = "ResetInstance", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Reset.PNG", action = ResetInstanceAction, tooltip = L["GroupMenuButton"]["ResetInstance"]},
 }
+
+local function ApplyMicroMenuStyle(self)
+    if not self.frame or not self.buttons then
+        return
+    end
+
+    local size = addon.db[self.modName]["IconSize"] or DEFAULT_BUTTON_SIZE
+    local spacing = addon.db[self.modName]["IconSpacing"] or 0
+    self.frame:SetSize(#BUTTONS * size + (#BUTTONS - 1) * spacing, size)
+
+    for i, buttonData in ipairs(BUTTONS) do
+        local btn = self.buttons[buttonData.name]
+        if btn then
+            btn:SetSize(size, size)
+            btn:ClearAllPoints()
+            btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * (size + spacing), 0)
+        end
+    end
+end
 
 local function ApplyGroupMenuStyle(self)
     if not self.groupMenu then
         return
     end
 
-    self.groupMenu:SetSize(#GROUP_BUTTONS * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    local size = addon.db[self.modName]["GroupMenuIconSize"] or DEFAULT_GROUP_BUTTON_SIZE
+    local spacing = addon.db[self.modName]["GroupMenuIconSpacing"] or 0
+    self.groupMenu:SetSize(#GROUP_BUTTONS * size + (#GROUP_BUTTONS - 1) * spacing, size)
     self.groupMenu:ClearAllPoints()
     self.groupMenu:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X_GroupMenu"] or 0, addon.db[self.modName]["Y_GroupMenu"] or 0)
+
+    for i, buttonData in ipairs(GROUP_BUTTONS) do
+        local btn = self.groupMenu.buttons[buttonData.name]
+        if btn then
+            btn:SetSize(size, size)
+            btn:ClearAllPoints()
+            btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * (size + spacing), 0)
+        end
+    end
 end
 
 local function ShouldShowGroupMenu(self)
@@ -370,13 +387,13 @@ local function CreateGroupMenu(self)
     end
 
     self.groupMenu = CreateFrame("Frame", nil, UIParent)
-    self.groupMenu:SetSize(#GROUP_BUTTONS * GROUP_BUTTON_SIZE + (#GROUP_BUTTONS - 1) * GROUP_BUTTON_SPACING, GROUP_BUTTON_SIZE)
+    self.groupMenu:SetSize(#GROUP_BUTTONS * DEFAULT_GROUP_BUTTON_SIZE, DEFAULT_GROUP_BUTTON_SIZE)
     self.groupMenu:SetFrameStrata("LOW")
     self.groupMenu.buttons = {}
     for i, buttonData in ipairs(GROUP_BUTTONS) do
         local btn = CreateFrame("Button", nil, self.groupMenu, "SecureActionButtonTemplate")
-        btn:SetSize(GROUP_BUTTON_SIZE, GROUP_BUTTON_SIZE)
-        btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * (GROUP_BUTTON_SIZE + GROUP_BUTTON_SPACING), 0)
+        btn:SetSize(DEFAULT_GROUP_BUTTON_SIZE, DEFAULT_GROUP_BUTTON_SIZE)
+        btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * DEFAULT_GROUP_BUTTON_SIZE, 0)
         btn.texture = btn:CreateTexture(nil, "BACKGROUND")
         btn.texture:SetAllPoints()
         btn.texture:SetTexture(buttonData.texture)
@@ -386,8 +403,7 @@ local function CreateGroupMenu(self)
         if buttonData.tooltip then
             btn:SetScript("OnEnter", function(self)
                 GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-                btn.texture:SetVertexColor(1, 1, 1, 0.25)
-
+                btn.texture:SetVertexColor(unpack(HIGHTLIGHT_COLOR))
                 GameTooltip:SetText(buttonData.tooltip or buttonData.name, 1, 1, 1)
                 GameTooltip:Show()
             end)
@@ -418,13 +434,13 @@ function MicroMenu:Initialize()
     end
 
     self.frame = CreateFrame("Frame", ADDON_NAME .. self.modName, UIParent)
-    self.frame:SetSize(#BUTTONS * BUTTON_SIZE + (#BUTTONS - 1) * BUTTON_SPACING, BUTTON_SIZE)
+    self.frame:SetSize(#BUTTONS * DEFAULT_BUTTON_SIZE, DEFAULT_BUTTON_SIZE)
     self.frame:SetFrameStrata("LOW")
     self.buttons = {}
     for i, button in ipairs(BUTTONS) do
         local btn = CreateFrame("Button", nil, self.frame, "SecureActionButtonTemplate")
-        btn:SetSize(BUTTON_SIZE, BUTTON_SIZE)
-        btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * (BUTTON_SIZE + BUTTON_SPACING), 0)
+        btn:SetSize(DEFAULT_BUTTON_SIZE, DEFAULT_BUTTON_SIZE)
+        btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * DEFAULT_BUTTON_SIZE, 0)
         btn.texture = btn:CreateTexture(nil, "BACKGROUND")
         btn.texture:SetAllPoints()
         btn.texture:SetTexture(button.texture)
@@ -441,8 +457,7 @@ function MicroMenu:Initialize()
         if button.tooltip then
             btn:SetScript("OnEnter", function(self)
                 GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-                btn.texture:SetVertexColor(1, 1, 1, 0.25)
-
+                btn.texture:SetVertexColor(unpack(HIGHTLIGHT_COLOR))
                 GameTooltip:SetText(button.tooltip or button.name, 1, 1, 1)
                 GameTooltip:Show()
             end)
@@ -452,8 +467,7 @@ function MicroMenu:Initialize()
         elseif button.name == "Teleport" then
             btn:SetScript("OnEnter", function(frame)
                 GameTooltip:SetOwner(frame, "ANCHOR_BOTTOMRIGHT")
-                btn.texture:SetVertexColor(1, 1, 1, 0.25)
-
+                btn.texture:SetVertexColor(unpack(HIGHTLIGHT_COLOR))
                 local tooltipText
                 local hearthStoneCooldown = GetCooldownOutputString(self.hearthstoneID)
                 if PlayerHasToy(self.customTeleportID) then
@@ -476,6 +490,8 @@ function MicroMenu:Initialize()
         self.buttons[button.name] = btn
     end
     self.frame:Show()
+
+    ApplyMicroMenuStyle(self)
 
     if addon.db[self.modName]["GroupMenuEnabled"] then
         CreateGroupMenu(self)
@@ -503,10 +519,9 @@ end
 
 ---Update style settings and render them in-game for CustomTracker
 function MicroMenu:UpdateStyle()
-    if InCombatLockdown and InCombatLockdown() then
-        return
-    end
+    if addon.states["inCombat"] then return end
 
+    ApplyMicroMenuStyle(self)
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"] or 0, addon.db[self.modName]["Y"] or 0)
     UpdateHearthstoneMacro(self, self.buttons["Teleport"])
 

@@ -168,7 +168,7 @@ local function InitializeAuraButton(self, frame, options)
     border:SetTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\iconBorder.png")
     border:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1)
-    frame:SetAuraBorder(border, {
+    frame:SetAuraBorder(border, { -- 12.15 API got renamed to "AddDispelTypeTexture"
         showIcon = true,
         showWhenHarmful = true,
         showWhenHelpful = true,

@@ -28,8 +28,8 @@ local CLASS_MISDIRECTION = {
     PRIEST = {spellID = 10060, role = "DAMAGER"}
 }
 local MACRO_NAME = "HBT_AutoMacro"
-local MACRO_BODY = "#showtooltip\n/cast [@%s][@player] %s"
-local MACRO_BODY_NO_TARGET = "#showtooltip\n/cast [@player] %s"
+local MACRO_BODY = "#showtooltip\n/use [@%s][@player] %s"
+local MACRO_BODY_NO_TARGET = "#showtooltip\n/use [@player] %s"
 
 -- MARK: Get Spell Name
 

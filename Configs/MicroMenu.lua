@@ -13,11 +13,12 @@ addon.configurationList[MOD_KEY] = {
 	IconSpacing = 5,
 
 	GroupMenuEnabled = true,
-	GroupMenuOnlyInGroup = false,
-	X_GroupMenu = -490,
-	Y_GroupMenu = 460,
+	GroupMenuOnlyInGroup = true,
+	X_GroupMenu = -405,
+	Y_GroupMenu = 465,
 	GroupMenuIconSize = 30,
 	GroupMenuIconSpacing = 5,
+	CountdownSeconds = 10,
 }
 
 -- MARK: Safe update
@@ -88,6 +89,10 @@ local function RenderPanel(parent)
 		addon.db[MOD_KEY].GroupMenuOnlyInGroup = value
 		update()
 	end)
+	GUI:CreateSlider(groupMenuGroup, L["CountdownSeconds"], 1, 30, 1, addon.db[MOD_KEY].CountdownSeconds, function(value)
+		addon.db[MOD_KEY].CountdownSeconds = value
+		update()
+	end)
 
 	local groupMenuPositionGroup = GUI:CreateInlineGroup(groupMenuGroup, L["PositionSettings"])
 	GUI:CreateSlider(groupMenuPositionGroup, L["X"], -2000, 2000, 1, addon.db[MOD_KEY].X_GroupMenu, function(value)
@@ -99,12 +104,12 @@ local function RenderPanel(parent)
 		update()
 	end)
 
-	GUI:CreateSlider(groupMenuGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].GroupMenuIconSpacing, function(value)
+	GUI:CreateSlider(groupMenuPositionGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].GroupMenuIconSpacing, function(value)
 		addon.db[MOD_KEY].GroupMenuIconSpacing = value
 		update()
 	end)
 
-	GUI:CreateSlider(groupMenuGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].GroupMenuIconSize, function(value)
+	GUI:CreateSlider(groupMenuPositionGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].GroupMenuIconSize, function(value)
 		addon.db[MOD_KEY].GroupMenuIconSize = value
 		update()
 	end)

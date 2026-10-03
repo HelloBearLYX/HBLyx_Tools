@@ -420,6 +420,7 @@ L["MicroMenuSettings"] = "Micro Menu"
 L["MicroMenuSettingsDesc"] = "Custom quick-access menu for character, bags, talents, social, and more"
 L["GroupMenuSettings"] = "Group Menu"
 L["GroupMenuOnlyInGroup"] = "Show only in group"
+L["CountdownSeconds"] = "Countdown Duration"
 L["HearthStoneSelection"] = "Hearthstone Selection"
 L["MicroMenuButton"] = {
 	Character = "Character",
@@ -436,9 +437,11 @@ L["MicroMenuButton"] = {
 }
 L["GroupMenuButton"] = {
 	ReadyCheck = "Ready Check",
-	CountdownTen = "|cff00ff00Left|r:Countdown 10\n|cff00ff00Right|r:Cancel Countdown",
+	CountdownTen = "|cff00ff00Left|r:Countdown\n|cff00ff00Right|r:Cancel Countdown",
 	ConvertRaid = "Convert Party/Raid",
 	ResetInstance = "Reset Instances",
+	Marker = "|cff00ff00Left|r:Raid Mark\n|cff00ff00Right|r:World Mark",
+	ClearMarkers = "|cff00ff00Left|r:Clear Raid Marks\n|cff00ff00Right|r:Clear World Marks",
 }
 
 -- MARK: Aura Helper

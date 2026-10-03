@@ -18,42 +18,59 @@ local CUSTOM_TELEPORT_DEFAULT_ID = 253629
 local HIGHTLIGHT_COLOR = addon.UICore:GetHighlightColor()
 local HEARTHSTONE_AND_TOY_ID_LIST = {
     6948,   -- Hearthstone
-    54452,  -- Ethereal Portal
-    64488,  -- The Innkeeper's Daughter
-    93672,  -- Dark Portal
-    142542, -- Tome of Town Portal
-    162973, -- Greatfather Winter's Hearthstone
+
+    -- Midnight
+    263933, -- Huntmaster's Hearthstone
+    265100, -- Coreway Foundry Hearthstone
+    263489, -- Embrace of the Naaru
+    264367, -- Midnight hearthstone
+
+    -- The War Within
+    257736, -- Hearthstone of the Lightcaller
+    246565, -- Stellar Hearthstone
+    245970, -- P.O.S.T. Master's Express Hearthstone
+    228940, -- Notorious Thread's Hearthstone
+    212337, -- Stone of the Hearth
+    209035, -- Hearthstone of the Flame
+    208704, -- Deepdweller's Earthen Hearthstone
+    210455, -- Draenei Hologem
+
+    -- Dragonflight
+    236687, -- Explosive Hearthstone
+    235016, -- Redeployment Module
+    200630, -- Ohn'ir Windsage's Hearthstone
+    193588, -- Timewalker's Hearthstone
+
+    -- Shadowlands
+    190196, -- Enlightened Hearthstone
+    190237, -- Shadowlands hearthstone
+    188952, -- Dominated Hearthstone
+    184353, -- Kyrian Hearthstone
+    182773, -- Necrolord Hearthstone
+    180290, -- Night Fae Hearthstone
+    183716, -- Venthyr Sinstone
+    172179, -- Eternal Traveler's Hearthstone
+
+    -- Seasonal / Holiday
     163045, -- Headless Horseman's Hearthstone
+    162973, -- Greatfather Winter's Hearthstone
     165669, -- Lunar Elder's Hearthstone
     165670, -- Peddlefeet's Lovely Hearthstone
     165802, -- Noble Gardener's Hearthstone
     166746, -- Fire Eater's Hearthstone
     166747, -- Brewfest Reveler's Hearthstone
+
+    -- Legacy / Misc
+    64488,  -- The Innkeeper's Daughter
+    28585,  -- Legacy hearthstone
+    93672,  -- Dark Portal
+    142542, -- Tome of Town Portal
+    142298, -- Legacy hearthstone
     168907, -- Holographic Digitalization Hearthstone
-    172179, -- Eternal Traveler's Hearthstone
-    180290, -- Night Fae Hearthstone
-    182773, -- Necrolord Hearthstone
-    183716, -- Venthyr Sinstone
-    184353, -- Kyrian Hearthstone
-    188952, -- Dominated Hearthstone
-    190196, -- Enlightened Hearthstone
-    193588, -- Timewalker's Hearthstone
-    200630, -- Ohn'ir Windsage's Hearthstone
+    54452,  -- Ethereal Portal
     206195, -- Path of the Naaru
-    208704, -- Deepdweller's Earthen Hearthstone
-    209035, -- Hearthstone of the Flame
-    210455, -- Draenei Hologem
-    212337, -- Stone of the Hearth
-    228940, -- Notorious Thread's Hearthstone
-    235016, -- Redeployment Module
-    236687, -- Explosive Hearthstone
-    245970, -- P.O.S.T. Master's Express Hearthstone
-    246565, -- Stellar Hearthstone
-    257736, -- Hearthstone of the Lightcaller
-    263489, -- Embrace of the Naaru
-    263933, -- Huntmaster's Hearthstone
-    265100, -- Coreway Foundry Hearthstone
 }
+
 
 local function SuppressBlizzardFrame(frameName)
     local container = _G[frameName]
@@ -276,9 +293,19 @@ local function ReadyCheckAction(self, button)
     button:RegisterForClicks("AnyDown")
 end
 
+-- Countdown length is user-configurable (CountdownSeconds), refreshed whenever settings change.
+local function UpdateCountdownMacro(self, button)
+    if not button then
+        return
+    end
+
+    local countdownTime = addon.db[self.modName]["CountdownSeconds"] or 10
+    button:SetAttribute("macrotext1", "/countdown " .. countdownTime)
+end
+
 local function CountdownTenAction(self, button)
     button:SetAttribute("type1", "macro")
-    button:SetAttribute("macrotext1", "/countdown 10")
+    UpdateCountdownMacro(self, button)
     button:SetAttribute("type2", "macro")
     button:SetAttribute("macrotext2", "/countdown 0")
     button:RegisterForClicks("AnyDown")
@@ -288,6 +315,36 @@ local function ResetInstanceAction(self, button)
     button:SetScript("OnClick", function(self, buttonClicked)
         ResetInstances()
     end)
+    button:RegisterForClicks("AnyDown")
+end
+
+-- MARK: Group Menu Raid Markers
+-- Sheet SYMBOL order (1 Star...8 Skull) is not the WORLD marker ID order; this maps
+-- each symbol to the flare that actually carries it (same table EllesmereUIQoL_RaidTools uses).
+local MARKER_SYMBOL_TO_WORLD = { 5, 6, 3, 2, 7, 1, 4, 8 }
+local RAID_MARKER_TEXTURE = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d"
+
+-- Left click toggles the target marker, right click sets the world marker.
+local function MakeRaidMarkerAction(symbolIndex)
+    local worldID = MARKER_SYMBOL_TO_WORLD[symbolIndex]
+    return function(self, button)
+        button:SetAttribute("type1", "macro")
+        button:SetAttribute("macrotext1", (SLASH_TARGET_MARKER1 or "/tm") .. " !" .. symbolIndex)
+        button:SetAttribute("type2", "worldmarker")
+        button:SetAttribute("marker2", tostring(worldID))
+        button:SetAttribute("action2", "set")
+        button:SetAttribute("useOnKeyDown", true)
+        button:RegisterForClicks("AnyDown")
+    end
+end
+
+-- Left click clears the target marker, right click clears every world marker.
+local function ClearRaidMarkersAction(self, button)
+    button:SetAttribute("type1", "macro")
+    button:SetAttribute("macrotext1", (SLASH_TARGET_MARKER1 or "/tm") .. " 0")
+    button:SetAttribute("type2", "macro")
+    button:SetAttribute("macrotext2", (SLASH_CLEAR_WORLD_MARKER1 or "/cwm") .. " " .. (ALL or "All"))
+    button:SetAttribute("useOnKeyDown", true)
     button:RegisterForClicks("AnyDown")
 end
 
@@ -324,6 +381,15 @@ local BUTTONS = {
     {name = "LFG", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\LFG.PNG", action = LFGButtonAction, tooltip = L["MicroMenuButton"]["LFG"]},
 }
 local GROUP_BUTTONS = {
+    {name = "Marker1", texture = string.format(RAID_MARKER_TEXTURE, 1), action = MakeRaidMarkerAction(1), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker2", texture = string.format(RAID_MARKER_TEXTURE, 2), action = MakeRaidMarkerAction(2), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker3", texture = string.format(RAID_MARKER_TEXTURE, 3), action = MakeRaidMarkerAction(3), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker4", texture = string.format(RAID_MARKER_TEXTURE, 4), action = MakeRaidMarkerAction(4), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker5", texture = string.format(RAID_MARKER_TEXTURE, 5), action = MakeRaidMarkerAction(5), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker6", texture = string.format(RAID_MARKER_TEXTURE, 6), action = MakeRaidMarkerAction(6), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker7", texture = string.format(RAID_MARKER_TEXTURE, 7), action = MakeRaidMarkerAction(7), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "Marker8", texture = string.format(RAID_MARKER_TEXTURE, 8), action = MakeRaidMarkerAction(8), tooltip = L["GroupMenuButton"]["Marker"]},
+    {name = "ClearMarkers", texture = "Interface\\Buttons\\UI-GroupLoot-Pass-Up", action = ClearRaidMarkersAction, tooltip = L["GroupMenuButton"]["ClearMarkers"]},
     {name = "ReadyCheck", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\ReadyCheck.PNG", action = ReadyCheckAction, tooltip = L["GroupMenuButton"]["ReadyCheck"]},
     {name = "Countdown", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Countdown.PNG", action = CountdownTenAction, tooltip = L["GroupMenuButton"]["CountdownTen"]},
     {name = "ResetInstance", texture = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\MicroMenu\\Reset.PNG", action = ResetInstanceAction, tooltip = L["GroupMenuButton"]["ResetInstance"]},
@@ -529,6 +595,7 @@ function MicroMenu:UpdateStyle()
         if not self.groupMenu then
             CreateGroupMenu(self)
         end
+        UpdateCountdownMacro(self, self.groupMenu.buttons["Countdown"])
         ApplyGroupMenuStyle(self)
         self.groupMenu:Show()
     elseif self.groupMenu then

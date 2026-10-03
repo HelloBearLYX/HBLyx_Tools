@@ -419,6 +419,7 @@ L["MicroMenuSettings"] = "微型菜单"
 L["MicroMenuSettingsDesc"] = "自定义快捷菜单，快速访问角色、背包、天赋、社交等界面"
 L["GroupMenuSettings"] = "队伍菜单"
 L["GroupMenuOnlyInGroup"] = "仅在队伍中显示"
+L["CountdownSeconds"] = "倒计时时长"
 L["HearthStoneSelection"] = "炉石选择"
 L["MicroMenuButton"] = {
 	Character = "角色",
@@ -434,10 +435,12 @@ L["MicroMenuButton"] = {
 	LFG = "|cff00ff00左键|r:寻找队伍\n|cff00ff00右键|r:集合石插件",
 }
 L["GroupMenuButton"] = {
-	ReadyCheck = "团队检查",
-	CountdownTen = "|cff00ff00左键|r:倒计时 10 秒\n|cff00ff00右键|r:取消倒计时",
+	ReadyCheck = "就位检查",
+	CountdownTen = "|cff00ff00左键|r:倒计时\n|cff00ff00右键|r:取消倒计时",
 	ConvertRaid = "转换队伍/团队",
 	ResetInstance = "重置副本",
+	Marker = "|cff00ff00左键|r:团队标记\n|cff00ff00右键|r:世界标记",
+	ClearMarkers = "|cff00ff00左键|r:清除团队标记\n|cff00ff00右键|r:清除世界标记",
 }
 
 -- MARK: Aura Helper

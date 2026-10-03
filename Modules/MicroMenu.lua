@@ -402,14 +402,23 @@ local function ApplyMicroMenuStyle(self)
 
     local size = addon.db[self.modName]["IconSize"] or DEFAULT_BUTTON_SIZE
     local spacing = addon.db[self.modName]["IconSpacing"] or 0
-    self.frame:SetSize(#BUTTONS * size + (#BUTTONS - 1) * spacing, size)
+    local vertical = addon.db[self.modName]["Vertical"] == true
+    if vertical then
+        self.frame:SetSize(size, #BUTTONS * size + (#BUTTONS - 1) * spacing)
+    else
+        self.frame:SetSize(#BUTTONS * size + (#BUTTONS - 1) * spacing, size)
+    end
 
     for i, buttonData in ipairs(BUTTONS) do
         local btn = self.buttons[buttonData.name]
         if btn then
             btn:SetSize(size, size)
             btn:ClearAllPoints()
-            btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * (size + spacing), 0)
+            if vertical then
+                btn:SetPoint("TOP", self.frame, "TOP", 0, -(i - 1) * (size + spacing))
+            else
+                btn:SetPoint("LEFT", self.frame, "LEFT", (i - 1) * (size + spacing), 0)
+            end
         end
     end
 end
@@ -421,7 +430,12 @@ local function ApplyGroupMenuStyle(self)
 
     local size = addon.db[self.modName]["GroupMenuIconSize"] or DEFAULT_GROUP_BUTTON_SIZE
     local spacing = addon.db[self.modName]["GroupMenuIconSpacing"] or 0
-    self.groupMenu:SetSize(#GROUP_BUTTONS * size + (#GROUP_BUTTONS - 1) * spacing, size)
+    local vertical = addon.db[self.modName]["GroupMenuVertical"] == true
+    if vertical then
+        self.groupMenu:SetSize(size, #GROUP_BUTTONS * size + (#GROUP_BUTTONS - 1) * spacing)
+    else
+        self.groupMenu:SetSize(#GROUP_BUTTONS * size + (#GROUP_BUTTONS - 1) * spacing, size)
+    end
     self.groupMenu:ClearAllPoints()
     self.groupMenu:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X_GroupMenu"] or 0, addon.db[self.modName]["Y_GroupMenu"] or 0)
 
@@ -430,7 +444,11 @@ local function ApplyGroupMenuStyle(self)
         if btn then
             btn:SetSize(size, size)
             btn:ClearAllPoints()
-            btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * (size + spacing), 0)
+            if vertical then
+                btn:SetPoint("TOP", self.groupMenu, "TOP", 0, -(i - 1) * (size + spacing))
+            else
+                btn:SetPoint("LEFT", self.groupMenu, "LEFT", (i - 1) * (size + spacing), 0)
+            end
         end
     end
 end

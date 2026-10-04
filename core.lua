@@ -283,6 +283,25 @@ function Core:GetStatesMonitorInfo()
     return output
 end
 
+---Get "event(count): state1, state2" for every registered state update event
+---@return table<string> output
+function Core:GetStateEventInfo()
+    local output = {}
+    for event, states in pairs(self.statesUpdate) do
+        local stateNames = {}
+        for state, _ in pairs(states) do
+            table.insert(stateNames, state)
+        end
+        table.sort(stateNames)
+
+        local entry = "|cff8788ee" .. event .. "|r(" .. #stateNames .. "): " .. table.concat(stateNames, ", ")
+        table.insert(output, entry)
+    end
+    table.sort(output)
+
+    return output
+end
+
 ---Get "event(unit1, unit2)(count): module1, module2" for every registered event, the unit part is omitted when the event has no unit
 ---@return table<string> output
 function Core:GetEventInfo()

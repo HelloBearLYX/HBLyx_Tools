@@ -1,7 +1,7 @@
 local ADDON_NAME, addon = ...
 
 -- MARK: Default values
-local FRAME_WIDTH = 400
+local FRAME_WIDTH = 800
 local FRAME_HEIGHT = 300
 local CLOSE_BUTTON_SIZE = 20
 local CLOSE_BUTTON_TEXTURE = "Interface\\AddOns\\HBLyx_Tools\\GUI\\Assets\\Close_Button.png"
@@ -11,7 +11,7 @@ local Developer = {
     displayFrame = nil
 }
 
----Fill the scroll frame with the modules overview and the states info
+---Fill the scroll frame with the modules overview, states info, and event registrations
 local function RenderAddonInfo(container)
     addon.GUI:CreateInlineGroup(container, "Modules")
     local loadedModContent = "|cff8788eeLoaded|r"
@@ -36,6 +36,11 @@ local function RenderAddonInfo(container)
     local statesMonitorDisplay = ""
     statesMonitorDisplay = table.concat(statesMonitorInfo, "\n")
     addon.GUI:CreateInformationTag(container, statesMonitorDisplay, "LEFT")
+
+    addon.GUI:CreateHeader(container, "State Events")
+    local stateEventInfo = addon.core:GetStateEventInfo()
+    local stateEventDisplay = table.concat(stateEventInfo, "\n")
+    addon.GUI:CreateInformationTag(container, stateEventDisplay, "LEFT")
 
     addon.GUI:CreateHeader(container, "Events")
     local eventInfo = addon.core:GetEventInfo()

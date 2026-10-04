@@ -119,16 +119,12 @@ local function InitializeStates()
 
 	-- interface number
 	-- GetBuildInfo is available at ADDON_LOADED, before modules initialize.
-	-- addon.states["interfaceNumber"] = select(4, GetBuildInfo())
-	addon.core:RegisterState("ADDON_LOADED", nil, "interfaceNumber", function ()
-		local interfaceNumber = select(4, GetBuildInfo())
-		addon.states["interfaceNumber"] = interfaceNumber
-	end)
+	addon.states["interfaceNumber"] = select(4, GetBuildInfo())
+	addon.core:RegisterState("ADDON_LOADED", nil, "interfaceNumber", function() end)
 
 	-- player class
-	addon.core:RegisterState("PLAYER_ENTERING_WORLD", nil, "playerClass", function()
-		addon.states["playerClass"] = select(2, UnitClass("player"))
-	end)
+	addon.states["playerClass"] = select(2, UnitClass("player")) -- initialize immediately
+	addon.core:RegisterState("ADDON_LOADED", nil, "playerClass", function() end)
 
 	-- inCombat
 	addon.states["inCombat"] = InCombatLockdown()

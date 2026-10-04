@@ -168,7 +168,7 @@ local function InitializeAuraButton(self, frame, options)
     border:SetTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\iconBorder.png")
     border:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1)
-    frame:SetAuraBorder(border, { -- 12.15 API got renamed to "AddDispelTypeTexture"
+    local borderOptions = {
         showIcon = true,
         showWhenHarmful = true,
         showWhenHelpful = true,
@@ -182,7 +182,13 @@ local function InitializeAuraButton(self, frame, options)
             Poison = (options.ApplyDispellColor and self.dispellColors.Poison) or DEFAULT_BORDER_COLOR,
             Bleed = (options.ApplyDispellColor and self.dispellColors.Bleed) or DEFAULT_BORDER_COLOR,
         },
-    })
+    }
+    -- 12.15 API got renamed to "AddDispelTypeTexture"
+    if addon.states["interfaceNumber"] >= 120105 then
+        frame:AddDispelTypeTexture(border, borderOptions)
+    else
+        frame:SetAuraBorder(border, borderOptions)
+    end
 end
 
 -- MARK: Filter handlers

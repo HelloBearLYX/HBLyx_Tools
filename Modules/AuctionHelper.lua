@@ -237,6 +237,7 @@ local function CreateButton(self, itemID, tag, parent)
         button = CreateFrame("Button", nil, parent)
         button.texture = button:CreateTexture(nil, "BACKGROUND")
         button.texture:SetAllPoints()
+        button.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 
         button.textFrame = CreateFrame("Frame", nil, button)
         button.textFrame:SetAllPoints()

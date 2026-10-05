@@ -7,7 +7,19 @@ local MOD_LABEL = L["AuraHelperSettings"] or "Aura Helper"
 -- MARK: Defaults
 addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 	Enabled = true,
-	data = {},
+	data = { -- add a default debuff container of player
+		Debuffs = {
+			Type = "Harmful", -- default to debuff
+			IconSize = 40,
+			MaxCount = 5,
+			IconSpacing = 0,
+			GrowDirection = "RIGHT",
+			X = 145,
+			Y = -80,
+			Filters = {"NonPlayer"},
+			ApplyDispellColor = true,
+		},
+	},
 	dataSound = {}, -- {spellID = {trigger = soundLSM}}
 	EnabledCoTank = true,
 	coTankOptions = {

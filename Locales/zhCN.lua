@@ -338,7 +338,7 @@ L["PortalExpiredMessage"] = "本次传送门数量: %s"
 L["AutoMacroHelperSettings"] = "自动宏助手"
 L["AutoMacroHelperSettingsDesc"] = "自动为你的职业创建和更新宏(误导,能量灌注,激活), 并自动设置目标"
 L["MDHelperTarget"] = "目标"
-L["MDHelperTargetDesc"] = "宏的名称在通用宏中为\"HBT_AutoMacro\"\n\n输入\"TANK\",\"HEALER\"或\"DAMAGER\"以自动搜索该角色的队伍成员，或输入具体的\"名字-服务器\"(不会校验格式)"
+L["MDHelperTargetDesc"] = "宏的名称在通用宏中为\"HBT_AutoMacro\"\n\n输入\"TANK\",\"HEALER\"或\"DAMAGER\"以自动搜索该职责的队伍成员，或输入具体的\"名字-服务器\"(不会校验格式)"
 L["MDHelperGenerateMacro"] = "生成/更新宏"
 
 -- MARK: Talent Reminder
@@ -468,7 +468,7 @@ L["AuraFilter"] = {
 	CrowdControl = "控制",
 	Dispellable = "可驱散",
 	Power_Infusion = "外部团队",
-	Role = "角色",
+	Role = "职责",
 	Priority = "优先级",
 	Stealable = "可偷取",
 	Boss = "首领",

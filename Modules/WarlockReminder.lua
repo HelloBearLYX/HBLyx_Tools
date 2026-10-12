@@ -321,11 +321,15 @@ end
 ---@param on boolean turn the Test mode on or off
 function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
-		self.pet:Show()
-        addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, L["PetSettings"], self.modName)
+        if addon.db[self.modName].PetEnabled then
+            self.pet:Show()
+            addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, L["PetSettings"], self.modName)
+        end
 
-        self.candy:Show()
-        addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, L["CandySetting"], self.modName)
+        if addon.db[self.modName].CandyEnabled then
+            self.candy:Show()
+            addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, L["CandySetting"], self.modName)
+        end
     else
         addon.Utilities:HideEditFrame(self.pet)
         addon.Utilities:HideEditFrame(self.candy)

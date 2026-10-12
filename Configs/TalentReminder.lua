@@ -171,10 +171,6 @@ local function RenderPanel(parent)
 
 	spellInput = GUI:CreateEditBox(nil, spellLabel, "", nil)
 	specsSelection = GUI:CreateSpecSelectDropdown(nil, L["LoadingSpecs"])
-	-- specsSelection:GetWidget():SetRelativeWidth(0.45)
-	-- local clearSpecsButton = GUI:CreateButton(nil, L["ClearSpecsSelection"], function ()
-	-- 	specsSelection:ClearSpecSelection()
-	-- end)
     local addButton
     local removeButton
 

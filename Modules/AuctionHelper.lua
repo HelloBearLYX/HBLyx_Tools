@@ -494,13 +494,6 @@ local function UpdateQuantities(self)
     end
 end
 
--- MARK: Test
-
----Test Mode
----@param on boolean turn the Test mode on or off
-function AuctionHelper:Test(on)
-end
-
 -- MARK: RegisterEvents
 
 ---Register events

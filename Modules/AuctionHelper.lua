@@ -482,6 +482,18 @@ function AuctionHelper:UpdateStyle()
     RenderPanel(self, self.currentCategoryData or data[1])
 end
 
+-- MARK: UpdateQuantities
+
+---Refresh quantity text/icon visibility for every currently rendered button
+---@param self AuctionHelper the AuctionHelper object
+local function UpdateQuantities(self)
+    for _, subCategoryFrame in ipairs(self.activeSubCategories) do
+        for _, button in ipairs(subCategoryFrame.buttons) do
+            UpdateButtonVisuals(button, button.itemID)
+        end
+    end
+end
+
 -- MARK: Test
 
 ---Test Mode
@@ -494,6 +506,7 @@ end
 ---Register events
 function AuctionHelper:RegisterEvents()
     self.frame:RegisterEvent("ADDON_LOADED")
+    addon.core:RegisterEvent("BAG_UPDATE", self.frame, self.modName)
 
     self.frame:SetScript("OnEvent", function(_, event, ...)
         if event == "ADDON_LOADED" then
@@ -502,6 +515,10 @@ function AuctionHelper:RegisterEvents()
                 self.frame:UnregisterEvent("ADDON_LOADED")
                 CreateMainFrame(self)
                 self.loaded = true
+            end
+        elseif event == "BAG_UPDATE" then
+            if self.loaded and self.panel then
+                UpdateQuantities(self)
             end
         end
     end)

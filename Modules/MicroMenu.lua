@@ -643,10 +643,7 @@ function MicroMenu:Test(on)
         end
     else
         addon.Utilities:HideEditFrame(self.frame)
-
-        if self.groupMenu then
-            addon.Utilities:HideEditFrame(self.groupMenu)
-        end
+        addon.Utilities:HideEditFrame(self.groupMenu)
 
         self:UpdateStyle()
     end

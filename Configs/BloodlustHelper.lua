@@ -28,18 +28,9 @@ local function RenderPanel(parent)
 
     local enabledModule = GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["BloodlustHelperSettings"] .. "|r", addon.db.BloodlustHelper.Enabled, function(value)
         addon.db.BloodlustHelper.Enabled = value
-        if addon.core:HasModuleLoaded(MOD_KEY) then
-            if not value then
-                addon:ShowDialog(ADDON_NAME .. "RLNeeded")
-            end
-        else
-            if value then
-                addon.core:LoadModule(MOD_KEY)
-                addon.core:TestModule(MOD_KEY)
-            end
-        end
+        addon.core:ToggleModule(MOD_KEY, value)
     end)
-    local notValidVersion = select(4, GetBuildInfo()) < 120100
+    local notValidVersion = addon.states["interfaceNumber"] < 120100
     enabledModule:SetDisabled(notValidVersion)
     if notValidVersion then
         GUI:CreateInformationTag(frame, L["BloodlustHelperNotValidVersion"], "LEFT")

@@ -49,16 +49,9 @@ local function RenderPanel(parent)
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChannelHelperSettings"] .. "|r", addon.db[MOD_KEY].Enabled, function(value)
 		addon.db[MOD_KEY].Enabled = value
-		if addon.core:HasModuleLoaded(MOD_KEY) then
-			if not value then
-				addon:ShowDialog(ADDON_NAME .. "RLNeeded")
-			end
-		else
-			if value then
-				addon.core:LoadModule(MOD_KEY)
-				addon.core:TestModule(MOD_KEY)
-				update()
-			end
+		addon.core:ToggleModule(MOD_KEY, value)
+		if value then
+			update()
 		end
 	end)
 

@@ -44,16 +44,7 @@ local function RenderPanel(parent)
 	GUI:CreateInformationTag(frame, L["WarlockWelecome"], "LEFT")
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["WarlockReminders"] .. "|r", addon.db.WarlockReminders.Enabled, function(value)
 		addon.db.WarlockReminders.Enabled = value
-		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
-            if not value then -- user try to disable the module
-                addon:ShowDialog(ADDON_NAME.."RLNeeded")
-            end
-        else -- if the module is not loaded yet
-            if value then -- user try to enable the module, just load it without asking for reload, since it will be loaded immediately
-                addon.core:LoadModule(MOD_KEY)
-                addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
-            end
-        end
+		addon.core:ToggleModule(MOD_KEY, value)
 	end)
 	GUI:CreateToggleCheckBox(frame, L["ShowInInstance"], addon.db.WarlockReminders.ShowInInstance, function(value)
 		addon.db.WarlockReminders.ShowInInstance = value

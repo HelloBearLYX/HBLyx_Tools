@@ -41,16 +41,7 @@ local function RenderPanel(parent)
 	-- MARK: General
 	GUI:CreateToggleCheckBox(parent, L["Enable"] .. "|cff0070DD" .. L["AutoMacroHelperSettings"] .. "|r", addon.db.AutoMacroHelper.Enabled, function(value)
 		addon.db.AutoMacroHelper.Enabled = value
-		if addon.core:HasModuleLoaded(MOD_KEY) then -- if module is loaded
-            if not value then -- user try to disable the module
-                addon:ShowDialog(ADDON_NAME.."RLNeeded")
-            end
-        else -- if the module is not loaded yet
-            if value then -- user try to enable the module, just load it without asking for reload, since it will be loaded immediately
-                addon.core:LoadModule(MOD_KEY)
-                addon.core:TestModule(MOD_KEY) -- the test mode will be on if the addon is in test mode
-            end
-        end
+		addon.core:ToggleModule(MOD_KEY, value)
 	end)
 	GUI:CreateResetModButton(parent, MOD_KEY, L["AutoMacroHelperSettings"])
 

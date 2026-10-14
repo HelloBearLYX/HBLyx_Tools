@@ -203,7 +203,7 @@ local function InitializeEditFrame(frame, dbTable, xKey, yKey, anchorFrom, label
 	if not frame.editFrame then
 		local editFrame = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 		editFrame:EnableMouse(true)
-		editFrame:SetFrameStrata("FULLSCREEN_DIALOG")
+		editFrame:SetFrameStrata("DIALOG")
 		editFrame:SetBackdrop({
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = "Interface\\Buttons\\WHITE8x8",

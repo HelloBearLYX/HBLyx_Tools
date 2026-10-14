@@ -120,16 +120,7 @@ local function RenderPanel(parent)
 
 	GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. MOD_LABEL .. "|r", addon.db[MOD_KEY].Enabled, function(value)
 		addon.db[MOD_KEY].Enabled = value
-		if addon.core:HasModuleLoaded(MOD_KEY) then
-			if not value then
-				addon:ShowDialog(ADDON_NAME .. "RLNeeded")
-			end
-		else
-			if value then
-				addon.core:LoadModule(MOD_KEY)
-				addon.core:TestModule(MOD_KEY)
-			end
-		end
+		addon.core:ToggleModule(MOD_KEY, value)
 	end)
 
 	GUI:CreateResetModButton(frame, MOD_KEY, MOD_LABEL)

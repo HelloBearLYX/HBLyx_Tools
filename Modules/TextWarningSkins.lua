@@ -247,10 +247,6 @@ end
 ---Test Mode
 ---@param on boolean turn the Test mode on or off
 function TextWarningSkins:Test(on)
-    if not addon.db[self.modName]["Enabled"] then -- if the module is not enabled, do not allow test mode
-        return
-    end
-
     if on then
         local testInfo = {
             text = "Test Warning",

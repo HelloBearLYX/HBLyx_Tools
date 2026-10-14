@@ -190,10 +190,6 @@ end
 ---Test Mode
 ---@param on boolean turn the Test mode on or off
 function Countdown:Test(on)
-    if not addon.db[self.modName]["Enabled"] then -- if the module is not enabled, do not allow test mode
-        return
-    end
-
     if on then
         addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CountdownSettings"], self.modName)
         self:countdown(10, "TEST") -- start a 10-second countdown for testing

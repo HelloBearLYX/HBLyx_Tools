@@ -383,7 +383,6 @@ function addon.Utilities:GetAllSpecIconList(withColor)
 	local output = {}
 
 	for class = 1, 13 do
-		addon:debug("Processing class: " .. (select(2, GetClassInfo(class)) or "UNKNOWN"))
 		local classFileName = select(2, GetClassInfo(class))
 		local classColorObj = C_ClassColor.GetClassColor(classFileName)
 		local specsCount = C_SpecializationInfo.GetNumSpecializationsForClassID(class)

@@ -41,15 +41,15 @@ local function RenderPanel(parent)
 
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. "|cff0070DD" .. L["ChallengeEnhanceSettings"] .. "|r", addon.db.ChallengeEnhance.Enabled, function(value)
         addon.db.ChallengeEnhance.Enabled = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        addon.core:ShowReloadPopup()
     end)
     GUI:CreateToggleCheckBox(frame, L["PortalPartyMessage"], addon.db.ChallengeEnhance.PortalPartyMessage, function(value)
         addon.db.ChallengeEnhance.PortalPartyMessage = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        addon.core:ShowReloadPopup()
     end)
     GUI:CreateToggleCheckBox(frame, L["Enable"] .. L["TeamKeystone"], addon.db.ChallengeEnhance.TeamKeystone, function(value)
         addon.db.ChallengeEnhance.TeamKeystone = value
-        addon:ShowDialog(ADDON_NAME.."RLNeeded")
+        addon.core:ShowReloadPopup()
     end)
     GUI:CreateResetModButton(frame, MOD_KEY, L["ChallengeEnhanceSettings"])
 

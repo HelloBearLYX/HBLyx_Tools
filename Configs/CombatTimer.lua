@@ -31,7 +31,7 @@ local function RenderPanel(parent)
 	end)
 	GUI:CreateToggleCheckBox(frame, L["TimerCombatShow"], addon.db.CombatTimer.CombatShow, function(value)
 		addon.db.CombatTimer.CombatShow = value
-		addon:ShowDialog(ADDON_NAME.."RLNeeded")
+		addon.core:ShowReloadPopup()
 	end)
 	GUI:CreateToggleCheckBox(frame, L["TimerPrintEnabled"], addon.db.CombatTimer.PrintEnabled, function(value)
 		addon.db.CombatTimer.PrintEnabled = value

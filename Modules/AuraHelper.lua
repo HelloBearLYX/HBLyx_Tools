@@ -29,6 +29,8 @@ container_options = {
     Y = 0,
     Filters = {"Player", "Raid", "Defensive", "External"},
     ApplyDispellColor = true, -- whether to apply the dispel color to the border of the aura icons
+    BorderSize = 1, -- thickness of the aura icon border in pixels
+    ShowDispelIcon = false, -- whether to show the dispel type icon on the aura icons
 }]]
 
 -- MARK: Constants
@@ -164,16 +166,33 @@ local function InitializeAuraButton(self, frame, options)
     frame:SetApplicationCount(stack)
 
     -- border
-    local border = frame:CreateTexture(nil, "OVERLAY")
-    border:SetTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\iconBorder.png")
-    border:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
-    border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1)
+    local border = {
+        top = frame:CreateTexture(nil, "OVERLAY"),
+        bottom = frame:CreateTexture(nil, "OVERLAY"),
+        left = frame:CreateTexture(nil, "OVERLAY"),
+        right = frame:CreateTexture(nil, "OVERLAY"),
+    }
+    local borderSize = options.BorderSize or 1
+    for _, tex in pairs(border) do
+        tex:SetColorTexture(1, 1, 1, 1)
+    end
+    border.top:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+    border.top:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+    border.top:SetHeight(borderSize)
+    border.left:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+    border.left:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+    border.left:SetWidth(borderSize)
+    border.bottom:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+    border.bottom:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
+    border.bottom:SetHeight(borderSize)
+    border.right:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+    border.right:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
+    border.right:SetWidth(borderSize)
     local borderOptions = {
-        showIcon = true,
         showWhenHarmful = true,
         showWhenHelpful = true,
         showWithoutDispelType = true,
-        style = 3,
+        style = Enum.CustomAuraButtonDispelTypeTextureStyle.PreserveAsset,
         customDispelColorMap = {
             None = (options.ApplyDispellColor and self.dispellColors.None) or DEFAULT_BORDER_COLOR,
             Magic = (options.ApplyDispellColor and self.dispellColors.Magic) or DEFAULT_BORDER_COLOR,
@@ -183,11 +202,22 @@ local function InitializeAuraButton(self, frame, options)
             Bleed = (options.ApplyDispellColor and self.dispellColors.Bleed) or DEFAULT_BORDER_COLOR,
         },
     }
-    -- 12.15 API got renamed to "AddDispelTypeTexture"
-    if addon.states["interfaceNumber"] >= 120105 then
-        frame:AddDispelTypeTexture(border, borderOptions)
-    else
-        frame:SetAuraBorder(border, borderOptions)
+    for _, tex in pairs(border) do
+        frame:AddDispelTypeTexture(tex, borderOptions)
+    end
+
+    -- dispell icon
+    if options.ShowDispelIcon then
+        local dispellIcon = frame:CreateTexture(nil, "OVERLAY")
+        local iconSize = options.IconSize * 0.35
+        dispellIcon:SetSize(iconSize, iconSize)
+        dispellIcon:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -1 * options.BorderSize, -1 * options.BorderSize)
+        frame:AddDispelTypeTexture(dispellIcon, {
+            showWhenHarmful = true,
+            showWhenHelpful = true,
+            -- showWithoutDispelType = true,
+            style = Enum.CustomAuraButtonDispelTypeTextureStyle.Icon,
+        })
     end
 end
 

@@ -86,7 +86,7 @@ local function RenderPanel(parent)
 	local petGroup = GUI:CreateInlineGroup(frame, L["PetSettings"])
 	GUI:CreateToggleCheckBox(petGroup, L["Enable"], addon.db.WarlockReminders.PetEnabled, function(value)
 		addon.db.WarlockReminders.PetEnabled = value
-		addon:ShowDialog(ADDON_NAME.."RLNeeded")
+		addon.core:ShowReloadPopup()
 	end)
 	GUI:CreateToggleCheckBox(petGroup, L["PetStanceEnable"], addon.db.WarlockReminders.StanceEnabled, function(value)
 		addon.db.WarlockReminders.StanceEnabled = value
@@ -125,7 +125,7 @@ local function RenderPanel(parent)
 	local candyGroup = GUI:CreateInlineGroup(frame, L["CandySetting"])
 	GUI:CreateToggleCheckBox(candyGroup, L["Enable"], addon.db.WarlockReminders.CandyEnabled, function(value)
 		addon.db.WarlockReminders.CandyEnabled = value
-		addon:ShowDialog(ADDON_NAME.."RLNeeded")
+		addon.core:ShowReloadPopup()
 	end)
 	-- MARK: Candy Position
 	local candyPositionGroup = GUI:CreateInlineGroup(candyGroup, L["PositionSettings"])

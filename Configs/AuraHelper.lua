@@ -18,6 +18,8 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 			Y = -80,
 			Filters = {"NonPlayer"},
 			ApplyDispellColor = true,
+			BorderSize = 2,
+			ShowDispelIcon = false,
 		},
 	},
 	dataSound = {}, -- {spellID = {trigger = soundLSM}}
@@ -32,6 +34,8 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 		Y = -40,
 		Filters = {"NonPlayer"},
 		ApplyDispellColor = true,
+		BorderSize = 2,
+		ShowDispelIcon = false,
 	},
 	dispellColors = {
 		None = "000000",
@@ -53,6 +57,8 @@ local DEFAULT_CONTAINER = {
 	Y = 0,
 	Filters = {},
 	ApplyDispellColor = true,
+	BorderSize = 2,
+	ShowDispelIcon = false,
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows
@@ -344,9 +350,11 @@ local function RenderPanel(parent)
 	local typeSelection
 	local filtersSelection
 	local applyDispellColorToggle
+	local showDispelIconToggle
 	local growSelection
 	local maxCountSlider
 	local iconSizeSlider
+	local borderSizeSlider
 	local iconSpacingSlider
 	local xSlider
 	local ySlider
@@ -387,9 +395,11 @@ local function RenderPanel(parent)
 			end
 		end
 		applyDispellColorToggle:SetValue(options.ApplyDispellColor ~= false)
+		showDispelIconToggle:SetValue(options.ShowDispelIcon == true)
 		growSelection:SetValue(options.GrowDirection or "RIGHT")
 		maxCountSlider:SetValue(options.MaxCount or 5)
 		iconSizeSlider:SetValue(options.IconSize or 35)
+		borderSizeSlider:SetValue(options.BorderSize or 1)
 		iconSpacingSlider:SetValue(options.IconSpacing or 0)
 		xSlider:SetValue(options.X or 0)
 		ySlider:SetValue(options.Y or 0)
@@ -520,7 +530,17 @@ local function RenderPanel(parent)
 		if not options then return end
 
 		options.ApplyDispellColor = value
-		addon:ShowDialog(ADDON_NAME .. "RLNeeded") -- border color is only read at frame creation, needs reload
+		addon.core:ShowReloadPopup() -- border color is only read at frame creation, needs reload
+	end)
+
+	showDispelIconToggle = GUI:CreateToggleCheckBox(optionsGroup, L["ShowDispelIcon"], false, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.ShowDispelIcon = value
+		addon.core:ShowReloadPopup() -- dispel icon is only created at frame creation, needs reload
 	end)
 
 	local iconGroup = GUI:CreateInlineGroup(optionsGroup, L["IconSettings"])
@@ -541,6 +561,15 @@ local function RenderPanel(parent)
 
 		options.IconSize = value
 		ApplyUpdate("UpdateLayout", containerSelected)
+	end)
+	borderSizeSlider = GUI:CreateSlider(iconGroup, L["BorderSize"], 1, 10, 1, 1, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.BorderSize = value
+		addon.core:ShowReloadPopup() -- border size is only read at frame creation, needs reload
 	end)
 	iconSpacingSlider = GUI:CreateSlider(iconGroup, L["IconSpacing"], -10, 30, 1, 0, function(value)
 		if not containerSelected then return end

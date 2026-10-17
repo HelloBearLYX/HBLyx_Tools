@@ -360,11 +360,10 @@ local function RenderKeystoneRow(self, name, keyLevel, keyChallengeMapID)
         row.dungeonName:SetText(L["NotAcquired"])
     else
         row.icon.level:SetText(WrapTextColor(tostring(keyLevel), GetKeyLevelColor(keyLevel)))
-        local mapName = C_ChallengeMode.GetMapUIInfo(keyChallengeMapID)
+        local mapName, _, _, mapTexture = C_ChallengeMode.GetMapUIInfo(keyChallengeMapID)
         local mapID = mapName and NAME_TO_INFO[mapName]
         local seasonInfo = mapID and addon.data.SEASON_MAP[mapID]
-        local portalID = mapID and GetPortalID(mapID)
-        row.icon.art:SetTexture(portalID and C_Spell.GetSpellTexture(portalID) or 134400)
+        row.icon.art:SetTexture(mapTexture or 134400)
         row.dungeonName:SetText(seasonInfo and seasonInfo.short or (mapName or ""))
     end
 end

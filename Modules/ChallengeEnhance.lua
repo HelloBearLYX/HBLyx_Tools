@@ -531,6 +531,7 @@ function ChallengeEnhance:RegisterEvents()
     if addon.db.ChallengeEnhance.PortalPartyMessage then
         addon.core:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName, "player")
     end
+    addon.core:RegisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
 
     self.eventFrame:SetScript("OnEvent", function(_, event, ...)
         if event == "ADDON_LOADED" then
@@ -550,6 +551,8 @@ function ChallengeEnhance:RegisterEvents()
                     C_ChatInfo.SendChatMessage(msg, "PARTY")
                 end
             end
+        elseif event == "GROUP_ROSTER_UPDATE" then
+            RefreshKeystoneFrame(self)
         else
             UpdateButtons(self, EVENT_UPDATE_DELAY)
         end

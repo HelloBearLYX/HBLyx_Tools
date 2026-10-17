@@ -113,8 +113,6 @@ function ScrollFrame:Create(parent, width, height)
 
     local scrollHandler = CreateFrame("ScrollFrame", nil, frame)
     scrollHandler:SetPoint("TOPLEFT", frame, "TOPLEFT", CONTENT_INSET, -CONTENT_INSET)
-    -- scrollHandler:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -SCROLLBAR_WIDTH, CONTENT_INSET)
-    -- scrollHandler:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     scrollHandler:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, CONTENT_INSET)
     scrollHandler:EnableMouseWheel(true)
     scrollHandler:SetScript("OnMouseWheel", ScrollHandler_OnMouseWheel)

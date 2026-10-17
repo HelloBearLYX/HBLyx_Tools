@@ -9,6 +9,7 @@ addon.configurationList[MOD_KEY] = {
     Font = "",
     PortalPartyMessage = true,
     TeamKeystone = true,
+    KeystoneScale = 1,
     -- level settings
     LevelEnabled = true,
     LevelFontSize = 20,
@@ -45,10 +46,6 @@ local function RenderPanel(parent)
     end)
     GUI:CreateToggleCheckBox(frame, L["PortalPartyMessage"], addon.db.ChallengeEnhance.PortalPartyMessage, function(value)
         addon.db.ChallengeEnhance.PortalPartyMessage = value
-        addon.core:ShowReloadPopup()
-    end)
-    GUI:CreateToggleCheckBox(frame, L["Enable"] .. L["TeamKeystone"], addon.db.ChallengeEnhance.TeamKeystone, function(value)
-        addon.db.ChallengeEnhance.TeamKeystone = value
         addon.core:ShowReloadPopup()
     end)
     GUI:CreateResetModButton(frame, MOD_KEY, L["ChallengeEnhanceSettings"])
@@ -175,6 +172,21 @@ local function RenderPanel(parent)
     frame:AddWidget(nameXSlider)
     frame:AddWidget(nameYSlider)
     frame:AddWidget(nameAnchorDropdown)
+
+    -- MARK: Keystone Settings
+    local keystoneGroup = GUI:CreateInlineGroup(frame, L["TeamKeystone"])
+    local keystoneScaleSlider = GUI:CreateSlider(nil, L["Scale"], 0.1, 3.0, 0.01, addon.db.ChallengeEnhance.KeystoneScale or 1, function(value)
+        addon.db.ChallengeEnhance.KeystoneScale = value
+        update()
+    end)
+    GUI:CreateToggleCheckBox(keystoneGroup, L["Enable"], addon.db.ChallengeEnhance.TeamKeystone, function(value)
+        addon.db.ChallengeEnhance.TeamKeystone = value
+        keystoneScaleSlider:SetDisabled(not value)
+        addon.core:ShowReloadPopup()
+    end):SetRelativeWidth(0.15)
+    keystoneScaleSlider:SetRelativeWidth(0.2)
+    keystoneScaleSlider:SetDisabled(not addon.db.ChallengeEnhance.TeamKeystone)
+    frame:AddWidget(keystoneScaleSlider)
 
     return frame
 end

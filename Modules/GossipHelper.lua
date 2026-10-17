@@ -108,5 +108,10 @@ function GossipHelper:RegisterEvents()
     end)
 end
 
+---Unregister events
+function GossipHelper:UnregisterEvents()
+    addon.core:UnregisterEvent("GOSSIP_SHOW", self.eventFrame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(GossipHelper.modName, L["GossipHelperSettings"], function() return GossipHelper:Initialize() end)

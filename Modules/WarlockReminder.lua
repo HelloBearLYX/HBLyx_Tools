@@ -379,5 +379,18 @@ function WarlockReminder:RegisterEvents()
     self.frame:SetScript("OnEvent", OnEvent)
 end
 
+---Unregister events
+function WarlockReminder:UnregisterEvents()
+    addon.core:UnregisterStateMonitor("inCombat", self.modName)
+    addon.core:UnregisterEvent("UNIT_PET", self.frame, self.modName)
+    addon.core:UnregisterEvent("PET_BAR_UPDATE", self.frame, self.modName)
+    addon.core:UnregisterEvent("PET_DISMISS_START", self.frame, self.modName)
+    addon.core:UnregisterEvent("PLAYER_ALIVE", self.frame, self.modName)
+    addon.core:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED", self.frame, self.modName)
+    addon.core:UnregisterEvent("UNIT_SPELLCAST_CHANNEL_START", self.frame, self.modName)
+    addon.core:UnregisterStateMonitor("playerSpec", self.modName)
+    addon.core:UnregisterEvent("BAG_UPDATE", self.frame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(WarlockReminder.modName, L["WarlockReminders"], function() return WarlockReminder:Initialize() end)

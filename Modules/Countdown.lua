@@ -225,5 +225,13 @@ function Countdown:RegisterEvents()
     end)
 end
 
+---Unregister events
+function Countdown:UnregisterEvents()
+    addon.core:UnregisterEvent("START_PLAYER_COUNTDOWN", self.frame, self.modName)
+    addon.core:UnregisterEvent("CANCEL_PLAYER_COUNTDOWN", self.frame, self.modName)
+    addon.core:UnregisterEvent("CHALLENGE_MODE_RESET", self.frame, self.modName)
+    addon.core:UnregisterStateMonitor("encounterInfo", self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(Countdown.modName, L["CountdownSettings"], function() return Countdown:Initialize() end)

@@ -131,5 +131,10 @@ function CombatTimer:RegisterEvents()
     addon.core:RegisterStateMonitor("inCombat", self.modName, OnStateUpdate)
 end
 
+---Unregister events needed by CombatTimer
+function CombatTimer:UnregisterEvents()
+    addon.core:UnregisterStateMonitor("inCombat", self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(CombatTimer.modName, L["TimerSettings"], function() return CombatTimer:Initialize() end)

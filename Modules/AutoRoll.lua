@@ -142,5 +142,10 @@ function AutoRoll:RegisterEvents()
     end)
 end
 
+---Unregister events
+function AutoRoll:UnregisterEvents()
+    addon.core:UnregisterEvent("START_LOOT_ROLL", self.eventFrame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(AutoRoll.modName, L["AutoRollSettings"], function() return AutoRoll:Initialize() end)

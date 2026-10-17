@@ -186,5 +186,11 @@ function DemonologyPortals:RegisterEvents()
     end)
 end
 
+---Unregister events
+function DemonologyPortals:UnregisterEvents()
+    addon.core:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.frame, self.modName)
+    addon.core:UnregisterStateMonitor("playerSpec", self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(DemonologyPortals.modName, L["DemonologyPortalsSettings"], function() return DemonologyPortals:Initialize() end)

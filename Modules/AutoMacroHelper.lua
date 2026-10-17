@@ -186,5 +186,11 @@ function AutoMacroHelper:RegisterEvents()
     end)
 end
 
+---Unregister events
+function AutoMacroHelper:UnregisterEvents()
+    addon.core:UnregisterEvent("PLAYER_ENTERING_WORLD", self.eventFrame, self.modName)
+    addon.core:UnregisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(AutoMacroHelper.modName, L["AutoMacroHelperSettings"], function() return AutoMacroHelper:Initialize() end)

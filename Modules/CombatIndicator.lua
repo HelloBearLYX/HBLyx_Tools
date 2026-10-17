@@ -129,5 +129,10 @@ function CombatIndicator:RegisterEvents()
     addon.core:RegisterStateMonitor("inCombat", self.modName, OnStateUpdate)
 end
 
+---Unregister events for CombatIndicator
+function CombatIndicator:UnregisterEvents()
+    addon.core:UnregisterStateMonitor("inCombat", self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(CombatIndicator.modName, L["CombatSettings"], function() return CombatIndicator:Initialize() end)

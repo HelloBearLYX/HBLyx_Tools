@@ -238,12 +238,5 @@ function ChannelHelper:Test(on)
     end
 end
 
--- MARK: RegisterEvents
-
----Register events
-function ChannelHelper:RegisterEvents()
-    -- no game state dependent behavior is needed, channels resolve at click time
-end
-
 -- MARK: Register Module
 addon.core:RegisterModule(ChannelHelper.modName, L["ChannelHelperSettings"], function() return ChannelHelper:Initialize() end)

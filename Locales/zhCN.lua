@@ -258,7 +258,7 @@ L["BloodlustContainerDesc"] = "显示一个可移动的嗜血/英勇光环图标
 L["BloodlustHelperNotValidVersion"] = "|cffff0000此模块仅适用于12.1及以上版本, 并且在不兼容的版本下将自动禁用|r"
 
 --MARK: Warlock
-L["WarlockReminders"] = "|cff8788ee术士|r提醒"
+L["WarlockReminders"] = "术士提醒"
 L["WarlockRemindersIntro"] = "宠物和治疗石的提醒"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "恶魔卫士检查用于恶魔天赋, 地狱猎犬/小鬼检查用于其他天赋"
@@ -328,7 +328,7 @@ L["ItemType"] = {
 }
 
 -- MARK: Demonology Portals
-L["DemonologyPortalsSettings"] = "|cff8788ee恶魔术|r传送门"
+L["DemonologyPortalsSettings"] = "恶魔术传送门"
 L["DemonologyPortalsSettingsDesc"] = "显示本次/上次暴君期间的传送门数量"
 L["PortalExpiredMessage"] = "本次传送门数量: %s"
 

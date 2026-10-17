@@ -229,5 +229,12 @@ function TalentReminder:RegisterEvents()
     end)
 end
 
+---Unregister events
+function TalentReminder:UnregisterEvents()
+    addon.core:UnregisterStateMonitor("instanceInfo", self.modName)
+    addon.core:UnregisterStateMonitor("playerSpec", self.modName)
+    addon.core:UnregisterEvent("TRAIT_CONFIG_UPDATED", self.head, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(TalentReminder.modName, L["TalentReminderSettings"], function() return TalentReminder:Initialize() end)

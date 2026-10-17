@@ -558,5 +558,12 @@ function ChallengeEnhance:RegisterEvents()
     end)
 end
 
+---Unregister events
+function ChallengeEnhance:UnregisterEvents()
+    self.eventFrame:UnregisterEvent("ADDON_LOADED")
+    addon.core:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.eventFrame, self.modName)
+    addon.core:UnregisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(ChallengeEnhance.modName, L["ChallengeEnhanceSettings"], function() return ChallengeEnhance:Initialize() end)

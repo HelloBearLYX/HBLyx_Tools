@@ -659,5 +659,12 @@ function MicroMenu:RegisterEvents()
     end)
 end
 
+---Unregister events
+function MicroMenu:UnregisterEvents()
+    addon.core:UnregisterEvent("GROUP_ROSTER_UPDATE", self.frame, self.modName)
+    addon.core:UnregisterEvent("PLAYER_REGEN_ENABLED", self.frame, self.modName)
+end
+
+
 -- MARK: Register Module
 addon.core:RegisterModule(MicroMenu.modName, L["MicroMenuSettings"], function() return MicroMenu:Initialize() end)

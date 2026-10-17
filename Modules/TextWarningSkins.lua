@@ -303,5 +303,11 @@ function TextWarningSkins:RegisterEvents()
     end)
 end
 
+---Unregister events
+function TextWarningSkins:UnregisterEvents()
+    addon.core:UnregisterEvent("ENCOUNTER_WARNING", self.head, self.modName)
+    addon.core:UnregisterEvent("START_PLAYER_COUNTDOWN", self.head, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(TextWarningSkins.modName, L["TextWarningSkinsSettings"], function() return TextWarningSkins:Initialize() end)

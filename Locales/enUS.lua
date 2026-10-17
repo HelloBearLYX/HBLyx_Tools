@@ -258,7 +258,7 @@ L["BloodlustContainerDesc"] = "Show a movable aura icon container for Bloodlust/
 L["BloodlustHelperNotValidVersion"] = "|cffff0000This module is only available for 12.1 and above, and this module will be automatically disabled with incompatible version."
 
 --MARK: Warlock
-L["WarlockReminders"] = "|cff8788eeWarlock|r Reminders"
+L["WarlockReminders"] = "Warlock Reminders"
 L["WarlockRemindersIntro"] = "Pet and healthstone reminders"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "Felguard check for Demonology, and Felhunter/Imp check for other specs"
@@ -328,7 +328,7 @@ L["ItemType"] = {
 }
 
 -- MARK: Demonology Portals
-L["DemonologyPortalsSettings"] = "|cff8788eeDemonology|r Portals"
+L["DemonologyPortalsSettings"] = "Demonology Portals"
 L["DemonologyPortalsSettingsDesc"] = "Display the count of portals during this/last Tyrant"
 L["PortalExpiredMessage"] = "The portal count: %s"
 

@@ -389,5 +389,11 @@ function BloodlustHelper:RegisterEvents()
     end)
 end
 
+---Unregister events
+function BloodlustHelper:UnregisterEvents()
+    addon.core:UnregisterEvent("UNIT_AURA", self.frame, self.modName)
+    addon.core:UnregisterEvent("PLAYER_ENTERING_WORLD", self.frame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(BloodlustHelper.modName, L["BloodlustHelperSettings"], function() return BloodlustHelper:Initialize() end)

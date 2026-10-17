@@ -169,5 +169,15 @@ function BattleRes:RegisterEvents()
     end)
 end
 
+---Unregister events
+function BattleRes:UnregisterEvents()
+    addon.core:UnregisterEvent("ENCOUNTER_START", self.frame, self.modName)
+    addon.core:UnregisterEvent("ENCOUNTER_END", self.frame, self.modName)
+    addon.core:UnregisterEvent("SPELL_UPDATE_CHARGES", self.frame, self.modName)
+    addon.core:UnregisterEvent("CHALLENGE_MODE_RESET", self.frame, self.modName)
+    addon.core:UnregisterEvent("CHALLENGE_MODE_COMPLETED", self.frame, self.modName)
+    addon.core:UnregisterStateMonitor("instanceInfo", self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(BattleRes.modName, L["BattleResSettings"], function() return BattleRes:Initialize() end)

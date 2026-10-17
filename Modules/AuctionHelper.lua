@@ -517,5 +517,11 @@ function AuctionHelper:RegisterEvents()
     end)
 end
 
+---Unregister events
+function AuctionHelper:UnregisterEvents()
+    self.frame:UnregisterEvent("ADDON_LOADED")
+    addon.core:UnregisterEvent("BAG_UPDATE", self.frame, self.modName)
+end
+
 -- MARK: Register Module
 addon.core:RegisterModule(AuctionHelper.modName, L["AuctionHelperSettings"], function() return AuctionHelper:Initialize() end)

@@ -146,7 +146,7 @@ local function UpdateMacro(self)
     local index = GetMacroIndexByName(MACRO_NAME)
     if index and index > 0 then
         EditMacro(index, MACRO_NAME, icon, body)
-    elseif GetNumMacros() >= MAX_ACCOUNT_MACROS then
+    elseif GetNumMacros() >= 120 then
         addon.Utilities:print(L["GeneralMacroSlotsFull"] .. MACRO_NAME)
     else
         CreateMacro(MACRO_NAME, icon, body)

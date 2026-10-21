@@ -1,6 +1,3 @@
----@class HBLyx_tools: AceAddon
-HBLyx_Tools = LibStub("AceAddon-3.0"):NewAddon("HBLyx_Tools")
-
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 

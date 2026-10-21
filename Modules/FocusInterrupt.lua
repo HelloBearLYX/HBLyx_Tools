@@ -591,7 +591,7 @@ local function UpdateBarStyle(self, unit)
     bar:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName][unit .. "X"], addon.db[self.modName][unit .. "Y"])
     
     -- background is kind of Blizzard's texture, only color and alpha are customizable
-    self.bars[unit].background:SetColorTexture(0, 0, 0, addon.db[self.modName][unit .. "BackgroundAlpha"])
+    self.bars[unit]:SetBackdropColor(0, 0, 0, addon.db[self.modName][unit .. "BackgroundAlpha"])
 
     -- icon zoom and size
     local icon = self.bars[unit].icon
@@ -609,11 +609,11 @@ local function UpdateBarStyle(self, unit)
     local totalHeight = addon.db[self.modName][unit .. "Height"]
     local statusBar = self.bars[unit].statusBar
     statusBar:SetStatusBarTexture(addon.LSM:Fetch("statusbar", addon.db[self.modName][unit .. "Texture"]))
-    statusBar:SetSize(totalWidth, totalHeight)
+    statusBar:SetSize(totalWidth - 2, totalHeight - 2) -- left a 2 pixels insets for the backdrop border
     statusBar:GetStatusBarTexture():SetVertexColor(self.interruptibleColor:GetRGBA())
     local sparkColor = CreateColor(addon.Utilities:HexToRGB(addon.db[self.modName]["SparkColor"]))
     local sparkWidth = addon.db[self.modName]["SparkWidth"] or SPARK_WIDTH
-    statusBar.spark:SetSize(sparkWidth, totalHeight)
+    statusBar.spark:SetSize(sparkWidth - 2, totalHeight - 2)
     statusBar.spark:SetColorTexture(sparkColor:GetRGBA())
     if addon.db[self.modName]["Spark"] then
         statusBar.spark:SetPoint("CENTER", statusBar:GetStatusBarTexture(), "RIGHT", 0, 0)
@@ -675,17 +675,14 @@ end
 ---Create a FocusInterrupt Bar
 ---@return frame bar the created FocusInterrupt Bar
 function FocusInterrupt:CreateBar()
-    local bar = CreateFrame("Frame", nil, self.frame)
+    local bar = CreateFrame("Frame", nil, self.frame, "BackdropTemplate")
     bar:Hide()
-
-    bar.background = bar:CreateTexture(nil, "BACKGROUND")
-    bar.background:SetAllPoints()
-
-    bar.border = CreateFrame("Frame", nil, bar, "BackdropTemplate")
-    bar.border:SetAllPoints()
-    bar.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
-    bar.border:SetFrameLevel(bar:GetFrameLevel() + 10)
-    bar.border:SetBackdropBorderColor(0, 0, 0, 1)
+    bar:SetBackdrop({
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1,
+        insets = {left = 0, right = 0, top = 0, bottom = 0}
+    })
+    bar:SetBackdropBorderColor(0, 0, 0, 1)
 
     bar.icon = bar:CreateTexture(nil, "ARTWORK")
     bar.icon:SetPoint("LEFT", bar, "LEFT", 0, 0)
@@ -718,6 +715,12 @@ function FocusInterrupt:CreateBar()
     bar.kickSpark = CreateFrame("StatusBar", nil, bar)
     bar.kickSpark:SetStatusBarTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\transparent.png")
     bar.kickSpark.texture = bar.kickSpark:CreateTexture(nil, "OVERLAY")
+    -- since we want to hide the spark when the kick will not be ready, make the frame strata of spark lower than the main bar
+    addon:debug("main frame level: " .. tostring(bar:GetFrameLevel()))
+    -- addon:debug("border frame level: " .. tostring(bar.border:GetFrameLevel()))
+    addon:debug("status frame level: " .. tostring(bar.statusBar:GetFrameLevel()))
+    bar.kickSpark:SetFrameLevel(bar:GetFrameLevel())
+    addon:debug("kick spark frame level: " .. tostring(bar.kickSpark:GetFrameLevel()))
 
     return bar
 end

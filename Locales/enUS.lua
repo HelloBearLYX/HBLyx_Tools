@@ -450,6 +450,7 @@ L["AuraHelperSettingsDesc"] = "Create cutomizable aura containers to track buffs
 L["DispellColorDesc"] = "Set the border color used for each dispel type on aura icons.\nOnce you changed any color, please reload to apply the changes"
 L["ApplyDispellColor"] = "Apply Dispel Colors"
 L["BorderSize"] = "Border Size"
+L["StackTextSize"] = "Stack Text Size"
 L["ShowDispelIcon"] = "Show Dispel Icon"
 L["DispellType"] = {
 	None = "No Dispel Type",

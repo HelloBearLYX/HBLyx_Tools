@@ -20,6 +20,7 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 			ApplyDispellColor = true,
 			BorderSize = 2,
 			ShowDispelIcon = false,
+			StackTextSize = 12,
 		},
 	},
 	dataSound = {}, -- {spellID = {trigger = soundLSM}}
@@ -36,6 +37,7 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 		ApplyDispellColor = true,
 		BorderSize = 2,
 		ShowDispelIcon = false,
+		StackTextSize = 12,
 	},
 	dispellColors = {
 		None = "000000",
@@ -59,6 +61,7 @@ local DEFAULT_CONTAINER = {
 	ApplyDispellColor = true,
 	BorderSize = 2,
 	ShowDispelIcon = false,
+	StackTextSize = 12,
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows
@@ -355,6 +358,7 @@ local function RenderPanel(parent)
 	local maxCountSlider
 	local iconSizeSlider
 	local borderSizeSlider
+	local stackTextSizeSlider
 	local iconSpacingSlider
 	local xSlider
 	local ySlider
@@ -400,6 +404,7 @@ local function RenderPanel(parent)
 		maxCountSlider:SetValue(options.MaxCount or 5)
 		iconSizeSlider:SetValue(options.IconSize or 35)
 		borderSizeSlider:SetValue(options.BorderSize or 1)
+		stackTextSizeSlider:SetValue(options.StackTextSize or 12)
 		iconSpacingSlider:SetValue(options.IconSpacing or 0)
 		xSlider:SetValue(options.X or 0)
 		ySlider:SetValue(options.Y or 0)
@@ -579,6 +584,17 @@ local function RenderPanel(parent)
 
 		options.IconSpacing = value
 		ApplyUpdate("UpdateLayout", containerSelected)
+	end)
+
+	local fontGroup = GUI:CreateInlineGroup(optionsGroup, L["FontSettings"])
+	stackTextSizeSlider = GUI:CreateSlider(fontGroup, L["StackTextSize"], 6, 40, 1, 12, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.StackTextSize = value
+		addon.core:ShowReloadPopup() -- stack text font is only read at frame creation, needs reload
 	end)
 
 	local positionGroup = GUI:CreateInlineGroup(optionsGroup, L["PositionSettings"])

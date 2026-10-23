@@ -449,6 +449,7 @@ L["AuraHelperSettingsDesc"] = "创建可自定义的光环容器以跟踪玩家/
 L["DispellColorDesc"] = "设置光环图标上各驱散类型使用的边框颜色\n一旦你更改了任何颜色,请重新加载(Reload)以应用更改"
 L["ApplyDispellColor"] = "应用驱散颜色"
 L["BorderSize"] = "边框大小"
+L["StackTextSize"] = "层数文字大小"
 L["ShowDispelIcon"] = "显示驱散类型图标"
 L["DispellType"] = {
 	None = "无驱散类型",

@@ -31,6 +31,7 @@ container_options = {
     ApplyDispellColor = true, -- whether to apply the dispel color to the border of the aura icons
     BorderSize = 1, -- thickness of the aura icon border in pixels
     ShowDispelIcon = false, -- whether to show the dispel type icon on the aura icons
+    StackTextSize = 12, -- font size of the aura stack/application count text
 }]]
 
 -- MARK: Constants
@@ -159,7 +160,16 @@ local function InitializeAuraButton(self, frame, options)
     cooldown:SetScale(0.75)
     frame:SetDurationCooldown(cooldown)
 
-    local stack = frame:CreateFontString(nil, "OVERLAY")
+    -- A child frame (cooldown) defaults to a frame level above its parent, so
+    -- the swipe draws over any OVERLAY-layer region owned by `frame` itself,
+    -- including a fontstring created directly on it. Ride the stack text on
+    -- its own carrier above the cooldown's frame level instead.
+    local stackFrame = CreateFrame("Frame", nil, frame)
+    stackFrame:SetAllPoints()
+    stackFrame:SetFrameLevel(cooldown:GetFrameLevel() + 1)
+    stackFrame:EnableMouse(false)
+
+    local stack = stackFrame:CreateFontString(nil, "OVERLAY")
     stack:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
     stack:SetFont(addon.DEFAULTS.font, options.StackTextSize or 12, "OUTLINE")
     stack:SetTextColor(1, 1, 1, 1)

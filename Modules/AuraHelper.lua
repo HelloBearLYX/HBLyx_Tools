@@ -277,6 +277,7 @@ local function CreateAuraContainer(self, name, options)
     local container = CreateFrame("AuraContainer", ADDON_NAME .. "_" .. name, UIParent, "CustomAuraContainerTemplate")
     container:SetFlowLayoutGrowthDirection(DIRECTION[options.GrowDirection or "RIGHT"], DIRECTION.UP)
     local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
+    container:SetFlowLayoutAnchorPoint(anchorFrom)
     container:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
     container:SetSize(width, height)
     container:SetUnit("player") -- the unit is always player, the auras are filtered by the filters
@@ -382,6 +383,7 @@ local function CreateCoTankContainer(self, options)
     local container = CreateFrame("AuraContainer", ADDON_NAME .. "_" .. name, UIParent, "CustomAuraContainerTemplate")
     container:SetFlowLayoutGrowthDirection(DIRECTION[options.GrowDirection or "RIGHT"], DIRECTION.UP)
     local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
+    container:SetFlowLayoutAnchorPoint(anchorFrom)
     container:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
     container:SetSize(width, height)
     -- unitToken is not set initially, will be set later with container:SetUnit(unitToken)
@@ -712,6 +714,7 @@ function AuraHelper:UpdateGrowDirection(key)
     local container = self.containers[key]
     if container then
         local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
+        container:SetFlowLayoutAnchorPoint(anchorFrom)
         container:SetFlowLayoutGrowthDirection(DIRECTION[options.GrowDirection or "RIGHT"], DIRECTION.UP)
         container:ClearAllPoints()
         container:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
@@ -751,6 +754,7 @@ function AuraHelper:UpdatePosition(key)
     local container = self.containers[key]
     if container then
         local anchorFrom = options.GrowDirection == "RIGHT" and "LEFT" or "RIGHT"
+        container:SetFlowLayoutAnchorPoint(anchorFrom)
         container:ClearAllPoints()
         container:SetPoint(anchorFrom, UIParent, "CENTER", options.X or 0, options.Y or 0)
     end

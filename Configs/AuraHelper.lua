@@ -21,6 +21,7 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 			BorderSize = 2,
 			ShowDispelIcon = false,
 			StackTextSize = 12,
+			CooldownTextScale = 0.75,
 		},
 	},
 	dataSound = {}, -- {spellID = {trigger = soundLSM}}
@@ -38,6 +39,7 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 		BorderSize = 2,
 		ShowDispelIcon = false,
 		StackTextSize = 12,
+		CooldownTextScale = 0.75,
 	},
 	dispellColors = {
 		None = "000000",
@@ -62,6 +64,7 @@ local DEFAULT_CONTAINER = {
 	BorderSize = 2,
 	ShowDispelIcon = false,
 	StackTextSize = 12,
+	CooldownTextScale = 0.75,
 }
 
 local GROW_DIRECTIONS = addon.Utilities.Grows
@@ -359,6 +362,7 @@ local function RenderPanel(parent)
 	local iconSizeSlider
 	local borderSizeSlider
 	local stackTextSizeSlider
+	local cooldownTextScaleSlider
 	local iconSpacingSlider
 	local xSlider
 	local ySlider
@@ -405,6 +409,7 @@ local function RenderPanel(parent)
 		iconSizeSlider:SetValue(options.IconSize or 35)
 		borderSizeSlider:SetValue(options.BorderSize or 1)
 		stackTextSizeSlider:SetValue(options.StackTextSize or 12)
+		cooldownTextScaleSlider:SetValue(options.CooldownTextScale or 0.75)
 		iconSpacingSlider:SetValue(options.IconSpacing or 0)
 		xSlider:SetValue(options.X or 0)
 		ySlider:SetValue(options.Y or 0)
@@ -587,7 +592,7 @@ local function RenderPanel(parent)
 	end)
 
 	local fontGroup = GUI:CreateInlineGroup(optionsGroup, L["FontSettings"])
-	stackTextSizeSlider = GUI:CreateSlider(fontGroup, L["StackTextSize"], 6, 40, 1, 12, function(value)
+	stackTextSizeSlider = GUI:CreateSlider(fontGroup, L["StackFontSize"], 6, 40, 1, 12, function(value)
 		if not containerSelected then return end
 
 		local options = GetContainerOptionsTable(containerSelected)
@@ -595,6 +600,15 @@ local function RenderPanel(parent)
 
 		options.StackTextSize = value
 		addon.core:ShowReloadPopup() -- stack text font is only read at frame creation, needs reload
+	end)
+	cooldownTextScaleSlider = GUI:CreateSlider(fontGroup, L["TimeFontScale"], 0.1, 2.0, 0.01, 0.75, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.CooldownTextScale = value
+		addon.core:ShowReloadPopup() -- cooldown scale is only read at frame creation, needs reload
 	end)
 
 	local positionGroup = GUI:CreateInlineGroup(optionsGroup, L["PositionSettings"])

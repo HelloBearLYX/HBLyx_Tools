@@ -32,6 +32,7 @@ container_options = {
     BorderSize = 1, -- thickness of the aura icon border in pixels
     ShowDispelIcon = false, -- whether to show the dispel type icon on the aura icons
     StackTextSize = 12, -- font size of the aura stack/application count text
+    CooldownTextScale = 0.75, -- scale of the CooldownFrameTemplate's swipe/countdown text
 }]]
 
 -- MARK: Constants
@@ -157,7 +158,7 @@ local function InitializeAuraButton(self, frame, options)
     cooldown:SetAllPoints()
     cooldown:SetDrawEdge(false)
     cooldown:SetReverse(true)
-    cooldown:SetScale(0.75)
+    cooldown:SetScale(options.CooldownTextScale or 0.75)
     frame:SetDurationCooldown(cooldown)
 
     -- A child frame (cooldown) defaults to a frame level above its parent, so

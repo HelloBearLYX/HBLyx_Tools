@@ -393,7 +393,7 @@ local function CreateKeystoneRow(self, parent, index)
     icon:SetBackdropBorderColor(0, 0, 0, 1)
 
     -- the dungeon's portal icon texture, swapped whenever the cached keystone changes
-    icon.art = icon:CreateTexture(nil, "ARTWORK")
+    icon.art = icon:CreateTexture(nil, "BACKGROUND")
     icon.art:SetAllPoints()
 
     icon.level = icon:CreateFontString(nil, "OVERLAY")

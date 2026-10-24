@@ -72,6 +72,132 @@ addon.data.SEASON_MAP = {
 	},
 }
 
+-- MARK: Aura Helper
+addon.data.AURA_HELPER = {
+	-- the type decides whether the container tracks buffs or debuffs, it is required and is not a filter
+	TYPES = {
+		Helpful = {value = "HELPFUL", category = "Buff", name = L["AuraFilter"]["Helpful"]},
+		Harmful = {value = "HARMFUL", category = "Debuff", name = L["AuraFilter"]["Harmful"]},
+	},
+	FILTERS = {
+		-- token filters, the values are string
+		Player = {value = "PLAYER", category = "Both", name = L["AuraFilter"]["Player"]},
+		Raid = {value = "RAID", category = "Both", name = L["AuraFilter"]["Raid"]},
+		Defensive = {value = "BIG_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["Defensive"]},
+		-- External = {value = "EXTERNAL_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["External"]},
+		CrowdControl = {value = "CROWD_CONTROL", category = "Debuff", name = L["AuraFilter"]["CrowdControl"]},
+		Dispellable = {value = "DISPELLABLE", category = "Both", name = L["AuraFilter"]["Dispellable"]},
+		-- candidate filters, the values are table
+		PI = {value = {includeSpellIDs = {
+			[10060] = true, -- Power Infusion
+			[406732] = true, -- Spatial Paradox
+			[29166] = true, -- Innervate
+			-- movement
+			[192082] = true, -- Wind Rush Totem
+			[106898] = true, -- Stampeding Roar
+			[77761] = true, -- Stampeding Roar(Bear)
+			[77764] = true, -- Stampeding Roar(Cat)
+			[1044] = true, -- Bless of Freedom
+			[116841] = true, -- Tiger's Lust
+			-- external defensive
+			[33206] = true, -- Pain Suppression
+			[47788] = true, -- Guardian Spirit
+			[102342] = true, -- Ironbark
+			[116849] = true, -- Life Cocoon
+			[6940] = true, -- Bless of Sacrifice
+			[1022] = true, -- Bless of Protection
+			[204018] = true, -- Blessing of Spellwarding
+			[357170] = true, -- Time Dilation
+			[3411] = true, -- Intervene
+			-- team defensive
+			[31821] = true, -- Aura Mastery
+			[81782] = true, -- Power Word: Barrier
+			[325174] = true, -- Spirit Link Totem
+			[97463] = true, -- Rallying Cry
+			[145629] = true, -- Anti-Magic Zone
+			[209426] = true, -- Darkness
+			[374227] = true, -- Zephyr
+		}}, category = "Buff", name = L["AuraFilter"]["Power_Infusion"]},
+		PDefensive = {value = {includeSpellIDs = {
+			-- Death Knight
+			[48792] = true, -- Icebound Fortitude
+			[48707] = true, -- Anti-Magic Shell
+			[49039] = true, -- Lichborne
+			[55233] = true, -- Vampiric Blood-Tank
+			[49028] = true, -- Dancing Rune Weapon-Tank
+			-- Demon Hunter
+			[198589] = true, -- Blur
+			[196555] = true, -- Netherwalk
+			[187827] = true, -- Metamorphosis-Tank
+			-- Druid
+			[22812] = true, -- Barkskin
+			[61336] = true, -- Survival Instincts
+			[102558] = true, -- Incarnation: Guardian of Ursoc-Tank
+			[204066] = true, -- Lunar Beam-Tank
+			-- Evoker
+			[363916] = true, -- Obsidian Scales
+			-- Hunter
+			[186265] = true, -- Aspect of the Turtle
+			[264735] = true, -- Survival of the Fittest
+			-- Mage
+			[45438] = true, -- Ice Block
+			[110959] = true, -- Greater Invisibility
+			[55342] = true, -- Mirror Image
+			-- Monk
+			[115203] = true, -- Fortifying Brew
+			[122278] = true, -- Dampen Harm
+			[322507] = true, -- Celestial Brew-Tank
+			-- Paladin
+			[642] = true, -- Divine Shield
+			[403876] = true, -- Divine Protection
+			[86659] = true, -- Guardian of Ancient Kings-Tank
+			[31850] = true, -- Ardent Defender-Tank
+			-- Priest
+			[47585] = true, -- Dispersion
+			[19236] = true, -- Desperate Prayer
+			[586] = true, -- Fade
+			-- Rogue
+			[31224] = true, -- Cloak of Shadows
+			[5277] = true, -- Evasion
+			[1966] = true, -- Feint
+			-- Shaman
+			[108271] = true, -- Astral Shift
+			[381755] = true, -- Earth Element
+			-- Warlock
+			[104773] = true, -- Unending Resolve
+			[108416] = true, -- Dark Pact
+			-- Warrior
+			[184364] = true, -- Enraged Regeneration
+			[118038] = true, -- Die by the Sword
+			[335255] = true, -- Spell Reflection
+			[871] = true, -- Shield Wall-Tank
+		}}, category = "Buff", name = L["AuraFilter"]["Personal_Defensive"]},
+		LUST = {value = {includeSpellIDs = {
+			[2825] = true, -- Bloodlust
+			[32182] = true, -- Heroism
+			[80353] = true, -- Time Warp
+			[264689] = true, -- Primal Rage
+			[390386] = true, -- Fury of the Aspects
+			[466904] = true, -- Marksman Hunter's
+			[1243972] = true, -- Drums
+		}}, category = "Buff", name = L["AuraFilter"]["Bloodlust"]},
+		-- TRINKET = {value = {includeSpellIDs = {
+		-- }}, category = "Buff", name = L["AuraFilter"]["Trinkets"]},
+		POTION = {value = {includeSpellIDs = {
+			[1236616] = true, -- Light's Potential
+			[1236994] = true, -- Potion of Recklessness
+			[1236998] = true, -- Draught of Rampant Abandon
+			[1295147] = true, -- Liquid Luster
+			[1236551] = true, -- Void-Shrouded Tincture
+		}}, category = "Buff", name = L["AuraFilter"]["Potions"]},
+		NonPlayer = {value = {isFromPlayerOrPlayerPet = false}, category = "Both", name = L["AuraFilter"]["NonPlayer"]},
+		Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
+		Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
+		Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
+		Boss = {value = {isBossAura = true}, category = "Both", name = L["AuraFilter"]["Boss"]},
+	},
+}
+
 -- MARK: Auction Helper
 addon.data.AUCTION_HELPER = {
 	{

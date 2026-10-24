@@ -44,74 +44,8 @@ local DIRECTION = {
 }
 local DEFAULT_BORDER_COLOR = CreateColor(0, 0, 0, 1)
 -- the type decides whether the container tracks buffs or debuffs, it is required and is not a filter
-local TYPES = {
-    Helpful = {value = "HELPFUL", category = "Buff", name = L["AuraFilter"]["Helpful"]},
-    Harmful = {value = "HARMFUL", category = "Debuff", name = L["AuraFilter"]["Harmful"]},
-}
-
-local FILTERS = {
-    -- token filters, the values are string
-    Player = {value = "PLAYER", category = "Both", name = L["AuraFilter"]["Player"]},
-    Raid = {value = "RAID", category = "Both", name = L["AuraFilter"]["Raid"]},
-    Defensive = {value = "BIG_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["Defensive"]},
-    -- External = {value = "EXTERNAL_DEFENSIVE", category = "Buff", name = L["AuraFilter"]["External"]},
-    CrowdControl = {value = "CROWD_CONTROL", category = "Debuff", name = L["AuraFilter"]["CrowdControl"]},
-    Dispellable = {value = "DISPELLABLE", category = "Both", name = L["AuraFilter"]["Dispellable"]},
-    -- candidate filters, the values are table
-    PI = {value = {includeSpellIDs = {
-        [10060] = true, -- Power Infusion
-        [406732] = true, -- Spatial Paradox
-        [29166] = true, -- Innervate
-        -- movement
-        [192082] = true, -- Wind Rush Totem
-        [106898] = true, -- Stampeding Roar
-        [77761] = true, -- Stampeding Roar(Bear)
-        [77764] = true, -- Stampeding Roar(Cat)
-        [1044] = true, -- Bless of Freedom
-        [116841] = true, -- Tiger's Lust
-        -- external defensive
-        [33206] = true, -- Pain Suppression
-        [47788] = true, -- Guardian Spirit
-        [102342] = true, -- Ironbark
-        [116849] = true, -- Life Cocoon
-        [6940] = true, -- Bless of Sacrifice
-        [1022] = true, -- Bless of Protection
-        [204018] = true, -- Blessing of Spellwarding
-        [357170] = true, -- Time Dilation
-        [3411] = true, -- Intervene
-        -- team defensive
-        [31821] = true, -- Aura Mastery
-        [81782] = true, -- Power Word: Barrier
-        [325174] = true, -- Spirit Link Totem
-        [97463] = true, -- Rallying Cry
-        [145629] = true, -- Anti-Magic Zone
-        [209426] = true, -- Darkness
-        [374227] = true, -- Zephyr
-    }}, category = "Buff", name = L["AuraFilter"]["Power_Infusion"]},
-    LUST = {value = {includeSpellIDs = {
-        [2825] = true, -- Bloodlust
-        [32182] = true, -- Heroism
-        [80353] = true, -- Time Warp
-        [264689] = true, -- Primal Rage
-        [390386] = true, -- Fury of the Aspects
-        [466904] = true, -- Marksman Hunter's
-        [1243972] = true, -- Drums
-    }}, category = "Buff", name = L["AuraFilter"]["Bloodlust"]},
-    -- TRINKET = {value = {includeSpellIDs = {
-    -- }}, category = "Buff", name = L["AuraFilter"]["Trinkets"]},
-    POTION = {value = {includeSpellIDs = {
-        [1236616] = true, -- Light's Potential
-        [1236994] = true, -- Potion of Recklessness
-        [1236998] = true, -- Draught of Rampant Abandon
-        [1295147] = true, -- Liquid Luster
-        [1236551] = true, -- Void-Shrouded Tincture
-    }}, category = "Buff", name = L["AuraFilter"]["Potions"]},
-    NonPlayer = {value = {isFromPlayerOrPlayerPet = false}, category = "Both", name = L["AuraFilter"]["NonPlayer"]},
-    Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
-    Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
-    Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
-    Boss = {value = {isBossAura = true}, category = "Both", name = L["AuraFilter"]["Boss"]},
-}
+local TYPES = addon.data.AURA_HELPER.TYPES
+local FILTERS = addon.data.AURA_HELPER.FILTERS
 
 ---Get the container type list for the config panel
 ---@return table list map of type name to its localized name
@@ -165,12 +99,12 @@ local function InitializeAuraButton(self, frame, options)
     -- the swipe draws over any OVERLAY-layer region owned by `frame` itself,
     -- including a fontstring created directly on it. Ride the stack text on
     -- its own carrier above the cooldown's frame level instead.
-    local stackFrame = CreateFrame("Frame", nil, frame)
-    stackFrame:SetAllPoints()
-    stackFrame:SetFrameLevel(cooldown:GetFrameLevel() + 1)
-    stackFrame:EnableMouse(false)
+    local dummyFrame = CreateFrame("Frame", nil, frame)
+    dummyFrame:SetAllPoints()
+    dummyFrame:SetFrameLevel(cooldown:GetFrameLevel() + 1)
+    dummyFrame:EnableMouse(false)
 
-    local stack = stackFrame:CreateFontString(nil, "OVERLAY")
+    local stack = dummyFrame:CreateFontString(nil, "OVERLAY")
     stack:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
     stack:SetFont(addon.DEFAULTS.font, options.StackTextSize or 12, "OUTLINE")
     stack:SetTextColor(1, 1, 1, 1)
@@ -178,10 +112,10 @@ local function InitializeAuraButton(self, frame, options)
 
     -- border
     local border = {
-        top = frame:CreateTexture(nil, "OVERLAY"),
-        bottom = frame:CreateTexture(nil, "OVERLAY"),
-        left = frame:CreateTexture(nil, "OVERLAY"),
-        right = frame:CreateTexture(nil, "OVERLAY"),
+        top = dummyFrame:CreateTexture(nil, "OVERLAY"),
+        bottom = dummyFrame:CreateTexture(nil, "OVERLAY"),
+        left = dummyFrame:CreateTexture(nil, "OVERLAY"),
+        right = dummyFrame:CreateTexture(nil, "OVERLAY"),
     }
     local borderSize = options.BorderSize or 1
     for _, tex in pairs(border) do
@@ -193,11 +127,11 @@ local function InitializeAuraButton(self, frame, options)
     border.left:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
     border.left:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
     border.left:SetWidth(borderSize)
-    border.bottom:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, -1)
-    border.bottom:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, -1)
+    border.bottom:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+    border.bottom:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
     border.bottom:SetHeight(borderSize)
-    border.right:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 1, 0)
-    border.right:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, 0)
+    border.right:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+    border.right:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
     border.right:SetWidth(borderSize)
     local borderOptions = {
         showWhenHarmful = true,
@@ -226,7 +160,6 @@ local function InitializeAuraButton(self, frame, options)
         frame:AddDispelTypeTexture(dispellIcon, {
             showWhenHarmful = true,
             showWhenHelpful = true,
-            -- showWithoutDispelType = true,
             style = Enum.CustomAuraButtonDispelTypeTextureStyle.Icon,
         })
     end

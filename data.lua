@@ -88,6 +88,12 @@ addon.data.AURA_HELPER = {
 		CrowdControl = {value = "CROWD_CONTROL", category = "Debuff", name = L["AuraFilter"]["CrowdControl"]},
 		Dispellable = {value = "DISPELLABLE", category = "Both", name = L["AuraFilter"]["Dispellable"]},
 		-- candidate filters, the values are table
+		NonPlayer = {value = {isFromPlayerOrPlayerPet = false}, category = "Both", name = L["AuraFilter"]["NonPlayer"]},
+		Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
+		Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
+		Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
+		Boss = {value = {isBossAura = true}, category = "Both", name = L["AuraFilter"]["Boss"]},
+		-- HBLyx made filters
 		PI = {value = {includeSpellIDs = {
 			[10060] = true, -- Power Infusion
 			[406732] = true, -- Spatial Paradox
@@ -117,7 +123,7 @@ addon.data.AURA_HELPER = {
 			[145629] = true, -- Anti-Magic Zone
 			[209426] = true, -- Darkness
 			[374227] = true, -- Zephyr
-		}}, category = "Buff", name = L["AuraFilter"]["Power_Infusion"]},
+		}}, category = "Buff", name = L["AuraFilter"]["Power_Infusion"], isAddonMade = true},
 		PDefensive = {value = {includeSpellIDs = {
 			-- Death Knight
 			[48792] = true, -- Icebound Fortitude
@@ -171,7 +177,7 @@ addon.data.AURA_HELPER = {
 			[118038] = true, -- Die by the Sword
 			[335255] = true, -- Spell Reflection
 			[871] = true, -- Shield Wall-Tank
-		}}, category = "Buff", name = L["AuraFilter"]["Personal_Defensive"]},
+		}}, category = "Buff", name = L["AuraFilter"]["Personal_Defensive"], isAddonMade = true},
 		LUST = {value = {includeSpellIDs = {
 			[2825] = true, -- Bloodlust
 			[32182] = true, -- Heroism
@@ -180,7 +186,13 @@ addon.data.AURA_HELPER = {
 			[390386] = true, -- Fury of the Aspects
 			[466904] = true, -- Marksman Hunter's
 			[1243972] = true, -- Drums
-		}}, category = "Buff", name = L["AuraFilter"]["Bloodlust"]},
+		}}, category = "Buff", name = L["AuraFilter"]["Bloodlust"], isAddonMade = true},
+		EXHAUSTION = {value = {excludeSpellIDs = {
+			[57723] = true, -- Exhaustion
+			[57724] = true, -- Sated
+			[80354] = true, -- Temporal Displacement
+			[264689] = true, -- Fatigue
+		}}, category = "Debuff", name = L["AuraFilter"]["ExcludingExhaustion"], isAddonMade = true},
 		-- TRINKET = {value = {includeSpellIDs = {
 		-- }}, category = "Buff", name = L["AuraFilter"]["Trinkets"]},
 		POTION = {value = {includeSpellIDs = {
@@ -189,12 +201,7 @@ addon.data.AURA_HELPER = {
 			[1236998] = true, -- Draught of Rampant Abandon
 			[1295147] = true, -- Liquid Luster
 			[1236551] = true, -- Void-Shrouded Tincture
-		}}, category = "Buff", name = L["AuraFilter"]["Potions"]},
-		NonPlayer = {value = {isFromPlayerOrPlayerPet = false}, category = "Both", name = L["AuraFilter"]["NonPlayer"]},
-		Role = {value = {isRoleAura = true}, category = "Both", name = L["AuraFilter"]["Role"]},
-		Priority = {value = {isPriorityAura = true}, category = "Both", name = L["AuraFilter"]["Priority"]},
-		Stealable = {value = {isStealableAura = true}, category = "Both", name = L["AuraFilter"]["Stealable"]},
-		Boss = {value = {isBossAura = true}, category = "Both", name = L["AuraFilter"]["Boss"]},
+		}}, category = "Buff", name = L["AuraFilter"]["Potions"], isAddonMade = true},
 	},
 }
 

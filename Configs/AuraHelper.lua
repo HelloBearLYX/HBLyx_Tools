@@ -198,6 +198,83 @@ local function FetchFilterList(auraType)
 	return list, order
 end
 
+---Get the description of every filter
+---@return table details map of localized filter name to its description
+---@return table order the localized filter names sorted alphabetically
+---@return table addonMade set of the localized names of the filters made by this addon
+local function GetFiltersDetails()
+	local list, order = FetchFilterList()
+	local descriptions = L["AuraFilterDetails"] or {}
+	local filters = addon.data.AURA_HELPER.FILTERS
+	local details, names, addonMade = {}, {}, {}
+	for _, key in ipairs(order) do
+		local name = list[key] or key
+		details[name] = descriptions[key] or ""
+		table.insert(names, name)
+		if filters[key] and filters[key].isAddonMade then
+			addonMade[name] = true
+		end
+	end
+
+	return details, names, addonMade
+end
+
+local FILTER_DETAILS_WIDTH = 500
+local FILTER_DETAILS_HEIGHT = 350
+local CLOSE_BUTTON_SIZE = 20
+local CLOSE_BUTTON_TEXTURE = "Interface\\AddOns\\HBLyx_Tools\\GUI\\Assets\\Close_Button.png"
+local filterDetailsFrame
+
+local function RenderFilterDetails(container)
+	local group = GUI:CreateInlineGroup(container, L["FilterDetails"], "LEFT")
+	GUI:CreateInformationTag(group, L["FilterDetailsDesc"], "LEFT")
+	GUI:CreateHeader(group, L["FiltersRecommendation"])
+	GUI:CreateInformationTag(group, L["FiltersRecommendationDesc"], "LEFT")
+	local details, names, addonMade = GetFiltersDetails()
+	for _, groupIsAddon in ipairs({false, true}) do
+		GUI:CreateHeader(group, groupIsAddon and L["AddonFilters"] or L["BlizzardFilters"])
+		for _, name in ipairs(names) do
+			if (addonMade[name] or false) == groupIsAddon then
+				GUI:CreateInformationTag(group, string.format("|cff8788ee%s|r: %s", name, details[name]), "LEFT")
+			end
+		end
+	end
+end
+
+local function ShowFilterDetails()
+	if not filterDetailsFrame then
+		local scrollFrame = addon.UICore:Build("ScrollFrame")
+		scrollFrame:SetParent(UIParent)
+		scrollFrame:SetSize(FILTER_DETAILS_WIDTH, FILTER_DETAILS_HEIGHT)
+		scrollFrame:SetPoint("CENTER")
+		scrollFrame:SetRenderer(RenderFilterDetails)
+		scrollFrame.frame:SetFrameStrata("HIGH")
+
+		scrollFrame.frame:SetMovable(true)
+		scrollFrame.frame:EnableMouse(true)
+		scrollFrame.frame:RegisterForDrag("LeftButton")
+		scrollFrame.frame:SetScript("OnDragStart", scrollFrame.frame.StartMoving)
+		scrollFrame.frame:SetScript("OnDragStop", scrollFrame.frame.StopMovingOrSizing)
+		scrollFrame.frame:SetClampedToScreen(true)
+
+		local close = CreateFrame("Button", nil, scrollFrame.frame)
+		close:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
+		close:SetPoint("BOTTOMRIGHT", scrollFrame.frame, "TOPRIGHT", 0, 0)
+		close:SetFrameLevel(scrollFrame.frame:GetFrameLevel() + 10)
+		close:SetNormalTexture(CLOSE_BUTTON_TEXTURE)
+		close:SetPushedTexture(CLOSE_BUTTON_TEXTURE)
+		close:SetHighlightTexture(CLOSE_BUTTON_TEXTURE)
+		close:GetHighlightTexture():SetAlpha(0.75)
+		close:SetScript("OnClick", function() scrollFrame:Hide() end)
+		addon.UICore:BuildHover(close)
+
+		filterDetailsFrame = scrollFrame
+	end
+
+	filterDetailsFrame:Rerender()
+	filterDetailsFrame:Show()
+end
+
 local function FetchContainerList()
 	EnsureAuraDB()
 	local list = {}
@@ -551,6 +628,10 @@ local function RenderPanel(parent)
 
 		options.ShowDispelIcon = value
 		addon.core:ShowReloadPopup() -- dispel icon is only created at frame creation, needs reload
+	end)
+
+	GUI:CreateButton(optionsGroup, L["FilterDetails"], function()
+		ShowFilterDetails()
 	end)
 
 	local iconGroup = GUI:CreateInlineGroup(optionsGroup, L["IconSettings"])

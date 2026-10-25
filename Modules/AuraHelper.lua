@@ -153,7 +153,7 @@ local function InitializeAuraButton(self, frame, options)
 
     -- dispell icon
     if options.ShowDispelIcon then
-        local dispellIcon = frame:CreateTexture(nil, "OVERLAY")
+        local dispellIcon = dummyFrame:CreateTexture(nil, "OVERLAY")
         local iconSize = options.IconSize * 0.35
         dispellIcon:SetSize(iconSize, iconSize)
         dispellIcon:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -1 * options.BorderSize, -1 * options.BorderSize)

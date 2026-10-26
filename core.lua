@@ -400,7 +400,6 @@ end
 ---@param mod string module key
 ---@return function update update function for the update module style
 function Core:GetSafeUpdate(mod)
-    addon:debug(string.format("module: %s, enabled: %s", mod, tostring(self.modules[mod] and self.modules[mod].enabled)))
     if self:HasModuleLoaded(mod) and self.modules[mod].UpdateStyle then
         return function() self.modules[mod]:UpdateStyle() end
     else

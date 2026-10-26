@@ -21,8 +21,7 @@ local SPLITTER = "-"
 ---@return DemonologyPortals DemonologyPortals a DemonologyPortals object
 function DemonologyPortals:Initialize()
     if addon.states["playerClass"] ~= "WARLOCK" then
-        self.enabled = false
-        return self
+        return nil
     end
 
     self.frame = CreateFrame("Frame", ADDON_NAME .. "_DemonologyPortalsFrame", UIParent)

@@ -3,7 +3,7 @@ local ADDON_NAME, addon = ...
 ---@class Core
 ---@field eventFrame Frame the frame used to register events
 ---@field eventMap table<string, {mods: table<string>, units: table<string, boolean>}> map of events to the modules and units registered for it, just record for developers
----@field modules table<string, table> map of module key to module instance, used to store
+---@field modules table<string, table> map of module key to module instance, used to store(aka. loaded modules)
 ---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
 ---@field totalMods number total number of registered modules, used to check if all modules are loaded
 ---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
@@ -207,17 +207,15 @@ function Core:LoadModule(mod)
             addon.Utilities:print(string.format("|cffff0000%s failed to load|r: %s", mod, tostring(result)))
             return false
         end
-        if not self.modules[mod] then
+        -- some module will not initialize due to some other reason like wrong class of player
+        -- these modules just return a nil but success
+        -- check whether the result is nil
+        if result == nil then
             return false
         end
-        -- a module may set enabled = false in Initialize (e.g. wrong class); only default to true when unset
-        if self.modules[mod].enabled == nil then
-            self.modules[mod].enabled = true
-        end
-        if not self.modules[mod].enabled then
-            return false
-        end
-        if self.modules[mod].RegisterEvents then
+
+        self.modules[mod].enabled = true
+        if self.modules[mod] and self.modules[mod].RegisterEvents then
             self.modules[mod]:RegisterEvents()
         end
         self.loadedMods = self.loadedMods + 1

@@ -44,8 +44,7 @@ local PET_STANCE = { -- map pet stance names onto numbers
 ---@return WarlockReminder|nil WarlockReminder a WarlockReminder object(nil for non-warlock player -> not initialized)
 function WarlockReminder:Initialize()
     if addon.states["playerClass"] ~= "WARLOCK" then
-        self.enabled = false
-        return self
+        return nil
     end
 
     self.pet = CreateFrame("Frame", nil, UIParent)
@@ -363,9 +362,6 @@ function WarlockReminder:RegisterEvents()
             self:OnChannelCast(spellID)
         end
     end
-
-    -- if not warlock, return early
-    if addon.states.playerClass ~= "WARLOCK" then return end
 
     -- Both events
     addon.core:RegisterStateMonitor("inCombat", self.modName, function() self:Handler() end)

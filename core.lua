@@ -207,11 +207,20 @@ function Core:LoadModule(mod)
             addon.Utilities:print(string.format("|cffff0000%s failed to load|r: %s", mod, tostring(result)))
             return false
         end
-        self.modules[mod].enabled = true -- add a field to the module to indicate whether the module is loaded, and this field is controlled by Core only
-        if self.modules[mod] and self.modules[mod].RegisterEvents then
-            self.modules[mod]:RegisterEvents()
-            self.loadedMods = self.loadedMods + 1
+        if not self.modules[mod] then
+            return false
         end
+        -- a module may set enabled = false in Initialize (e.g. wrong class); only default to true when unset
+        if self.modules[mod].enabled == nil then
+            self.modules[mod].enabled = true
+        end
+        if not self.modules[mod].enabled then
+            return false
+        end
+        if self.modules[mod].RegisterEvents then
+            self.modules[mod]:RegisterEvents()
+        end
+        self.loadedMods = self.loadedMods + 1
         return true
     elseif loadedAlready then -- if the module is already loaded, it has been loaded
         return true
@@ -391,6 +400,7 @@ end
 ---@param mod string module key
 ---@return function update update function for the update module style
 function Core:GetSafeUpdate(mod)
+    addon:debug(string.format("module: %s, enabled: %s", mod, tostring(self.modules[mod] and self.modules[mod].enabled)))
     if self:HasModuleLoaded(mod) and self.modules[mod].UpdateStyle then
         return function() self.modules[mod]:UpdateStyle() end
     else
@@ -444,7 +454,6 @@ end
 function Core:ToggleModule(mod, on)
     if on then
         local success = self:LoadModule(mod)
-        self.modules[mod].enabled = true
         self:TestModule(mod) -- also check whether turn the test mode for the module
         return success
     else

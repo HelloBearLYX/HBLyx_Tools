@@ -198,6 +198,8 @@ L["TimerSettings"] = "战斗计时器"
 L["TimerSettingsDesc"] = "显示一个战斗时长的计时器(MM:SS)"
 L["TimerCombatShow"] = "只在战斗中显示"
 L["TimerPrintEnabled"] = "打印到聊天框"
+L["TimerTimeFormat"] = "时间格式"
+L["TimerTimeFormatDesc"] = "时间显示的格式: 第一个\"%0nd\"为分钟(保留n位数字), 第二个\"%0nd\"为秒\n默认: %02d:%02d\n该文本的长度限制大约为7个字符"
 
 -- MARK: Focus Interrupt
 L["FocusInterruptSettings"] = "焦点打断"

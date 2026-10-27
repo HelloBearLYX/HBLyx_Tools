@@ -13,6 +13,8 @@ local CombatTimer = {
     startTime = nil,
 }
 
+local DEFAULT_TIME_FORMAT = "%02d:%02d"
+
 -- private methods
 
 local function CreateCTFrame(self)
@@ -25,7 +27,7 @@ local function CreateCTFrame(self)
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
-    frame.text:SetText(string.format("%02d:%02d", 0, 0))
+    frame.text:SetText(string.format(addon.db[self.modName]["TimeFormat"] or DEFAULT_TIME_FORMAT, 0, 0))
 
     return frame
 end
@@ -35,7 +37,7 @@ end
 ---@param min number minutes to show
 ---@param sec number seconds to show
 local function SetDisplay(self, min, sec)
-    self.frame.text:SetText(string.format("%02d:%02d", min, sec))
+    self.frame.text:SetText(string.format(addon.db[self.modName]["TimeFormat"] or DEFAULT_TIME_FORMAT, min, sec))
 end
 
 ---Get combat duration
@@ -97,13 +99,14 @@ end
 function CombatTimer:UpdateStyle()
     self.frame:SetFrameStrata(addon.db[self.modName]["FrameStrata"] or "BACKGROUND")
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
-    self.frame:SetSize(3 * addon.db[self.modName]["FontSize"], addon.db[self.modName]["FontSize"])
+    self.frame:SetSize(5 * addon.db[self.modName]["FontSize"], addon.db[self.modName]["FontSize"])
 
     self.frame.text:SetFont(
         addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font,
         addon.db[self.modName]["FontSize"],
         "OUTLINE"
     )
+    self.frame.text:SetText(string.format(addon.db[self.modName]["TimeFormat"] or DEFAULT_TIME_FORMAT, 0, 0))
 end
 
 -- MARK: Test

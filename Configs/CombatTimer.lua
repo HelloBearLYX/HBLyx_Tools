@@ -8,6 +8,7 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = true,
 	CombatShow = false,
 	PrintEnabled = false,
+	TimeFormat = "%02d:%02d",
 	Font = "",
 	FontSize = 20,
 	X = -180,
@@ -40,6 +41,15 @@ local function RenderPanel(parent)
 
 	-- Style Settings
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateInformationTag(frame, L["TimerTimeFormatDesc"], "LEFT")
+	GUI:CreateEditBox(frame, L["TimerTimeFormat"], addon.db.CombatTimer.TimeFormat, function(value)
+		-- fall back to the default if the format is invalid
+		if value == "" or not pcall(string.format, value, 0, 0) then
+			value = "%02d:%02d"
+		end
+		addon.db.CombatTimer.TimeFormat = value
+		update()
+	end)
 	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.CombatTimer.FrameStrata, function(value)
 		addon.db.CombatTimer.FrameStrata = value
 		update()

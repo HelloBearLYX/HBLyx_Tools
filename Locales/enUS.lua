@@ -198,6 +198,8 @@ L["TimerSettings"] = "Combat Timer"
 L["TimerSettingsDesc"] = "Display a Timer(MM:SS) to show the combat duration"
 L["TimerCombatShow"] = "Show ONLY in Combat"
 L["TimerPrintEnabled"] = "Print to Chat"
+L["TimerTimeFormat"] = "TimeFormat"
+L["TimerTimeFormatDesc"] = "Format of the time display: the first \"%0nd\" is the minutes with n digits kept, and the second \"%0nd\" is the seconds\nDefault: %02d:%02d\nThe length of this text is limited to approximately 7 characters"
 
 -- MARK: Focus Interrupt
 L["FocusInterruptSettings"] = "Focus Interrupt"

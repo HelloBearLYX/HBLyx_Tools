@@ -232,7 +232,7 @@ box:SetOnEnterPressed(function(widget, text) addon:ImportProfile(text) end)
 
 ### ColorPicker
 
-A small bordered color swatch on the left with the label beside it, matching the layout of `ToggleBox`. Clicking the swatch borrows the shared panel from `UICore:GetColorPicker()` (see below), with alpha when `SetHasAlpha(true)` is set. The panel calls back on every change, restores the starting color on cancel, close or Escape, stays open when clicking elsewhere, and keeps no recent or favorite colors.
+A small bordered color swatch on the left with the label beside it, matching the layout of `ToggleBox`. Clicking the swatch borrows the shared panel from `UICore:GetColorPicker()` (see below), with alpha when `SetHasAlpha(true)` is set. The panel calls back on every change, restores the starting color on cancel, close, Escape or a click outside, and keeps no recent or favorite colors.
 
 Any widget can use the shared panel directly. Opening it for another caller closes the previous session without reverting it:
 
@@ -266,7 +266,7 @@ The panel is not a pooled widget: `ColorPickerPopup.lua` builds one fixed panel 
 - Controls: saturation/value pad with a crosshair cursor, hue bar, alpha bar and Opacity input (only with `hasAlpha`), Hex# input, New and Prev previews (clicking Prev restores the starting color), OK and Cancel.
 - The right column always reserves the Opacity space, so the layout does not shift between alpha and non alpha pickers.
 - The row of preset color buttons at the bottom is driven by `PRESET_COLORS` in `ColorPickerPopup.lua` (`{r, g, b}`, 0 to 1): black, Priest white and the other class colors. The buttons are squares sized to the popup width.
-- It only closes through OK, Cancel, the close button or Escape inside an input. Clicking elsewhere does not close it.
+- It closes through OK, Cancel, the close button, Escape inside an input, or a click outside it. Everything except OK restores the starting color.
 
 ### Dropdown
 
@@ -418,4 +418,4 @@ Store callbacks on the widget (`self.onClick`, `self.onValueChanged`, ...) inste
 - Layout: saturation/value pad, hue bar, optional alpha bar, New/Prev previews, Hex# and Opacity inputs, OK and Cancel. The Opacity space is always reserved on the right and the controls sit closer to the title bar.
 - Added a bottom row of preset color buttons (`PRESET_COLORS`: black, Priest white and the other class colors).
 - The pad cursor is a four line crosshair, as in EllesmereUI.
-- The picker no longer closes when clicking outside it, and keeps no recent or favorite colors.
+- Clicking outside the picker cancels it, as in EllesmereUI. It keeps no recent or favorite colors.

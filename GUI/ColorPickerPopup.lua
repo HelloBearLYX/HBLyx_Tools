@@ -479,7 +479,22 @@ local function Build()
     hexInput:SetScript("OnEscapePressed", function(self) self:ClearFocus(); Cancel() end)
     opacityInput:SetScript("OnEscapePressed", function(self) self:ClearFocus(); Cancel() end)
 
+    -- click outside cancels; registered one frame late so the click which opened the popup does not close it
+    local clickOff = CreateFrame("Frame")
+    clickOff:SetScript("OnEvent", function()
+        if popup:IsShown() and not popup:IsMouseOver() then
+            Cancel()
+        end
+    end)
+    popup:HookScript("OnShow", function()
+        C_Timer.After(0, function()
+            if popup:IsShown() then
+                clickOff:RegisterEvent("GLOBAL_MOUSE_DOWN")
+            end
+        end)
+    end)
     popup:HookScript("OnHide", function()
+        clickOff:UnregisterEvent("GLOBAL_MOUSE_DOWN")
         -- every way of closing ends here, so the owner learns the session is over
         local onClose = closedCallback
         closedCallback = nil

@@ -1,4 +1,4 @@
-local ADDON_NAME, addon = ...
+﻿local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local LibKS = LibStub("LibKeystone")
 
@@ -16,6 +16,8 @@ local ChallengeEnhance = {
     keystoneShowHooked = false,
     keystoneFrame = nil,
     keystoneRows = nil,
+    weeklyFrame = nil,
+    weeklyLines = nil,
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
 }
 
@@ -28,6 +30,11 @@ local KEYSTONE_ROW_SPACING = 2
 local KEYSTONE_TEXT_WIDTH = 100
 local KEYSTONE_LEVEL_FONT_SIZE = 16
 local KEYSTONE_TEXT_FONT_SIZE = 12
+
+local WEEKLY_WIDTH = 240
+local KEYSTONE_FRAME_HEIGHT = KEYSTONE_MAX_ROWS * KEYSTONE_ICON_SIZE + (KEYSTONE_MAX_ROWS - 1) * KEYSTONE_ROW_SPACING + 8 - 5
+local WEEKLY_FONT_SIZE = 12
+local WEEKLY_LINE_SPACING = 2
 
 local NAME_TO_INFO = {}
 for mapID, mapInfo in pairs(addon.data.SEASON_MAP) do
@@ -134,10 +141,32 @@ end
 
 --MARK: UpdateStyle
 
+---Anchor keystoneFrame to ChallengesFrame with the configured offsets
+---@param self ChallengeEnhance self
+local function ApplyKeystonePosition(self)
+    local db = addon.db[self.modName]
+    self.keystoneFrame:ClearAllPoints()
+    self.keystoneFrame:SetPoint("BOTTOMLEFT", ChallengesFrame, "BOTTOMRIGHT", tonumber(db["KeystoneX"]) or 5, tonumber(db["KeystoneY"]) or 0)
+end
+
+---Anchor weeklyFrame to PVEFrame with the configured offsets
+---@param self ChallengeEnhance self
+local function ApplyWeeklyPosition(self)
+    local db = addon.db[self.modName]
+    self.weeklyFrame:ClearAllPoints()
+    self.weeklyFrame:SetPoint("TOPLEFT", PVEFrame, "TOPRIGHT", tonumber(db["WeeklyX"]) or 5, tonumber(db["WeeklyY"]) or 0)
+end
+
 ---Update style settings and render it in-game for ChallengeEnhance
 function ChallengeEnhance:UpdateStyle()
     if self.keystoneFrame then
         self.keystoneFrame:SetScale(tonumber(addon.db[self.modName]["KeystoneScale"]) or 1)
+        ApplyKeystonePosition(self)
+    end
+
+    if self.weeklyFrame then
+        self.weeklyFrame:SetScale(tonumber(addon.db[self.modName]["WeeklyScale"]) or 1)
+        ApplyWeeklyPosition(self)
     end
 
     for mapID, button in pairs(self.buttons) do
@@ -422,8 +451,7 @@ end
 ---@param self ChallengeEnhance self
 local function CreateKeystoneFrame(self)
     local frame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceKeystoneFrame", ChallengesFrame, "BackdropTemplate")
-    local totalHeight = KEYSTONE_MAX_ROWS * KEYSTONE_ICON_SIZE + (KEYSTONE_MAX_ROWS - 1) * KEYSTONE_ROW_SPACING + 8
-    frame:SetSize(KEYSTONE_ICON_SIZE + 4 + KEYSTONE_TEXT_WIDTH + 8, totalHeight)
+    frame:SetSize(KEYSTONE_ICON_SIZE + 4 + KEYSTONE_TEXT_WIDTH + 8, KEYSTONE_FRAME_HEIGHT)
     frame:SetPoint("BOTTOMLEFT", ChallengesFrame, "BOTTOMRIGHT", 5, 0)
     frame:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
@@ -437,6 +465,7 @@ local function CreateKeystoneFrame(self)
     frame:SetScale(tonumber(addon.db[self.modName]["KeystoneScale"]) or 1)
 
     self.keystoneFrame = frame
+    ApplyKeystonePosition(self)
     self.keystoneRows = {}
     for i = 1, KEYSTONE_MAX_ROWS do
         self.keystoneRows[i] = CreateKeystoneRow(self, frame, i)
@@ -472,6 +501,130 @@ local function RefreshKeystoneFrame(self)
     LibKS.Request("PARTY")
 end
 
+-- MARK: Weekly Frame
+
+---Generate the weekly report lines rendered in weeklyFrame
+---Each line: dungeon_short(count): level1, level2, ... with completed runs green and incompleted runs red
+---@return string[] lines array of strings, one per line
+local function GenerateWeeklyReport()
+    -- only this week's runs, include incompleted runs, current season only
+    local history = C_MythicPlus.GetRunHistory(false, true, true) or {}
+
+    table.sort(history, function(a, b)
+        if a.level ~= b.level then return a.level > b.level end
+        if a.completed ~= b.completed then return a.completed end
+        return a.mapChallengeModeID < b.mapChallengeModeID
+    end)
+
+    local groups = {}
+    local topEight = {}
+    for _, run in ipairs(history) do
+        local mapID = run.mapChallengeModeID
+        local info = addon.data.SEASON_MAP[mapID]
+        if info then
+            local color = run.completed and { r = 0, g = 1, b = 0 } or { r = 1, g = 0, b = 0 }
+            local levelText = WrapTextColor(tostring(run.level), color)
+            local shortName = info.short or info.name or tostring(mapID)
+            if #topEight < 8 then
+                topEight[#topEight + 1] = levelText .. "  " .. shortName
+            end
+
+            local group = groups[mapID]
+            if not group then
+                group = { levels = {} }
+                groups[mapID] = group
+            end
+            group.levels[#group.levels + 1] = levelText
+        end
+    end
+
+    local highlightRGBA = addon.UICore:GetHighlightColor()
+    local highlight = { r = highlightRGBA[1], g = highlightRGBA[2], b = highlightRGBA[3] }
+    local lines = {}
+    lines[#lines + 1] = WrapTextColor(L["WeeklyTop8"], highlight)
+    for i = 1, 8 do
+        lines[#lines + 1] = "  " .. (topEight[i] or "-")
+    end
+
+    local order = {}
+    local total = 0
+    for mapID, info in pairs(addon.data.SEASON_MAP) do
+        if info.enabled or groups[mapID] then
+            order[#order + 1] = mapID
+        end
+        if groups[mapID] then
+            total = total + #groups[mapID].levels
+        end
+    end
+    table.sort(order)
+
+    local countColor = { r = 1, g = 0.49, b = 0.04 }
+    lines[#lines + 1] = WrapTextColor(L["WeeklyTotal"], highlight) .. " " .. WrapTextColor(tostring(total), countColor)
+    for _, mapID in ipairs(order) do
+        local info = addon.data.SEASON_MAP[mapID]
+        local name = info.short or info.name or tostring(mapID)
+        local group = groups[mapID]
+        if group then
+            lines[#lines + 1] = string.format("%s(%s): %s", name, WrapTextColor(tostring(#group.levels), countColor), table.concat(group.levels, ", "))
+        else
+            lines[#lines + 1] = string.format("%s(%s): -", name, WrapTextColor("0", countColor))
+        end
+    end
+    return lines
+end
+
+---Re-render weeklyFrame from GenerateWeeklyReport, only while PVEFrame is shown
+---@param self ChallengeEnhance self
+local function RefreshWeeklyFrame(self)
+    if not self.weeklyFrame or not PVEFrame or not PVEFrame:IsShown() then return end
+
+    local lines = GenerateWeeklyReport() or {}
+    local lineHeight = WEEKLY_FONT_SIZE + WEEKLY_LINE_SPACING
+    for i, text in ipairs(lines) do
+        local line = self.weeklyLines[i]
+        if not line then
+            line = self.weeklyFrame:CreateFontString(nil, "OVERLAY")
+            line:SetFont(addon.DEFAULTS.font, WEEKLY_FONT_SIZE, "OUTLINE")
+            line:SetJustifyH("LEFT")
+            line:SetWidth(WEEKLY_WIDTH - 8)
+            line:SetPoint("TOPLEFT", self.weeklyFrame, "TOPLEFT", 4, -4 - (i - 1) * lineHeight)
+            self.weeklyLines[i] = line
+        end
+        line:SetText(text)
+        line:Show()
+    end
+    for i = #lines + 1, #self.weeklyLines do
+        self.weeklyLines[i]:SetText("")
+        self.weeklyLines[i]:Hide()
+    end
+end
+
+---Create the weeklyFrame anchored to the top right of PVEFrame, refreshed whenever PVEFrame is shown
+---@param self ChallengeEnhance self
+local function CreateWeeklyFrame(self)
+    local frame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceWeeklyFrame", PVEFrame, "BackdropTemplate")
+    -- default height: weekly + keystone = PVEFrame height
+    frame:SetSize(WEEKLY_WIDTH, math.max(PVEFrame:GetHeight() - KEYSTONE_FRAME_HEIGHT, 1))
+    frame:SetPoint("TOPLEFT", PVEFrame, "TOPRIGHT", 5, 0)
+    frame:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 0, right = 0, top = 0, bottom = 0 }
+    })
+    frame:SetBackdropColor(0, 0, 0, 0.5)
+    frame:SetBackdropBorderColor(0, 0, 0, 1)
+    frame:SetScale(tonumber(addon.db[self.modName]["WeeklyScale"]) or 1)
+
+    self.weeklyFrame = frame
+    ApplyWeeklyPosition(self)
+    self.weeklyLines = {}
+
+    PVEFrame:HookScript("OnShow", function() RefreshWeeklyFrame(self) end)
+    RefreshWeeklyFrame(self)
+end
+
 ---Create buttons for dungeons in the PVEFrame
 ---This must be executed after Blizzard_ChallengesUI loaded the PVEFrame and its icons
 ---@return boolean success if the buttons are created
@@ -490,6 +643,10 @@ function ChallengeEnhance:Create()
                     CreateButtons(self)
                     self:UpdateStyle()
                     UpdateButtons(self, 0)
+
+                    if addon.db[self.modName]["WeeklyEnabled"] and not self.weeklyFrame and PVEFrame then
+                        CreateWeeklyFrame(self)
+                    end
 
                     if addon.db[self.modName]["TeamKeystone"] and not self.keystoneFrame then
                         CreateKeystoneFrame(self)

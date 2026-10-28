@@ -10,6 +10,12 @@ addon.configurationList[MOD_KEY] = {
     PortalPartyMessage = true,
     TeamKeystone = true,
     KeystoneScale = 1,
+    KeystoneX = 5,
+    KeystoneY = 0,
+    WeeklyEnabled = true,
+    WeeklyScale = 1,
+    WeeklyX = 5,
+    WeeklyY = 0,
     -- level settings
     LevelEnabled = true,
     LevelFontSize = 20,
@@ -179,14 +185,61 @@ local function RenderPanel(parent)
         addon.db.ChallengeEnhance.KeystoneScale = value
         update()
     end)
+    local keystoneXSlider = GUI:CreateSlider(nil, L["X"], -500, 500, 1, addon.db.ChallengeEnhance.KeystoneX, function(value)
+        addon.db.ChallengeEnhance.KeystoneX = value
+        update()
+    end)
+    local keystoneYSlider = GUI:CreateSlider(nil, L["Y"], -500, 500, 1, addon.db.ChallengeEnhance.KeystoneY, function(value)
+        addon.db.ChallengeEnhance.KeystoneY = value
+        update()
+    end)
     GUI:CreateToggleCheckBox(keystoneGroup, L["Enable"], addon.db.ChallengeEnhance.TeamKeystone, function(value)
         addon.db.ChallengeEnhance.TeamKeystone = value
         keystoneScaleSlider:SetDisabled(not value)
+        keystoneXSlider:SetDisabled(not value)
+        keystoneYSlider:SetDisabled(not value)
         addon.core:ShowReloadPopup()
     end):SetRelativeWidth(0.15)
     keystoneScaleSlider:SetRelativeWidth(0.2)
+    keystoneXSlider:SetRelativeWidth(0.2)
+    keystoneYSlider:SetRelativeWidth(0.2)
     keystoneScaleSlider:SetDisabled(not addon.db.ChallengeEnhance.TeamKeystone)
+    keystoneXSlider:SetDisabled(not addon.db.ChallengeEnhance.TeamKeystone)
+    keystoneYSlider:SetDisabled(not addon.db.ChallengeEnhance.TeamKeystone)
     frame:AddWidget(keystoneScaleSlider)
+    frame:AddWidget(keystoneXSlider)
+    frame:AddWidget(keystoneYSlider)
+
+    -- MARK: Weekly Settings
+    local weeklyGroup = GUI:CreateInlineGroup(frame, L["WeeklyReport"])
+    local weeklyScaleSlider = GUI:CreateSlider(nil, L["Scale"], 0.1, 3.0, 0.01, addon.db.ChallengeEnhance.WeeklyScale or 1, function(value)
+        addon.db.ChallengeEnhance.WeeklyScale = value
+        update()
+    end)
+    local weeklyXSlider = GUI:CreateSlider(nil, L["X"], -500, 500, 1, addon.db.ChallengeEnhance.WeeklyX, function(value)
+        addon.db.ChallengeEnhance.WeeklyX = value
+        update()
+    end)
+    local weeklyYSlider = GUI:CreateSlider(nil, L["Y"], -500, 500, 1, addon.db.ChallengeEnhance.WeeklyY, function(value)
+        addon.db.ChallengeEnhance.WeeklyY = value
+        update()
+    end)
+    weeklyScaleSlider:SetRelativeWidth(0.2)
+    weeklyXSlider:SetRelativeWidth(0.2)
+    weeklyYSlider:SetRelativeWidth(0.2)
+    weeklyScaleSlider:SetDisabled(not addon.db.ChallengeEnhance.WeeklyEnabled)
+    weeklyXSlider:SetDisabled(not addon.db.ChallengeEnhance.WeeklyEnabled)
+    weeklyYSlider:SetDisabled(not addon.db.ChallengeEnhance.WeeklyEnabled)
+    GUI:CreateToggleCheckBox(weeklyGroup, L["Enable"], addon.db.ChallengeEnhance.WeeklyEnabled, function(value)
+        addon.db.ChallengeEnhance.WeeklyEnabled = value
+        weeklyScaleSlider:SetDisabled(not value)
+        weeklyXSlider:SetDisabled(not value)
+        weeklyYSlider:SetDisabled(not value)
+        addon.core:ShowReloadPopup()
+    end):SetRelativeWidth(0.15)
+    frame:AddWidget(weeklyScaleSlider)
+    frame:AddWidget(weeklyXSlider)
+    frame:AddWidget(weeklyYSlider)
 
     return frame
 end

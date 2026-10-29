@@ -192,6 +192,7 @@ addon.data.AURA_HELPER = {
 			[57724] = true, -- Sated
 			[80354] = true, -- Temporal Displacement
 			[264689] = true, -- Fatigue
+			[390435] = true, -- Sated(Evoker)
 		}}, category = "Debuff", name = L["AuraFilter"]["ExcludingExhaustion"], isAddonMade = true},
 		-- TRINKET = {value = {includeSpellIDs = {
 		-- }}, category = "Buff", name = L["AuraFilter"]["Trinkets"]},

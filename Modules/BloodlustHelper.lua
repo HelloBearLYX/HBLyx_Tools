@@ -17,8 +17,9 @@ local LUST_SPELL_ID = {
     2825, -- Bloodlust
     32182, -- Heroism
     80353, -- Time Warp
-    264689, -- Primal Rage
     390386, -- Fury of the Aspects
+    264689, -- Primal Rage(Hunter)
+    264667, -- Primal Rage(Alternative)
     466904, -- Marksman Hunter's
     1243972, -- Drums
 }
@@ -198,7 +199,7 @@ function BloodlustHelper:Initialize()
 
     -- the buff container must render above the debuff container so the Lust
     -- icon is the one visible during the brief overlap when both are up
-    self.container:SetFrameLevel(self.satedContainer:GetFrameLevel() + 1)
+    self.container:SetFrameLevel(self.satedContainer:GetFrameLevel() + 10)
 
     self.frame:Show()
     self:UpdateVisibility()

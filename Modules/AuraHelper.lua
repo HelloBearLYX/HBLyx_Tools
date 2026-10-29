@@ -92,6 +92,7 @@ local function InitializeAuraButton(self, frame, options)
     cooldown:SetAllPoints()
     cooldown:SetDrawEdge(false)
     cooldown:SetReverse(true)
+    cooldown:SetCountdownAbbrevThreshold(600)
     cooldown:SetScale(options.CooldownTextScale or 0.75)
     frame:SetDurationCooldown(cooldown)
 

@@ -182,8 +182,9 @@ addon.data.AURA_HELPER = {
 			[2825] = true, -- Bloodlust
 			[32182] = true, -- Heroism
 			[80353] = true, -- Time Warp
-			[264689] = true, -- Primal Rage
 			[390386] = true, -- Fury of the Aspects
+			[264689] = true, -- Primal Rage(Hunter)
+			[264667] = true, -- Primal Rage(Alternative)
 			[466904] = true, -- Marksman Hunter's
 			[1243972] = true, -- Drums
 		}}, category = "Buff", name = L["AuraFilter"]["Bloodlust"], isAddonMade = true},

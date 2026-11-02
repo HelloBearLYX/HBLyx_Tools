@@ -555,7 +555,7 @@ L["GossipHelperSettingsDesc"] = "自动选择已注册的对话选项"
 
 -- MARK: Channel Helper
 L["ChannelHelperSettings"] = "频道助手"
-L["ChannelHelperSettingsDesc"] = "一个可以快速切换聊天频道的按钮栏。"
+L["ChannelHelperSettingsDesc"] = "一个可以快速切换聊天频道的按钮栏"
 L["ChannelHelperChannels"] = {
 	["say"] = "说",
 	["yell"] = "大喊",

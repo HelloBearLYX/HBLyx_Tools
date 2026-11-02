@@ -19,6 +19,7 @@
 ### **Utility Modules**
 - **Auction Helper**: a consumerables, enhancements, and craft quick search panel for the auction house
 - **Gossip Helper**: automatically select the registered gossip options
+- **Channel Helper**: A bar which helps to quickly switch between chat channels
 - **M+ Panel Enhance**: display score and dungeon name and clickable M+ dungeon portal on the M+ Panel
 - **Auto Roll**: automatically select Need/Greed/Pass on the loot roll window based on customizable rules
 - **Talent Reminders**: display talent reminders when you enter a Mythic Dungeon
@@ -27,6 +28,7 @@
 - **Countdown**: customizable replacement for Blizzard's countdown timer, with customizable sound alerts
 - **Text Warning**: customizable replacement for Blizzard's boss text warnings
 ### **Specialization Modules**
+- **Auto Macro Helper**: Automatically create and update a macro for your class(misdirection, power infusion, and innervate), and automatically set the target
 - **Warlock Reminders**: reminder for pet and healthstones for warlocks.
 - **Demonology Portals**: display the count of portals summoned during this/last Tyrant for Demonology Warlocks
 
@@ -47,6 +49,7 @@
 ### **实用模块**
 - **拍卖助手**: 一个用于拍卖行的消耗品、附魔和制作材料快速搜索面板
 - **对话助手**: 自动选择已注册的对话选项
+- **频道助手**: 一个可以快速切换聊天频道的按钮栏
 - **大秘境面板增强**: 在M+面板上显示分数、地下城名称以及可点击的M+地下城传送门
 - **自动Roll点**: 根据自定义规则自动在Roll点窗口上选择需求/贪婪/放弃
 - **天赋提醒**: 当你进入一个史诗地下城时显示天赋提醒
@@ -55,5 +58,6 @@
 - **倒计时**: 可自定义的暴雪倒计时替代方案，带有可自定义的音效提醒
 - **文本警告美化**: 可自定义的暴雪首领文本警告替代方案
 ### **职业模块**
+- **自动宏助手**: 自动为你的职业创建和更新宏(误导,能量灌注,激活), 并自动设置目标
 - **术士提醒**: 为术士提供宠物和治疗石提醒
 - **恶魔术传送门**: 显示恶魔术士本次/上次暴君期间召唤的传送门数量

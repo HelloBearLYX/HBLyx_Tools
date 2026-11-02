@@ -566,7 +566,7 @@ L["InvalidGossipID"] = "Invalid gossip ID"
 
 -- MARK: Channel Helper
 L["ChannelHelperSettings"] = "Channel Helper"
-L["ChannelHelperSettingsDesc"] = "A bar which helps to quickly switch between chat channels."
+L["ChannelHelperSettingsDesc"] = "A bar which helps to quickly switch between chat channels"
 L["ChannelHelperChannels"] = {
 	["say"] = "Say",
 	["yell"] = "Yell",

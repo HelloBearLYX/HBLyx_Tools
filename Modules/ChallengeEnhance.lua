@@ -8,6 +8,9 @@ local LibKS = LibStub("LibKeystone")
 ---@field modName string module name for registering in core
 ---@field keystoneFrame frame frame showing teammates' keystone info
 ---@field keystoneRows table array of up to KEYSTONE_MAX_ROWS row frames (icon + dungeonName + playerName), one per teammate; row.name tracks which teammate currently occupies it
+---@field leaderName string|nil short name of the current party leader
+---@field leaderCacheHooked boolean whether the initial leader cache hook is installed
+---@field leaderCacheInitialized boolean whether the leader has been cached on first PVEFrame show
 local ChallengeEnhance = {
     modName = "ChallengeEnhance",
     buttons = {},
@@ -16,6 +19,9 @@ local ChallengeEnhance = {
     keystoneShowHooked = false,
     keystoneFrame = nil,
     keystoneRows = nil,
+    leaderName = nil,
+    leaderCacheHooked = false,
+    leaderCacheInitialized = false,
     weeklyFrame = nil,
     weeklyLines = nil,
     eventFrame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceEvent"),
@@ -27,7 +33,7 @@ local EVENT_UPDATE_DELAY = 1
 local KEYSTONE_MAX_ROWS = 5 -- a full party (4 members + self)
 local KEYSTONE_ICON_SIZE = 30
 local KEYSTONE_ROW_SPACING = 2
-local KEYSTONE_TEXT_WIDTH = 100
+local KEYSTONE_RATING_WIDTH = 48
 local KEYSTONE_LEVEL_FONT_SIZE = 16
 local KEYSTONE_TEXT_FONT_SIZE = 12
 
@@ -35,6 +41,61 @@ local WEEKLY_WIDTH = 240
 local KEYSTONE_FRAME_HEIGHT = KEYSTONE_MAX_ROWS * KEYSTONE_ICON_SIZE + (KEYSTONE_MAX_ROWS - 1) * KEYSTONE_ROW_SPACING + 8 - 5
 local WEEKLY_FONT_SIZE = 12
 local WEEKLY_LINE_SPACING = 2
+
+---Get the display color for a keystone level
+---@param keyLevel integer keystone level
+---@return ColorMixin color configured tier color for the level
+local function GetKeyLevelColor(keyLevel)
+    local setting
+    if keyLevel >= 20 then setting = "TierColorHero"
+    elseif keyLevel >= 13 then setting = "TierColorLegendary"
+    elseif keyLevel >= 11 then setting = "TierColorEpic"
+    elseif keyLevel >= 8 then setting = "TierColorRare"
+    elseif keyLevel >= 5 then setting = "TierColorUncommon"
+    else setting = "TierColorDefault" end
+    local r, g, b = addon.Utilities:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
+    return CreateColor(r, g, b, 1)
+end
+
+---Get the display color for a player's Mythic+ rating
+---@param playerRating number Mythic+ rating
+---@return table color configured tier color for the rating
+local function GetPlayerRatingColor(playerRating)
+    local setting
+    if playerRating >= 3900 then setting = "TierColorHero"
+    elseif playerRating >= 3200 then setting = "TierColorLegendary"
+    elseif playerRating >= 2400 then setting = "TierColorEpic"
+    elseif playerRating >= 1600 then setting = "TierColorRare"
+    elseif playerRating >= 960 then setting = "TierColorUncommon"
+    else setting = "TierColorDefault" end
+    local r, g, b = addon.Utilities:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
+    return { r = r, g = g, b = b }
+end
+
+---Wrap text in a color escape sequence using only a color's r/g/b fields
+---@param text string text to color
+---@param color table|nil table with r,g,b fields, or nil to leave text uncolored
+---@return string text color-wrapped text
+local function WrapTextColor(text, color)
+    if not color then return text end
+    return string.format("|cff%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, text)
+end
+
+---Refresh the level and rating text colors for a keystone row
+---@param row frame keystone row
+local function RefreshKeystoneRowColors(row)
+    if type(row.keyLevel) == "number" and row.keyLevel > 0 then
+        row.icon.level:SetText(WrapTextColor(tostring(row.keyLevel), GetKeyLevelColor(row.keyLevel)))
+    else
+        row.icon.level:SetText("")
+    end
+
+    if type(row.ratingValue) == "number" then
+        row.playerRating:SetText(WrapTextColor(string.format("%d", row.ratingValue), GetPlayerRatingColor(row.ratingValue)))
+    else
+        row.playerRating:SetText("")
+    end
+end
 
 local NAME_TO_INFO = {}
 for mapID, mapInfo in pairs(addon.data.SEASON_MAP) do
@@ -116,16 +177,16 @@ local function RefreshMapInfo(self, mapID)
     if button then
         local mapBestInfo = C_MythicPlus.GetSeasonBestForMap(mapID)
         local level = mapBestInfo and mapBestInfo.level or 0
+        local levelColor = GetKeyLevelColor(level)
         if level and addon.db[self.modName]["LevelEnabled"] and level > 0 then
-            button.level:SetText(tostring(level))
+            button.level:SetText(WrapTextColor(tostring(level), levelColor))
         else
             button.level:SetText("")
         end
 
         local score = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)) or 0
         if score and addon.db[self.modName]["ScoreEnabled"] and score > 0 then
-            button.score:SetText(tostring(score))
-            button.score:SetTextColor(button.level:GetTextColor())
+            button.score:SetText(WrapTextColor(tostring(score), levelColor))
         else
             button.score:SetText("")
         end
@@ -162,6 +223,10 @@ function ChallengeEnhance:UpdateStyle()
     if self.keystoneFrame then
         self.keystoneFrame:SetScale(tonumber(addon.db[self.modName]["KeystoneScale"]) or 1)
         ApplyKeystonePosition(self)
+    end
+
+    for _, row in ipairs(self.keystoneRows or {}) do
+        RefreshKeystoneRowColors(row)
     end
 
     if self.weeklyFrame then
@@ -262,7 +327,7 @@ local function CreateButtons(self)
             button:SetAttribute("type", "spell")
             button:SetAttribute("spell", portalID)
 
-            button.selectOverlay = button:CreateTexture(nil, "HIGHLIGHT") 
+            button.selectOverlay = button:CreateTexture(nil, "HIGHLIGHT")
             button.selectOverlay:SetAllPoints()
             button.selectOverlay:SetBlendMode("ADD")
             button.selectOverlay:SetColorTexture(1, 1, 1, 0.25)
@@ -304,6 +369,61 @@ local function StripRealm(fullName)
     return Ambiguate(fullName, "short") or fullName:match("^([^%-]+)") or fullName
 end
 
+---Cache the current party leader's short name
+---@param self ChallengeEnhance self
+local function UpdateGroupLeader(self)
+    if self.keystoneFrame and self.keystoneFrame.leaderIcon then
+        self.keystoneFrame.leaderIcon:Hide()
+    end
+
+    self.leaderName = nil
+    if not IsInGroup() or IsInRaid() then return end
+
+    for i = 0, GetNumGroupMembers() - 1 do
+        local unit = i == 0 and "player" or "party" .. i
+        if UnitIsGroupLeader(unit) then
+            self.leaderName = StripRealm(UnitName(unit))
+            return
+        end
+    end
+end
+
+---Place the cached leader marker on a row's keystone icon
+---@param self ChallengeEnhance self
+---@param row frame keystone row
+local function ShowLeaderIcon(self, row)
+    local leaderIcon = self.keystoneFrame and self.keystoneFrame.leaderIcon
+    if not leaderIcon then return end
+
+    leaderIcon:SetParent(row.icon)
+    leaderIcon:ClearAllPoints()
+    leaderIcon:SetPoint("TOPLEFT", row.icon, "TOPLEFT", -2, 2)
+    leaderIcon:Show()
+end
+
+---Cache the leader when PVEFrame is first opened
+---@param self ChallengeEnhance self
+local function HookInitialGroupLeaderCache(self)
+    if not PVEFrame or self.leaderCacheHooked then return end
+
+    self.leaderCacheHooked = true
+    local function OnPVEFrameShow()
+        if self.leaderCacheInitialized then return end
+        UpdateGroupLeader(self)
+        self.leaderCacheInitialized = true
+        for _, row in ipairs(self.keystoneRows or {}) do
+            if self.leaderName and row.name and StripRealm(row.name) == self.leaderName then
+                ShowLeaderIcon(self, row)
+                break
+            end
+        end
+    end
+    PVEFrame:HookScript("OnShow", OnPVEFrameShow)
+    if PVEFrame:IsShown() then
+        OnPVEFrameShow()
+    end
+end
+
 ---Build a short name -> classFile lookup for everyone currently in the group
 ---@return table classMap short name -> classFile
 local function BuildClassColorMap()
@@ -330,27 +450,6 @@ local function BuildClassColorMap()
     return map
 end
 
----Get the display color for a keystone level, higher levels are colored more distinctly
----@param keyLevel integer keystone level
----@return ColorMixin color color for the level
-local function GetKeyLevelColor(keyLevel)
-    if keyLevel >= 12 then return CreateColor(1, 0.5, 0, 1)
-    elseif keyLevel >= 10 then return CreateColor(0.63, 0.2, 0.93, 1)
-    elseif keyLevel >= 7 then return CreateColor(0, 0.44, 0.87, 1)
-    elseif keyLevel >= 4 then return CreateColor(0.12, 1, 0, 1)
-    else return CreateColor(1, 1, 1, 1) end
-end
-
----Wrap text in a color escape sequence using only a color's r/g/b fields
----(avoids relying on ColorMixin methods, which some color tables like RAID_CLASS_COLORS may lack)
----@param text string text to color
----@param color table|nil table with r,g,b fields, or nil to leave text uncolored
----@return string text color-wrapped text
-local function WrapTextColor(text, color)
-    if not color then return text end
-    return string.format("|cff%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, text)
-end
-
 ---Find the row currently showing a teammate's keystone, or the first still-empty row to claim for a new teammate
 ---@param self ChallengeEnhance self
 ---@param name string party member name
@@ -372,39 +471,47 @@ end
 ---@param name string party member name
 ---@param keyLevel integer keystone level
 ---@param keyChallengeMapID integer keystone challenge map ID
-local function RenderKeystoneRow(self, name, keyLevel, keyChallengeMapID)
+---@param playerRating number|nil Mythic+ rating
+local function RenderKeystoneRow(self, name, keyLevel, keyChallengeMapID, playerRating)
     local row = FindKeystoneRow(self, name)
     if not row then return end -- more reports than rows, ignore the overflow
 
     row.name = name
+    row.keyLevel = keyLevel
+    row.ratingValue = playerRating
     row:Show()
 
     local classMap = BuildClassColorMap()
-    local nameColor = RAID_CLASS_COLORS[classMap[StripRealm(name)]]
-    row.playerName:SetText(WrapTextColor(StripRealm(name), nameColor))
+    local shortName = StripRealm(name)
+    local nameColor = RAID_CLASS_COLORS[classMap[shortName]]
+    row.playerName:SetText(WrapTextColor(shortName, nameColor))
+    RefreshKeystoneRowColors(row)
+    if self.leaderName and shortName == self.leaderName then
+        ShowLeaderIcon(self, row)
+    end
 
     if keyLevel <= 0 then
-        row.icon.level:SetText("")
         row.icon.art:SetTexture(nil)
         row.dungeonName:SetText(L["NotAcquired"])
     else
-        row.icon.level:SetText(WrapTextColor(tostring(keyLevel), GetKeyLevelColor(keyLevel)))
         local mapName, _, _, mapTexture = C_ChallengeMode.GetMapUIInfo(keyChallengeMapID)
         local mapID = mapName and NAME_TO_INFO[mapName]
         local seasonInfo = mapID and addon.data.SEASON_MAP[mapID]
         row.icon.art:SetTexture(mapTexture or 134400)
-        row.dungeonName:SetText(seasonInfo and seasonInfo.short or (mapName or ""))
+        row.dungeonName:SetText(seasonInfo and seasonInfo.name or (mapName or ""))
     end
 end
 
----Create a single keystone row: an icon (border + dynamic background + centered level) and two fontStrings to its right
+---Create a single keystone row with a keystone icon, two left-side labels, and a centered rating
 ---@param self ChallengeEnhance self
 ---@param parent frame frame to parent the row to
 ---@param index integer row index, used to anchor beneath the previous row
----@return frame row row frame with .icon (icon.art texture, icon.level fontString), .dungeonName, .playerName fields
+---@return frame row row frame with .icon (icon.art texture, icon.level fontString), .dungeonName, .playerName, and .playerRating fields
 local function CreateKeystoneRow(self, parent, index)
     local row = CreateFrame("Frame", nil, parent)
-    row:SetSize(KEYSTONE_ICON_SIZE + 4 + KEYSTONE_TEXT_WIDTH, KEYSTONE_ICON_SIZE)
+    local rowWidth = WEEKLY_WIDTH - 8
+    local textWidth = rowWidth - KEYSTONE_ICON_SIZE - KEYSTONE_RATING_WIDTH - 12
+    row:SetSize(rowWidth, KEYSTONE_ICON_SIZE)
     if index == 1 then
         row:SetPoint("TOPLEFT", parent, "TOPLEFT", 4, -4)
     else
@@ -431,18 +538,26 @@ local function CreateKeystoneRow(self, parent, index)
     row.icon = icon
 
     local dungeonName = row:CreateFontString(nil, "OVERLAY")
-    dungeonName:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 0)
-    dungeonName:SetSize(KEYSTONE_TEXT_WIDTH, KEYSTONE_ICON_SIZE / 2)
+    dungeonName:SetPoint("TOPLEFT", icon, "TOPRIGHT", 4, 0)
+    dungeonName:SetSize(textWidth, KEYSTONE_ICON_SIZE / 2)
     dungeonName:SetJustifyH("LEFT")
     dungeonName:SetFont(addon.DEFAULTS.font, KEYSTONE_TEXT_FONT_SIZE, "OUTLINE")
     row.dungeonName = dungeonName
 
     local playerName = row:CreateFontString(nil, "OVERLAY")
-    playerName:SetPoint("BOTTOMLEFT", icon, "BOTTOMRIGHT", 0, 0)
-    playerName:SetSize(KEYSTONE_TEXT_WIDTH, KEYSTONE_ICON_SIZE / 2)
+    playerName:SetPoint("BOTTOMLEFT", icon, "BOTTOMRIGHT", 4, 0)
+    playerName:SetSize(textWidth, KEYSTONE_ICON_SIZE / 2)
     playerName:SetJustifyH("LEFT")
     playerName:SetFont(addon.DEFAULTS.font, KEYSTONE_TEXT_FONT_SIZE, "OUTLINE")
     row.playerName = playerName
+
+    local playerRating = row:CreateFontString(nil, "OVERLAY")
+    playerRating:SetPoint("RIGHT", row, "RIGHT", -4, 0)
+    playerRating:SetSize(KEYSTONE_RATING_WIDTH, KEYSTONE_ICON_SIZE)
+    playerRating:SetJustifyH("CENTER")
+    playerRating:SetJustifyV("MIDDLE")
+    playerRating:SetFont(addon.DEFAULTS.font, KEYSTONE_TEXT_FONT_SIZE, "OUTLINE")
+    row.playerRating = playerRating
 
     return row
 end
@@ -451,7 +566,7 @@ end
 ---@param self ChallengeEnhance self
 local function CreateKeystoneFrame(self)
     local frame = CreateFrame("Frame", ADDON_NAME .. "_ChallengeEnhanceKeystoneFrame", ChallengesFrame, "BackdropTemplate")
-    frame:SetSize(KEYSTONE_ICON_SIZE + 4 + KEYSTONE_TEXT_WIDTH + 8, KEYSTONE_FRAME_HEIGHT)
+    frame:SetSize(WEEKLY_WIDTH, KEYSTONE_FRAME_HEIGHT)
     frame:SetPoint("BOTTOMLEFT", ChallengesFrame, "BOTTOMRIGHT", 5, 0)
     frame:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
@@ -463,6 +578,11 @@ local function CreateKeystoneFrame(self)
     frame:SetBackdropColor(0, 0, 0, 0.5)
     frame:SetBackdropBorderColor(0, 0, 0, 1)
     frame:SetScale(tonumber(addon.db[self.modName]["KeystoneScale"]) or 1)
+
+    frame.leaderIcon = frame:CreateTexture(nil, "OVERLAY")
+    frame.leaderIcon:SetSize(10, 10)
+    frame.leaderIcon:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
+    frame.leaderIcon:Hide()
 
     self.keystoneFrame = frame
     ApplyKeystonePosition(self)
@@ -491,6 +611,7 @@ end
 local function RefreshKeystoneFrame(self)
     if not self.keystoneFrame then return end
 
+    self.keystoneFrame.leaderIcon:Hide()
     for _, row in ipairs(self.keystoneRows) do
         row.name = nil
         row:Hide()
@@ -631,6 +752,10 @@ end
 function ChallengeEnhance:Create()
     if addon.states["inCombat"] or not ChallengesFrame or not ChallengesFrame.DungeonIcons then return false end
 
+    if addon.db[self.modName]["TeamKeystone"] then
+        HookInitialGroupLeaderCache(self)
+    end
+
     if ChallengesFrame.Update and not self.updateHooked then
         local firstExecute = true
         hooksecurefunc(ChallengesFrame, "Update", function()
@@ -653,7 +778,7 @@ function ChallengeEnhance:Create()
                         LibKS.Register(self, function(keyLevel, keyChallengeMapID, playerRating, name, channel)
                             if channel ~= "PARTY" then return end
                             -- LibKeystone invokes this via securecallfunction, which silently swallows errors, so surface them ourselves
-                            local ok, err = pcall(RenderKeystoneRow, self, name, keyLevel, keyChallengeMapID)
+                            local ok, err = pcall(RenderKeystoneRow, self, name, keyLevel, keyChallengeMapID, playerRating)
                             if not ok then geterrorhandler()(err) end
                         end)
                         RefreshKeystoneFrame(self)
@@ -708,6 +833,7 @@ function ChallengeEnhance:RegisterEvents()
                 end
             end
         elseif event == "GROUP_ROSTER_UPDATE" then
+            UpdateGroupLeader(self)
             RefreshKeystoneFrame(self)
         else
             UpdateButtons(self, EVENT_UPDATE_DELAY)

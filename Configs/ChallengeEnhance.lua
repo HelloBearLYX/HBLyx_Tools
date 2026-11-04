@@ -7,6 +7,12 @@ local MOD_KEY = "ChallengeEnhance"
 addon.configurationList[MOD_KEY] = {
     Enabled = true,
     Font = "",
+    TierColorDefault = "FFFFFF",
+    TierColorUncommon = "1FFF00",
+    TierColorRare = "0070DE",
+    TierColorEpic = "8A2BE3",
+    TierColorLegendary = "FF8C00",
+    TierColorHero = "F58CBA",
     PortalPartyMessage = true,
     TeamKeystone = true,
     KeystoneScale = 1,
@@ -55,12 +61,6 @@ local function RenderPanel(parent)
         addon.core:ShowReloadPopup()
     end)
     GUI:CreateResetModButton(frame, MOD_KEY, L["ChallengeEnhanceSettings"])
-
-    local fontGroup = GUI:CreateInlineGroup(frame, L["FontSettings"])
-    GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.ChallengeEnhance.Font, function(value)
-        addon.db.ChallengeEnhance.Font = value
-        update()
-    end)
 
     -- MARK: Level Settings
     local levelGroup = GUI:CreateInlineGroup(frame, L["ChallengeEnhanceLevelSettings"])
@@ -240,6 +240,30 @@ local function RenderPanel(parent)
     frame:AddWidget(weeklyScaleSlider)
     frame:AddWidget(weeklyXSlider)
     frame:AddWidget(weeklyYSlider)
+
+    local fontGroup = GUI:CreateInlineGroup(frame, L["FontSettings"])
+    GUI:CreateFontSelect(fontGroup, L["Font"], addon.db.ChallengeEnhance.Font, function(value)
+        addon.db.ChallengeEnhance.Font = value
+        update()
+    end)
+
+    local tierColorGroup = GUI:CreateInlineGroup(frame, L["ColorSettings"])
+    GUI:CreateInformationTag(tierColorGroup, L["ChallengeEnhanceTierColorDescription"], "LEFT")
+    local tierColorOptions = {
+        { key = "TierColorDefault", label = L["ChallengeEnhanceTierDefault"] },
+        { key = "TierColorUncommon", label = L["ChallengeEnhanceTierUncommon"] },
+        { key = "TierColorRare", label = L["ChallengeEnhanceTierRare"] },
+        { key = "TierColorEpic", label = L["ChallengeEnhanceTierEpic"] },
+        { key = "TierColorLegendary", label = L["ChallengeEnhanceTierLegendary"] },
+        { key = "TierColorHero", label = L["ChallengeEnhanceTierHero"] },
+    }
+    for _, option in ipairs(tierColorOptions) do
+        GUI:CreateColorPicker(tierColorGroup, option.label, false, addon.db.ChallengeEnhance[option.key], function(value)
+            addon.db.ChallengeEnhance[option.key] = value
+            -- addon.core:ShowReloadPopup()
+            update()
+        end):SetRelativeWidth(0.165)
+    end
 
     return frame
 end

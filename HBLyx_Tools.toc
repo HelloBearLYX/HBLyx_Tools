@@ -28,6 +28,7 @@ Modules\FocusInterrupt.lua
 Modules\CombatIndicator.lua
 Modules\CombatTimer.lua
 Modules\BattleRes.lua
+Modules\RangeAlert.lua
 Modules\ChallengeEnhance.lua
 Modules\AutoRoll.lua
 Modules\WarlockReminder.lua
@@ -49,6 +50,7 @@ Configs\FocusInterrupt.lua
 Configs\CombatIndicator.lua
 Configs\CombatTimer.lua
 Configs\BattleRes.lua
+Configs\RangeAlert.lua
 Configs\ChallengeEnhance.lua
 Configs\AutoRoll.lua
 Configs\WarlockReminder.lua

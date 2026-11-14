@@ -8,4 +8,5 @@
   <Include file="Libs\LibDeflate\lib.xml"/>
   <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
   <Script file="Libs\LibKeystone\LibKeystone.lua"/>
+  <Script file="Libs\LibRangeCheck-3.0\LibRangeCheck-3.0.lua"/>
 </Ui>

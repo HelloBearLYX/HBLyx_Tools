@@ -255,6 +255,18 @@ L["BattleResSettings"] = "战复助手"
 L["BattleResSettingsDesc"] = "显示战复的冷却和充能"
 L["HideInactive"] = "未激活时隐藏"
 
+-- MARK: Range Alert
+L["RangeAlertSettings"] = "距离提醒"
+L["RangeAlertSettingsDesc"] = "根据玩家当前专精判断目标是否超出距离时显示提醒"
+L["RangeAlertText"] = "超出距离"
+L["RangeAlertTextLabel"] = "提醒文本"
+L["RangeAlertLibMissing"] = "未找到LibRangeCheck-3.0, 距离提醒模块无法工作。"
+L["RangeAlertInfo"] = "远程: 40码, 中距离: 25码, 近战: 5码\n该提醒仅在拥有有效目标(敌对)时触发"
+L["ShowRangeDisplay"] = "启用距离显示"
+L["ShowRangeDisplayDesc"] = "当目标处于范围内时, 显示实时的距离估计(按距离着色), 而不是隐藏提醒。目标超出距离时, 上方的提醒文本/颜色始终优先显示。"
+L["RangeAlertRangeDisplay"] = "距离显示"
+L["RangeDisplayColorDesc"] = "设置实时距离显示在各个距离区间(码)下使用的颜色。"
+
 -- MARK: Bloodlust Helper
 L["BloodlustHelperSettings"] = "嗜血助手"
 L["BloodlustHelperSettingsDesc"] = "当你获得嗜血/英勇和疲劳类减益时播放可自定义的声音提醒"

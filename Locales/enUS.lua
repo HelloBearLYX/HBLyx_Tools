@@ -255,6 +255,18 @@ L["BattleResSettings"] = "BattleRes Timer"
 L["BattleResSettingsDesc"] = "display the cooldown and charges of Battle-Res"
 L["HideInactive"] = "Hide When Inactive"
 
+-- MARK: Range Alert
+L["RangeAlertSettings"] = "Range Alert"
+L["RangeAlertSettingsDesc"] = "The alert shows if the target is out of range based on player's current specialization"
+L["RangeAlertText"] = "Out of Range"
+L["RangeAlertTextLabel"] = "Alert Text"
+L["RangeAlertLibMissing"] = "LibRangeCheck-3.0 was not found, Range Alert cannot work."
+L["RangeAlertInfo"] = "Range: 40yds, Mid-range: 25yds, Melee: 5yds\nThe alert only triggers when you have a valid target(enemy)"
+L["RangeAlertRangeDisplay"] = "Show Range Display"
+L["ShowRangeDisplay"] = "Enable Range Display"
+L["ShowRangeDisplayDesc"] = "When your target is within range, show the live distance estimate(colored by distance) instead of hiding the reminder. The out-of-range alert text/color always takes priority when your target is out of range."
+L["RangeDisplayColorDesc"] = "Set the color used for the live range display at each distance bracket(yards)."
+
 -- MARK: Bloodlust Helper
 L["BloodlustHelperSettings"] = "Bloodlust Helper"
 L["BloodlustHelperSettingsDesc"] = "Play customizable sound alerts when you gain Bloodlust/Heroism and Exhaustion-like debuffs"

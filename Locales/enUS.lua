@@ -351,6 +351,12 @@ L["AutoMacroHelperSettingsDesc"] = "Automatically create and update a macro for 
 L["MDHelperTarget"] = "Target"
 L["MDHelperTargetDesc"] = "The macro name is \"HBT_AutoMacroHelper\" in general macros\n\nEnter \"TANK\", \"HEALER\" or \"DAMAGER\" to auto-search a group member with that role, or a specific \"Name-Realm\"(not validated)"
 L["MDHelperGenerateMacro"] = "Generate/Update Macro"
+L["PotionMacroSettings"] = "Combat Potion Macro"
+L["PotionMacroDesc"] = "The macro name is \"HBT_Potion\" in general macros\n\nScans your custom potion list below first, then the current season's combat potion(s), and uses the first one found\n\nWithin the same potion, priority is: Fleeting Level 2 > Fleeting Level 1 > Level 2 > Level 1"
+L["CustomPotionList"] = "Custom Potions"
+L["CustomPotionID"] = "Potion Item ID"
+L["InvalidPotionItemID"] = "Please enter a valid positive integer item ID"
+L["PotionAlreadyAdded"] = "This item ID is already in the custom potion list"
 
 -- MARK: Talent Reminder
 L["TalentReminderSettings"] = "Talent Reminder"

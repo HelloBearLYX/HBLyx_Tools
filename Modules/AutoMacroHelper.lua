@@ -7,6 +7,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field targetRole string
 ---@field spellID integer
 ---@field spellName string
+---@field potionItemID integer
 ---@field eventFrame Frame
 ---@field db table
 local AutoMacroHelper = {
@@ -15,6 +16,7 @@ local AutoMacroHelper = {
     targetRole = nil,
     spellID = nil,
     spellName = nil,
+    potionItemID = nil,
     eventFrame = nil,
     db = nil
 }
@@ -30,6 +32,18 @@ local CLASS_MISDIRECTION = {
 local MACRO_NAME = "HBT_AutoMacro"
 local MACRO_BODY = "#showtooltip\n/use [@%s][@player] %s"
 local MACRO_BODY_NO_TARGET = "#showtooltip\n/use [@player] %s"
+-- the potion priority within the same potion: Fleeting > Level 2 > Level 1
+local SEASONAL_POTIONS = {
+    274764, 274763, 271886, 271887, -- Liquid Luster
+    245898, 245897, 241308, 241309, -- Light's Potential
+    245902, 245903, 241289, 241288, -- Potion of Recklessness
+    245910, 245911, 241293, 241292, -- Draught of Rampant Abandon
+}
+local POTION_MACRO_NAME = "HBT_Potion"
+local POTION_MACRO_BODY = "#showtooltip item:%d\n/use item:%d"
+-- queued while a macro update is attempted in combat (macro edits are blocked during combat lockdown)
+local isMacroUpdatePending = false
+local isPotionUpdatePending = false
 
 -- MARK: Get Spell Name
 
@@ -154,9 +168,71 @@ local function UpdateMacro(self)
 end
 
 ---Public accessor to sync the "HBT_AutoMacro" macro with the current spell/target
+---Macro edits are blocked during combat, so the update is queued and flushed once combat ends
 function AutoMacroHelper:UpdateMacro()
+    if addon.states["inCombat"] then
+        isMacroUpdatePending = true
+        return
+    end
+
     FetchSpellName(self)
     UpdateMacro(self)
+end
+
+-- MARK: Potion Macro
+
+---Scan the user's custom list first, then the seasonal list, for the first combat potion owned
+---@param self AutoMacroHelper self
+local function FetchPotionItemID(self)
+    self.potionItemID = nil
+    if self.db["PotionEnabled"] == false then return end -- user disabled the potion macro
+
+    for _, itemID in ipairs(self.db["CustomPotions"] or {}) do
+        if C_Item.GetItemCount(itemID) > 0 then
+            self.potionItemID = itemID
+            return
+        end
+    end
+
+    for _, itemID in ipairs(SEASONAL_POTIONS) do
+        if C_Item.GetItemCount(itemID) > 0 then
+            self.potionItemID = itemID
+            return
+        end
+    end
+end
+
+---Create/update the "HBT_Potion" macro so it uses the detected combat potion
+---@param self AutoMacroHelper self
+local function UpdatePotionMacro(self)
+    if not self.potionItemID then return end -- no seasonal/custom combat potion found in bags
+
+    local body = POTION_MACRO_BODY:format(self.potionItemID, self.potionItemID)
+    -- question mark icon so WoW's action bar engine dynamically shows the item's icon/cooldown/count via #showtooltip
+    local icon = UNKNOWN_SPELL_TEXTURE
+    local index = GetMacroIndexByName(POTION_MACRO_NAME)
+    if index and index > 0 then
+        local _, currentIcon, currentBody = GetMacroInfo(index)
+        if currentBody ~= body or currentIcon ~= icon then
+            EditMacro(index, POTION_MACRO_NAME, icon, body)
+        end
+    elseif GetNumMacros() >= 120 then
+        addon.Utilities:print(L["GeneralMacroSlotsFull"] .. POTION_MACRO_NAME)
+    else
+        CreateMacro(POTION_MACRO_NAME, icon, body)
+    end
+end
+
+---Public accessor to sync the "HBT_Potion" macro with the currently detected combat potion
+---Macro edits are blocked during combat, so the update is queued and flushed once combat ends
+function AutoMacroHelper:UpdatePotionMacro()
+    if addon.states["inCombat"] then
+        isPotionUpdatePending = true
+        return
+    end
+
+    FetchPotionItemID(self)
+    UpdatePotionMacro(self)
 end
 
 -- MARK: Initialize
@@ -176,14 +252,33 @@ end
 function AutoMacroHelper:RegisterEvents()
     addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.eventFrame, self.modName)
     addon.core:RegisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
+    addon.core:RegisterEvent("BAG_UPDATE_DELAYED", self.eventFrame, self.modName)
+
+    -- flush any macro update that was queued while in combat
+    local OnCombatStateUpdate = function()
+        if addon.states["inCombat"] then return end
+
+        if isMacroUpdatePending then
+            isMacroUpdatePending = false
+            self:UpdateMacro()
+        end
+        if isPotionUpdatePending then
+            isPotionUpdatePending = false
+            self:UpdatePotionMacro()
+        end
+    end
+    addon.core:RegisterStateMonitor("inCombat", self.modName, OnCombatStateUpdate)
 
     self.eventFrame:SetScript("OnEvent", function(_, event, ...)
         if event == "PLAYER_ENTERING_WORLD" then
             self:SearchTarget()
             self:UpdateMacro()
+            self:UpdatePotionMacro()
         elseif event == "GROUP_ROSTER_UPDATE" then
             self:SearchTarget()
             self:UpdateMacro()
+        elseif event == "BAG_UPDATE_DELAYED" then
+            self:UpdatePotionMacro()
         end
     end)
 end
@@ -192,6 +287,8 @@ end
 function AutoMacroHelper:UnregisterEvents()
     addon.core:UnregisterEvent("PLAYER_ENTERING_WORLD", self.eventFrame, self.modName)
     addon.core:UnregisterEvent("GROUP_ROSTER_UPDATE", self.eventFrame, self.modName)
+    addon.core:UnregisterEvent("BAG_UPDATE_DELAYED", self.eventFrame, self.modName)
+    addon.core:UnregisterStateMonitor("inCombat", self.modName)
 end
 
 -- MARK: Register Module

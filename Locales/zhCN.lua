@@ -351,6 +351,12 @@ L["AutoMacroHelperSettingsDesc"] = "自动为你的职业创建和更新宏(误�
 L["MDHelperTarget"] = "目标"
 L["MDHelperTargetDesc"] = "宏的名称在通用宏中为\"HBT_AutoMacro\"\n\n输入\"TANK\",\"HEALER\"或\"DAMAGER\"以自动搜索该职责的队伍成员，或输入具体的\"名字-服务器\"(不会校验格式)"
 L["MDHelperGenerateMacro"] = "生成/更新宏"
+L["PotionMacroSettings"] = "战斗药水宏"
+L["PotionMacroDesc"] = "宏的名称在通用宏中为\"HBT_Potion\"\n\n会先扫描下方的自定义药水列表,若未找到再扫描本赛季的战斗药水,并使用找到的第一个\n\n同一种药水内的优先级为: 飞逝二级 > 飞逝一级 > 二级 > 一级"
+L["CustomPotionList"] = "自定义药水"
+L["CustomPotionID"] = "药水物品ID"
+L["InvalidPotionItemID"] = "请输入有效的正整数物品ID"
+L["PotionAlreadyAdded"] = "该物品ID已在自定义药水列表中"
 
 -- MARK: Talent Reminder
 L["TalentReminderSettings"] = "天赋提醒"

@@ -633,7 +633,6 @@ local function RenderPanel(parent)
 
 	-- Dispell color and icon settings
 	local dispellGroup = GUI:CreateInlineGroup(optionsGroup, L["DispellSettings"])
-	GUI:CreateInformationTag(dispellGroup, L["DispellColorDesc"], "LEFT")
 	applyDispellColorToggle = GUI:CreateToggleCheckBox(dispellGroup, L["ApplyDispellColor"], true, function(value)
 		if not containerSelected then return end
 
@@ -652,8 +651,7 @@ local function RenderPanel(parent)
 		options.ShowDispelIcon = value
 		addon.core:ShowReloadPopup() -- dispel icon is only created at frame creation, needs reload
 	end)
-
-	GUI:CreateLinebreaker(dispellGroup)
+	GUI:CreateInformationTag(dispellGroup, L["DispellColorDesc"], "LEFT")
 	for _, colorKey in ipairs(DISPELL_COLOR_ORDER) do
 		GUI:CreateColorPicker(dispellGroup, L["DispellType"][colorKey], false, addon.db[MOD_KEY].dispellColors[colorKey], function(value)
 			addon.db[MOD_KEY].dispellColors[colorKey] = value

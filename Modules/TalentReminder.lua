@@ -21,7 +21,7 @@ function TalentReminder:Initialize()
     self.head = CreateFrame("Frame", ADDON_NAME .. self.modName, UIParent)
     self.head:SetSize(addon.db[self.modName].IconSize, addon.db[self.modName].IconSize)
     self.head.text = self.head:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    self.head.text:SetPoint("LEFT", self.head, "LEFT", 0, 0)
+    self.head.text:SetPoint("RIGHT", self.head, "RIGHT", 0, 0)
     self.head.text:SetTextColor(255, 255, 255)
     self.head:Hide()
 

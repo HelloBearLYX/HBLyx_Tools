@@ -148,9 +148,8 @@ local function RenderPanel(parent)
 	GUI:CreateToggleCheckBox(portalGroup, L["Enable"], addon.db.WarlockReminders.PortalEnabled, function(value)
 		addon.db.WarlockReminders.PortalEnabled = value
 	end)
-	local portalTextGroup = GUI:CreateInlineGroup(portalGroup, L["TextSettings"])
-	GUI:CreateInformationTag(portalTextGroup, L["PortalTextSettingsDesc"], "LEFT")
-	GUI:CreateEditBox(portalTextGroup, L["PortalTextSettings"], addon.db.WarlockReminders.PortalText, function(value)
+	GUI:CreateInformationTag(portalGroup, L["PortalTextSettingsDesc"], "LEFT")
+	GUI:CreateEditBox(portalGroup, L["PortalTextSettings"], addon.db.WarlockReminders.PortalText, function(value)
 		addon.db.WarlockReminders.PortalText = value
 	end)
 

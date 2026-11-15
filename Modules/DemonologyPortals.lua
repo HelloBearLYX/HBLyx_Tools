@@ -146,6 +146,7 @@ function DemonologyPortals:UpdateStyle()
         "OUTLINE"
     )
     local anchorFrom = addon.Utilities:GetAnchorFrom(addon.db[self.modName]["CountAnchor"])
+    self.frame.text:ClearAllPoints()
     self.frame.text:SetPoint(anchorFrom, self.frame, addon.db[self.modName]["CountAnchor"], addon.db[self.modName]["CountFontOffsetX"], addon.db[self.modName]["CountFontOffsetY"])
 end
 

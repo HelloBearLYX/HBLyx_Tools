@@ -85,34 +85,32 @@ local function RenderPanel(parent)
 		addon.db[MOD_KEY].GroupMenuOnlyInGroup = value
 		update()
 	end)
-
-	local groupBasicGroup = GUI:CreateInlineGroup(groupMenuGroup, L["BasicSettings"])
-	GUI:CreateToggleCheckBox(groupBasicGroup, L["ChannelHelperVertical"], addon.db[MOD_KEY].GroupMenuVertical, function(value)
+	GUI:CreateToggleCheckBox(groupMenuGroup, L["ChannelHelperVertical"], addon.db[MOD_KEY].GroupMenuVertical, function(value)
 		addon.db[MOD_KEY].GroupMenuVertical = value
 		update()
 	end)
-	GUI:CreateSlider(groupBasicGroup, L["CountdownSeconds"], 1, 30, 1, addon.db[MOD_KEY].CountdownSeconds, function(value)
+	GUI:CreateLinebreaker(groupMenuGroup)
+	GUI:CreateSlider(groupMenuGroup, L["CountdownSeconds"], 1, 30, 1, addon.db[MOD_KEY].CountdownSeconds, function(value)
 		addon.db[MOD_KEY].CountdownSeconds = value
 		update()
 	end)
+	GUI:CreateSlider(groupMenuGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].GroupMenuIconSpacing, function(value)
+		addon.db[MOD_KEY].GroupMenuIconSpacing = value
+		update()
+	end)
 
-	local groupMenuPositionGroup = GUI:CreateInlineGroup(groupMenuGroup, L["PositionSettings"])
+	GUI:CreateSlider(groupMenuGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].GroupMenuIconSize, function(value)
+		addon.db[MOD_KEY].GroupMenuIconSize = value
+		update()
+	end)
+
+	local groupMenuPositionGroup = GUI:CreateInlineGroup(frame, L["PositionSettings"])
 	GUI:CreateSlider(groupMenuPositionGroup, L["X"], -2000, 2000, 1, addon.db[MOD_KEY].X_GroupMenu, function(value)
 		addon.db[MOD_KEY].X_GroupMenu = value
 		update()
 	end)
 	GUI:CreateSlider(groupMenuPositionGroup, L["Y"], -1000, 1000, 1, addon.db[MOD_KEY].Y_GroupMenu, function(value)
 		addon.db[MOD_KEY].Y_GroupMenu = value
-		update()
-	end)
-
-	GUI:CreateSlider(groupMenuPositionGroup, L["IconSpacing"], 0, 50, 1, addon.db[MOD_KEY].GroupMenuIconSpacing, function(value)
-		addon.db[MOD_KEY].GroupMenuIconSpacing = value
-		update()
-	end)
-
-	GUI:CreateSlider(groupMenuPositionGroup, L["IconSize"], 10, 120, 1, addon.db[MOD_KEY].GroupMenuIconSize, function(value)
-		addon.db[MOD_KEY].GroupMenuIconSize = value
 		update()
 	end)
 

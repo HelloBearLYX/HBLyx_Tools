@@ -282,7 +282,7 @@ L["BloodlustHelperNotValidVersion"] = "|cffff0000此模块仅适用于12.1及以
 
 --MARK: Warlock
 L["WarlockReminders"] = "术士提醒"
-L["WarlockRemindersIntro"] = "宠物和治疗石的提醒"
+L["WarlockRemindersIntro"] = "宠物和治疗石的提醒+传送门小队/团队通告"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "恶魔卫士检查用于恶魔天赋, 地狱猎犬/小鬼检查用于其他天赋"
 L["FelguardEnable"] = "启用恶魔卫士检查"

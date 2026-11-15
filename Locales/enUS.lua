@@ -282,7 +282,7 @@ L["BloodlustHelperNotValidVersion"] = "|cffff0000This module is only available f
 
 --MARK: Warlock
 L["WarlockReminders"] = "Warlock Reminders"
-L["WarlockRemindersIntro"] = "Pet and healthstone reminders"
+L["WarlockRemindersIntro"] = "Pet + healthstone reminders + Portal party/raid notifications"
 -- Warlock Pet settings
 L["PetTypeSettingsDesc"] = "Felguard check for Demonology, and Felhunter/Imp check for other specs"
 L["FelguardEnable"] = "Enable Felguard Check"

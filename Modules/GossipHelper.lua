@@ -73,7 +73,7 @@ local function InitializeGossipOptionHook(self)
 
         local gossipID = GetGossipID(info)
         if gossipID then
-            button:SetText(button:GetText() .. " |cff828282[" .. gossipID .. "]|r")
+            button:SetText(button:GetText() .. "|cff828282[" .. gossipID .. "]|r")
         end
     end)
 end

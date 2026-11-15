@@ -17,7 +17,7 @@ local CHANNEL_DEFAULTS = {
 }
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+local DEFAULTS = {
 	Enabled = true,
 	X = -970,
 	Y = -215,
@@ -31,12 +31,13 @@ addon.configurationList[MOD_KEY] = {
 	Command_custom = "",
 }
 for _, channel in ipairs(CHANNEL_DEFAULTS) do
-	addon.configurationList[MOD_KEY]["Enabled_" .. channel.channel] = true
+	DEFAULTS["Enabled_" .. channel.channel] = true
 	if not channel.isIcon then
-		addon.configurationList[MOD_KEY]["Text_" .. channel.channel] = channel.short
-		addon.configurationList[MOD_KEY]["Color_" .. channel.channel] = channel.color
+		DEFAULTS["Text_" .. channel.channel] = channel.short
+		DEFAULTS["Color_" .. channel.channel] = channel.color
 	end
 end
+addon.core:RegisterDBDefaults(MOD_KEY, DEFAULTS)
 
 -- MARK: Safe update
 local function update()

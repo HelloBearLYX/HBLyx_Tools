@@ -4,12 +4,12 @@ local GUI = addon.GUI
 local MOD_KEY = "GossipHelper"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
     EnabledSeasonGossip = true,
     ShowGossipID = true,
     data = {}, -- data = {gossipID = true, ...}
-}
+})
 
 -- MARK: Helpers
 local function EnsureGossipDB()
@@ -84,12 +84,12 @@ local function RenderPanel(parent)
     GUI:CreateButton(gossipGroup, L["Add"], function()
         local gossipID = tonumber(strtrim(gossipEditBox:GetText() or ""))
         if not gossipID or gossipID <= 0 then
-            addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidGossipID"], true)
+            addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidGossipID"], true)
             return
         end
 
         if addon.db[MOD_KEY].data[gossipID] then
-            addon.Utilities:print(string.format("%s-" .. L["AddFailed"], gossipID))
+            addon.Utility:print(string.format("%s-" .. L["AddFailed"], gossipID))
             return
         end
 
@@ -97,13 +97,13 @@ local function RenderPanel(parent)
         gossipSelected = gossipID
         gossipSelection:SetList(FetchGossipList())
         gossipSelection:SetValue(tostring(gossipID))
-        addon.Utilities:print(string.format("%s-" .. L["AddSuccess"], gossipID))
+        addon.Utility:print(string.format("%s-" .. L["AddSuccess"], gossipID))
     end)
 
     GUI:CreateButton(gossipGroup, L["Remove"], function()
         local gossipID = gossipSelected
         if not gossipID or not addon.db[MOD_KEY].data[gossipID] then
-            addon.Utilities:print(L["RemoveFailed"])
+            addon.Utility:print(L["RemoveFailed"])
             return
         end
 
@@ -112,7 +112,7 @@ local function RenderPanel(parent)
         gossipSelection:SetList(FetchGossipList())
         gossipSelection:SetValue("")
         gossipEditBox:SetText("")
-        addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], gossipID))
+        addon.Utility:print(string.format("%s-" .. L["RemoveSuccess"], gossipID))
     end)
 
     return frame

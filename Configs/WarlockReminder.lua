@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "WarlockReminders"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	Font = "",
 	FontSize = 12,
@@ -29,7 +29,7 @@ addon.configurationList[MOD_KEY] = {
 	-- portal settings
 	PortalEnabled = true,
 	PortalText = L["PortalText"],
-}
+})
 
 -- MARK: Safe update
 local function update()
@@ -48,7 +48,7 @@ local function RenderPanel(parent)
 	end)
 	GUI:CreateToggleCheckBox(frame, L["ShowInInstance"], addon.db.WarlockReminders.ShowInInstance, function(value)
 		addon.db.WarlockReminders.ShowInInstance = value
-		if addon.core:HasModuleLoaded(MOD_KEY) and not addon.core.testMode then
+		if addon.core:HasModuleLoaded(MOD_KEY) and not addon.testMode then
 			addon.core:GetModule(MOD_KEY):Handler()
 		end
 	end)

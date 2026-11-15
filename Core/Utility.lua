@@ -65,14 +65,19 @@ addon.Utility = Utility
 
 ---Use addon's identifier to print
 ---@param message string message to print
-function addon.Utilities:print(message)
+function Utility:print(message)
 	print("|cff8788ee" .. ADDON_NAME .. "|r: " .. message)
 end
 
 ---Debug print in form of string format
 ---@param message string debug message
 function addon:debug(message, ...)
-	addon.Utilities:print("|cffff0000[Debug]|r " .. string.format(message, ...))
+	addon.Utility:print("|cffff0000[Debug]|r " .. string.format(message, ...))
+end
+
+---Get the addon's current version
+function addon:GetVersion()
+    return addon.version or C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version")
 end
 
 -- MARK: Popup Dialogs

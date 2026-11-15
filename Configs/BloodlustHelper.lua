@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "BloodlustHelper"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
     Enabled = true,
     Mute = true,
     LustSound = "None",
@@ -14,7 +14,7 @@ addon.configurationList[MOD_KEY] = {
     HideInactive = true,
     X = -265,
     Y = -260,
-}
+})
 
 -- MARK: Safe update
 local function update()
@@ -50,7 +50,7 @@ local function RenderPanel(parent)
         addon.db.BloodlustHelper.ExhaustionSound = value
         update()
     end)
-    local soundChannelDropdown = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.BloodlustHelper.SoundChannel, function(value)
+    local soundChannelDropdown = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utility.SoundChannels, nil, addon.db.BloodlustHelper.SoundChannel, function(value)
         addon.db.BloodlustHelper.SoundChannel = value
         update()
     end)

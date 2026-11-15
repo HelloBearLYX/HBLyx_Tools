@@ -78,7 +78,7 @@ local function DeactivateCount(self)
     self.frame.icon:SetDesaturated(true)
     if addon.db[self.modName]["PrintToChat"] then
         local message = string.format(L["PortalExpiredMessage"], ComputeCount(self.frame.count))
-        addon.Utilities:print(message)
+        addon.Utility:print(message)
     end
     if addon.db[self.modName]["HideWhenInactive"] then
         self.timer = C_Timer.After(addon.db[self.modName]["HideDelay"] or 5, function()
@@ -145,7 +145,7 @@ function DemonologyPortals:UpdateStyle()
         addon.db[self.modName]["CountFontSize"],
         "OUTLINE"
     )
-    local anchorFrom = addon.Utilities:GetAnchorFrom(addon.db[self.modName]["CountAnchor"])
+    local anchorFrom = addon.Utility:GetAnchorFrom(addon.db[self.modName]["CountAnchor"])
     self.frame.text:ClearAllPoints()
     self.frame.text:SetPoint(anchorFrom, self.frame, addon.db[self.modName]["CountAnchor"], addon.db[self.modName]["CountFontOffsetX"], addon.db[self.modName]["CountFontOffsetY"])
 end
@@ -158,11 +158,11 @@ function DemonologyPortals:Test(on)
     if on then
         self.frame:Show()
         SimulateCount(self, true)
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["DemonologyPortalsSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["DemonologyPortalsSettings"], self.modName)
     else
         SimulateCount(self, false)
         SpecActivate(self)
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
     end
 end
 

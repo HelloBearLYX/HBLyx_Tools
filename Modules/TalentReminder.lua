@@ -207,10 +207,10 @@ end
 function TalentReminder:Test(on)
     if on then
         self.head:Show()
-        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TalentReminderSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TalentReminderSettings"], self.modName)
     else
         OnUpdate(self)
-        addon.Utilities:HideEditFrame(self.head)
+        addon.Utility:HideEditFrame(self.head)
     end
 end 
 

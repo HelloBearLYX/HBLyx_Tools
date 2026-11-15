@@ -6,7 +6,7 @@ local MOD_KEY = "RangeAlert"
 local RANGE_DISPLAY_COLOR_ORDER = {"0-5", "5-10", "10-20", "20-30", "30-40", "40+"}
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	X = 0,
 	Y = -110,
@@ -24,7 +24,7 @@ addon.configurationList[MOD_KEY] = {
 		["30-40"] = "FF7C0A",
 		["40+"] = "C41E3A",
 	},
-}
+})
 
 -- MARK: Safe update
 local function update()

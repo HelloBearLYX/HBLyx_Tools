@@ -161,7 +161,7 @@ local function UpdateMacro(self)
     if index and index > 0 then
         EditMacro(index, MACRO_NAME, icon, body)
     elseif GetNumMacros() >= 120 then
-        addon.Utilities:print(L["GeneralMacroSlotsFull"] .. MACRO_NAME)
+        addon.Utility:print(L["GeneralMacroSlotsFull"] .. MACRO_NAME)
     else
         CreateMacro(MACRO_NAME, icon, body)
     end
@@ -217,7 +217,7 @@ local function UpdatePotionMacro(self)
             EditMacro(index, POTION_MACRO_NAME, icon, body)
         end
     elseif GetNumMacros() >= 120 then
-        addon.Utilities:print(L["GeneralMacroSlotsFull"] .. POTION_MACRO_NAME)
+        addon.Utility:print(L["GeneralMacroSlotsFull"] .. POTION_MACRO_NAME)
     else
         CreateMacro(POTION_MACRO_NAME, icon, body)
     end

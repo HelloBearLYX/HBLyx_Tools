@@ -3,7 +3,7 @@
 ## Notes: A collections of features including Combat Indicator and Combat Timer, and more features are coming
 ## Author: HBLyx
 ## OptionalDeps: LibSharedMedia-3.0
-## Version: 4.8.5
+## Version: 5.0.0
 ## SavedVariables: HBLyx_Tools_DB
 ## IconTexture: Interface\AddOns\HBLyx_Tools\Media\HBLyx.png
 ## Category: Collections
@@ -14,18 +14,14 @@ Libs\Libs.xml
 # Locales
 Locales\locales.xml
 # Core
-utilities.lua
-configure.lua
-core.lua
+Core\core.xml
+# Data
 data.lua
 # GUI library
 GUI\gui.xml
 # Modules
 Modules\modules.xml
 # Config Panels
-GUI.lua
 Configs\configs.xml
 # Developer
 developer.lua
-
-main.lua

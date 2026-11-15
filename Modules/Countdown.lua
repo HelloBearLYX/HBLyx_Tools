@@ -182,7 +182,7 @@ function Countdown:UpdateStyle()
     self.frame:SetSize(math.max(addon.db[self.modName]["FontSize"] * 2, 60), math.max(addon.db[self.modName]["FontSize"], 30))
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame.text:SetFont(addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font, addon.db[self.modName]["FontSize"], "OUTLINE")
-    self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["FontColor"]))
+    self.frame.text:SetTextColor(addon.Utility:HexToRGB(addon.db[self.modName]["FontColor"]))
 end
 
 -- MARK: Test
@@ -191,10 +191,10 @@ end
 ---@param on boolean turn the Test mode on or off
 function Countdown:Test(on)
     if on then
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CountdownSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CountdownSettings"], self.modName)
         self:countdown(10, "TEST") -- start a 10-second countdown for testing
     else
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
         self:countdown(0) -- stop the countdown
     end
 end

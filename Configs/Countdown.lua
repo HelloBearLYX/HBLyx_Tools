@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "Countdown"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = false,
 	X = 0,
 	Y = 50,
@@ -19,7 +19,7 @@ addon.configurationList[MOD_KEY] = {
 	VictorySound = "None",
     SoundChannel = "Master",
 	StartSound = "[HBLyx] Notification",
-}
+})
 
 -- MARK: Safe update
 
@@ -66,7 +66,7 @@ local function RenderPanel(parent)
 
     -- MARK: Sound
     local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])
-    GUI:CreateDropdown(soundGroup, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.Countdown.SoundChannel, function(key)
+    GUI:CreateDropdown(soundGroup, L["SoundChannelSettings"], addon.Utility.SoundChannels, nil, addon.db.Countdown.SoundChannel, function(key)
         addon.db.Countdown.SoundChannel = key
     end)
 	GUI:CreateSoundSelect(soundGroup, L["ActiveSound"], addon.db.Countdown.StartSound, function(value)

@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "DemonologyPortals"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	HideWhenInactive = true,
 	PrintToChat = true,
@@ -20,7 +20,7 @@ addon.configurationList[MOD_KEY] = {
 	IconSize = 30,
 	IconZoom = 0.07,
 	FrameStrata = "MEDIUM",
-}
+})
 
 -- MARK: Safe update
 local function update()

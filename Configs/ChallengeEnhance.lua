@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "ChallengeEnhance"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
     Enabled = true,
     Font = "",
     TierColorDefault = "FFFFFF",
@@ -40,7 +40,7 @@ addon.configurationList[MOD_KEY] = {
     NameX = 0,
     NameY = 0,
     NameAnchor = "BOTTOM",
-}
+})
 
 -- MARK: Safe update
 local function update()

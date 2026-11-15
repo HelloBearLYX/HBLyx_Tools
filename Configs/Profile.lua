@@ -43,7 +43,7 @@ local function RenderPanel(parent)
     local modBox = GUI:CreateMultiLineEditBox(nil, L["Export/Import"], "", function (value)
         local mod = value:match("!HBLyx_Tools_(%w+)_")
         if not mod or mod == "" then
-            addon.Utilities:print("Invalid module profile string.")
+            addon.Utility:print("Invalid module profile string.")
             return
         end
 
@@ -69,7 +69,7 @@ GUI:RegisterModule("Profile", RenderPanel)
 function addon:ExportProfile()
     local profile = addon.db
     if not profile then
-        addon.Utilities:print("No profile data to export.")
+        addon.Utility:print("No profile data to export.")
         return nil
     end
 
@@ -87,7 +87,7 @@ end
 function addon:ExportModuleProfile(mod)
     local moduleProfile = addon.db[mod]
     if not moduleProfile then
-        addon.Utilities:print(string.format("No profile data for the %s.", mod))
+        addon.Utility:print(string.format("No profile data for the %s.", mod))
         return nil
     end
 
@@ -111,13 +111,13 @@ function addon:ImportProfile(data)
     local success, profileData = Serialize:Deserialize(decompressedData)
 
     if not success or type(profileData) ~= "table" or data:sub(1, 21) ~= "!HBLyx_Tools_Profile_" then
-        addon.Utilities:print("Invalid profile data.")
+        addon.Utility:print("Invalid profile data.")
         return false
     end
 
     HBLyx_Tools_DB = profileData.profile
     addon.db = HBLyx_Tools_DB
-    addon.Utilities:print(L["ImportSuccess"])
+    addon.Utility:print(L["ImportSuccess"])
 
     return true
 end
@@ -134,12 +134,12 @@ function addon:ImportModuleProfile(data, mod)
     local success, profileData = Serialize:Deserialize(decompressedData)
 
     if not success or type(profileData) ~= "table" or data:sub(1, prefixLength) ~= prefix then
-        addon.Utilities:print("Invalid module profile data.")
+        addon.Utility:print("Invalid module profile data.")
         return false
     end
 
     addon.db[mod] = profileData[mod]
-    addon.Utilities:print(mod .. "-" .. L["ImportSuccess"])
+    addon.Utility:print(mod .. "-" .. L["ImportSuccess"])
 
     return true
 end

@@ -36,7 +36,7 @@ end
 ---@param self TextWarningSkins self
 ---@param frame Frame the warning frame to insert
 local function QueueInsert(self, frame)
-    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[self.modName]["Grow"])
+    local anchorFrom, anchorTo = addon.Utility:GetGrowAnchors(addon.db[self.modName]["Grow"])
     if not self.tail then
         frame:ClearAllPoints()
         frame:SetPoint(anchorFrom, self.head, anchorFrom, 0, 0)
@@ -52,7 +52,7 @@ local function QueueInsert(self, frame)
 end
 
 local function QueueRemove(self, frame)
-    local anchorFrom, anchorTo = addon.Utilities:GetGrowAnchors(addon.db[self.modName]["Grow"])
+    local anchorFrom, anchorTo = addon.Utility:GetGrowAnchors(addon.db[self.modName]["Grow"])
     if frame.prev == self.head then
         if frame.next then
             frame.next:ClearAllPoints()
@@ -185,7 +185,7 @@ local function LoadWarning(self, info)
 
     -- if info.shouldShowChatMessage then
     --     local chatMessage = string.format(info.text, info.casterName, info.targetName)
-    --     addon.Utilities:print(chatMessage)
+    --     addon.Utility:print(chatMessage)
     -- end
 end
 
@@ -258,9 +258,9 @@ function TextWarningSkins:Test(on)
 
         TestPrivateWarning(self, true)
 
-        addon.Utilities:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TextWarningSkinsSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.head, addon.db[self.modName], "X", "Y", nil, L["TextWarningSkinsSettings"], self.modName)
 
-        addon.Utilities:ShowEditFrame(self.privateWarningFrame, addon.db[self.modName], "PrivateWarningX", "PrivateWarningY", nil, L["PrivateWarningSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.privateWarningFrame, addon.db[self.modName], "PrivateWarningX", "PrivateWarningY", nil, L["PrivateWarningSettings"], self.modName)
     else
         if self.testWarningFrame then
             UnloadWarning(self, self.testWarningFrame)
@@ -269,8 +269,8 @@ function TextWarningSkins:Test(on)
 
         TestPrivateWarning(self, false)
 
-        addon.Utilities:HideEditFrame(self.head)
-        addon.Utilities:HideEditFrame(self.privateWarningFrame)
+        addon.Utility:HideEditFrame(self.head)
+        addon.Utility:HideEditFrame(self.privateWarningFrame)
     end
 end
 

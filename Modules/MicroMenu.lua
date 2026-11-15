@@ -627,7 +627,7 @@ end
 ---@param on boolean turn the Test mode on or off
 function MicroMenu:Test(on)
     if on then
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["MicroMenuSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["MicroMenuSettings"], self.modName)
 
         if addon.db[self.modName]["GroupMenuEnabled"] and not self.groupMenu then
             CreateGroupMenu(self)
@@ -635,11 +635,11 @@ function MicroMenu:Test(on)
 
         if addon.db[self.modName]["GroupMenuEnabled"] and self.groupMenu then
             self.groupMenu:Show()
-            addon.Utilities:ShowEditFrame(self.groupMenu, addon.db[self.modName], "X_GroupMenu", "Y_GroupMenu", nil, L["GroupMenuSettings"], self.modName)
+            addon.Utility:ShowEditFrame(self.groupMenu, addon.db[self.modName], "X_GroupMenu", "Y_GroupMenu", nil, L["GroupMenuSettings"], self.modName)
         end
     else
-        addon.Utilities:HideEditFrame(self.frame)
-        addon.Utilities:HideEditFrame(self.groupMenu)
+        addon.Utility:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.groupMenu)
 
         self:UpdateStyle()
     end

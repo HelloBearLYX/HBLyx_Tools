@@ -88,7 +88,7 @@ function WarlockReminder:Initialize()
     self.candy.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1, insets = {left = 1, right = 1, top = 1, bottom = 1}})
     self.candy.border:SetBackdropBorderColor(0, 0, 0, 1)
 
-    addon.Utilities:print(L["WarlockWelecome"])
+    addon.Utility:print(L["WarlockWelecome"])
     return self
 end
 
@@ -323,16 +323,16 @@ function WarlockReminder:Test(on)
     if on and not addon.states["inCombat"] then
         if addon.db[self.modName].PetEnabled then
             self.pet:Show()
-            addon.Utilities:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, L["PetSettings"], self.modName)
+            addon.Utility:ShowEditFrame(self.pet, addon.db[self.modName], "PetX", "PetY", nil, L["PetSettings"], self.modName)
         end
 
         if addon.db[self.modName].CandyEnabled then
             self.candy:Show()
-            addon.Utilities:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, L["CandySetting"], self.modName)
+            addon.Utility:ShowEditFrame(self.candy, addon.db[self.modName], "CandyX", "CandyY", nil, L["CandySetting"], self.modName)
         end
     else
-        addon.Utilities:HideEditFrame(self.pet)
-        addon.Utilities:HideEditFrame(self.candy)
+        addon.Utility:HideEditFrame(self.pet)
+        addon.Utility:HideEditFrame(self.candy)
         self:Handler()
     end
 end

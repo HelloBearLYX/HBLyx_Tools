@@ -9,14 +9,14 @@ local function update()
 end
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	ButtonSize = 40,
 	GlobalScale = 1,
 	FrameOffsetX = 5,
 	FrameOffsetY = 0,
 
-}
+})
 
 -- GUI
 local function RenderPanel(parent)

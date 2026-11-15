@@ -193,7 +193,7 @@ function ChannelHelper:UpdateStyle()
             button.text:SetFont(font, db["FontSize"], "OUTLINE")
             button.text:SetText(GetChannelText(self, entry))
             if not entry.icon then
-                button.text:SetTextColor(addon.Utilities:HexToRGB(db["Color_" .. entry.channel]))
+                button.text:SetTextColor(addon.Utility:HexToRGB(db["Color_" .. entry.channel]))
             end
 
             local width = math.max(button.text:GetStringWidth() + padding * 2, height)
@@ -242,9 +242,9 @@ end
 ---@param on boolean turn the Test mode on or off
 function ChannelHelper:Test(on)
     if on then
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["ChannelHelperSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["ChannelHelperSettings"], self.modName)
     else
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
     end
 end
 

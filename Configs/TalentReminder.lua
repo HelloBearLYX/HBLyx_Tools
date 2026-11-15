@@ -5,7 +5,7 @@ local MOD_KEY = "TalentReminder"
 local MOD_LABEL = L["TalentReminderSettings"] or "Talent Reminder"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	IconSize = 35,
     Font = "",
@@ -15,7 +15,7 @@ addon.configurationList[MOD_KEY] = {
 	Y = 285,
 	FrameStrata = "MEDIUM",
     data = {} -- {instanceID = {spellID = {spec1 = true, spec2 = true, ...}}}
-}
+})
 
 -- MARK: Safe update
 local function update()
@@ -55,7 +55,7 @@ local function FetchExistingEntries(instanceID)
 	end
 
 	for spellID, _ in pairs(addon.db[MOD_KEY].data[instanceID] or {}) do
-		output[spellID] = addon.Utilities:GetSpellIconString(spellID)
+		output[spellID] = addon.Utility:GetSpellIconString(spellID)
 	end
 
 	return output
@@ -178,23 +178,23 @@ local function RenderPanel(parent)
     addButton = GUI:CreateButton(nil, L["Add"], function()
 		local spellID = tonumber(spellInput:GetText())
 		if not spellID or spellID <= 0 or spellID % 1 ~= 0 then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidSpellID"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidSpellID"], true)
 			return
 		end
 
 		if not C_Spell.GetSpellInfo(spellID) then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["SpellIDNotFound"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["SpellIDNotFound"], true)
 			return
 		end
 
         local specsSelected = specsSelection:GetSelectedSpecs()
 		if not instanceSelected then
-            addon.Utilities:SetPopupDialog(ADDON_NAME.."InvalidInput", L["InvalidInput"], true)
+            addon.Utility:SetPopupDialog(ADDON_NAME.."InvalidInput", L["InvalidInput"], true)
             return
         end
 
 		if not specsSelected then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidInput"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidInput"], true)
 			return
 		end
 
@@ -204,18 +204,18 @@ local function RenderPanel(parent)
 		existingSelection:SetList(FetchExistingEntries(instanceSelected))
 		existingSelection:SetValue(spellID)
 
-		local spellIconString = addon.Utilities:GetSpellIconString(spellID)
+		local spellIconString = addon.Utility:GetSpellIconString(spellID)
 		if isUpdate then
-			addon.Utilities:print(string.format("%s-" .. L["UpdateSuccess"], spellIconString))
+			addon.Utility:print(string.format("%s-" .. L["UpdateSuccess"], spellIconString))
 		else
-			addon.Utilities:print(string.format("%s-" .. L["AddSuccess"], spellIconString))
+			addon.Utility:print(string.format("%s-" .. L["AddSuccess"], spellIconString))
 		end
 	end)
 
 	removeButton = GUI:CreateButton(nil, L["Remove"], function()
 		local spellID = tonumber(spellInput:GetText())
 		if not spellID or spellID <= 0 or spellID % 1 ~= 0 or not instanceSelected then
-			addon.Utilities:print(L["RemoveFailed"])
+			addon.Utility:print(L["RemoveFailed"])
 			return
 		end
 
@@ -226,9 +226,9 @@ local function RenderPanel(parent)
 			existingSelection:SetValue("")
 			spellInput:SetText("")
 			specsSelection:ClearSpecSelection()
-			addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], addon.Utilities:GetSpellIconString(spellID)))
+			addon.Utility:print(string.format("%s-" .. L["RemoveSuccess"], addon.Utility:GetSpellIconString(spellID)))
 		else
-			addon.Utilities:print(string.format("%s-" .. L["RemoveFailed"], addon.Utilities:GetSpellIconString(spellID)))
+			addon.Utility:print(string.format("%s-" .. L["RemoveFailed"], addon.Utility:GetSpellIconString(spellID)))
 		end
     end)
 

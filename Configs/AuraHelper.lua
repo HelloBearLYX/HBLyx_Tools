@@ -5,7 +5,7 @@ local MOD_KEY = "AuraHelper"
 local MOD_LABEL = L["AuraHelperSettings"] or "Aura Helper"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	data = { -- add a default debuff container of player
 		Debuffs = {
@@ -49,7 +49,7 @@ addon.configurationList[MOD_KEY] = addon.configurationList[MOD_KEY] or {
 		Poison = "00B449",
 		Bleed = "BF2626",
 	}
-}
+})
 
 local DEFAULT_CONTAINER = {
 	Type = "Helpful",
@@ -67,7 +67,7 @@ local DEFAULT_CONTAINER = {
 	CooldownTextScale = 0.75,
 }
 
-local GROW_DIRECTIONS = addon.Utilities.Grows
+local GROW_DIRECTIONS = addon.Utility.Grows
 local GROW_ORDER = {"LEFT", "RIGHT"}
 
 local SOUND_TRIGGERS = {
@@ -295,7 +295,7 @@ local function FetchSoundList()
 	local order = {}
 	for spellId in pairs(addon.db[MOD_KEY].dataSound) do
 		local key = tostring(spellId)
-		list[key] = addon.Utilities:GetSpellIconString(tonumber(spellId) or spellId)
+		list[key] = addon.Utility:GetSpellIconString(tonumber(spellId) or spellId)
 		table.insert(order, key)
 	end
 	table.sort(order, function(a, b)
@@ -518,22 +518,22 @@ local function RenderPanel(parent)
 	GUI:CreateButton(containerGroup, L["Add"], function()
 		local key = strtrim(nameInput:GetText() or "")
 		if key == "" or key:find("[^%w_]") then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraContainerName"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraContainerName"], true)
 			return
 		end
 
 		if key == COTANK_KEY then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
 			return
 		end
 
 		if not typeSelected then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraTypeRequired"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraTypeRequired"], true)
 			return
 		end
 
 		if not AddContainer(key, typeSelected) then
-			addon.Utilities:print(string.format("%s-" .. L["AddFailed"], key))
+			addon.Utility:print(string.format("%s-" .. L["AddFailed"], key))
 			return
 		end
 
@@ -541,18 +541,18 @@ local function RenderPanel(parent)
 		containerSelection:SetList(FetchContainerList())
 		containerSelection:SetValue(key)
 		RefreshOptions()
-		addon.Utilities:print(string.format("%s-" .. L["AddSuccess"], key))
+		addon.Utility:print(string.format("%s-" .. L["AddSuccess"], key))
 	end)
 
 	GUI:CreateButton(containerGroup, L["Remove"], function()
 		local key = containerSelected
 		if key == COTANK_KEY then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["ReservedAuraContainerName"], true)
 			return
 		end
 
 		if not RemoveContainer(key) then
-			addon.Utilities:print(L["RemoveFailed"])
+			addon.Utility:print(L["RemoveFailed"])
 			return
 		end
 
@@ -561,7 +561,7 @@ local function RenderPanel(parent)
 		containerSelection:SetValue("")
 		nameInput:SetText("")
 		RefreshOptions()
-		addon.Utilities:print(string.format("%s-" .. L["RemoveSuccess"], key))
+		addon.Utility:print(string.format("%s-" .. L["RemoveSuccess"], key))
 	end)
 
 	-- Selected container settings
@@ -792,20 +792,20 @@ local function RenderPanel(parent)
 			dataSound = addon.db[MOD_KEY].dataSound
 		end
 		if key == "" or not spellId or spellId <= 0 then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraSpellID"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraSpellID"], true)
 			return
 		elseif not triggerSelected or triggerSelected == "" then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraSoundTriggerRequired"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraSoundTriggerRequired"], true)
 			return
 		elseif not soundLSMSelected or soundLSMSelected == "" then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraSoundMediaRequired"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["AuraSoundMediaRequired"], true)
 			return
 		end
 
 		local triggerKey = NormalizeSoundTrigger(triggerSelected)
 		local spellKey = ResolveSoundSpellKey(dataSound, spellId)
 		if spellKey == nil then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraSpellID"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidAuraSpellID"], true)
 			return
 		end
 		local soundBucket = dataSound[spellKey]
@@ -824,7 +824,7 @@ local function RenderPanel(parent)
 		soundSelectionDropdown:SetList(FetchSoundList())
 		soundSelectionDropdown:SetValue(tostring(spellId))
 		RefreshSoundSelectionDisplay()
-		addon.Utilities:print(string.format("%s-%s-" .. L["AddSuccess"], spellId, GetSoundTriggerLabel(triggerKey)))
+		addon.Utility:print(string.format("%s-%s-" .. L["AddSuccess"], spellId, GetSoundTriggerLabel(triggerKey)))
 	end)
 
 	GUI:CreateButton(soundGroup, L["Remove"], function()
@@ -859,7 +859,7 @@ local function RenderPanel(parent)
 		end
 
 		RefreshSoundPanel()
-		addon.Utilities:print(string.format("%s-%s-" .. L["RemoveSuccess"], spellId, GetSoundTriggerLabel(removedTrigger)))
+		addon.Utility:print(string.format("%s-%s-" .. L["RemoveSuccess"], spellId, GetSoundTriggerLabel(removedTrigger)))
 	end)
 
 	return frame

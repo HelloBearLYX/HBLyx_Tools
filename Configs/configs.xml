@@ -1,7 +1,7 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-  <!-- <Script file="GUIUtility.lua"/> -->
+  <Script file="GUIUtility.lua"/>
   <!-- Config Panels -->
-  <!-- <Script file="General.lua"/> -->
+  <Script file="General.lua"/>
   <Script file="Profile.lua"/>
   <!-- Module Panels -->
   <Script file="FocusInterrupt.lua"/>

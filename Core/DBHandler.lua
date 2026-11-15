@@ -15,17 +15,18 @@ local DBHandler = {}
         - ValidateDatabase: Validates the database and sets up default values for first-time use.
 ]]
 
----Assign the default value to a database reference, handling tables correctly to avoid reference issues
----@param DBReference any the database reference to assign the default value to
----@param defaultVal any the default value to assign
-local function AssignDefaultValue(DBReference, defaultVal)
+---Build a safe copy of the default value, handling tables correctly to avoid reference issues
+---@param defaultVal any the default value to copy
+---@return any value a copy of defaultVal (shallow copy if it's a table)
+local function CopyDefaultValue(defaultVal)
     if type(defaultVal) == "table" then
-        DBReference = {}
+        local copy = {}
         for k, v in pairs(defaultVal) do
-            DBReference[k] = v
+            copy[k] = v
         end
+        return copy
     else
-        DBReference = defaultVal
+        return defaultVal
     end
 end
 
@@ -57,11 +58,14 @@ function DBHandler:ValidateModuleDatabase(mod, resetValues)
     -- if resetValues is not true, only validate the types and correct the mismatched types to default values
     -- if resetValues is true, reset the value to the default value regardless of its current type
     -- if the default value is a table, need to copy the table instead of directly assigning it to avoid reference issues
+    local reset = false
     for name, defaultVal in pairs(self.dbDefaults[mod] or {}) do
         if resetValues then
-            AssignDefaultValue(addon.db[mod][name], defaultVal)
+            addon.db[mod][name] = CopyDefaultValue(defaultVal)
+            reset = true
         elseif type(addon.db[mod][name]) ~= type(defaultVal) then
-            AssignDefaultValue(addon.db[mod][name], defaultVal)
+            addon.db[mod][name] = CopyDefaultValue(defaultVal)
+            reset = true
         end
     end
 
@@ -72,7 +76,7 @@ function DBHandler:ValidateModuleDatabase(mod, resetValues)
         end
     end
 
-	return false
+	return reset
 end
 
 ---Validate the database and set up default values for first-time use
@@ -80,9 +84,9 @@ function DBHandler:ValidateDatabase()
 	-- also reset configs before v3.0 version(no DB.Version before v3.0)
 	if type(HBLyx_Tools_DB) ~= "table" or not HBLyx_Tools_DB["Version"] then
 		HBLyx_Tools_DB = {}
-		addon.Utilities:print("Profile database initialized.")
+		addon.Utility:print("Profile database initialized.")
 
-		addon.Utilities:SetPopupDialog(ADDON_NAME .. "ConfigRest", L["Welecome"], true)
+		addon.Utility:SetPopupDialog(ADDON_NAME .. "ConfigRest", L["Welecome"], true)
   	end
 
     -- assign the global database table to the addon's db field

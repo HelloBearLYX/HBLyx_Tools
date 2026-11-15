@@ -1,4 +1,4 @@
-﻿local ADDON_NAME, addon = ...
+local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local LibKS = LibStub("LibKeystone")
 
@@ -53,7 +53,7 @@ local function GetKeyLevelColor(keyLevel)
     elseif keyLevel >= 8 then setting = "TierColorRare"
     elseif keyLevel >= 5 then setting = "TierColorUncommon"
     else setting = "TierColorDefault" end
-    local r, g, b = addon.Utilities:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
+    local r, g, b = addon.Utility:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
     return CreateColor(r, g, b, 1)
 end
 
@@ -68,7 +68,7 @@ local function GetPlayerRatingColor(playerRating)
     elseif playerRating >= 1600 then setting = "TierColorRare"
     elseif playerRating >= 960 then setting = "TierColorUncommon"
     else setting = "TierColorDefault" end
-    local r, g, b = addon.Utilities:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
+    local r, g, b = addon.Utility:HexToRGB(addon.db[ChallengeEnhance.modName][setting])
     return { r = r, g = g, b = b }
 end
 

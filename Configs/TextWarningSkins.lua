@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "TextWarningSkins"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
     Width = 500,
     Height = 40,
@@ -15,7 +15,7 @@ addon.configurationList[MOD_KEY] = {
     Grow = "DOWN",
     FontSize = 20,
     Font = "",
-}
+})
 
 -- MARK: Safe update
 
@@ -36,7 +36,7 @@ local function RenderPanel(parent)
 
 	-- MARK: Style
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
-	GUI:CreateDropdown(styleGroup, L["Grow"], addon.Utilities.Grows, nil, addon.db.TextWarningSkins.Grow, function(key)
+	GUI:CreateDropdown(styleGroup, L["Grow"], addon.Utility.Grows, nil, addon.db.TextWarningSkins.Grow, function(key)
 		addon.db.TextWarningSkins.Grow = key
 		update()
 	end)

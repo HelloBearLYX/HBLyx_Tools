@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "BattleRes"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	Font = "",
 	HideInactive = true,
@@ -15,7 +15,7 @@ addon.configurationList[MOD_KEY] = {
 	IconSize = 35,
 	IconZoom = 0.07,
 	FrameStrata = "BACKGROUND",
-}
+})
 
 -- MARK: Safe update
 local function update()

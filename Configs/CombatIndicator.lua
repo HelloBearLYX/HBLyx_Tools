@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "CombatIndicator"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	FadeTime = 3,
 	Font = "",
@@ -20,7 +20,7 @@ addon.configurationList[MOD_KEY] = {
 	OutCombatSoundMedia = "None",
 	SoundChannel = "Master",
 	FrameStrata = "BACKGROUND",
-}
+})
 
 -- MARK: Safe update
 local function update()
@@ -87,7 +87,7 @@ local function RenderPanel(parent)
 
 	-- MARK: Sound
 	local soundGroup = GUI:CreateInlineGroup(frame, L["SoundSettings"])
-	local soundChannelSelect = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utilities.SoundChannels, nil, addon.db.CombatIndicator.SoundChannel, function(value)
+	local soundChannelSelect = GUI:CreateDropdown(nil, L["SoundChannelSettings"], addon.Utility.SoundChannels, nil, addon.db.CombatIndicator.SoundChannel, function(value)
         addon.db.CombatIndicator.SoundChannel = value
     end)
 	local inSoundSelect = GUI:CreateSoundSelect(nil, L["CombatInSoundMedia"], addon.db.CombatIndicator.InCombatSoundMedia, function(value)

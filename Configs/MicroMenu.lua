@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "MicroMenu"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	X = 0,
 	Y = 465,
@@ -21,7 +21,7 @@ addon.configurationList[MOD_KEY] = {
 	GroupMenuIconSpacing = 5,
 	GroupMenuVertical = false,
 	CountdownSeconds = 10,
-}
+})
 
 -- MARK: Safe update
 local function update()

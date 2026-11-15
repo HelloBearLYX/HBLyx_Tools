@@ -131,10 +131,10 @@ function BattleRes:Test(Test)
         self.frame.charge:SetText("5")
         self.frame.cooldown:SetCooldownDuration(90)
         self.frame:Show()
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["BattleResSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["BattleResSettings"], self.modName)
     else
         Reset(self)
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
         Handler(self)
     end
 end
@@ -144,7 +144,7 @@ end
 ---Register events needed
 function BattleRes:RegisterEvents()
     local function OnEvent(event, ...)
-        if addon.core.testMode then
+        if addon.testMode then
             return
         end
 

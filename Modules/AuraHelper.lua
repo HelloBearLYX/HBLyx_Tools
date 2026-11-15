@@ -449,7 +449,7 @@ local function BuildTestOverlay(self, key)
         -- make the test overlay draggable and interact with db's position
         local function updatePosition(testOverlay)
             local x, y = GetCursorPosition()
-            x, y = addon.Utilities:ScreenPositionToUIPosition(x, y)
+            x, y = addon.Utility:ScreenPositionToUIPosition(x, y)
             x, y = math.floor(x + 0.5), math.floor(y + 0.5) -- round the position to integers
 
             testOverlay:ClearAllPoints()
@@ -551,7 +551,7 @@ end
 -- MARK: Load Dispell Colors
 local function LoadDispellColors(self)
     for dispellType, colorHex in pairs(self.db.dispellColors) do
-        local r, g, b = addon.Utilities:HexToRGB(colorHex)
+        local r, g, b = addon.Utility:HexToRGB(colorHex)
         self.dispellColors[dispellType] = CreateColor(r, g, b, 1)
     end
 end
@@ -738,7 +738,7 @@ end
 
 function AuraHelper:UpdateDispellColor(colorKey, colorHex)
     -- just convert and set the color in the module, the initializeFrame will access the color from the module when creating the border
-    local r, g, b = addon.Utilities:HexToRGB(colorHex)
+    local r, g, b = addon.Utility:HexToRGB(colorHex)
     self.dispellColors[colorKey] = CreateColor(r, g, b, 1)
 end
 

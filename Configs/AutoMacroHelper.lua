@@ -22,12 +22,12 @@ local function GenerateDefaultData()
 end
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
     Data = GenerateDefaultData(),
     PotionEnabled = true,
     CustomPotions = {},
-}
+})
 
 ---Sync spell/target state and both the "HBT_AutoMacro" and "HBT_Potion" macros, if the module is currently loaded
 local function RefreshMacro()
@@ -113,13 +113,13 @@ local function RenderPanel(parent)
 	GUI:CreateButton(potionGroup, L["Add"], function()
 		local itemID = tonumber(strtrim(potionIDInput:GetText() or ""))
 		if not itemID or itemID <= 0 or itemID % 1 ~= 0 then
-			addon.Utilities:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidPotionItemID"], true)
+			addon.Utility:SetPopupDialog(ADDON_NAME .. "InvalidInput", L["InvalidPotionItemID"], true)
 			return
 		end
 
 		for _, existing in ipairs(addon.db.AutoMacroHelper.CustomPotions) do
 			if existing == itemID then
-				addon.Utilities:print(L["PotionAlreadyAdded"])
+				addon.Utility:print(L["PotionAlreadyAdded"])
 				return
 			end
 		end

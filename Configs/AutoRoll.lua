@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "AutoRoll"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = false,
     -- gear section
     Toggle_Gear = true,
@@ -23,7 +23,7 @@ addon.configurationList[MOD_KEY] = {
     Toggle_Housing = true,
     FirstChoice_Housing = "NEED", -- options: "NEED", "GREED", "PASS"
     SecondaryChoice_Housing = "GREED", -- options: "GREED", "PASS"
-}
+})
 
 local function CreateItemOptions(parentGroup, itemKey, itemLabel, firstChoices, firstOrder, secondaryChoices, secondaryOrder)
     local itemGroup = GUI:CreateInlineGroup(parentGroup, itemLabel)

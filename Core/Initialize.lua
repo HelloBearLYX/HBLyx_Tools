@@ -19,6 +19,44 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local Core = {}
 addon.core = Core
 
+-- MARK: Facade
+
+---Forward addon.core:<methodName>(...) calls to the sub-handler that actually implements it,
+---so existing call sites across Modules/Configs/GUI keep working against a single addon.core API.
+---@param handlerField string field on Core holding the sub-handler instance ("ModuleHandler"/"EventsHandler"/"DBHandler")
+---@param methodName string name of the method to forward
+local function Delegate(handlerField, methodName)
+	Core[methodName] = function(self, ...)
+		return self[handlerField][methodName](self[handlerField], ...)
+	end
+end
+
+for _, methodName in ipairs({
+	"RegisterModule", "HasModuleLoaded", "LoadModule", "UnloadModule", "LoadAllModules",
+	"GetModule", "GetModuleName", "GetSafeUpdate", "ToggleModule", "GetModuleList",
+	"GetLoadedModulesList", "GetUnloadedModulesList", "TestMode", "TestModule", "IsTestOn",
+}) do
+	Delegate("ModuleHandler", methodName)
+end
+
+for _, methodName in ipairs({
+	"RegisterEvent", "UnregisterEvent", "RegisterState", "RegisterStateMonitor", "UnregisterStateMonitor",
+	"GetEventInfo", "GetStateEventInfo", "GetStatesInfo", "GetStatesMonitorInfo",
+}) do
+	Delegate("EventsHandler", methodName)
+end
+
+for _, methodName in ipairs({
+	"RegisterDBDefaults", "ValidateModuleDatabase", "ValidateDatabase",
+}) do
+	Delegate("DBHandler", methodName)
+end
+
+---Show the "reload needed" popup (owned by Utility, forwarded here since most callers go through addon.core)
+function Core:ShowReloadPopup()
+	addon.Utility:ShowReloadPopup()
+end
+
 ---Register in-game Slash Command
 local function SetUpSlashCommand()
 	SLASH_HBT1 = "/hbt"
@@ -72,6 +110,7 @@ function Core:Initialize()
     self.DBHandler:ValidateDatabase()
     RegisterLDB()
     SetUpSlashCommand()
+    self.EventsHandler:InitializeStates()
     self.ModuleHandler:LoadAllModules()
 
     addon.Utility:print(L["WelecomeSetting"])

@@ -5,6 +5,7 @@ local ADDON_NAME, addon = ...
 ---@field registeredMods table<string, table> map of module key to module initialize and event register function, used to store the registered modules before they are loaded
 ---@field totalMods number total number of registered modules, used to check if all modules are loaded
 ---@field loadedMods number total number of loaded modules, used to check if all modules are loaded
+---@field frame frame frame used to hook PLAYER_ENTERING_WORLD so every loaded module's UpdateStyle runs once medias are ready
 local ModuleHandler = {}
 --[[
     ModuleHandler is responsible for managing addon modules, including registering, loading, and unloading them.
@@ -30,6 +31,16 @@ local ModuleHandler = {}
         - IsTestOn: Checks if test mode is currently enabled.
 ]]
 
+-- MARK: Private Methods
+
+---Call UpdateStyle on every currently loaded module
+---@param self ModuleHandler
+local function UpdateAllModulesStyle(self)
+    for mod, _ in pairs(self.modules) do
+        self:GetSafeUpdate(mod)()
+    end
+end
+
 function ModuleHandler:Initialize()
     self.modules = {}
     self.registeredMods = {}
@@ -38,6 +49,14 @@ function ModuleHandler:Initialize()
     addon.testMode = false
 
     addon.core.ModuleHandler = self
+
+    -- move all UpdateStyle calls to "PLAYER_ENTERING_WORLD" to make sure all addons have loaded their medias
+    -- prevent cannot load the medias which is loaded by other addons loaded later than this addon
+    self.frame = CreateFrame("Frame")
+    self.frame:SetScript("OnEvent", function()
+        UpdateAllModulesStyle(self)
+    end)
+    addon.core:RegisterEvent("PLAYER_ENTERING_WORLD", self.frame, "Core-ModuleHandler")
 end
 
 -- MARK: Module Management
@@ -68,7 +87,7 @@ function ModuleHandler:LoadModule(mod)
         local success, result = pcall(self.registeredMods[mod].initialize)
         self.modules[mod] = success and result or nil
         if not success then -- otherwise the module silently stays unloaded
-            addon.Utilities:print(string.format("|cffff0000%s failed to load|r: %s", mod, tostring(result)))
+            addon.Utility:print(string.format("|cffff0000%s failed to load|r: %s", mod, tostring(result)))
             return false
         end
         -- some module will not initialize due to some other reason like wrong class of player

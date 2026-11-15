@@ -100,7 +100,7 @@ function EventsHandler:InitializeStates()
 		addon.GUI:CloseGUI() -- close GUI when enter combat
 		if addon.core:IsTestOn() then
 			addon.core:TestMode(false) -- turn off test mode when enter combat
-			addon.Utilities:print(L["CombatLock"])
+			addon.Utility:print(L["CombatLock"])
 		end
 	end)
 	self:RegisterState("PLAYER_REGEN_ENABLED", nil, "inCombat", inCombat, function()

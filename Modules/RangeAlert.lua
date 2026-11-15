@@ -120,12 +120,12 @@ local function GetRangeDisplayColor(self, minRange)
     if minRange then
         for _, bracket in ipairs(RANGE_DISPLAY_BRACKETS) do
             if minRange >= bracket.min then
-                return addon.Utilities:HexToRGB(colors[bracket.key])
+                return addon.Utility:HexToRGB(colors[bracket.key])
             end
         end
     end
 
-    return addon.Utilities:HexToRGB(colors["0-5"])
+    return addon.Utility:HexToRGB(colors["0-5"])
 end
 
 ---Format the live range display text, e.g. "15 - 20", or "40+" when the max range is unknown
@@ -161,7 +161,7 @@ local function Handler(self)
 
     if outOfRange then
         self.frame.text:SetText(addon.db[self.modName]["AlertText"])
-        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["Color"]))
+        self.frame.text:SetTextColor(addon.Utility:HexToRGB(addon.db[self.modName]["Color"]))
         self.frame:Show()
     elseif addon.db[self.modName]["ShowRangeDisplay"] then
         if minRange then
@@ -182,7 +182,7 @@ end
 ---@return RangeAlert? RangeAlert a RangeAlert object, or nil if LibRangeCheck-3.0 is missing
 function RangeAlert:Initialize()
     if not LRC then
-        addon.Utilities:print("|cffff0000" .. L["RangeAlertLibMissing"] .. "|r")
+        addon.Utility:print("|cffff0000" .. L["RangeAlertLibMissing"] .. "|r")
         return nil
     end
 
@@ -202,7 +202,7 @@ function RangeAlert:UpdateStyle()
     local font = addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font
     local fontSize = addon.db[self.modName]["FontSize"] or 24
     self.frame.text:SetFont(font, fontSize, "OUTLINE")
-    self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["Color"]))
+    self.frame.text:SetTextColor(addon.Utility:HexToRGB(addon.db[self.modName]["Color"]))
     self.frame.text:SetText(addon.db[self.modName]["AlertText"])
 end
 
@@ -213,9 +213,9 @@ end
 function RangeAlert:Test(on)
     if on then
         self.frame:Show()
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["RangeAlertSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["RangeAlertSettings"], self.modName)
     else
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
         self.frame:Hide()
         Handler(self)
     end

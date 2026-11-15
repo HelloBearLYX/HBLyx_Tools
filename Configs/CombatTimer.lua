@@ -4,7 +4,7 @@ local GUI = addon.GUI
 local MOD_KEY = "CombatTimer"
 
 -- MARK: Defaults
-addon.configurationList[MOD_KEY] = {
+addon.core:RegisterDBDefaults(MOD_KEY, {
 	Enabled = true,
 	CombatShow = false,
 	PrintEnabled = false,
@@ -14,7 +14,7 @@ addon.configurationList[MOD_KEY] = {
 	X = -180,
 	Y = -260,
 	FrameStrata = "BACKGROUND",
-}
+})
 
 -- MARK: Safe update
 local function update()

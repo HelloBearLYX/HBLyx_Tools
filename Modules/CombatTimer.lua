@@ -67,7 +67,7 @@ local function Handler(self)
         end
 
         if addon.db[self.modName]["PrintEnabled"] then
-            addon.Utilities:print(string.format(L["TimerPrintTextIntro"] .. GetDuration(self)))
+            addon.Utility:print(string.format(L["TimerPrintTextIntro"] .. GetDuration(self)))
         end
 
         if addon.db[self.modName]["CombatShow"] then
@@ -116,9 +116,9 @@ end
 function CombatTimer:Test(on)
     if on then
 		self.frame:Show()
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["TimerSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["TimerSettings"], self.modName)
     else
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
 
         if addon.db[self.modName]["CombatShow"] then
 			self.frame:Hide()

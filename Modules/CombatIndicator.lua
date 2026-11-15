@@ -30,10 +30,10 @@ end
 local function SetIndicator(self, inCombat)
     if inCombat then
         self.frame.text:SetText(addon.db[self.modName]["InCombatText"])
-        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["InCombatColor"]))
+        self.frame.text:SetTextColor(addon.Utility:HexToRGB(addon.db[self.modName]["InCombatColor"]))
     else
         self.frame.text:SetText(addon.db[self.modName]["OutCombatText"])
-        self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["OutCombatColor"]))
+        self.frame.text:SetTextColor(addon.Utility:HexToRGB(addon.db[self.modName]["OutCombatColor"]))
     end
 end
 
@@ -108,9 +108,9 @@ function CombatIndicator:Test(on)
 
         self.frame:Show()
 
-        addon.Utilities:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CombatSettings"], self.modName)
+        addon.Utility:ShowEditFrame(self.frame, addon.db[self.modName], "X", "Y", nil, L["CombatSettings"], self.modName)
     else
-        addon.Utilities:HideEditFrame(self.frame)
+        addon.Utility:HideEditFrame(self.frame)
 
         if self.timer then
             self.timer:Cancel()

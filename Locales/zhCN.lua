@@ -128,6 +128,7 @@ L["Random"] = "随机"
 L["MaxCount"] = "最大数量"
 L["ShowBorder"] = "显示边框"
 L["GeneralMacroSlotsFull"] = "无法创建宏：通用宏栏位已满 - "
+L["DispellSettings"] = "驱散设置"
 
 -- MARK: Style
 L["StyleSettings"] = "样式设置"

@@ -409,19 +409,6 @@ local function RenderPanel(parent)
 		end
 	end)
 
-	-- BasicSettings
-	local basicGroup = GUI:CreateInlineGroup(frame, L["BasicSettings"])
-	GUI:CreateInformationTag(basicGroup, L["DispellColorDesc"], "LEFT")
-	for _, colorKey in ipairs(DISPELL_COLOR_ORDER) do
-		GUI:CreateColorPicker(basicGroup, L["DispellType"][colorKey], false, addon.db[MOD_KEY].dispellColors[colorKey], function(value)
-			addon.db[MOD_KEY].dispellColors[colorKey] = value
-			local module = addon.core:GetModule(MOD_KEY)
-			if module then
-				module:UpdateDispellColor(colorKey, value)
-			end
-		end):SetRelativeWidth(0.165) -- 1 / 6 where 6 is the number of dispell color types and take floor value
-	end
-
 	-- Container settings
 	local containerGroup = GUI:CreateInlineGroup(frame, L["AuraContainerSettings"])
 	GUI:CreateInformationTag(containerGroup, L["AuraContainerDesc"], "LEFT")
@@ -599,7 +586,11 @@ local function RenderPanel(parent)
 		options.Filters = filters
 		ApplyUpdate("UpdateFilter", containerSelected)
 	end)
+	GUI:CreateButton(optionsGroup, L["FilterDetails"], function()
+		ShowFilterDetails()
+	end)
 
+	GUI:CreateLinebreaker(optionsGroup)
 	growSelection = GUI:CreateDropdown(optionsGroup, L["Grow"], GROW_DIRECTIONS, GROW_ORDER, "RIGHT", function(value)
 		if not containerSelected then return end
 
@@ -609,8 +600,41 @@ local function RenderPanel(parent)
 		options.GrowDirection = value
 		ApplyUpdate("UpdateGrowDirection", containerSelected)
 	end)
+	maxCountSlider = GUI:CreateSlider(optionsGroup, L["MaxCount"], 1, 20, 1, 5, function(value)
+		if not containerSelected then return end
 
-	applyDispellColorToggle = GUI:CreateToggleCheckBox(optionsGroup, L["ApplyDispellColor"], true, function(value)
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.MaxCount = value
+		ApplyUpdate("UpdateMaxCount", containerSelected)
+	end)
+
+	-- Position settings
+	local positionGroup = GUI:CreateInlineGroup(optionsGroup, L["PositionSettings"])
+	xSlider = GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, 0, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.X = value
+		ApplyUpdate("UpdatePosition", containerSelected)
+	end)
+	ySlider = GUI:CreateSlider(positionGroup, L["Y"], -1000, 1000, 1, 0, function(value)
+		if not containerSelected then return end
+
+		local options = GetContainerOptionsTable(containerSelected)
+		if not options then return end
+
+		options.Y = value
+		ApplyUpdate("UpdatePosition", containerSelected)
+	end)
+
+	-- Dispell color and icon settings
+	local dispellGroup = GUI:CreateInlineGroup(optionsGroup, L["DispellSettings"])
+	GUI:CreateInformationTag(dispellGroup, L["DispellColorDesc"], "LEFT")
+	applyDispellColorToggle = GUI:CreateToggleCheckBox(dispellGroup, L["ApplyDispellColor"], true, function(value)
 		if not containerSelected then return end
 
 		local options = GetContainerOptionsTable(containerSelected)
@@ -619,8 +643,7 @@ local function RenderPanel(parent)
 		options.ApplyDispellColor = value
 		addon.core:ShowReloadPopup() -- border color is only read at frame creation, needs reload
 	end)
-
-	showDispelIconToggle = GUI:CreateToggleCheckBox(optionsGroup, L["ShowDispelIcon"], false, function(value)
+	showDispelIconToggle = GUI:CreateToggleCheckBox(dispellGroup, L["ShowDispelIcon"], false, function(value)
 		if not containerSelected then return end
 
 		local options = GetContainerOptionsTable(containerSelected)
@@ -630,20 +653,18 @@ local function RenderPanel(parent)
 		addon.core:ShowReloadPopup() -- dispel icon is only created at frame creation, needs reload
 	end)
 
-	GUI:CreateButton(optionsGroup, L["FilterDetails"], function()
-		ShowFilterDetails()
-	end)
+	GUI:CreateLinebreaker(dispellGroup)
+	for _, colorKey in ipairs(DISPELL_COLOR_ORDER) do
+		GUI:CreateColorPicker(dispellGroup, L["DispellType"][colorKey], false, addon.db[MOD_KEY].dispellColors[colorKey], function(value)
+			addon.db[MOD_KEY].dispellColors[colorKey] = value
+			local module = addon.core:GetModule(MOD_KEY)
+			if module then
+				module:UpdateDispellColor(colorKey, value)
+			end
+		end):SetRelativeWidth(0.165) -- 1 / 6 where 6 is the number of dispell color types and take floor value
+	end
 
 	local iconGroup = GUI:CreateInlineGroup(optionsGroup, L["IconSettings"])
-	maxCountSlider = GUI:CreateSlider(iconGroup, L["MaxCount"], 1, 20, 1, 5, function(value)
-		if not containerSelected then return end
-
-		local options = GetContainerOptionsTable(containerSelected)
-		if not options then return end
-
-		options.MaxCount = value
-		ApplyUpdate("UpdateMaxCount", containerSelected)
-	end)
 	iconSizeSlider = GUI:CreateSlider(iconGroup, L["IconSize"], 10, 120, 1, 35, function(value)
 		if not containerSelected then return end
 
@@ -690,26 +711,6 @@ local function RenderPanel(parent)
 
 		options.CooldownTextScale = value
 		addon.core:ShowReloadPopup() -- cooldown scale is only read at frame creation, needs reload
-	end)
-
-	local positionGroup = GUI:CreateInlineGroup(optionsGroup, L["PositionSettings"])
-	xSlider = GUI:CreateSlider(positionGroup, L["X"], -2000, 2000, 1, 0, function(value)
-		if not containerSelected then return end
-
-		local options = GetContainerOptionsTable(containerSelected)
-		if not options then return end
-
-		options.X = value
-		ApplyUpdate("UpdatePosition", containerSelected)
-	end)
-	ySlider = GUI:CreateSlider(positionGroup, L["Y"], -1000, 1000, 1, 0, function(value)
-		if not containerSelected then return end
-
-		local options = GetContainerOptionsTable(containerSelected)
-		if not options then return end
-
-		options.Y = value
-		ApplyUpdate("UpdatePosition", containerSelected)
 	end)
 
 	RefreshOptions()

@@ -199,7 +199,9 @@ function RangeAlert:UpdateStyle()
     self.frame:SetPoint("CENTER", UIParent, "CENTER", addon.db[self.modName]["X"], addon.db[self.modName]["Y"])
     self.frame:SetSize(300, addon.db[self.modName]["FontSize"] * 1.5)
 
-    self.frame.text:SetFont(addon.DEFAULTS.font, addon.db[self.modName]["FontSize"], "OUTLINE")
+    local font = addon.LSM:Fetch("font", addon.db[self.modName]["Font"]) or addon.DEFAULTS.font
+    local fontSize = addon.db[self.modName]["FontSize"] or 24
+    self.frame.text:SetFont(font, fontSize, "OUTLINE")
     self.frame.text:SetTextColor(addon.Utilities:HexToRGB(addon.db[self.modName]["Color"]))
     self.frame.text:SetText(addon.db[self.modName]["AlertText"])
 end

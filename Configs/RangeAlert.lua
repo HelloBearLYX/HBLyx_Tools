@@ -10,6 +10,7 @@ addon.configurationList[MOD_KEY] = {
 	Enabled = true,
 	X = 0,
 	Y = -110,
+	Font = "",
 	FontSize = 24,
 	Color = "ffFF0000",
 	AlertText = L["RangeAlertText"],
@@ -41,13 +42,18 @@ local function RenderPanel(parent)
 	end)
 	GUI:CreateResetModButton(frame, MOD_KEY, L["RangeAlertSettings"])
 	GUI:CreateInformationTag(frame, L["RangeAlertInfo"], "LEFT")
-	GUI:CreateFrameStrataDropdown(frame, addon.db.RangeAlert.FrameStrata, function(value)
-		addon.db.RangeAlert.FrameStrata = value
-		update()
-	end)
 
 	-- MARK: Style
 	local styleGroup = GUI:CreateInlineGroup(frame, L["StyleSettings"])
+	GUI:CreateFrameStrataDropdown(styleGroup, addon.db.RangeAlert.FrameStrata, function(value)
+		addon.db.RangeAlert.FrameStrata = value
+		update()
+	end)
+	GUI:CreateLinebreaker(styleGroup)
+	GUI:CreateFontSelect(styleGroup, L["Font"], addon.db.RangeAlert.Font, function(value)
+		addon.db.RangeAlert.Font = value
+		update()
+	end)
 	GUI:CreateSlider(styleGroup, L["FontSize"], 6, 60, 1, addon.db.RangeAlert.FontSize, function(value)
 		addon.db.RangeAlert.FontSize = value
 		update()

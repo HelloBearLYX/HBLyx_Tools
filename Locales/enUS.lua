@@ -128,6 +128,7 @@ L["Random"] = "Random"
 L["MaxCount"] = "Max Count"
 L["ShowBorder"] = "Show Border"
 L["GeneralMacroSlotsFull"] = "Unable to create macro: general macro slots are full - "
+L["DispellSettings"] = "Dispel Settings"
 
 -- MARK: Style
 L["StyleSettings"] = "Style Settings"

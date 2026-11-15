@@ -10,14 +10,14 @@ local ChannelHelper = {
 
 -- MARK: Constants
 local CHANNELS = {
-    {channel = "say", command = "/s", short = "S"},
-    {channel = "yell", command = "/y", short = "Y"},
-    {channel = "party", command = "/p", short = "P"},
-    {channel = "raid", command = "/raid", short = "R"},
-    {channel = "raidwarning", command = "/rw", short = "RW"},
-    {channel = "guild", command = "/g", short = "G"},
-    {channel = "custom", command = "/1", short = "C"},
-    {channel = "roll", command = "/roll", isCommand = true, icon = "Interface\\Buttons\\UI-GroupLoot-Dice-Up"}
+    {channel = "say", command = "/s", short = "S", tooltip = L["ChannelHelperChannels"]["say"]},
+    {channel = "yell", command = "/y", short = "Y", tooltip = L["ChannelHelperChannels"]["yell"]},
+    {channel = "party", command = "/p", short = "P", tooltip = L["ChannelHelperChannels"]["party"]},
+    {channel = "raid", command = "/raid", short = "R", tooltip = L["ChannelHelperChannels"]["raid"]},
+    {channel = "raidwarning", command = "/rw", short = "RW", tooltip = L["ChannelHelperChannels"]["raidwarning"]},
+    {channel = "guild", command = "/g", short = "G", tooltip = L["ChannelHelperChannels"]["guild"]},
+    {channel = "custom", command = "/1", short = "C", tooltip = L["ChannelHelperChannels"]["custom"]},
+    {channel = "roll", command = "/roll", isCommand = true, icon = "Interface\\Buttons\\UI-GroupLoot-Dice-Up", tooltip = L["ChannelHelperChannels"]["roll"]}
 }
 
 -- private methods
@@ -130,6 +130,16 @@ local function CreateButton(self, parent, entry)
 
     button:SetScript("OnClick", function()
         Execute(self, entry)
+    end)
+
+    -- set tooltip
+    button:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(entry.tooltip or entry.channel, 1, 1, 1)
+        GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function()
+        GameTooltip:Hide()
     end)
 
     return button

@@ -9,65 +9,23 @@
 ## Category: Collections
 ## Category-zhCN: 整合工具
 
-embeds.xml
-
-## Locales
-Locales\enUS.lua
-Locales\zhCN.lua
-
+# Libraries
+Libs\Libs.xml
+# Locales
+Locales\locales.xml
+# Core
 utilities.lua
 configure.lua
 core.lua
 data.lua
-
 # GUI library
 GUI\gui.xml
-
-# modules
-Modules\FocusInterrupt.lua
-Modules\CombatIndicator.lua
-Modules\CombatTimer.lua
-Modules\BattleRes.lua
-Modules\RangeAlert.lua
-Modules\ChallengeEnhance.lua
-Modules\AutoRoll.lua
-Modules\WarlockReminder.lua
-Modules\DemonologyPortals.lua
-Modules\TalentReminder.lua
-Modules\AuctionHelper.lua
-Modules\MicroMenu.lua
-Modules\BloodlustHelper.lua
-Modules\AuraHelper.lua
-Modules\Countdown.lua
-Modules\TextWarningSkins.lua
-Modules\GossipHelper.lua
-Modules\ChannelHelper.lua
-Modules\AutoMacroHelper.lua
-
-# handle configuration and options
+# Modules
+Modules\modules.xml
+# Config Panels
 GUI.lua
-Configs\FocusInterrupt.lua
-Configs\CombatIndicator.lua
-Configs\CombatTimer.lua
-Configs\BattleRes.lua
-Configs\RangeAlert.lua
-Configs\ChallengeEnhance.lua
-Configs\AutoRoll.lua
-Configs\WarlockReminder.lua
-Configs\DemonologyPortals.lua
-Configs\TalentReminder.lua
-Configs\AuctionHelper.lua
-Configs\MicroMenu.lua
-Configs\BloodlustHelper.lua
-Configs\AuraHelper.lua
-Configs\Countdown.lua
-Configs\TextWarningSkins.lua
-Configs\GossipHelper.lua
-Configs\ChannelHelper.lua
-Configs\AutoMacroHelper.lua
-Configs\Profile.lua
-
-# developer use only
+Configs\configs.xml
+# Developer
 developer.lua
 
 main.lua

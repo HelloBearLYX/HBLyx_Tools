@@ -68,14 +68,10 @@ function addon.Utilities:print(message)
 	print("|cff8788ee" .. ADDON_NAME .. "|r: " .. message)
 end
 
----Debug print
+---Debug print in form of string format
 ---@param message string debug message
----@param callback function? additional function to call after print
-function addon:debug(message, callback)
-	addon.Utilities:print("|cffff0000[Debug]|r " .. message)
-	if callback then
-		callback()
-	end
+function addon:debug(message, ...)
+	addon.Utilities:print("|cffff0000[Debug]|r " .. string.format(message, ...))
 end
 
 ---Get the addon's current version
@@ -115,23 +111,6 @@ function addon.Utilities:RGBToHex(r, g, b, a)
 
 	a = math.ceil(255 * a)
 	return string.format("%02x%02x%02x%02x", a, r, g, b)
-end
-
--- MARK: Position Handle
-
----Convert a screen position into a UIParent position
----@param x number x position(screen position)
----@param y number y position(screen position)
----@return number x x position(UIParent position)
----@return number y y position(UIParent position)
-function addon.Utilities:ScreenPositionToUIPosition(x, y)
-	local scale = UIParent:GetEffectiveScale()
-	x, y = x / scale, y / scale
-	
-	local centerX = GetScreenWidth() / 2
-	local centerY = GetScreenHeight() / 2
-
-	return x - centerX, y - centerY
 end
 
 -- MARK: Get AnchorTo
@@ -181,6 +160,23 @@ function addon.Utilities:GetGrowAnchors(direction)
 	else
 		error("Invalid Input")
 	end
+end
+
+-- MARK: Position Handle
+
+---Convert a screen position into a UIParent position
+---@param x number x position(screen position)
+---@param y number y position(screen position)
+---@return number x x position(UIParent position)
+---@return number y y position(UIParent position)
+function addon.Utilities:ScreenPositionToUIPosition(x, y)
+	local scale = UIParent:GetEffectiveScale()
+	x, y = x / scale, y / scale
+	
+	local centerX = GetScreenWidth() / 2
+	local centerY = GetScreenHeight() / 2
+
+	return x - centerX, y - centerY
 end
 
 -- MARK: Drag Position

@@ -1,0 +1,21 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+  <Script file="FocusInterrupt.lua"/>
+  <Script file="CombatIndicator.lua"/>
+  <Script file="CombatTimer.lua"/>
+  <Script file="BattleRes.lua"/>
+  <Script file="RangeAlert.lua"/>
+  <Script file="ChallengeEnhance.lua"/>
+  <Script file="AutoRoll.lua"/>
+  <Script file="WarlockReminder.lua"/>
+  <Script file="DemonologyPortals.lua"/>
+  <Script file="TalentReminder.lua"/>
+  <Script file="AuctionHelper.lua"/>
+  <Script file="MicroMenu.lua"/>
+  <Script file="BloodlustHelper.lua"/>
+  <Script file="AuraHelper.lua"/>
+  <Script file="Countdown.lua"/>
+  <Script file="TextWarningSkins.lua"/>
+  <Script file="GossipHelper.lua"/>
+  <Script file="ChannelHelper.lua"/>
+  <Script file="AutoMacroHelper.lua"/>
+</Ui>

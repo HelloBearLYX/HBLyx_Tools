@@ -3,11 +3,13 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 --[[
     Working in progress to re-factor addon's core structure for better modularity and maintainability
     Main goal is:
+		- make addon utility methods(static) load with core(before) with new "Utility" renaming from "Utilities"
         - seperate event and state management to EventsHandler
         - seperate module management to ModuleHandler
         - make core able to manage addon db directly through DBHandler
-        - make core can manage GUI directly
-        - make the initialize and configuration initialize in the core itself
+        - make the initialize and configuration initialize in the core itself(in this file)
+
+	Thus, the toc file contains core.xml first, and get modules and config also loaded through xml also
 ]]--
 
 ---@class Core
@@ -61,11 +63,6 @@ local function RegisterLDB()
 	LibStub("LibDBIcon-1.0"):Register(ADDON_NAME, ldb, addon.db["MinimapIcon"])
 end
 
----Show the reload popup dialog
-function Core:ShowReloadPopup()
-    StaticPopup_Show(ADDON_NAME .. "RLNeeded")
-end
-
 -- MARK: Initialize Core
 
 ---Initialize the core of the addon, including setting up the LDB, slash commands, and default configurations.
@@ -77,13 +74,13 @@ function Core:Initialize()
     SetUpSlashCommand()
     self.ModuleHandler:LoadAllModules()
 
-    addon.Utilities:print(L["WelecomeSetting"])
+    addon.Utility:print(L["WelecomeSetting"])
 end
 
 ---Configure the basic environment for the addon, including popup dialogs and media settings
 function Core:Configure()
     -- set up RLNeeded popup dialog
-    addon.Utilities:SetPopupDialog(ADDON_NAME .. "RLNeeded", L["ReloadNeeded"], false, {button1 = L["Reload"], button2 = CLOSE, OnButton1 = ReloadUI})
+    addon.Utility:SetPopupDialog(ADDON_NAME .. "RLNeeded", L["ReloadNeeded"], false, {button1 = L["Reload"], button2 = CLOSE, OnButton1 = ReloadUI})
     -- set up LibSharedMedia and defult media for the addon
     addon.LSM = LibStub("LibSharedMedia-3.0")
     addon.LSM:Register("sound", "[HBLyx] Notification", "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\Sound\\notification.ogg")

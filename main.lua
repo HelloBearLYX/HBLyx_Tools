@@ -102,12 +102,6 @@ local function SetUpSlashCommand()
 	end
 end
 
----Get Addon's Version number
----@return string version number
-function addon:GetVersion()
-	return addon.version
-end
-
 -- MARK: States
 
 ---Initialize addon states

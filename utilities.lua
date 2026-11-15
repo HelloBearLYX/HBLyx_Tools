@@ -78,6 +78,11 @@ function addon:debug(message, callback)
 	end
 end
 
+---Get the addon's current version
+function addon:GetVersion()
+    return addon.version or C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version")
+end
+
 -- MARK: RGB Handle
 
 ---Convert a Hex string into a RGBa

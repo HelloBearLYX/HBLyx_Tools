@@ -316,6 +316,8 @@ function Core:GetUnloadedModulesList(useKey)
     return output, #output
 end
 
+-- MARK: Core Info Fetch
+
 function Core:GetStatesInfo()
     local output = {}
     for state, _ in pairs(self.registeredStates) do

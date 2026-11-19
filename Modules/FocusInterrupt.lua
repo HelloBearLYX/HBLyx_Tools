@@ -8,7 +8,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 ---@field lastKickTime C_Timer? timer for the last kick check
 ---@field subInterrupt integer? if there is a second interrupt
 ---@field timer C_Timer? timer to handle interrupt fade out
----@field cooldownColer ColorMixin? color for interrupt on cooldown cast
+---@field cooldownColor ColorMixin? color for interrupt on cooldown cast
 ---@field interruptibleColor ColorMixin? color for interruptible cast
 ---@field notInterruptibleColor ColorMixin? color for NOT interruptible cast
 ---@field interruptedColor ColorMixin? color for interrupted fade time

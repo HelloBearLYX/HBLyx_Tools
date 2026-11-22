@@ -976,6 +976,8 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
                 mainInterruptPlayerID = self.interruptID
                 subInterruptPlayerID = self.subInterrupt
             end
+            -- wrap a secret value check around the spellID to ensure it is valid
+            -- also check sub-interrupt if it exists
             if not issecretvalue(spellID) and (spellID == mainInterruptPlayerID or (subInterruptPlayerID and spellID == subInterruptPlayerID)) then
                 -- a kick is only successful if it is used during an active cast
                 local anyActive = false

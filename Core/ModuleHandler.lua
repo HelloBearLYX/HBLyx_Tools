@@ -186,7 +186,7 @@ function ModuleHandler:ToggleModule(mod, on)
         return success
     else
         local success = self:UnloadModule(mod)
-        self:ShowReloadPopup()
+        addon.core:ShowReloadPopup()
         return success
     end
 end

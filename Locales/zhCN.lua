@@ -1,5 +1,6 @@
 local ADDON_NAME, addon = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN")
+if not L then return end
 
 L["Welecome"] = "|cff8788ee" .. ADDON_NAME .. "|r: 欢迎! 你的配置已经被初始化, 你可以使用 \"|cff8788ee/hbt|r\" 命令来更改设置"
 L["WelecomeInfo"] = "欢迎! 感谢你使用|cff8788ee" .. ADDON_NAME .. "|r!"

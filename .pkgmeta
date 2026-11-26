@@ -1,3 +1,6 @@
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown
+
+  ignore:
+    - CHANGELOG.md # ignore the changelog file since it's only used for manual changelog tracking

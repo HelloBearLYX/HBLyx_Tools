@@ -982,7 +982,14 @@ function FocusInterrupt:RegisterEvents() -- for cast-start events
                 -- a kick is only successful if it is used during an active cast
                 local anyActive = false
                 for _, bar in pairs(self.bars) do
-                    if bar.active then
+                    -- need to check whether the focus/target exists or not
+                    -- if there is no focus/target, the bar should be considered as active
+                    -- no focus/target means the interrupt is cast like mouseover or other ways this module should not take care of
+                    -- thus, if the unit is not visible, we consider the bar as active to account for interrupts cast on non-visible units -> mute the fail kick sound
+                    -- use UnitIsVisible to check if the focus/target exists instead of UnitExists()
+                    -- since UnitExists() returns true even if the unit is out of range as long as the focus hasn't been cleared
+                    local unitExists = UnitIsVisible(bar.unit)
+                    if bar.active or not unitExists then
                         anyActive = true
                         break
                     end
